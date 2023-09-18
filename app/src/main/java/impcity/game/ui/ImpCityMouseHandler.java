@@ -256,7 +256,7 @@ public class ImpCityMouseHandler implements MouseHandler
         {
             map.setFloor(rasterI, rasterJ, Features.GROUND_TREASURY + (int)(Math.random() * 2));
             game.addTreasurySquare(rasterI, rasterJ);
-            game.soundPlayer.play(Sounds.MAKE_TREASURY, 1.0f);            
+            game.soundPlayer.play(Sounds.MAKE_TREASURY, 0.4f);            
         }
     }
 
