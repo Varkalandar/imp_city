@@ -10,7 +10,6 @@ import impcity.game.Clock;
 import impcity.game.Texture;
 import impcity.game.TextureCache;
 import impcity.game.mobs.Mob;
-import impcity.oal.SoundPlayer;
 import impcity.ogl.IsoDisplay;
 import impcity.ui.PixFont;
 import impcity.ui.TimedMessage;
@@ -120,12 +119,12 @@ public class GameDisplay
         IsoDisplay.drawTile(buttonBar, left, 0);
         
         IsoDisplay.drawTile(buttonText, left + 14, 14, tabSelected == -1 ? selectedButtonColor : 0xFFFFFFFF);
-        IsoDisplay.drawTile(buttonText, left + 14, 37, tabSelected == -1 ? selectedButtonColor : 0xFFFFFFFF);
-        IsoDisplay.drawTile(buttonText, left + 14, 60, tabSelected == TAB_SPELLS ? selectedButtonColor : 0xFFFFFFFF);
+        IsoDisplay.drawTile(buttonText, left + 14, 37, tabSelected == TAB_SPELLS ? selectedButtonColor : 0xFFFFFFFF);
+        IsoDisplay.drawTile(buttonText, left + 14, 60, tabSelected == TAB_ROOMS_II ? selectedButtonColor : 0xFFFFFFFF);
         IsoDisplay.drawTile(buttonText, left + 14, 83, tabSelected == TAB_ROOMS_I ? selectedButtonColor : 0xFFFFFFFF);
         
         fontLow.drawStringScaled("Rooms I", tabSelected == TAB_ROOMS_I ? 0xFFFFFF : 0, left+62, 82, 0.16);
-        fontLow.drawStringScaled("Rooms II", tabSelected == TAB_SPELLS ? 0xFFFFFF : 0, left+60, 59, 0.16);
+        fontLow.drawStringScaled("Rooms II", tabSelected == TAB_ROOMS_II ? 0xFFFFFF : 0, left+60, 59, 0.16);
         fontLow.drawStringScaled("Spells", tabSelected == TAB_SPELLS ? 0xFFFFFF : 0, left+64, 36, 0.16);
         fontLow.drawStringScaled("?????", 0x000000, left+70, 13, 0.16);
         
