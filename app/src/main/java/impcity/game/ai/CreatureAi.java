@@ -222,7 +222,7 @@ public class CreatureAi extends AiBase
             
             if(path == null)
             {
-                game.soundPlayer.playFromPosition(Sounds.CRUNCH_MUNCH, 0.4f, mob.location, game.getViewPosition());
+                game.soundPlayer.playFromPosition(Sounds.CRUNCH_MUNCH, 0.4f, 1.0f, mob.location, game.getViewPosition());
                 int n = mob.gameMap.getItem(mob.location.x, mob.location.y);
                 mob.gameMap.setItem(mob.location.x, mob.location.y, 0);
                 
@@ -491,7 +491,7 @@ public class CreatureAi extends AiBase
             if(desc.startingSound >= 0) // got a sound ?
             {
                 Mob player = game.world.mobs.get(game.getPlayerKey());
-                game.soundPlayer.playFromPosition(desc.startingSound, 0.9f, mob.location, game.getViewPosition());
+                game.soundPlayer.playFromPosition(desc.startingSound, 0.9f, 1.0f, mob.location, game.getViewPosition());
             }
         }
     }
@@ -567,7 +567,7 @@ public class CreatureAi extends AiBase
             if(nextSoundTime < Clock.time())
             {
                 nextSoundTime = Clock.time() + 3000;
-                game.soundPlayer.playFromPosition(Sounds.FORGE_WORK, 0.2f, mob.location, game.getViewPosition());
+                game.soundPlayer.playFromPosition(Sounds.FORGE_WORK, 0.2f, 1.0f, mob.location, game.getViewPosition());
             }
             
             
@@ -696,7 +696,7 @@ public class CreatureAi extends AiBase
                     map.setItem(xr, yr, Features.I_MUSHROOM);
                 }   
                 
-                game.soundPlayer.playFromPosition(Sounds.PLANTING, 0.1f, mob.location, game.getViewPosition());
+                game.soundPlayer.playFromPosition(Sounds.PLANTING, 0.1f, 1.0f, mob.location, game.getViewPosition());
             }
         }
 

@@ -182,7 +182,7 @@ public class ImpCityMouseHandler implements MouseHandler
         {
             map.setFloor(rasterI, rasterJ, Features.GROUND_LAIR + (int)(Math.random() * 3));
             game.addLairSquare(rasterI, rasterJ);
-            game.soundPlayer.play(Sounds.MAKE_LAIR, 1.0f);            
+            game.soundPlayer.play(Sounds.MAKE_LAIR, 1.0f, 1.0f);            
         }
     }
         
@@ -193,7 +193,7 @@ public class ImpCityMouseHandler implements MouseHandler
         {
             map.setFloor(rasterI, rasterJ, Features.GROUND_GRASS_DARK + (int)(Math.random() * 2));
             game.addFarmlandSquare(rasterI, rasterJ);
-            game.soundPlayer.play(Sounds.MAKE_FARMLAND, 1.0f);            
+            game.soundPlayer.play(Sounds.MAKE_FARMLAND, 1.0f, 1.0f);            
         }
     }
     
@@ -211,7 +211,7 @@ public class ImpCityMouseHandler implements MouseHandler
             Rectangle r = new Rectangle(rasterI, rasterJ+3, 5, 1);
             map.setAreaMovementBlocked(r, true);
             
-            game.soundPlayer.play(Sounds.MAKE_LIBRARY, 0.8f);            
+            game.soundPlayer.play(Sounds.MAKE_LIBRARY, 0.8f, 1.0f);            
         }
     }
     
@@ -222,7 +222,7 @@ public class ImpCityMouseHandler implements MouseHandler
         {
             map.setFloor(rasterI, rasterJ, Features.GROUND_WORKSHOP + (int)(Math.random() * 3));
             game.addWorkshopSquare(map, rasterI, rasterJ);
-            game.soundPlayer.play(Sounds.MAKE_WORKSHOP, 0.2f);            
+            game.soundPlayer.play(Sounds.MAKE_WORKSHOP, 0.2f, 1.0f);
         }
     }
 
@@ -233,7 +233,7 @@ public class ImpCityMouseHandler implements MouseHandler
         {
             map.setFloor(rasterI, rasterJ, Features.GROUND_FORGE + (int)(Math.random() * 3));
             game.addForgeSquare(map, rasterI, rasterJ);
-            game.soundPlayer.play(Sounds.MAKE_WORKSHOP, 0.2f);            
+            game.soundPlayer.play(Sounds.MAKE_WORKSHOP, 0.2f, 1.0f);
         }
     }
     
@@ -245,7 +245,7 @@ public class ImpCityMouseHandler implements MouseHandler
         {
             map.setFloor(rasterI, rasterJ, Features.GROUND_HOSPITAL + (int)(Math.random() * 1));
             game.addHospitalSquare(map, rasterI, rasterJ);
-            game.soundPlayer.play(Sounds.MAKE_WORKSHOP, 0.2f);            
+            game.soundPlayer.play(Sounds.MAKE_WORKSHOP, 0.2f, 1.0f);            
         }
     }
 
@@ -256,7 +256,7 @@ public class ImpCityMouseHandler implements MouseHandler
         {
             map.setFloor(rasterI, rasterJ, Features.GROUND_TREASURY + (int)(Math.random() * 2));
             game.addTreasurySquare(rasterI, rasterJ);
-            game.soundPlayer.play(Sounds.MAKE_TREASURY, 0.4f);            
+            game.soundPlayer.play(Sounds.MAKE_TREASURY, 0.4f, 1.0f);            
         }
     }
 
@@ -321,7 +321,7 @@ public class ImpCityMouseHandler implements MouseHandler
            wps.isMoveAllowed(game.mouseI, game.mouseJ, game.mouseI, game.mouseJ))
         {
             game.spawnImp(map, game.mouseI, game.mouseJ);
-            game.soundPlayer.play(Sounds.CLAIM_SQUARE, 1.0f);            
+            game.soundPlayer.play(Sounds.CLAIM_SQUARE, 1.0f, 1.0f);
         }
     }
     
@@ -342,49 +342,49 @@ public class ImpCityMouseHandler implements MouseHandler
         {
             Tools.selected = Tools.MARK_DIG;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
-            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f);
+            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
         else if(mouseX >= left + 280 && mouseX <= left + 280 + 80)
         {
             Tools.selected = Tools.MAKE_LAIR;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
-            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f);
+            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
         else if(mouseX >= left + 364 && mouseX <= left + 364 + 80)
         {
             Tools.selected = Tools.MAKE_FARM;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
-            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f);
+            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
         else if(mouseX >= left + 448 && mouseX <= left + 448 + 80)
         {
             Tools.selected = Tools.MAKE_LIBRARY;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
-            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f);
+            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
         else if(mouseX >= left + 528 && mouseX <= left + 528 + 80)
         {
             Tools.selected = Tools.MAKE_WORKSHOP;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
-            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f);
+            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
         else if(mouseX >= left + 608 && mouseX <= left + 616 + 80)
         {
             Tools.selected = Tools.MAKE_FORGE;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
-            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f);
+            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
         else if(mouseX >= left + 700 && mouseX <= left + 700 + 80)
         {
             Tools.selected = Tools.MAKE_HOSPITAL;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
-            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f);
+            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
         else if(mouseX >= left + 824 && mouseX <= left + 824 + 80)
         {
             Tools.selected = Tools.DEMOLISH;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
-            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f);
+            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
     }
 
@@ -394,19 +394,19 @@ public class ImpCityMouseHandler implements MouseHandler
         {
             Tools.selected = Tools.MARK_DIG;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
-            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f);
+            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
         else if(mouseX >= left + 528 && mouseX <= left + 528 + 80)
         {
             Tools.selected = Tools.MAKE_TREASURY;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
-            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f);
+            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
         else if(mouseX >= left + 824 && mouseX <= left + 824 + 80)
         {
             Tools.selected = Tools.DEMOLISH;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
-            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f);
+            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
     }
 
@@ -417,7 +417,7 @@ public class ImpCityMouseHandler implements MouseHandler
             Tools.selected = Tools.SPELL_IMP;
             // setMousePointer(TextureCache.species[Species.IMPS_BASE+2]);
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
-            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f);
+            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
     }
 
@@ -489,7 +489,7 @@ public class ImpCityMouseHandler implements MouseHandler
                 JobExcavate job = new JobExcavate(game, rasterI + Map.SUB/2, rasterJ + Map.SUB/2);
                 game.jobQueue.add(job, JobQueue.PRI_HIGH);
 
-                soundPlayer.play(Sounds.UI_BUTTON_CLICK, 0.7f);                    
+                soundPlayer.play(Sounds.UI_BUTTON_CLICK, 0.7f, 1.0f);                    
             }
         }
     }
@@ -557,17 +557,17 @@ public class ImpCityMouseHandler implements MouseHandler
             if(mouseY >= 85 && mouseY <= 85 + 30)
             {
                 gameDisplay.selectTab(GameDisplay.TAB_ROOMS_I);
-                soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f);
+                soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
             } 
             else if(mouseY >= 62 && mouseY <= 62 + 30)
             {
                 gameDisplay.selectTab(GameDisplay.TAB_ROOMS_II);
-                soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f);
+                soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
             }
             else if(mouseY >= 39 && mouseY <= 39 + 30)
             {
                 gameDisplay.selectTab(GameDisplay.TAB_SPELLS);
-                soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f);
+                soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
             }
         }
 

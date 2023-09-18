@@ -195,7 +195,7 @@ public class GameDisplay
                 // sitting now?
                 if(hook.yoff <= yoff)
                 {
-                    game.soundPlayer.play(Sounds.METAL_HIT, 0.2f);
+                    game.soundPlayer.play(Sounds.METAL_HIT, 0.2f, 1.0f);
                 }
             }
             else

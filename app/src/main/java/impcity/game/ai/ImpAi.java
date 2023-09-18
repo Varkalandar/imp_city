@@ -17,8 +17,10 @@ import java.io.Writer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import impcity.game.Clock;
+import impcity.game.Sounds;
 import impcity.game.mobs.Mob;
 import impcity.game.map.LocationPathDestination;
+import impcity.oal.SoundPlayer;
 import rlgamekit.pathfinding.Path;
 
 /**
@@ -573,6 +575,13 @@ public class ImpAi extends AiBase
         if(workStep < 30)
         {
             splashMiningSparks(mob);
+            
+            if(workStep % 8 == 1)
+            {
+                game.soundPlayer.playFromPosition(Sounds.DIG_SQUARE, 0.2f, (float)(0.5 + (Math.random() *  0.4)),
+                        mob.location, game.getViewPosition());
+            }
+
             workStep ++;
         }    
         else
@@ -638,13 +647,13 @@ public class ImpAi extends AiBase
                                                   speed * Math.random() * 2.0 - speed, 
                                                   speed * Math.random(),
                                                   30, 
-                                                  Features.P_BROWN_SHARD_1 + (int)(Math.random() * 7),
+                                                  Features.P_BROWN_SHARD_1 + (int)(Math.random() * 4),
                                                   0xFFFFFFFF);
             mob.visuals.frontParticles.addParticle(0, 12, 
                                                   speed * Math.random() * 2.0 - speed, 
                                                   - speed * Math.random(),
                                                   30, 
-                                                  Features.P_BROWN_SHARD_1 + (int)(Math.random() * 7),
+                                                  Features.P_BROWN_SHARD_1 + (int)(Math.random() * 4),
                                                   0xFFFFFFFF);
         }
     }

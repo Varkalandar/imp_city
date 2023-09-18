@@ -201,7 +201,7 @@ public class SoundPlayer
         AL10.alGetError();
     }
 
-    public boolean play(int sample, float volume)
+    public boolean play(int sample, float volume, float pitch)
     {
         if(initialized)
         {
@@ -210,6 +210,7 @@ public class SoundPlayer
                 if(!isPlaying(source))
                 {
                     // AL10.alSourceStop(source.get(0));
+                    AL10.alSourcef(source.get(0), AL10.AL_PITCH, pitch);
                     AL10.alSourcef(source.get(0), AL10.AL_GAIN, volume);
                     AL10.alSourcei(source.get(0), AL10.AL_BUFFER, buffers[sample].get(0));
                     AL10.alSourcePlay(source.get(0));
@@ -220,7 +221,7 @@ public class SoundPlayer
         return false;
     }
 
-    public boolean playFromPosition(int sample, float volume, Point soundLocation, Point listenerLocation)
+    public boolean playFromPosition(int sample, float volume, float pitch, Point soundLocation, Point listenerLocation)
     {
         boolean ok = false;
         
@@ -234,7 +235,7 @@ public class SoundPlayer
 
             if(volume > 1f/256f)
             {
-                ok = play(sample, volume);
+                ok = play(sample, volume, pitch);
             }
         }
         
