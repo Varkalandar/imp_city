@@ -1,0 +1,113 @@
+Graphics
+--------
+
+Bed symbol (public domain clip art)
+http://www.clker.com/clipart-bed-hotel.html
+
+Food symbol (public domain clip art)
+http://www.clker.com/clipart-3811.html
+
+Treasure chest (public domain)
+http://www.wpclipart.com/money/treasure/treasure_2/treasure_chest_BW.png.html
+
+Dance of Rebirth by Shiroikuro (Public Domain)
+http://opengameart.org/content/dance-of-rebirth
+
+Paper texture by Darkwood67 (CC-By 3.0)
+http://darkwood67.deviantart.com/gallery/11280947/free-textures
+
+Palm Trees by Yughues (CC0)
+http://opengameart.org/content/free-palm-treez-v3
+
+Trees by Bleed (CC-By 3.0)
+http://opengameart.org/content/tree-collection-bleeds-game-art
+
+Tree Branches by Yughues (CC0)
+http://opengameart.org/content/branches-textures-pack-03
+
+Plants by Yughues (CC0)
+http://opengameart.org/content/stylish-plants
+
+Merchant Tent by Yd (CC0)
+http://opengameart.org/content/merchant-tent-v2
+
+Tents from Unknown Horizons (CC-By-SA 3.0)
+http://opengameart.org/content/isometric-tents-unknown-horizons-2d
+
+Tavern and Smith from Widelands (GPL v2)
+https://www.widelands.org/
+
+Rocks by Yughues (CC0)
+http://opengameart.org/content/rocks-0
+
+Rocks by Prushik (CC0)
+http://opengameart.org/content/a-bunch-of-rocks
+
+Farm Plants by Daniel Eddeland (CC-By-SA 3.0)
+http://opengameart.org/content/lpc-farming-tilesets-magic-animations-and-ui-elements
+
+Plants by rubberduck (CC0)
+http://opengameart.org/content/free-plant-pack
+
+Medieval Blacksmith by feudalwars (CC0)
+http://opengameart.org/content/isometric-25d-medieval-blacksmith
+
+Stronghold by feudalwars (CC0, Public Domain)
+http://opengameart.org/content/isometric-25d-western-european-castle
+
+Hut by bleeds-game-art (CC-By 3.0)
+http://opengameart.org/content/hut-bleeds-game-art
+
+Stained marble floor texture, magic floor texture, golden floor texture (Public Domain)
+http://opengameart.org/content/100-seamless-textures
+
+Wyvern by Clint Bellanger (CC-By-SA 3.0)
+http://opengameart.org/content/wyvern-1
+
+Medieval horn by Osmic (Ville Seppanen), CC-By 3.0
+http://opengameart.org/content/medieval-horn
+
+
+Sounds
+------
+
+Monster arrival sound derived from Ritual by brainiac256 (CC-By 3.0, CC-By-SA 3.0, LGPL 2.1, LGPL 3.0)
+http://opengameart.org/content/ritual
+
+Library (aka Dustbin) Sound (CC-By-SA 3.0, GPL 3.0, GPL 2.0)
+http://opengameart.org/content/interface-sounds-starter-pack
+
+Wood hammering (CC-By 3.0) by WIM
+https://freesound.org/people/WIM/sounds/25060/ 
+https://freesound.org/people/WIM/
+
+Falling and rolling stones (CC0) by Tumbleweed3288
+https://freesound.org/people/Tumbleweed3288/sounds/381547/
+https://freesound.org/people/Tumbleweed3288/
+
+Buzzing Fly by Acclivity (Attribution-NonCommercial 3.0 Unported (CC BY-NC 3.0))
+https://freesound.org/people/acclivity/sounds/20797/
+https://freesound.org/people/acclivity/
+
+Slurp by Breviceps (CC0)
+https://freesound.org/people/Breviceps/sounds/445974/
+https://freesound.org/people/Breviceps/ 
+
+Angle Grinder by thearxx08 (CC0)
+https://freesound.org/people/thearxx08/sounds/273722/
+https://freesound.org/people/thearxx08/
+
+Metal hit by timgormly (Attribution 3.0 Unported (CC BY 3.0))
+https://freesound.org/people/timgormly/sounds/170957/
+https://freesound.org/people/timgormly/
+
+Crunch & Munch by JBP (Attribution 3.0 Unported (CC BY 3.0))
+https://freesound.org/people/JBP/sounds/428953/
+https://freesound.org/people/JBP/
+
+
+Fonts
+-----
+
+Humanistic by George Williams (SIL Open Font License)
+https://www.1001fonts.com/humanistic-font.html

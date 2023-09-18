@@ -1,0 +1,36 @@
+package impcity.game;
+
+/**
+ * These are indices into the player stats array.
+ * 
+ * @author Hj. Malthaner
+ */
+public class KeeperStats 
+{
+    /**
+     * The keeper reputation is the factor that determines the average level
+     * of joining creatures. The higher the reputation, the more powerful 
+     * creatures will join.
+     */
+    public static final int REPUTATION = 1;
+
+    /**
+     * Bookkeeping for the treasuries.
+     */
+    public static final int GOLD = 2;
+    
+    
+    /**
+     * The metallurgy level indicates the ability of creatures
+     * to create and use metals.
+     * 
+     * 0 = no metal working skills
+     * 1 = bronze working
+     * 2 = iron working
+     * 3 = steel working
+     * 4 = advanced steel alloys
+     * 5 = mithril working (low magic metal)
+     * 6 = adamantite working (highly magic metal)
+     */
+    public static final int METALLURGY = 4;
+}
