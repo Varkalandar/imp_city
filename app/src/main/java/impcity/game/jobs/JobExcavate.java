@@ -51,7 +51,7 @@ public class JobExcavate extends AbstractJob
 
             game.jobQueue.add(new JobClaimGround(game, location.x, location.y), JobQueue.PRI_NORM);
             
-            game.soundPlayer.play(Sounds.MARK_DIG, 1.0f);
+            game.soundPlayer.play(Sounds.DIG_SQUARE, 0.6f);
         }        
 
     }

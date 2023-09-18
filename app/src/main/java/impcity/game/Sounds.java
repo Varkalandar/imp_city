@@ -17,7 +17,7 @@ public class Sounds
     public static final int MAKE_TREASURY = 7;
     public static final int MAKE_LAIR = 8;
     public static final int MAKE_WORKSHOP = 9;
-    public static final int MARK_DIG = 10;
+    public static final int DIG_SQUARE = 10;
     public static final int CLAIM_SQUARE = 11;
     public static final int FLY_START = 12;
     public static final int SNAIL_START = 13;

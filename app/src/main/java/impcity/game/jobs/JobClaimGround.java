@@ -34,7 +34,7 @@ public class JobClaimGround extends AbstractJob
         
         game.addClaimedSquare(rasterI, rasterJ);
         
-        game.soundPlayer.play(Sounds.CLAIM_SQUARE, 0.8f);
+        game.soundPlayer.play(Sounds.CLAIM_SQUARE, 0.5f);
     }
     
     @Override
