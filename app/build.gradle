@@ -9,14 +9,16 @@
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
-    id 'java-library'
+    // id 'java-library'
 }
 
+/*
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(11)
     }
 }
+*/
 
 repositories {
     // Use Maven Central for resolving dependencies.
@@ -31,8 +33,13 @@ dependencies {
 }
 
 application {
-    // Define the main class for the application.
     mainClass = 'impcity.game.ImpCity'
+    def sep = File.pathSeparator
+
+    println "Project Directory: $projectDir"
+
+    applicationDefaultJvmArgs +=
+            "-Djava.library.path=lwjgl-2.9.3\\native\\windows" + sep + "lwjgl-2.9.3/native/linux"
 }
 
 tasks.named('test') {
