@@ -94,17 +94,17 @@ public class ImpCity implements PostRenderHook, GameInterface
     public final List <Room> forgeRooms = new ArrayList<Room>();
     public final List <Mob> generators = Collections.synchronizedList(new ArrayList<Mob>());
     public final List <Quest> quests = Collections.synchronizedList(new ArrayList<Quest>());
-    
+
+
     static
     {
-        
         Logger.getLogger(ImpCity.class.getName()).log(Level.INFO,
-                (new File("./")).getAbsolutePath());
+                "App directory: " + (new File("./")).getAbsolutePath());
         
         try 
         {
-            addLibraryPath("lwjgl-2.9.3\\native\\windows");
-            addLibraryPath("lwjgl-2.9.3/native/linux");
+            // addLibraryPath("lwjgl-2.9.3\\native\\windows");
+            // addLibraryPath("lwjgl-2.9.3/native/linux");
             
             // System.setProperty("org.lwjgl.util.Debug", "true");
         }
@@ -113,7 +113,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             Logger.getLogger(ImpCity.class.getName()).log(Level.SEVERE, "Failure in static init", ex);
         }
     }
-    
+
     
     public static void addLibraryPath(String pathToAdd) throws Exception 
     {
