@@ -23,7 +23,7 @@ public abstract class PaperMessage extends UiDialog
     
     public PaperMessage(GameDisplay gameDisplay, TextureCache textureCache, int width, int height,
             String headline,
-            String message, String leftButton, String rightButton) throws IOException
+            String message, String leftButton, String rightButton)
     {
         super(textureCache, width, height);
         // this.font = display.font;

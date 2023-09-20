@@ -20,7 +20,7 @@ public class QuestMessage extends PaperMessage
     private final Quest quest;
     
     public QuestMessage(ImpCity game, GameDisplay gameDisplay, IsoDisplay display, int width, int height,
-            Quest quest, String title, String leftButton, String rightButton) throws IOException
+            Quest quest, String title, String leftButton, String rightButton)
     {
         super(gameDisplay, display.textureCache, width, height, title, quest.story, leftButton, rightButton);
         this.game = game;

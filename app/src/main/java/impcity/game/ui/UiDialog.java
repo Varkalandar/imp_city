@@ -1,6 +1,10 @@
 package impcity.game.ui;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import impcity.game.ImpCity;
 import impcity.game.Texture;
 import impcity.game.TextureCache;
 import impcity.ogl.IsoDisplay;
@@ -11,19 +15,25 @@ import impcity.ogl.IsoDisplay;
  */
 public abstract class UiDialog
 {
+    private static final Logger logger = Logger.getLogger(UiDialog.class.getName());
+
     private static Texture messagePaperBg;
     
     public final int width;
     public final int height;
     
-    public UiDialog(TextureCache textureCache, int width, int height) throws IOException
+    public UiDialog(TextureCache textureCache, int width, int height)
     {
         this.width = width;
         this.height = height;
 
         if(messagePaperBg == null)
         {
-            messagePaperBg = textureCache.loadTexture("/impcity/resources/ui/paper_bg.png", true);
+            try {
+                messagePaperBg = textureCache.loadTexture("/ui/paper_bg.png", true);
+            } catch (IOException e) {
+                logger.log(Level.SEVERE, "Could not load: /ui/paper_bg.png");
+            }
         }
     }
     
