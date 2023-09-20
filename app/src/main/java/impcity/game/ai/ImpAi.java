@@ -578,7 +578,7 @@ public class ImpAi extends AiBase
             
             if(workStep % 8 == 1)
             {
-                game.soundPlayer.playFromPosition(Sounds.DIG_SQUARE, 0.2f, (float)(0.5 + (Math.random() *  0.4)),
+                game.soundPlayer.playFromPosition(Sounds.DIG_SQUARE, 0.15f, (float)(0.7 + (Math.random() *  0.4)),
                         mob.location, game.getViewPosition());
             }
 
