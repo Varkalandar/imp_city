@@ -58,7 +58,7 @@ import rlgamekit.objects.Registry;
  */
 public class ImpCity implements PostRenderHook, GameInterface
 {
-    private static final String nameVersion = "Imp City r017";
+    private static final String nameVersion = "Imp City v0.18";
     
     private static final Logger logger = Logger.getLogger(ImpCity.class.getName());
     
@@ -214,6 +214,8 @@ public class ImpCity implements PostRenderHook, GameInterface
         
         player.stats.setCurrent(KeeperStats.GOLD, 0);
         player.stats.setCurrent(KeeperStats.RESEARCH, 0);
+        player.stats.setMin(KeeperStats.RESEARCH, 0);
+        player.stats.setMax(KeeperStats.RESEARCH, 10000); // research needed for next discovery
     }
 
     @Override

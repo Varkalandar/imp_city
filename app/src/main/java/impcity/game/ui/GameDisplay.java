@@ -25,6 +25,7 @@ import static org.lwjgl.opengl.GL11.glBlendFunc;
 public class GameDisplay
 {
     private final static int selectedButtonColor = 0xFFFFDD77;
+    private final static int defaultButtonColor = 0xFFEEEEEE;
     
     private final Texture buttonBar;
     private final ImpCity game;
@@ -118,10 +119,10 @@ public class GameDisplay
         
         IsoDisplay.drawTile(buttonBar, left, 0);
         
-        IsoDisplay.drawTile(buttonText, left + 14, 14, tabSelected == -1 ? selectedButtonColor : 0xFFEEEEEE);
-        IsoDisplay.drawTile(buttonText, left + 14, 37, tabSelected == TAB_SPELLS ? selectedButtonColor : 0xFFEEEEEE);
-        IsoDisplay.drawTile(buttonText, left + 14, 60, tabSelected == TAB_ROOMS_II ? selectedButtonColor : 0xFFEEEEEE);
-        IsoDisplay.drawTile(buttonText, left + 14, 83, tabSelected == TAB_ROOMS_I ? selectedButtonColor : 0xFFEEEEEE);
+        IsoDisplay.drawTile(buttonText, left + 14, 12, tabSelected == -1 ? selectedButtonColor : defaultButtonColor);
+        IsoDisplay.drawTile(buttonText, left + 14, 35, tabSelected == TAB_SPELLS ? selectedButtonColor : defaultButtonColor);
+        IsoDisplay.drawTile(buttonText, left + 14, 58, tabSelected == TAB_ROOMS_II ? selectedButtonColor : defaultButtonColor);
+        IsoDisplay.drawTile(buttonText, left + 14, 81, tabSelected == TAB_ROOMS_I ? selectedButtonColor : defaultButtonColor);
         
         fontLow.drawStringScaled("Rooms I", tabSelected == TAB_ROOMS_I ? 0xFFFFFF : 0, left+62, 82, 0.16);
         fontLow.drawStringScaled("Rooms II", tabSelected == TAB_ROOMS_II ? 0xFFFFFF : 0, left+60, 59, 0.16);
@@ -256,7 +257,7 @@ public class GameDisplay
             if (Tools.selected == tool) {
                 color = selectedButtonColor;
             } else {
-                color = 0xFFEEEEEE;
+                color = defaultButtonColor;
             }
         }
         else

@@ -50,7 +50,7 @@ public class CreatureAi extends AiBase
     private long thinkTime;
     private long lastThinkTime;
     private long pathTime;
-    private long questTime;
+    private long researchTime;
     private long nextSoundTime;
     private final ImpCity game;
     
@@ -65,7 +65,7 @@ public class CreatureAi extends AiBase
         this.goal = Goal.FIND_LAIR;
         this.thinkTime = Clock.time() + (int)(Math.random() * 4000);
         this.pathTime = Clock.time() + (int)(Math.random() * 4000);
-        this.questTime = Clock.time() + (int)(Math.random() * 60 * 1000);
+        this.researchTime = 0;
         this.hungry = 0;
         this.sleepy = 0;
         this.lastThinkTime = Clock.time();
@@ -552,6 +552,16 @@ public class CreatureAi extends AiBase
             int direction = 6 + (int)(Math.random() * 3) & 7;
             mob.visuals.setDisplayCode(Species.BOOKWORMS_BASE + direction);
         }
+        
+
+        int rasterI = mob.location.x/Map.SUB*Map.SUB;
+        int rasterJ = mob.location.y/Map.SUB*Map.SUB;
+        
+        int ground = mob.gameMap.getFloor(rasterI, rasterJ);
+        if(ground >= Features.GROUND_LIBRARY && ground <= Features.GROUND_LIBRARY + 3)
+        {
+            researchTime = Clock.time();
+        }
     }
 
     private void work(Mob mob)
@@ -760,32 +770,50 @@ public class CreatureAi extends AiBase
 
     private void produceInLibrary(Mob mob, Point rasterP) 
     {
-        if(Clock.time() > questTime)
-        {
-            Mob keeper = game.world.mobs.get(game.getPlayerKey());
-            int research = keeper.stats.getCurrent(KeeperStats.RESEARCH);
+        Mob keeper = game.world.mobs.get(game.getPlayerKey());
+        int research = keeper.stats.getMin(KeeperStats.RESEARCH);
 
+        // first, accumulate wisdom
+        int time = (int)(Clock.time() - researchTime) >> 3;
+        int total = research + time;
+        int limit = keeper.stats.getMax(KeeperStats.RESEARCH); 
+
+        logger.log(Level.INFO, "Mob researched " + time + " points, total is now " + total + " limit is " + limit);
+        
+        keeper.stats.setMin(KeeperStats.RESEARCH, total);
+        researchTime = Clock.time();
+        
+        
+        if(total > limit)
+        {
             // step by step research
 
-            if((research & KeeperStats.RESEARCH_FORGES) == 0)
+            int researchBits = keeper.stats.getCurrent(KeeperStats.RESEARCH);
+            if((researchBits & KeeperStats.RESEARCH_FORGES) == 0)
             {
-                research |= KeeperStats.RESEARCH_FORGES;
+                researchBits |= KeeperStats.RESEARCH_FORGES;
                 game.announceResearchResult(KeeperStats.RESEARCH_FORGES);
-                keeper.stats.setCurrent(KeeperStats.RESEARCH, research);
+                keeper.stats.setMin(KeeperStats.RESEARCH, 0);
+                keeper.stats.setCurrent(KeeperStats.RESEARCH, researchBits);
+                keeper.stats.setMax(KeeperStats.RESEARCH, limit * 2);
             }
-            else if((research & KeeperStats.RESEARCH_WORKSHOPS) == 0)
+            else if((researchBits & KeeperStats.RESEARCH_WORKSHOPS) == 0)
             {
-                research |= KeeperStats.RESEARCH_WORKSHOPS;
+                researchBits |= KeeperStats.RESEARCH_WORKSHOPS;
                 game.announceResearchResult(KeeperStats.RESEARCH_WORKSHOPS);
-                keeper.stats.setCurrent(KeeperStats.RESEARCH, research);
+                keeper.stats.setMin(KeeperStats.RESEARCH, 0);
+                keeper.stats.setCurrent(KeeperStats.RESEARCH, researchBits);
+                keeper.stats.setMax(KeeperStats.RESEARCH, limit * 2);
             }
-            else if((research & KeeperStats.RESEARCH_HEALING) == 0)
+            else if((researchBits & KeeperStats.RESEARCH_HEALING) == 0)
             {
-                research |= KeeperStats.RESEARCH_HEALING;
+                researchBits |= KeeperStats.RESEARCH_HEALING;
                 game.announceResearchResult(KeeperStats.RESEARCH_HEALING);
-                keeper.stats.setCurrent(KeeperStats.RESEARCH, research);
+                keeper.stats.setMin(KeeperStats.RESEARCH, 0);
+                keeper.stats.setCurrent(KeeperStats.RESEARCH, researchBits);
+                keeper.stats.setMax(KeeperStats.RESEARCH, limit * 2);
             }
-
+        }
 
 /*
             double w = Math.random();
@@ -798,8 +826,9 @@ public class CreatureAi extends AiBase
             {
                 game.makeTechnologyQuest();
             }
-*/
+
             questTime = Clock.time() + 180 * 1000 + (int)(Math.random() * 300 * 1000);
         }
+*/
     }
 }
