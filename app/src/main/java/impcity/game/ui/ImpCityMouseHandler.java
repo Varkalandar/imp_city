@@ -168,7 +168,7 @@ public class ImpCityMouseHandler implements MouseHandler
         {
             map.setFloor(rasterI, rasterJ, Features.GROUND_LAIR + (int)(Math.random() * 3));
             game.addLairSquare(rasterI, rasterJ);
-            game.soundPlayer.play(Sounds.MAKE_LAIR, 1.0f, 1.0f);            
+            game.soundPlayer.play(Sounds.MAKE_LAIR, 0.2f, 2.0f);            
         }
     }
         
