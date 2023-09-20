@@ -1,9 +1,6 @@
 package impcity.game.ui;
 
-import impcity.game.Features;
-import impcity.game.ImpCity;
-import impcity.game.Sounds;
-import impcity.game.Tools;
+import impcity.game.*;
 import impcity.game.species.Species;
 import impcity.game.ai.WayPathSource;
 import impcity.game.jobs.JobExcavate;
@@ -13,7 +10,7 @@ import impcity.game.processables.FarmSquare;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.logging.Logger;
-import impcity.game.Texture;
+
 import impcity.game.map.Map;
 import impcity.game.mobs.Mob;
 import impcity.oal.SoundPlayer;
@@ -327,6 +324,9 @@ public class ImpCityMouseHandler implements MouseHandler
 
     private void handleRoom1Buttons(int left, int mouseX)
     {
+        Mob keeper = game.world.mobs.get(game.getPlayerKey());
+        int research = keeper.stats.getCurrent(KeeperStats.RESEARCH);
+
         if(mouseX >= left + 196 && mouseX <= left + 196 + 80)
         {
             Tools.selected = Tools.MARK_DIG;
@@ -351,19 +351,19 @@ public class ImpCityMouseHandler implements MouseHandler
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
-        else if(mouseX >= left + 528 && mouseX <= left + 528 + 80)
+        else if(mouseX >= left + 528 && mouseX <= left + 528 + 80 && (research & KeeperStats.RESEARCH_WORKSHOPS) != 0)
         {
             Tools.selected = Tools.MAKE_WORKSHOP;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
-        else if(mouseX >= left + 608 && mouseX <= left + 616 + 80)
+        else if(mouseX >= left + 608 && mouseX <= left + 616 + 80 && (research & KeeperStats.RESEARCH_FORGES) != 0)
         {
             Tools.selected = Tools.MAKE_FORGE;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
-        else if(mouseX >= left + 700 && mouseX <= left + 700 + 80)
+        else if(mouseX >= left + 700 && mouseX <= left + 700 + 80 && (research & KeeperStats.RESEARCH_HEALING) != 0)
         {
             Tools.selected = Tools.MAKE_HOSPITAL;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);

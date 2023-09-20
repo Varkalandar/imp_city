@@ -19,11 +19,20 @@ public class KeeperStats
      */
     public static final int GOLD = 2;
     
-    
+    // Stats 3 to 5 are used in Mob update
+    // for mana and vitality
+
+    // Bitfield, see RESEARCH_XXX values
+    public static final int RESEARCH = 6;
+
+    public static final int RESEARCH_FORGES = 1;
+    public static final int RESEARCH_WORKSHOPS = 2;
+    public static final int RESEARCH_HEALING = 4;
+
     /**
      * The metallurgy level indicates the ability of creatures
      * to create and use metals.
-     * 
+     *
      * 0 = no metal working skills
      * 1 = bronze working
      * 2 = iron working
@@ -32,5 +41,5 @@ public class KeeperStats
      * 5 = mithril working (low magic metal)
      * 6 = adamantite working (highly magic metal)
      */
-    public static final int METALLURGY = 4;
+    public static final int METALLURGY = 7;
 }

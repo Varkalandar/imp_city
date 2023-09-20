@@ -762,6 +762,32 @@ public class CreatureAi extends AiBase
     {
         if(Clock.time() > questTime)
         {
+            Mob keeper = game.world.mobs.get(game.getPlayerKey());
+            int research = keeper.stats.getCurrent(KeeperStats.RESEARCH);
+
+            // step by step research
+
+            if((research & KeeperStats.RESEARCH_FORGES) == 0)
+            {
+                research |= KeeperStats.RESEARCH_FORGES;
+                game.announceResearchResult(KeeperStats.RESEARCH_FORGES);
+                keeper.stats.setCurrent(KeeperStats.RESEARCH, research);
+            }
+            else if((research & KeeperStats.RESEARCH_WORKSHOPS) == 0)
+            {
+                research |= KeeperStats.RESEARCH_WORKSHOPS;
+                game.announceResearchResult(KeeperStats.RESEARCH_WORKSHOPS);
+                keeper.stats.setCurrent(KeeperStats.RESEARCH, research);
+            }
+            else if((research & KeeperStats.RESEARCH_HEALING) == 0)
+            {
+                research |= KeeperStats.RESEARCH_HEALING;
+                game.announceResearchResult(KeeperStats.RESEARCH_HEALING);
+                keeper.stats.setCurrent(KeeperStats.RESEARCH, research);
+            }
+
+
+/*
             double w = Math.random();
 
             if(w < 0.5)
@@ -772,7 +798,7 @@ public class CreatureAi extends AiBase
             {
                 game.makeTechnologyQuest();
             }
-            
+*/
             questTime = Clock.time() + 180 * 1000 + (int)(Math.random() * 300 * 1000);
         }
     }

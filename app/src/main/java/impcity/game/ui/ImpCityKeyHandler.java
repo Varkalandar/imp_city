@@ -67,39 +67,31 @@ public class ImpCityKeyHandler implements KeyHandler
                 }
                 else if(Keyboard.getEventKey() == Keyboard.KEY_T)
                 {
-                    try {
-                        Quest quest = QuestGenerator.makeTreasureQuest();
-                        QuestMessage questMessage = new QuestMessage(game, gameDisplay, display, 
-                                                                     600, 400, quest,
-                                                                     "Discovery!",
-                                                                     "[ Send Party ]", "[ Leave It ]");
+                    Quest quest = QuestGenerator.makeTreasureQuest();
+                    QuestMessage questMessage = new QuestMessage(game, gameDisplay, display,
+                                                                 600, 400, quest,
+                                                                 "Discovery!",
+                                                                 "[ Send Party ]", "[ Leave It ]");
 
-                        MessageHook hookedMessage = 
-                                new MessageHook(Features.MESSAGE_TROPHY_QUEST,
-                                                questMessage);
-                        
-                        gameDisplay.addHookedMessage(hookedMessage);
-                    } catch (IOException ex) {
-                        Logger.getLogger(ImpCityKeyHandler.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    MessageHook hookedMessage =
+                            new MessageHook(Features.MESSAGE_TROPHY_QUEST,
+                                            questMessage);
+
+                    gameDisplay.addHookedMessage(hookedMessage);
                 }
                 else if(Keyboard.getEventKey() == Keyboard.KEY_H)
                 {
-                    try {
-                        Quest quest = QuestGenerator.makeTechnologyQuest();
-                        QuestMessage questMessage = new QuestMessage(game, gameDisplay, display, 
-                                                                     600, 400, quest,
-                                                                     "Humble Suggestion", 
-                                                                     "[ Assemble Party ]", "[ Leave It ]");
-                        
-                        MessageHook hookedMessage = 
-                                new MessageHook(Features.MESSAGE_RESEARCH_QUEST,
-                                                questMessage);
-                        
-                        gameDisplay.addHookedMessage(hookedMessage);
-                    } catch (IOException ex) {
-                        Logger.getLogger(ImpCityKeyHandler.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    Quest quest = QuestGenerator.makeTechnologyQuest();
+                    QuestMessage questMessage = new QuestMessage(game, gameDisplay, display,
+                                                                 600, 400, quest,
+                                                                 "Humble Suggestion",
+                                                                 "[ Assemble Party ]", "[ Leave It ]");
+
+                    MessageHook hookedMessage =
+                            new MessageHook(Features.MESSAGE_RESEARCH_QUEST,
+                                            questMessage);
+
+                    gameDisplay.addHookedMessage(hookedMessage);
                 }
                 else if(Keyboard.getEventKey() == Keyboard.KEY_L && isCtrlDown)
                 {

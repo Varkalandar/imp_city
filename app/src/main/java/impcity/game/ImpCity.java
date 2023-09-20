@@ -1,8 +1,6 @@
 package impcity.game;
 
-import impcity.game.ui.ImpCityKeyHandler;
-import impcity.game.ui.ImpCityMouseHandler;
-import impcity.game.ui.GameDisplay;
+import impcity.game.ui.*;
 import impcity.game.species.Species;
 import impcity.game.species.SpeciesDescription;
 import impcity.game.processables.FarmSquare;
@@ -14,8 +12,7 @@ import impcity.game.jobs.JobQueue;
 import impcity.game.processables.PortalSquare;
 import impcity.game.quests.Quest;
 import impcity.game.quests.QuestGenerator;
-import impcity.game.ui.MessageHook;
-import impcity.game.ui.QuestMessage;
+
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.BufferedReader;
@@ -216,6 +213,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         }
         
         player.stats.setCurrent(KeeperStats.GOLD, 0);
+        player.stats.setCurrent(KeeperStats.RESEARCH, 0);
     }
 
     @Override
@@ -1040,49 +1038,66 @@ public class ImpCity implements PostRenderHook, GameInterface
         return result;
     }
 
+    public void announceResearchResult(int breakthrough)
+    {
+        String text = "";
+        if(breakthrough == KeeperStats.RESEARCH_FORGES)
+        {
+            text = "Your researchers found out how to build forges.\nRoom unlocked: Forge";
+        }
+        else if(breakthrough == KeeperStats.RESEARCH_WORKSHOPS)
+        {
+            text = "Your researchers found out how to build workshops.\nRoom unlocked: Workshop";
+        }
+        else if(breakthrough == KeeperStats.RESEARCH_HEALING)
+        {
+            text = "Your researchers discovered healing.\nRoom unlocked: Healing Well";
+        }
+
+        GenericMessage message =
+                new GenericMessage(
+                        this, gameDisplay, display,
+                        600, 400,
+                        "Discovery!",
+                        text,
+                        "[ Acknowledged ]", null);
+
+        MessageHook hookedMessage =
+                new MessageHook(Features.MESSAGE_TROPHY_QUEST,
+                        message);
+
+        gameDisplay.addHookedMessage(hookedMessage);
+    }
+
     public void makeTreasureQuest()
     {
-        try 
-        {
-            Quest quest = QuestGenerator.makeTreasureQuest();
-            QuestMessage questMessage = new QuestMessage(this, gameDisplay, display, 
-                                                         600, 400, quest,
-                                                         "Discovery!",
-                                                         "[ Send Party ]", "[ Leave It ]");
+        Quest quest = QuestGenerator.makeTreasureQuest();
+        QuestMessage questMessage = new QuestMessage(this, gameDisplay, display,
+                                                     600, 400, quest,
+                                                     "Discovery!",
+                                                     "[ Send Party ]", "[ Leave It ]");
 
-            MessageHook hookedMessage = 
-                    new MessageHook(Features.MESSAGE_TROPHY_QUEST,
-                                    questMessage);
+        MessageHook hookedMessage =
+                new MessageHook(Features.MESSAGE_TROPHY_QUEST,
+                                questMessage);
 
-            gameDisplay.addHookedMessage(hookedMessage);
-        }
-        catch (IOException ex) 
-        {
-            logger.log(Level.SEVERE, null, ex);
-        }        
+        gameDisplay.addHookedMessage(hookedMessage);
     }
     
     public void makeTechnologyQuest()
     {
-        try 
-        {
-            Quest quest = QuestGenerator.makeTechnologyQuest();
-            QuestMessage questMessage = new QuestMessage(this, gameDisplay, display, 
-                                                         600, 400, quest,
-                                                         "Humble Suggestion", 
-                                                         "[ Assemble Party ]", "[ Leave It ]");
+        Quest quest = QuestGenerator.makeTechnologyQuest();
+        QuestMessage questMessage = new QuestMessage(this, gameDisplay, display,
+                                                     600, 400, quest,
+                                                     "Humble Suggestion",
+                                                     "[ Assemble Party ]", "[ Leave It ]");
 
-            MessageHook hookedMessage = 
-                    new MessageHook(Features.MESSAGE_RESEARCH_QUEST,
-                                    questMessage);
+        MessageHook hookedMessage =
+                new MessageHook(Features.MESSAGE_RESEARCH_QUEST,
+                                questMessage);
 
 
-            gameDisplay.addHookedMessage(hookedMessage);
-        }
-        catch (IOException ex) 
-        {
-            logger.log(Level.SEVERE, null, ex);
-        }                    
+        gameDisplay.addHookedMessage(hookedMessage);
     }
     
     private void addParticleGenerator(Map map, int x, int y, int z, int type)

@@ -244,7 +244,7 @@ public class TextureCache
 
     public Texture loadTexture(String filename, boolean hasAlpha) throws IOException
     {
-        InputStream in = Class.class.getResourceAsStream(filename);
+        InputStream in = this.getClass().getResourceAsStream(filename);
         BufferedImage img = ImageIO.read(in);
         in.close();
 

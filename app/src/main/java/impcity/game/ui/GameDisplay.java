@@ -118,10 +118,10 @@ public class GameDisplay
         
         IsoDisplay.drawTile(buttonBar, left, 0);
         
-        IsoDisplay.drawTile(buttonText, left + 14, 14, tabSelected == -1 ? selectedButtonColor : 0xFFFFFFFF);
-        IsoDisplay.drawTile(buttonText, left + 14, 37, tabSelected == TAB_SPELLS ? selectedButtonColor : 0xFFFFFFFF);
-        IsoDisplay.drawTile(buttonText, left + 14, 60, tabSelected == TAB_ROOMS_II ? selectedButtonColor : 0xFFFFFFFF);
-        IsoDisplay.drawTile(buttonText, left + 14, 83, tabSelected == TAB_ROOMS_I ? selectedButtonColor : 0xFFFFFFFF);
+        IsoDisplay.drawTile(buttonText, left + 14, 14, tabSelected == -1 ? selectedButtonColor : 0xFFEEEEEE);
+        IsoDisplay.drawTile(buttonText, left + 14, 37, tabSelected == TAB_SPELLS ? selectedButtonColor : 0xFFEEEEEE);
+        IsoDisplay.drawTile(buttonText, left + 14, 60, tabSelected == TAB_ROOMS_II ? selectedButtonColor : 0xFFEEEEEE);
+        IsoDisplay.drawTile(buttonText, left + 14, 83, tabSelected == TAB_ROOMS_I ? selectedButtonColor : 0xFFEEEEEE);
         
         fontLow.drawStringScaled("Rooms I", tabSelected == TAB_ROOMS_I ? 0xFFFFFF : 0, left+62, 82, 0.16);
         fontLow.drawStringScaled("Rooms II", tabSelected == TAB_ROOMS_II ? 0xFFFFFF : 0, left+60, 59, 0.16);
@@ -227,17 +227,57 @@ public class GameDisplay
         }
     }
 
+    /**
+     * Calculate of the button is disabled, normal or selected
+     * @return
+     */
+    private int calculateButtonColor(Tools tool)
+    {
+        Mob keeper = game.world.mobs.get(game.getPlayerKey());
+        int research = keeper.stats.getCurrent(KeeperStats.RESEARCH);
+
+        boolean enabled = true;
+        int color;
+
+        switch(tool)
+        {
+            case MAKE_FORGE:
+                enabled = (research & KeeperStats.RESEARCH_FORGES) != 0;
+                break;
+            case MAKE_WORKSHOP:
+                enabled = (research & KeeperStats.RESEARCH_WORKSHOPS) != 0;
+                break;
+            case MAKE_HOSPITAL:
+                enabled = (research & KeeperStats.RESEARCH_HEALING) != 0;
+                break;
+        }
+
+        if(enabled) {
+            if (Tools.selected == tool) {
+                color = selectedButtonColor;
+            } else {
+                color = 0xFFEEEEEE;
+            }
+        }
+        else
+        {
+            color = 0xFF666666;
+        }
+
+        return color;
+    }
+
     private void displayRooms1Tab(int left)
     {
-        IsoDisplay.drawTile(buttonDig, left + 196, 16, Tools.selected == Tools.MARK_DIG ? selectedButtonColor : 0xFFFFFFFF);
-        IsoDisplay.drawTile(buttonLair, left + 280, 16, Tools.selected == Tools.MAKE_LAIR ? selectedButtonColor : 0xFFFFFFFF);
-        IsoDisplay.drawTile(buttonFood, left + 364, 16, Tools.selected == Tools.MAKE_FARM ? selectedButtonColor : 0xFFFFFFFF);
-        IsoDisplay.drawTile(buttonBook, left + 448, 16, Tools.selected == Tools.MAKE_LIBRARY ? selectedButtonColor : 0xFFFFFFFF);
-        IsoDisplay.drawTile(buttonWork, left + 532, 16, Tools.selected == Tools.MAKE_TREASURY ? selectedButtonColor : 0xFFFFFFFF);
-        IsoDisplay.drawTile(buttonForge, left + 616, 16, Tools.selected == Tools.MAKE_FORGE ? selectedButtonColor : 0xFFFFFFFF);
-        IsoDisplay.drawTile(buttonHeal, left + 700, 16, Tools.selected == Tools.MAKE_HOSPITAL ? selectedButtonColor : 0xFFFFFFFF);
+        IsoDisplay.drawTile(buttonDig, left + 196, 16, calculateButtonColor(Tools.MARK_DIG));
+        IsoDisplay.drawTile(buttonLair, left + 280, 16, calculateButtonColor(Tools.MAKE_LAIR));
+        IsoDisplay.drawTile(buttonFood, left + 364, 16, calculateButtonColor(Tools.MAKE_FARM));
+        IsoDisplay.drawTile(buttonBook, left + 448, 16, calculateButtonColor(Tools.MAKE_LIBRARY));
+        IsoDisplay.drawTile(buttonWork, left + 532, 16, calculateButtonColor(Tools.MAKE_WORKSHOP));
+        IsoDisplay.drawTile(buttonForge, left + 616, 16, calculateButtonColor(Tools.MAKE_FORGE));
+        IsoDisplay.drawTile(buttonHeal, left + 700, 16, calculateButtonColor(Tools.MAKE_HOSPITAL));
 
-        IsoDisplay.drawTile(buttonDemolish, left + 824, 16, Tools.selected == Tools.DEMOLISH ? selectedButtonColor : 0xFFFFFFFF);
+        IsoDisplay.drawTile(buttonDemolish, left + 824, 16, calculateButtonColor(Tools.DEMOLISH));
         
         // Hajo: testing tooltips
         if(Mouse.getY() < 100)
@@ -281,10 +321,10 @@ public class GameDisplay
     
     private void displayRooms2Tab(int left)
     {
-        IsoDisplay.drawTile(buttonDig, left + 196, 16, Tools.selected == Tools.MARK_DIG ? selectedButtonColor : 0xFFFFFFFF);
-        IsoDisplay.drawTile(buttonTreasury, left + 532, 16, Tools.selected == Tools.MAKE_TREASURY ? selectedButtonColor : 0xFFFFFFFF);
+        IsoDisplay.drawTile(buttonDig, left + 196, 16, calculateButtonColor(Tools.MARK_DIG));
+        IsoDisplay.drawTile(buttonTreasury, left + 532, 16, calculateButtonColor(Tools.MAKE_TREASURY));
 
-        IsoDisplay.drawTile(buttonDemolish, left + 824, 16, Tools.selected == Tools.DEMOLISH ? selectedButtonColor : 0xFFFFFFFF);
+        IsoDisplay.drawTile(buttonDemolish, left + 824, 16, calculateButtonColor(Tools.DEMOLISH));
         
         // Hajo: testing tooltips
         if(Mouse.getY() < 100)
@@ -308,7 +348,7 @@ public class GameDisplay
 
     private void displaySpellsTab(int left)
     {
-        IsoDisplay.drawTile(buttonImp, left + 196, 16, Tools.selected == Tools.SPELL_IMP ? selectedButtonColor : 0xFFFFFFFF);
+        IsoDisplay.drawTile(buttonImp, left + 196, 16, calculateButtonColor(Tools.SPELL_IMP));
 
         // Hajo: testing tooltips
         if(Mouse.getY() < 100)
