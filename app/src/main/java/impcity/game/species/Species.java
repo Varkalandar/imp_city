@@ -171,7 +171,7 @@ public class Species
                                        393,               // lair type
                                        3,                 // lair size
                                        new MovementJitter(8, 1 << 16),
-                                       8,                // speed
+                                       4,                // speed
                                        -1,                // starting sound
                                        new RoomRequirements(
                                             4,   // lairs 
