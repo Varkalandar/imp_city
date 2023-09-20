@@ -17,7 +17,7 @@ public abstract class PaperMessage extends UiDialog
     protected String leftButton;
     protected String rightButton;
     protected String headline;
-    private int linespace;
+    private final int linespace;
     
     protected int messageYOffset = 0;
     
@@ -42,7 +42,8 @@ public abstract class PaperMessage extends UiDialog
         super.display(x, y);
         // int colorUi = 0x404040;
         int colorUi = 0x304060;
-        int colorText = Colors.BLUE_INK;
+        // int colorText = Colors.BLUE_INK;
+        int colorText = Colors.DARK_BLUE_INK;
         
         int headlineWidth = (int)(fontText.getStringWidth(headline) * 0.5); // * 0.8);
         fontText.drawStringScaled(headline, colorUi, x + (width - headlineWidth) / 2, y + height - 90, 0.5); // 0.8);
@@ -53,10 +54,18 @@ public abstract class PaperMessage extends UiDialog
         fontText.drawText(message, colorText, x+40, y+height - 128 + messageYOffset, width - 80, linespace, 0.25); // 0.6);
         
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
-        
-        fontText.drawStringScaled(leftButton, colorUi, x + 40, y + 40, 0.3); // 0.6);
-        
-        int rwidth = (int)(fontText.getStringWidth(rightButton) * 0.3);
-        fontText.drawStringScaled(rightButton, colorUi, x + width - 40 - rwidth, y + 40, 0.3); // 0.6);
+    
+        if(rightButton == null)
+        {
+            int bwidth = (int)(fontText.getStringWidth(leftButton) * 0.3);
+            fontText.drawStringScaled(leftButton, colorUi, x + width/2 - bwidth/2, y + 40, 0.3); // 0.6);            
+        }
+        else
+        {
+            fontText.drawStringScaled(leftButton, colorUi, x + 40, y + 40, 0.3); // 0.6);
+
+            int rwidth = (int)(fontText.getStringWidth(rightButton) * 0.3);
+            fontText.drawStringScaled(rightButton, colorUi, x + width - 40 - rwidth, y + 40, 0.3); // 0.6);
+        }
     }
 }
