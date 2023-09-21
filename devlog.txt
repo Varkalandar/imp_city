@@ -1,0 +1,17 @@
+Changes since v0.18
+
+- Improved tomato plant graphics
+- Reduced jitter for moving bookworms
+- New table lair graphics for mosquitoes and wyverns.
+- Powersnails now rest on green leaves
+
+Changes since v0.17
+
+- Fixed a regression in research that caused a crash if minions made a discovery
+- Research now unlocks additions rooms
+
+Changes since v0.16
+
+- Adjusted volumes for several sound effects
+- Adjusted particle effects
+- Map is now dragged with left mouse button instead of right
