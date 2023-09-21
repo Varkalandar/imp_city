@@ -145,7 +145,7 @@ public class Species
                 new SpeciesDescription("Wyvern", 
                                        3,                 // size 
                                        WYVERNS_BASE,
-                                       394,               // lair type
+                                       391,               // lair type
                                        3,                 // lair size
                                        new MovementJitter(7, 2 << 16),
                                        20,                // speed
@@ -170,7 +170,7 @@ public class Species
                                        BOOKWORMS_BASE,
                                        393,               // lair type
                                        3,                 // lair size
-                                       new MovementJitter(8, 1 << 16),
+                                       new MovementJitter(8, 1 << 15),
                                        4,                // speed
                                        -1,                // starting sound
                                        new RoomRequirements(
@@ -191,7 +191,7 @@ public class Species
                 new SpeciesDescription("Mosquito", 
                                        3,                 // size 
                                        MOSQUITOES_BASE,
-                                       393,               // lair type
+                                       394,               // lair type
                                        3,                 // lair size
                                        new MovementJitter(6, 1 << 16),
                                        8,                 // speed

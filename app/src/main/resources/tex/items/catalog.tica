@@ -10871,18 +10871,18 @@ null
 Tile Description
 v.5
 391
-1 1
+43 36
 0 0
-0 0
+21 7
 End Of Header
 Item
 v.1
 data
 4
+wyvern_lair
+rgba,item
 
 
-null
-null
 1
 0
 0
@@ -10925,7 +10925,7 @@ rgba,item
 Tile Description
 v.5
 394
-41 34
+42 35
 0 0
 20 5
 End Of Header
@@ -10933,7 +10933,7 @@ Item
 v.1
 data
 4
-wyvern_lair
+mosquito_lair
 rgba,item
 
 

@@ -11474,19 +11474,19 @@
       <Description>
         <version>4</version>
         <id>391</id>
-        <width>1</width>
-        <height>1</height>
+        <width>43</width>
+        <height>36</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>21</footX>
+        <footY>7</footY>
       </Description>
       <Metadata>
         <int>0</int>
+        <string>wyvern_lair</string>
+        <string>rgba,item</string>
         <string></string>
         <string></string>
-        <string>null</string>
-        <string>null</string>
       </Metadata>
     </Tile>
     <Tile>
@@ -11531,8 +11531,8 @@
       <Description>
         <version>4</version>
         <id>394</id>
-        <width>41</width>
-        <height>34</height>
+        <width>42</width>
+        <height>35</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
         <footX>20</footX>
@@ -11540,7 +11540,7 @@
       </Description>
       <Metadata>
         <int>0</int>
-        <string>wyvern_lair</string>
+        <string>mosquito_lair</string>
         <string>rgba,item</string>
         <string></string>
         <string></string>
