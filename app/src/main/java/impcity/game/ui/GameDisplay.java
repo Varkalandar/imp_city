@@ -24,12 +24,13 @@ import static org.lwjgl.opengl.GL11.glBlendFunc;
  */
 public class GameDisplay
 {
-    private final static int selectedButtonColor = 0xFFFFDD77;
-    private final static int defaultButtonColor = 0xFFEEEEEE;
+    private final static int defaultButtonColor = 0xB0FFFFFF;
+    private final static int selectedButtonColor = 0xD0FFDD99;
+    // private final static int selectedButtonColor = 0xD099DDFF;
+    private final static int disabledButtonColor = 0xB0555555;
     
     private final Texture buttonBar;
     private final ImpCity game;
-    private final PixFont fontHigh; // high contrast
     private final PixFont fontLow; // low contrast
 
     private final Texture buttonText;
@@ -62,13 +63,12 @@ public class GameDisplay
     {
         this.game = game;
         this.display = display;
-        // this.font = display.font;
-        this.fontHigh = new PixFont("/font/humanistic_128b");
         this.fontLow = new PixFont("/font/humanistic_128bbl");
         
         TextureCache textureCache = display.textureCache;
         
-        buttonBar = textureCache.loadTexture("/ui/main_bar_bg.jpg", false);
+        buttonBar = textureCache.loadTexture("/ui/menu_bar.png", true);
+        // buttonBar = textureCache.loadTexture("/ui/fire_menu_bar.png", true);
         buttonDig = textureCache.loadTexture("/ui/button_dig.png", true);
         buttonLair = textureCache.loadTexture("/ui/button_lair.png", true);
         buttonFood = textureCache.loadTexture("/ui/button_food.png", true);
@@ -81,14 +81,8 @@ public class GameDisplay
         buttonImp = textureCache.loadTexture("/ui/button_imp.png", true);
         
         buttonText = textureCache.loadTexture("/ui/button_text_short.png", true);
-      
-    }    
-    
-    public PixFont getFontHigh()
-    {
-        return fontHigh;
     }
-    
+
     public PixFont getFontLow()
     {
         return fontLow;
@@ -116,30 +110,31 @@ public class GameDisplay
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         int left = calcMainUiBarLeft();
+        int top = -10;
         
-        IsoDisplay.drawTile(buttonBar, left, 0);
+        IsoDisplay.drawTile(buttonBar, left, 0, 0xFF54463D);
+        // IsoDisplay.drawTile(buttonBar, left, 0, 0xFFFFFFFF);
+
+        IsoDisplay.drawTile(buttonText, left + 14, top + 12, tabSelected == -1 ? selectedButtonColor : defaultButtonColor);
+        IsoDisplay.drawTile(buttonText, left + 14, top + 35, tabSelected == TAB_SPELLS ? selectedButtonColor : defaultButtonColor);
+        IsoDisplay.drawTile(buttonText, left + 14, top + 58, tabSelected == TAB_ROOMS_II ? selectedButtonColor : defaultButtonColor);
+        IsoDisplay.drawTile(buttonText, left + 14, top + 81, tabSelected == TAB_ROOMS_I ? selectedButtonColor : defaultButtonColor);
         
-        IsoDisplay.drawTile(buttonText, left + 14, 12, tabSelected == -1 ? selectedButtonColor : defaultButtonColor);
-        IsoDisplay.drawTile(buttonText, left + 14, 35, tabSelected == TAB_SPELLS ? selectedButtonColor : defaultButtonColor);
-        IsoDisplay.drawTile(buttonText, left + 14, 58, tabSelected == TAB_ROOMS_II ? selectedButtonColor : defaultButtonColor);
-        IsoDisplay.drawTile(buttonText, left + 14, 81, tabSelected == TAB_ROOMS_I ? selectedButtonColor : defaultButtonColor);
-        
-        fontLow.drawStringScaled("Rooms I", tabSelected == TAB_ROOMS_I ? 0xFFFFFF : 0, left+62, 82, 0.16);
-        fontLow.drawStringScaled("Rooms II", tabSelected == TAB_ROOMS_II ? 0xFFFFFF : 0, left+60, 59, 0.16);
-        fontLow.drawStringScaled("Spells", tabSelected == TAB_SPELLS ? 0xFFFFFF : 0, left+64, 36, 0.16);
-        fontLow.drawStringScaled("?????", 0x000000, left+70, 13, 0.16);
-        
-        
+        drawShadowText("Rooms I", tabSelected == TAB_ROOMS_I ? 0xFFFFDD99 : 0xFFDDDDDD, left+62, top + 82, 0.16);
+        drawShadowText("Rooms II", tabSelected == TAB_ROOMS_II ? 0xFFFFDD99 : 0xFFDDDDDD, left+60, top + 59, 0.16);
+        drawShadowText("Spells", tabSelected == TAB_SPELLS ? 0xFFFFDD99 : 0xFFDDDDDD, left+64, top + 36, 0.16);
+        drawShadowText("Furniture", 0xFFDDDDDD, left+56, top + 13, 0.16);
+
         switch (tabSelected) 
         {
             case TAB_ROOMS_I:
-                displayRooms1Tab(left);
+                displayRooms1Tab(left-10, top);
                 break;
             case TAB_ROOMS_II:
-                displayRooms2Tab(left);
+                displayRooms2Tab(left-10, top);
                 break;
             case TAB_SPELLS:
-                displaySpellsTab(left);
+                displaySpellsTab(left-10, top);
                 break;
             default:
                 break;
@@ -150,13 +145,16 @@ public class GameDisplay
         // font.drawStringScaled("Mouse: " + display.cursorI + "," + display.cursorJ, 0xFFFFFF, 20, 600, 0.5);
 
         
-        fontLow.drawStringScaled("" + Clock.days() + " days " + Clock.hour() + " hours", 0xFFF0E0, 20, 8, 0.18);
-        
+        int textLeft = left + 854;
+        int textColor = 0xFFFFDD99;
         Mob keeper = game.world.mobs.get(game.getPlayerKey());
 
-        fontLow.drawStringScaled("Rookie", 0xFFF0E0, 20, 80, 0.28);
-        fontLow.drawStringScaled(calcReputationDisplay(keeper), 0xFFF0E0, 20, 60, 0.18);
-        fontLow.drawStringScaled("" + keeper.stats.getCurrent(KeeperStats.GOLD) + " GP", 0xFFF0E0, 20, 27, 0.28);
+        drawShadowText("Rookie", textColor, textLeft, 64, 0.25);
+        drawShadowText(calcReputationDisplay(keeper), textColor, textLeft, 34, 0.25);
+        drawShadowText("" + keeper.stats.getCurrent(KeeperStats.GOLD) + " Gold", textColor, textLeft, 4, 0.25);
+        
+        drawShadowText("" + Clock.days() + " days " + Clock.hour() + " hours", 0xFFDDDDDD, 
+                display.displayWidth - 140, display.displayHeight - 30, 0.22);
         
         if(topDialog != null)
         {
@@ -170,7 +168,10 @@ public class GameDisplay
         {
             yoff = 8 + (((int)(Clock.time() - message.time)) >> 4);
             double factor = 0.5 + yoff/120.0;
-            fontHigh.drawStringCentered(message.message, message.color, message.x, message.y + yoff, 0, factor);
+
+            int width = (int)(fontLow.getStringWidth(message.message) * factor + 0.5);
+            drawShadowText(message.message, message.color,
+                    message.x - width/2, message.y + yoff, factor);
 
             if(yoff > 100)
             {
@@ -209,6 +210,30 @@ public class GameDisplay
             IsoDisplay.drawTile(display.textureCache.textures[hook.icon], display.displayWidth - 40, hook.yoff);
             
         }
+    }
+
+    public void drawShadowText(String text, int color, int x, int y, double f)
+    {
+        int shadow = 0x33000000;
+        fontLow.drawStringScaled(text, shadow, x+1, y, f);
+        fontLow.drawStringScaled(text, shadow, x, y+1, f);
+        fontLow.drawStringScaled(text, shadow, x-1, y, f);
+        fontLow.drawStringScaled(text, shadow, x, y-1, f);
+
+        fontLow.drawStringScaled(text, color, x, y, f);
+    }
+
+    public void drawBoxedShadowText(String text,
+                                    int color, int left, int top, int width,
+                                    int linespace, double factor)
+    {
+        int shadow = 0x33000000;
+        fontLow.drawText(text, shadow, left+1, top, width, linespace, factor);
+        fontLow.drawText(text, shadow, left, top+1, width, linespace, factor);
+        fontLow.drawText(text, shadow, left-1, top, width, linespace, factor);
+        fontLow.drawText(text, shadow, left, top-1, width, linespace, factor);
+
+        fontLow.drawText(text, color, left, top, width, linespace, factor);
     }
 
     public int calcMainUiBarLeft()
@@ -262,23 +287,25 @@ public class GameDisplay
         }
         else
         {
-            color = 0xFF666666;
+            color = disabledButtonColor;
         }
 
         return color;
     }
 
-    private void displayRooms1Tab(int left)
+    private void displayRooms1Tab(int left, int top)
     {
-        IsoDisplay.drawTile(buttonDig, left + 196, 16, calculateButtonColor(Tools.MARK_DIG));
-        IsoDisplay.drawTile(buttonLair, left + 280, 16, calculateButtonColor(Tools.MAKE_LAIR));
-        IsoDisplay.drawTile(buttonFood, left + 364, 16, calculateButtonColor(Tools.MAKE_FARM));
-        IsoDisplay.drawTile(buttonBook, left + 448, 16, calculateButtonColor(Tools.MAKE_LIBRARY));
-        IsoDisplay.drawTile(buttonWork, left + 532, 16, calculateButtonColor(Tools.MAKE_WORKSHOP));
-        IsoDisplay.drawTile(buttonForge, left + 616, 16, calculateButtonColor(Tools.MAKE_FORGE));
-        IsoDisplay.drawTile(buttonHeal, left + 700, 16, calculateButtonColor(Tools.MAKE_HOSPITAL));
+        IsoDisplay.drawTile(buttonDig, left + 196, top + 16, calculateButtonColor(Tools.MARK_DIG));
+        IsoDisplay.drawTile(buttonLair, left + 280, top + 16, calculateButtonColor(Tools.MAKE_LAIR));
+        IsoDisplay.drawTile(buttonFood, left + 364, top + 16, calculateButtonColor(Tools.MAKE_FARM));
+        IsoDisplay.drawTile(buttonBook, left + 448, top + 16, calculateButtonColor(Tools.MAKE_LIBRARY));
+        IsoDisplay.drawTile(buttonWork, left + 532, top + 16, calculateButtonColor(Tools.MAKE_WORKSHOP));
+        IsoDisplay.drawTile(buttonForge, left + 616, top + 16, calculateButtonColor(Tools.MAKE_FORGE));
+        IsoDisplay.drawTile(buttonHeal, left + 700, top + 16, calculateButtonColor(Tools.MAKE_HOSPITAL));
 
-        IsoDisplay.drawTile(buttonDemolish, left + 824, 16, calculateButtonColor(Tools.DEMOLISH));
+        IsoDisplay.drawTile(buttonDemolish, left + 784, top + 16, calculateButtonColor(Tools.DEMOLISH));
+        
+        int tipY = 108;
         
         // Hajo: testing tooltips
         if(Mouse.getY() < 100)
@@ -287,46 +314,48 @@ public class GameDisplay
             
             if(x > left + 196 && x < left + 196 + 80)
             {
-                fontLow.drawStringScaled("Mark a block for digging", 0xFFFFFFFF, left + 196 - 120, 124, 0.3);
+                drawShadowText("Mark a block for digging", 0xFFFFFFFF, left + 196 - 120, tipY, 0.3);
             }
             else if(x > left + 280 && x < left + 280 + 80)
             {
-                fontLow.drawStringScaled("Build lair space for your creatures", 0xFFFFFFFF, left + 280 - 170, 124, 0.3);
+                drawShadowText("Build lair space for your creatures", 0xFFFFFFFF, left + 280 - 170, tipY, 0.3);
             }
             else if(x > left + 364 && x < left + 364 + 80)
             {
-                fontLow.drawStringScaled("Convert floor to farmland", 0xFFFFFFFF, left + 364 - 130, 124, 0.3);
+                drawShadowText("Convert floor to farmland", 0xFFFFFFFF, left + 364 - 130, tipY, 0.3);
             }
             else if(x > left + 448 && x < left + 448 + 80)
             {
-                fontLow.drawStringScaled("Set up a library", 0xFFFFFFFF, left + 448 - 70, 124, 0.3);
+                drawShadowText("Set up a library", 0xFFFFFFFF, left + 448 - 70, tipY, 0.3);
             }
             else if(x > left + 532 && x < left + 532 + 80)
             {
-                fontLow.drawStringScaled("Make a workshop", 0xFFFFFFFF, left + 532 - 90, 124, 0.3);
+                drawShadowText("Make a workshop", 0xFFFFFFFF, left + 532 - 90, tipY, 0.3);
             }
             else if(x > left + 616 && x < left + 616 + 80)
             {
-                fontLow.drawStringScaled("Create a forge", 0xFFFFFFFF, left + 616 - 70, 124, 0.3);
+                drawShadowText("Create a forge", 0xFFFFFFFF, left + 616 - 70, tipY, 0.3);
             }
             else if(x > left + 700 && x < left + 700 + 80)
             {
-                fontLow.drawStringScaled("Place a healing well", 0xFFFFFFFF, left + 700 - 110, 124, 0.3);
+                drawShadowText("Place a healing well", 0xFFFFFFFF, left + 700 - 110, tipY, 0.3);
             }
-            else if(x > left + 824 && x < left + 824 + 80)
+            else if(x > left + 784 && x < left + 784 + 80)
             {
-                fontLow.drawStringScaled("Revert a room to empty space", 0xFFFFFFFF, left + 824 - 210, 124, 0.3);
+                drawShadowText("Revert a room to empty space", 0xFFFFFFFF, left + 824 - 210, tipY, 0.3);
             }
         }
     }
     
-    private void displayRooms2Tab(int left)
+    private void displayRooms2Tab(int left, int top)
     {
-        IsoDisplay.drawTile(buttonDig, left + 196, 16, calculateButtonColor(Tools.MARK_DIG));
-        IsoDisplay.drawTile(buttonTreasury, left + 532, 16, calculateButtonColor(Tools.MAKE_TREASURY));
+        IsoDisplay.drawTile(buttonDig, left + 196, top + 16, calculateButtonColor(Tools.MARK_DIG));
+        IsoDisplay.drawTile(buttonTreasury, left + 532, top + 16, calculateButtonColor(Tools.MAKE_TREASURY));
 
-        IsoDisplay.drawTile(buttonDemolish, left + 824, 16, calculateButtonColor(Tools.DEMOLISH));
+        IsoDisplay.drawTile(buttonDemolish, left + 792, top + 16, calculateButtonColor(Tools.DEMOLISH));
         
+        int tipY = 108;
+
         // Hajo: testing tooltips
         if(Mouse.getY() < 100)
         {
@@ -334,22 +363,24 @@ public class GameDisplay
             
             if(x > left + 196 && x < left + 196 + 80)
             {
-                fontLow.drawStringScaled("Mark a block for digging", 0xFFFFFFFF, left + 196 - 120, 124, 0.3);
+                drawShadowText("Mark a block for digging", 0xFFFFFFFF, left + 196 - 120, tipY, 0.3);
             }
             else if(x > left + 532 && x < left + 532 + 80)
             {
-                fontLow.drawStringScaled("Make a storage room", 0xFFFFFFFF, left + 532 - 90, 124, 0.3);
+                drawShadowText("Make a storage room", 0xFFFFFFFF, left + 532 - 90, tipY, 0.3);
             }
-            else if(x > left + 824 && x < left + 824 + 80)
+            else if(x > left + 784 && x < left + 784 + 80)
             {
-                fontLow.drawStringScaled("Revert a room to empty space", 0xFFFFFFFF, left + 824 - 210, 124, 0.3);
+                drawShadowText("Revert a room to empty space", 0xFFFFFFFF, left + 824 - 210, tipY, 0.3);
             }
         }
     }
 
-    private void displaySpellsTab(int left)
+    private void displaySpellsTab(int left, int top)
     {
-        IsoDisplay.drawTile(buttonImp, left + 196, 16, calculateButtonColor(Tools.SPELL_IMP));
+        IsoDisplay.drawTile(buttonImp, left + 196, top + 16, calculateButtonColor(Tools.SPELL_IMP));
+
+        int tipY = 108;
 
         // Hajo: testing tooltips
         if(Mouse.getY() < 100)
@@ -358,7 +389,7 @@ public class GameDisplay
             
             if(x > left + 196 && x < left + 196 + 80)
             {
-                fontLow.drawStringScaled("Spawn a new imp", 0xFFFFFFFF, left + 196 - 120, 124, 0.3);
+                drawShadowText("Spawn a new imp", 0xFFFFFFFF, left + 196 - 120, tipY, 0.3);
             }
         }
     }

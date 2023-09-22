@@ -161,7 +161,7 @@ public class CreatureOverview extends UiDialog
                     {
                         if(party.members.contains(entry.key))
                         {
-                            party.members.remove(new Integer(entry.key));
+                            party.members.remove(entry.key);
                         }
                         else
                         {

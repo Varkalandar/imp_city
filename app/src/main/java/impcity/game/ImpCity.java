@@ -1065,7 +1065,7 @@ public class ImpCity implements PostRenderHook, GameInterface
                         "[ Acknowledged ]", null);
 
         MessageHook hookedMessage =
-                new MessageHook(Features.MESSAGE_TROPHY_QUEST,
+                new MessageHook(Features.MESSAGE_RESEARCH_RESULT,
                         message);
 
         gameDisplay.addHookedMessage(hookedMessage);

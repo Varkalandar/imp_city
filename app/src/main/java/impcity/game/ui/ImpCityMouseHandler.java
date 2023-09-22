@@ -351,13 +351,13 @@ public class ImpCityMouseHandler implements MouseHandler
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
-        else if(mouseX >= left + 528 && mouseX <= left + 528 + 80 && (research & KeeperStats.RESEARCH_WORKSHOPS) != 0)
+        else if(mouseX >= left + 532 && mouseX <= left + 532 + 80 && (research & KeeperStats.RESEARCH_WORKSHOPS) != 0)
         {
             Tools.selected = Tools.MAKE_WORKSHOP;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
-        else if(mouseX >= left + 608 && mouseX <= left + 616 + 80 && (research & KeeperStats.RESEARCH_FORGES) != 0)
+        else if(mouseX >= left + 616 && mouseX <= left + 616 + 80 && (research & KeeperStats.RESEARCH_FORGES) != 0)
         {
             Tools.selected = Tools.MAKE_FORGE;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
@@ -369,7 +369,7 @@ public class ImpCityMouseHandler implements MouseHandler
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
-        else if(mouseX >= left + 824 && mouseX <= left + 824 + 80)
+        else if(mouseX >= left + 784 && mouseX <= left + 784 + 80)
         {
             Tools.selected = Tools.DEMOLISH;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
@@ -391,7 +391,7 @@ public class ImpCityMouseHandler implements MouseHandler
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
-        else if(mouseX >= left + 824 && mouseX <= left + 824 + 80)
+        else if(mouseX >= left + 792 && mouseX <= left + 792 + 80)
         {
             Tools.selected = Tools.DEMOLISH;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
@@ -535,25 +535,26 @@ public class ImpCityMouseHandler implements MouseHandler
     {
         int mouseX = Mouse.getX();
         int mouseY = Mouse.getY();
-        int left = gameDisplay.calcMainUiBarLeft();
-
+        int left = gameDisplay.calcMainUiBarLeft() + 10;
+        int top = -10;
+        
         // Hajo: this was a click into the menu bar
 
         // Hajo: click on one of the left buttons?
 
         if(mouseX >= left + 14 && mouseX <= left + 14 + 140)
         {
-            if(mouseY >= 85 && mouseY <= 85 + 30)
+            if(mouseY >= 85+top && mouseY <= 85 + 30+top)
             {
                 gameDisplay.selectTab(GameDisplay.TAB_ROOMS_I);
                 soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
             } 
-            else if(mouseY >= 62 && mouseY <= 62 + 30)
+            else if(mouseY >= 62+top && mouseY <= 62 + 30+top)
             {
                 gameDisplay.selectTab(GameDisplay.TAB_ROOMS_II);
                 soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
             }
-            else if(mouseY >= 39 && mouseY <= 39 + 30)
+            else if(mouseY >= 39+top && mouseY <= 39 + 30+top)
             {
                 gameDisplay.selectTab(GameDisplay.TAB_SPELLS);
                 soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);

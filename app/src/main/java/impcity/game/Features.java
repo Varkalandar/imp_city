@@ -80,10 +80,10 @@ public class Features
     public static final int I_FRAME_TOP = 29;
     
     public static final int MESSAGE_RESEARCH_QUEST = 959;
-    public static final int MESSAGE_RESEARCH_RESULT = 960;
+    public static final int MESSAGE_RESEARCH_RESULT = 964;
     public static final int MESSAGE_TROPHY_QUEST = 961;
     public static final int MESSAGE_TROPHY_RESULT = 962;
-    public static final int MESSAGE_SUCCESS = 964;
+    public static final int MESSAGE_SUCCESS = 960;
     public static final int MESSAGE_NORMAL = 965;
     public static final int MESSAGE_IMPORTANT = 966;
     

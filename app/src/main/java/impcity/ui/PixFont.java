@@ -166,7 +166,6 @@ public class PixFont
         int width = (int)(getStringWidth(text) * factor + 0.5);
         
         drawStringScaled(text, color, x + (w - width)/2, y, factor);
-        
     }
     
     public void drawText(final String text,

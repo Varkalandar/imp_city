@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import impcity.game.ImpCity;
 import impcity.game.Texture;
 import impcity.game.TextureCache;
 import impcity.ogl.IsoDisplay;
@@ -30,6 +29,7 @@ public abstract class UiDialog
         if(messagePaperBg == null)
         {
             try {
+                // messagePaperBg = textureCache.loadTexture("/ui/fire_paper.png", true);
                 messagePaperBg = textureCache.loadTexture("/ui/paper_bg.png", true);
             } catch (IOException e) {
                 logger.log(Level.SEVERE, "Could not load: /ui/paper_bg.png");
@@ -39,8 +39,8 @@ public abstract class UiDialog
     
     public void display(int x, int y)
     {
-        // IsoDisplay.drawTile(messagePaperBg, x, y, width, height, 0xFFFFFFFF);
-        IsoDisplay.drawTile(messagePaperBg, x, y, width, height, 0xFFDDDDDD);
+        // IsoDisplay.drawTile(messagePaperBg, x, y, width, height, 0xFFCCCCCC);
+        IsoDisplay.drawTile(messagePaperBg, x, y, width, height, 0xFF54463D);
     }
 
     public abstract void mouseEvent(int buttonPressed, int buttonReleased, int mouseX, int mouseY);

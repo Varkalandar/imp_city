@@ -1,9 +1,11 @@
 Changes since v0.18
 
-- Improved tomato plant graphics
+- Improved some vegetable plant graphics
 - Reduced jitter for moving bookworms
-- New table lair graphics for mosquitoes and wyverns.
+- New table lair graphics for mosquitoes and wyverns
 - Powersnails now rest on green leaves
+- Bookworms got an improved carpet, too
+- New main UI, matching the message paper design
 
 Changes since v0.17
 
