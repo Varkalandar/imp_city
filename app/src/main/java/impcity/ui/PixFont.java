@@ -282,7 +282,7 @@ public class PixFont
         float tyy = ty + (fry / th);
 
         // glColor3f(((color >> 16) & 0xFF)/255f, ((color >> 8) & 0xFF) /255f, (color & 0xFF)/255f);
-        glColor4f(((color >> 16) & 0xFF)/255f, ((color >> 8) & 0xFF) /255f, (color & 0xFF)/255f, 1.0f);
+        glColor4f(((color >> 16) & 0xFF)/255f, ((color >> 8) & 0xFF) /255f, (color & 0xFF)/255f, ((color >> 24) & 0xFF)/255f);
         
         glTexCoord2f(tx, tyy);
         glVertex2i(x, y);
@@ -332,7 +332,7 @@ public class PixFont
                     {
                         // found a colored pixel
                         letterWidths[letter] = x+1;
-                        // System.err.println("Width " + letter + " = " + letterWidths[letter]);
+                        // System.err.println("Width " + ((char)letter) + " = " + letterWidths[letter]);
                         ok = false;
                     }
                 }

@@ -63,7 +63,7 @@ public class GameDisplay
     {
         this.game = game;
         this.display = display;
-        this.fontLow = new PixFont("/font/humanistic_128bbl");
+        this.fontLow = new PixFont("/font/humanistic_128_2");
         
         TextureCache textureCache = display.textureCache;
         
@@ -112,7 +112,8 @@ public class GameDisplay
         int left = calcMainUiBarLeft();
         int top = -10;
         
-        IsoDisplay.drawTile(buttonBar, left, 0, 0xFF54463D);
+        // IsoDisplay.drawTile(buttonBar, left, 0, 0xFF54463D);
+        IsoDisplay.drawTile(buttonBar, left, 0, 0xFF776655);
         // IsoDisplay.drawTile(buttonBar, left, 0, 0xFFFFFFFF);
 
         IsoDisplay.drawTile(buttonText, left + 14, top + 12, tabSelected == -1 ? selectedButtonColor : defaultButtonColor);
