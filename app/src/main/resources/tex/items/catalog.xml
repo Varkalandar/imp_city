@@ -31918,17 +31918,17 @@
       <Description>
         <version>4</version>
         <id>1467</id>
-        <width>1</width>
-        <height>1</height>
+        <width>51</width>
+        <height>58</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>25</footX>
+        <footY>44</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>lab table</string>
+        <string>rgba,item</string>
         <string></string>
         <string></string>
       </Metadata>
