@@ -34,7 +34,8 @@ public class Features
     public static final int BUBBLE_SLEEPING = 998;
     public static final int BUBBLE_GO_SLEEPING = 999;
     public static final int BUBBLE_GO_WATER = 1000;
-    
+
+
     public static final int I_MUSHROOM = 68;
     public static final int I_MOSSY_PATCH = 92;
     
@@ -54,8 +55,9 @@ public class Features
     
     public static final int I_COPPER_ORE = 1115;
     public static final int I_TIN_ORE = 1116;
-    
-    
+
+
+    public static final int I_LAB_TABLE = 1467;
     public static final int I_ANVIL = 1468;
     public static final int I_BOOKSHELF_HALF_RIGHT = 1469;
     public static final int I_BOOKSHELF_RIGHT = 1470;

@@ -11,7 +11,7 @@ public enum Tools
     MAKE_FARM,
     MAKE_LIBRARY,
     MAKE_FORGE,
-    MAKE_WORKSHOP,
+    MAKE_LAB,
     MAKE_HOSPITAL,
     MAKE_TREASURY,
     DEMOLISH,

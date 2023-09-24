@@ -26,7 +26,7 @@ public class KeeperStats
     public static final int RESEARCH = 6;
 
     public static final int RESEARCH_FORGES = 1;
-    public static final int RESEARCH_WORKSHOPS = 2;
+    public static final int RESEARCH_LABS = 2;
     public static final int RESEARCH_HEALING = 4;
 
     /**

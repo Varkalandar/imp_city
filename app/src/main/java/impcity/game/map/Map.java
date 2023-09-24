@@ -43,7 +43,15 @@ public class Map implements Serializable
     private static final int LAYER_GROUNDS = 0;
     private static final int LAYER_ITEMS = 1;
     private static final int LAYER_MOBS = 2;
-    
+
+    // The item layer of the map bears item numbers in the lower 24 bits
+    // and special flags in the upper 8 bits.
+
+    public static final int MASK_ITEM = 0xFFFFFF;
+    public static final int MASK_FLAGS = 0xFF000000;
+    public static final int FLAG_MOVEMENT_BLOCKED = 0x80000000;
+    public static final int FLAG_PLACEMENT_BLOCKED = 0x40000000;
+
     private LayeredMap map;
     // public static final int SUB = 14;
     public static final int SUB = 12;
@@ -161,19 +169,25 @@ public class Map implements Serializable
 
     public int getItem(int x, int y)
     {
-        return map.get(LAYER_ITEMS, x, y) & 0xFFFFFF;
+        return map.get(LAYER_ITEMS, x, y) & MASK_ITEM;
     }
-    
+
+    /**
+     * Setting an itgem clear all special flags (e.g. movement) for the spot
+     * @param x item x locations
+     * @param y item y location
+     * @param item item number (key id)
+     */
     public void setItem(int x, int y, int item)
     {
         int v = map.get(LAYER_ITEMS, x, y);
-        v = (v & 0xFF000000) | item;
+        v = (v & MASK_FLAGS) | item;
         map.set(LAYER_ITEMS, x, y, v);
     }
 
     public boolean isMovementBlocked(int x, int y)
     {
-        return (map.get(LAYER_ITEMS, x, y) & 0x80000000) != 0;
+        return (map.get(LAYER_ITEMS, x, y) & FLAG_MOVEMENT_BLOCKED) != 0;
     }
     
     public boolean isMovementBlockedRadius(int x, int y, int r)
@@ -198,11 +212,11 @@ public class Map implements Serializable
         int v = map.get(LAYER_ITEMS, x, y);
         if(yesno)
         {
-            v = (v & ~0x80000000) | 0x80000000;
+            v = (v & ~FLAG_MOVEMENT_BLOCKED) | FLAG_MOVEMENT_BLOCKED;
         }
         else
         {
-            v = (v & ~0x80000000);
+            v = (v & ~FLAG_MOVEMENT_BLOCKED);
         }
         map.set(LAYER_ITEMS, x, y, v);
     }
@@ -227,7 +241,7 @@ public class Map implements Serializable
 
     public boolean isPlacementBlocked(int x, int y)
     {
-        return (map.get(LAYER_ITEMS, x, y) & 0x40000000) != 0;
+        return (map.get(LAYER_ITEMS, x, y) & FLAG_PLACEMENT_BLOCKED) != 0;
     }
     
     public boolean isPlacementBlockedRadius(int x, int y, int r)
@@ -252,11 +266,11 @@ public class Map implements Serializable
         int v = map.get(LAYER_ITEMS, x, y);
         if(yesno)
         {
-            v = (v & ~0x40000000) | 0x40000000;
+            v = (v & ~FLAG_PLACEMENT_BLOCKED) | FLAG_PLACEMENT_BLOCKED;
         }
         else
         {
-            v = (v & ~0x40000000);
+            v = (v & ~FLAG_PLACEMENT_BLOCKED);
         }
         map.set(LAYER_ITEMS, x, y, v);
     }

@@ -41,6 +41,7 @@ public class GameDisplay
     private final Texture buttonTreasury;
     private final Texture buttonForge;
     private final Texture buttonWork;
+    private final Texture buttonLab;
     private final Texture buttonHeal;
     private final Texture buttonDemolish;
     private final Texture buttonImp;
@@ -76,6 +77,7 @@ public class GameDisplay
         buttonTreasury = textureCache.loadTexture("/ui/button_treasury.png", true);
         buttonForge = textureCache.loadTexture("/ui/button_forge.png", true);
         buttonWork = textureCache.loadTexture("/ui/button_work.png", true);
+        buttonLab = textureCache.loadTexture("/ui/button_alchemy.png", true);
         buttonHeal = textureCache.loadTexture("/ui/button_healing.png", true);
         buttonDemolish = textureCache.loadTexture("/ui/button_demolish.png", true);
         buttonImp = textureCache.loadTexture("/ui/button_imp.png", true);
@@ -271,8 +273,8 @@ public class GameDisplay
             case MAKE_FORGE:
                 enabled = (research & KeeperStats.RESEARCH_FORGES) != 0;
                 break;
-            case MAKE_WORKSHOP:
-                enabled = (research & KeeperStats.RESEARCH_WORKSHOPS) != 0;
+            case MAKE_LAB:
+                enabled = (research & KeeperStats.RESEARCH_LABS) != 0;
                 break;
             case MAKE_HOSPITAL:
                 enabled = (research & KeeperStats.RESEARCH_HEALING) != 0;
@@ -300,7 +302,7 @@ public class GameDisplay
         IsoDisplay.drawTile(buttonLair, left + 280, top + 16, calculateButtonColor(Tools.MAKE_LAIR));
         IsoDisplay.drawTile(buttonFood, left + 364, top + 16, calculateButtonColor(Tools.MAKE_FARM));
         IsoDisplay.drawTile(buttonBook, left + 448, top + 16, calculateButtonColor(Tools.MAKE_LIBRARY));
-        IsoDisplay.drawTile(buttonWork, left + 532, top + 16, calculateButtonColor(Tools.MAKE_WORKSHOP));
+        IsoDisplay.drawTile(buttonLab, left + 532, top + 16, calculateButtonColor(Tools.MAKE_LAB));
         IsoDisplay.drawTile(buttonForge, left + 616, top + 16, calculateButtonColor(Tools.MAKE_FORGE));
         IsoDisplay.drawTile(buttonHeal, left + 700, top + 16, calculateButtonColor(Tools.MAKE_HOSPITAL));
 
@@ -331,7 +333,7 @@ public class GameDisplay
             }
             else if(x > left + 532 && x < left + 532 + 80)
             {
-                drawShadowText("Make a workshop", 0xFFFFFFFF, left + 532 - 90, tipY, 0.3);
+                drawShadowText("Build a laboratorium", 0xFFFFFFFF, left + 532 - 90, tipY, 0.3);
             }
             else if(x > left + 616 && x < left + 616 + 80)
             {
@@ -498,5 +500,4 @@ public class GameDisplay
             hookedMessage.activate(this);
         }
     }
-
 }

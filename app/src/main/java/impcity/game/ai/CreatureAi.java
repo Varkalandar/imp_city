@@ -797,10 +797,10 @@ public class CreatureAi extends AiBase
                 keeper.stats.setCurrent(KeeperStats.RESEARCH, researchBits);
                 keeper.stats.setMax(KeeperStats.RESEARCH, limit * 2);
             }
-            else if((researchBits & KeeperStats.RESEARCH_WORKSHOPS) == 0)
+            else if((researchBits & KeeperStats.RESEARCH_LABS) == 0)
             {
-                researchBits |= KeeperStats.RESEARCH_WORKSHOPS;
-                game.announceResearchResult(KeeperStats.RESEARCH_WORKSHOPS);
+                researchBits |= KeeperStats.RESEARCH_LABS;
+                game.announceResearchResult(KeeperStats.RESEARCH_LABS);
                 keeper.stats.setMin(KeeperStats.RESEARCH, 0);
                 keeper.stats.setCurrent(KeeperStats.RESEARCH, researchBits);
                 keeper.stats.setMax(KeeperStats.RESEARCH, limit * 2);

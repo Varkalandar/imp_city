@@ -150,7 +150,7 @@ public class Party
         {
             line = reader.readLine();
             int key = Integer.parseInt(line.substring(5));
-            members.add(new Integer(key));
+            members.add(key);
         }
 
         line = reader.readLine();

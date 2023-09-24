@@ -207,7 +207,7 @@ public class ImpCityMouseHandler implements MouseHandler
         if(n >= Features.GROUND_POLY_TILES && n < Features.GROUND_POLY_TILES + 3)
         {
             map.setFloor(rasterI, rasterJ, Features.GROUND_WORKSHOP + (int)(Math.random() * 3));
-            game.addWorkshopSquare(map, rasterI, rasterJ);
+            game.addLabSquare(map, rasterI, rasterJ);
             game.soundPlayer.play(Sounds.MAKE_WORKSHOP, 0.2f, 1.0f);
         }
     }
@@ -351,9 +351,9 @@ public class ImpCityMouseHandler implements MouseHandler
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
-        else if(mouseX >= left + 532 && mouseX <= left + 532 + 80 && (research & KeeperStats.RESEARCH_WORKSHOPS) != 0)
+        else if(mouseX >= left + 532 && mouseX <= left + 532 + 80 && (research & KeeperStats.RESEARCH_LABS) != 0)
         {
-            Tools.selected = Tools.MAKE_WORKSHOP;
+            Tools.selected = Tools.MAKE_LAB;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
@@ -611,7 +611,7 @@ public class ImpCityMouseHandler implements MouseHandler
                 case MAKE_LIBRARY:
                     makeLibrary(map, rasterI, rasterJ);
                     break;
-                case MAKE_WORKSHOP:
+                case MAKE_LAB:
                     makeWorkshop(map, rasterI, rasterJ);
                     break;
                 case MAKE_FORGE:

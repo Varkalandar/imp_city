@@ -29,13 +29,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import impcity.game.Clock;
-import impcity.game.GameInterface;
-import impcity.game.Texture;
-import impcity.game.TextureCache;
+
 import impcity.ogl.GlTextureCache;
 import impcity.game.mobs.Mob;
-import impcity.game.World;
 import impcity.game.ai.Ai;
 import impcity.game.map.LocationCallback;
 import impcity.game.map.Map;
@@ -84,7 +80,7 @@ public class ImpCity implements PostRenderHook, GameInterface
     private final List <Point> treasuries = Collections.synchronizedList(new ArrayList<Point>());
     private final List <Point> libraries = Collections.synchronizedList(new ArrayList<Point>());
     private final List <Point> forges = Collections.synchronizedList(new ArrayList<Point>());
-    private final List <Point> workshops = Collections.synchronizedList(new ArrayList<Point>());
+    private final List <Point> laboratoriums = Collections.synchronizedList(new ArrayList<Point>());
     private final List <Point> hospitals = Collections.synchronizedList(new ArrayList<Point>());
     private final List <Point> claimed = Collections.synchronizedList(new ArrayList<Point>());
     
@@ -789,14 +785,23 @@ public class ImpCity implements PostRenderHook, GameInterface
         refreshPillars(rasterI, rasterJ);
     }
     
-    public void addWorkshopSquare(final Map map, int rasterI, int rasterJ) 
+    public void addLabSquare(final Map map, int rasterI, int rasterJ)
     {
         Point p = new Point(rasterI, rasterJ);
-        if(!workshops.contains(p))
+        if(!laboratoriums.contains(p))
         {
-            workshops.add(p);
-        }                
+            laboratoriums.add(p);
+        }
+
+        furnishWorkshop(map, p);
         refreshPillars(rasterI, rasterJ);
+    }
+
+    private void furnishWorkshop(Map map, Point p)
+    {
+        int x = p.x + Map.SUB/2;
+        int y = p.y + Map.SUB/2;
+        map.setItem(x, y, Features.I_LAB_TABLE);
     }
 
     public void addForgeSquare(final Map map, int rasterI, int rasterJ) 
@@ -957,9 +962,9 @@ public class ImpCity implements PostRenderHook, GameInterface
         return forges;
     }
 
-    public List<Point> getWorkshops()
+    public List<Point> getLaboratoriums()
     {
-        return workshops;
+        return laboratoriums;
     }
 
     public List<Point> getHospitals()
@@ -1047,7 +1052,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         {
             text = "Your researchers found out how to build forges.\nRoom unlocked: Forge";
         }
-        else if(breakthrough == KeeperStats.RESEARCH_WORKSHOPS)
+        else if(breakthrough == KeeperStats.RESEARCH_LABS)
         {
             text = "Your researchers found out how to build workshops.\nRoom unlocked: Workshop";
         }
