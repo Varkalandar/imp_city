@@ -24,10 +24,13 @@ import static org.lwjgl.opengl.GL11.glBlendFunc;
  */
 public class GameDisplay
 {
-    private final static int defaultButtonColor = 0xB0FFFFFF;
-    private final static int selectedButtonColor = 0xD0FFDD99;
+    private final static int defaultButtonColor = 0xFFFFFFFF;
+    private final static int selectedButtonColor = 0xFFFFDD99;
     // private final static int selectedButtonColor = 0xD099DDFF;
-    private final static int disabledButtonColor = 0xB0555555;
+    private final static int disabledButtonColor = 0xFF555555;
+    
+    // private final static int menuBarColor = 0xFF776655;
+    private final static int menuBarColor = 0xFFCCCCCC;
     
     private final Texture buttonBar;
     private final ImpCity game;
@@ -68,8 +71,8 @@ public class GameDisplay
         
         TextureCache textureCache = display.textureCache;
         
-        buttonBar = textureCache.loadTexture("/ui/menu_bar.png", true);
-        // buttonBar = textureCache.loadTexture("/ui/fire_menu_bar.png", true);
+        // buttonBar = textureCache.loadTexture("/ui/menu_bar.png", true);
+        buttonBar = textureCache.loadTexture("/ui/menu_bar_marble.png", true);
         buttonDig = textureCache.loadTexture("/ui/button_dig.png", true);
         buttonLair = textureCache.loadTexture("/ui/button_lair.png", true);
         buttonFood = textureCache.loadTexture("/ui/button_food.png", true);
@@ -112,22 +115,29 @@ public class GameDisplay
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         int left = calcMainUiBarLeft();
-        int top = -10;
+        int top = -8;
         
         // IsoDisplay.drawTile(buttonBar, left, 0, 0xFF54463D);
-        IsoDisplay.drawTile(buttonBar, left, 0, 0xFF776655);
+        IsoDisplay.drawTile(buttonBar, left, 0, menuBarColor);
         // IsoDisplay.drawTile(buttonBar, left, 0, 0xFFFFFFFF);
 
-        IsoDisplay.drawTile(buttonText, left + 14, top + 12, tabSelected == -1 ? selectedButtonColor : defaultButtonColor);
-        IsoDisplay.drawTile(buttonText, left + 14, top + 35, tabSelected == TAB_SPELLS ? selectedButtonColor : defaultButtonColor);
-        IsoDisplay.drawTile(buttonText, left + 14, top + 58, tabSelected == TAB_ROOMS_II ? selectedButtonColor : defaultButtonColor);
-        IsoDisplay.drawTile(buttonText, left + 14, top + 81, tabSelected == TAB_ROOMS_I ? selectedButtonColor : defaultButtonColor);
+        drawShortButton("Rooms I", left+14, top+81, 
+                tabSelected == TAB_ROOMS_I ? 0xFFFFDD99 : 0xFFDDDDDD,
+                tabSelected == TAB_ROOMS_I ? selectedButtonColor : defaultButtonColor);
         
-        drawShadowText("Rooms I", tabSelected == TAB_ROOMS_I ? 0xFFFFDD99 : 0xFFDDDDDD, left+62, top + 82, 0.16);
-        drawShadowText("Rooms II", tabSelected == TAB_ROOMS_II ? 0xFFFFDD99 : 0xFFDDDDDD, left+60, top + 59, 0.16);
-        drawShadowText("Spells", tabSelected == TAB_SPELLS ? 0xFFFFDD99 : 0xFFDDDDDD, left+64, top + 36, 0.16);
-        drawShadowText("Furniture", 0xFFDDDDDD, left+56, top + 13, 0.16);
-
+        drawShortButton("Rooms II", left+14, top+58, 
+                tabSelected == TAB_ROOMS_II ? 0xFFFFDD99 : 0xFFDDDDDD,
+                tabSelected == TAB_ROOMS_II ? selectedButtonColor : defaultButtonColor);
+        
+        drawShortButton("Spells", left+14, top+35, 
+                tabSelected == TAB_SPELLS ? 0xFFFFDD99 : 0xFFDDDDDD,
+                tabSelected == TAB_SPELLS ? selectedButtonColor : defaultButtonColor);
+        
+        drawShortButton("Furniture", left+14, top+12, 
+                tabSelected == -1 ? 0xFFFFDD99 : 0xFFDDDDDD,
+                tabSelected == -1 ? selectedButtonColor : defaultButtonColor);
+        
+        
         switch (tabSelected) 
         {
             case TAB_ROOMS_I:
@@ -214,7 +224,17 @@ public class GameDisplay
             
         }
     }
+    
+    
+    private void drawShortButton(String text, int x, int y, int textColor, int buttonColor)
+    {
+        IsoDisplay.drawTile(buttonText, x, y, buttonColor);
+        float f = 0.16f;
+        int width = (int)(fontLow.getStringWidth(text) * f + 0.5f);
+        drawShadowText(text, textColor, x + (buttonText.image.getWidth() - width)/2, y+2, f);        
+    }
 
+    
     public void drawShadowText(String text, int color, int x, int y, double f)
     {
         int shadow = 0x33000000;
