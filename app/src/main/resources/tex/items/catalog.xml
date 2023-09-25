@@ -31880,8 +31880,8 @@
       <Description>
         <version>4</version>
         <id>1465</id>
-        <width>1</width>
-        <height>1</height>
+        <width>104</width>
+        <height>75</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
         <footX>0</footX>
@@ -31918,12 +31918,12 @@
       <Description>
         <version>4</version>
         <id>1467</id>
-        <width>51</width>
-        <height>58</height>
+        <width>104</width>
+        <height>75</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>25</footX>
-        <footY>44</footY>
+        <footX>52</footX>
+        <footY>46</footY>
       </Description>
       <Metadata>
         <int>0</int>

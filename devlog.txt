@@ -5,7 +5,8 @@ Changes since v0.18
 - New table lair graphics for mosquitoes and wyverns
 - Powersnails now rest on green leaves
 - Bookworms got an improved carpet, too
-- New main UI, matching the message paper design
+- UI adjustments
+- Workshop was changed to laboratory and got new graphics
 
 Changes since v0.17
 
