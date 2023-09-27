@@ -21,7 +21,7 @@ public class Features
     public static final int GROUND_LAIR = 46;
     public static final int GROUND_LIBRARY = 49;
     public static final int GROUND_HOSPITAL = 52;
-    public static final int GROUND_WORKSHOP = 58;
+    public static final int GROUND_LABORATORY = 58;
     
     public static final int SOCKET = 7;
     public static final int SHADOW_BASE = 15;

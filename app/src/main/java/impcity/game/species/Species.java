@@ -20,6 +20,7 @@ public class Species
     public static final int WYVERNS_BASE = 73;
     public static final int BOOKWORMS_BASE = 81;
     public static final int MOSQUITOES_BASE = 89;
+    public static final int HAT_MAGE_BASE = 129;
 
     public static final HashMap<Integer, SpeciesDescription> speciesTable = new HashMap<Integer, SpeciesDescription>();
 
@@ -39,7 +40,8 @@ public class Species
                                             999,   // farms
                                             999,   // treasury
                                             999,   // libraries
-                                            999    // forges
+                                            999,
+                                               999// forges
                                         ),
                                        3,                 // intelligence
                                        1,                 // combat
@@ -62,7 +64,8 @@ public class Species
                                             4,   // farms
                                             0,   // treasury
                                             0,   // libraries
-                                            1    // forges
+                                            1,    // forges
+                                            0
                                         ),
                                        3,                 // intelligence
                                        2,                 // combat
@@ -85,7 +88,8 @@ public class Species
                                             999,   // farms
                                             999,   // treasury
                                             999,   // libraries
-                                            999    // forges
+                                            999,    // forges
+                                            0
                                         ),
                                        3,                 // intelligence
                                        1,                 // combat
@@ -109,7 +113,8 @@ public class Species
                                             1,   // farms
                                             0,   // treasury
                                             0,   // libraries
-                                            0    // forges
+                                            0,    // forges
+                                            0
                                         ),
                                        3,                 // intelligence
                                        1,                 // combat
@@ -132,7 +137,8 @@ public class Species
                                             9,   // farms
                                             1,   // treasury
                                             0,   // libraries
-                                            1    // forges
+                                            1,    // forges
+                                            0
                                         ),
                                        1,                 // intelligence
                                        5,                 // combat
@@ -155,7 +161,8 @@ public class Species
                                             4,   // farms
                                             4,   // treasury
                                             0,   // libraries
-                                            0    // forges
+                                            0,    // forges
+                                            0
                                         ),
                                        5,                 // intelligence
                                        1,                 // combat
@@ -178,7 +185,8 @@ public class Species
                                             4,   // farms
                                             0,   // treasury
                                             4,   // libraries
-                                            0    // forges
+                                            0,    // forges
+                                            0   
                                         ),
                                        5,                 // intelligence
                                        0,                 // combat
@@ -201,13 +209,38 @@ public class Species
                                             4,   // farms
                                             0,   // treasury
                                             0,   // libraries
-                                            0    // forges
+                                            0,    // forges
+                                            0
                                         ),
                                        4,                 // intelligence
                                        2,                 // combat
                                        3,                 // stealth
                                        1,                 // carrying capacity
                                        JobPreference.LIBRARY
+                );
+
+        SpeciesDescription hatMages = 
+                new SpeciesDescription("Hat Mage", 
+                                       3,                 // size 
+                                       HAT_MAGE_BASE,
+                                       397,               // lair type
+                                       3,                 // lair size
+                                       new MovementJumping(),
+                                       12,                 // speed
+                                       -1,  // starting sound
+                                       new RoomRequirements(
+                                            4,   // lairs 
+                                            4,   // farms
+                                            0,   // treasury
+                                            0,   // libraries
+                                            0,    // forges
+                                            4
+                                        ),
+                                       4,                 // intelligence
+                                       1,                 // combat
+                                       2,                 // stealth
+                                       2,                 // carrying capacity
+                                       JobPreference.LABORATORY
                 );
 
         speciesTable.put(GLOBOS_BASE, globos);
@@ -218,5 +251,6 @@ public class Species
         speciesTable.put(WYVERNS_BASE, wyverns);
         speciesTable.put(BOOKWORMS_BASE, bookworms);
         speciesTable.put(MOSQUITOES_BASE, mosquitoes);
+        speciesTable.put(HAT_MAGE_BASE, hatMages);
     }
 }

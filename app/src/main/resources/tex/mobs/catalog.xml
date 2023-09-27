@@ -2191,136 +2191,136 @@
       <Description>
         <version>4</version>
         <id>129</id>
-        <width>1</width>
-        <height>1</height>
+        <width>29</width>
+        <height>43</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>12</footX>
+        <footY>35</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>hat_mage_1</string>
+        <string>rgba</string>
       </Metadata>
     </Tile>
     <Tile>
       <Description>
         <version>4</version>
         <id>130</id>
-        <width>1</width>
-        <height>1</height>
+        <width>32</width>
+        <height>42</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>14</footX>
+        <footY>34</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>hat_mage_1</string>
+        <string>rgba</string>
       </Metadata>
     </Tile>
     <Tile>
       <Description>
         <version>4</version>
         <id>131</id>
-        <width>1</width>
-        <height>1</height>
+        <width>40</width>
+        <height>38</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>20</footX>
+        <footY>35</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>hat_mage_1</string>
+        <string>rgba</string>
       </Metadata>
     </Tile>
     <Tile>
       <Description>
         <version>4</version>
         <id>132</id>
-        <width>1</width>
-        <height>1</height>
+        <width>37</width>
+        <height>44</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>21</footX>
+        <footY>36</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>hat_mage_1</string>
+        <string>rgba</string>
       </Metadata>
     </Tile>
     <Tile>
       <Description>
         <version>4</version>
         <id>133</id>
-        <width>1</width>
-        <height>1</height>
+        <width>29</width>
+        <height>44</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>14</footX>
+        <footY>35</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>hat_mage_1</string>
+        <string>rgba</string>
       </Metadata>
     </Tile>
     <Tile>
       <Description>
         <version>4</version>
         <id>134</id>
-        <width>1</width>
-        <height>1</height>
+        <width>31</width>
+        <height>41</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>16</footX>
+        <footY>35</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>hat_mage_1</string>
+        <string>rgba</string>
       </Metadata>
     </Tile>
     <Tile>
       <Description>
         <version>4</version>
         <id>135</id>
-        <width>1</width>
-        <height>1</height>
+        <width>40</width>
+        <height>37</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>19</footX>
+        <footY>33</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>hat_mage_1</string>
+        <string>rgba</string>
       </Metadata>
     </Tile>
     <Tile>
       <Description>
         <version>4</version>
         <id>136</id>
-        <width>1</width>
-        <height>1</height>
+        <width>37</width>
+        <height>40</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>13</footX>
+        <footY>34</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>hat_mage_1</string>
+        <string>rgba</string>
       </Metadata>
     </Tile>
     <Tile>

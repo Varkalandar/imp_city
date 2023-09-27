@@ -7,24 +7,27 @@ package impcity.game.species;
  */
 public class RoomRequirements 
 {
-    public int lairs;
-    public int farms;
-    public int treasury;           // should this be gold reserves rather?
-    public int libraries;
-    public int forges;
+    public final int lairs;
+    public final int farms;
+    public final int treasury;           // should this be gold reserves rather?
+    public final int libraries;
+    public final int forges;
+    public final int labs;
 
     public RoomRequirements(
                 int lairs,
                 int farms,
                 int treasury,
                 int libraries,
-                int workshops
+                int forges,
+                int labs
             )
     {
         this.lairs = lairs;
         this.farms = farms;
         this.treasury = treasury;
         this.libraries = libraries;
-        this.forges = workshops;
+        this.forges = forges;
+        this.labs = labs;
     }
 }

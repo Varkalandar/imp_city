@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import impcity.game.Clock;
+import impcity.game.Direction;
 import impcity.game.mobs.Mob;
 import impcity.game.map.LocationPathDestination;
 import impcity.game.map.Map;
@@ -419,10 +420,15 @@ public class CreatureAi extends AiBase
                 case FORGE: 
                     workplaces = game.getForges();
                     break;
+                case LABORATORY: 
+                    workplaces = game.getLaboratoriums();
+                    break;
             }
             
             if(workplaces == null || workplaces.isEmpty())
             {
+                logger.log(Level.INFO, "Mob {0} could not find a workplace", 
+                        Species.speciesTable.get(mob.getSpecies()).name);                    
                 // Hajo: no suitable workplaces ...
                 mob.visuals.setBubble(0);
                 goal = Goal.GO_RANDOM;
@@ -441,6 +447,33 @@ public class CreatureAi extends AiBase
                         p.x += 4 + (int)(Math.random() * 3);
                         p.y += Map.SUB / 4 + (int)(Math.random() * Map.SUB/2);
                         break;
+                    case LABORATORY:                        
+                        // sit in a circle around the lab table
+                        
+                        int tries = 0;
+                        
+                        while(tries < 16)
+                        {
+                            double angle = Math.random() * Math.PI * 2.0;
+                            int cr = 5;                        
+                            int cx = Map.SUB / 2 + p.x + (int)(Math.cos(angle) * cr);
+                            int cy = Map.SUB / 2 + p.y + (int)(Math.sin(angle) * cr);
+
+                            p.x = cx;
+                            p.y = cy;
+                            
+                            if(mob.gameMap.isMovementBlocked(cx, cy))
+                            {
+                                tries ++;
+                            }
+                            else
+                            {
+                                // seems we can go there ...
+                                break;
+                            }
+                        }
+                        break;
+                        
                     default:
                         // around the middle ...
                         p.x += Map.SUB / 4 + (int)(Math.random() * Map.SUB/2);
@@ -552,7 +585,15 @@ public class CreatureAi extends AiBase
             int direction = 6 + (int)(Math.random() * 3) & 7;
             mob.visuals.setDisplayCode(Species.BOOKWORMS_BASE + direction);
         }
-        
+        else if(mob.getSpecies() == Species.HAT_MAGE_BASE)
+        {
+            // face the tile center (distill)
+            int cx = mob.location.x/Map.SUB*Map.SUB + Map.SUB/2;
+            int cy = mob.location.y/Map.SUB*Map.SUB + Map.SUB/2;
+            
+            int direction = Direction.dirFromVector(cx - mob.location.x, cy - mob.location.y);
+            mob.visuals.setDisplayCode(Species.HAT_MAGE_BASE + direction);
+        }        
 
         int rasterI = mob.location.x/Map.SUB*Map.SUB;
         int rasterJ = mob.location.y/Map.SUB*Map.SUB;
@@ -621,6 +662,12 @@ public class CreatureAi extends AiBase
                 
                 spreadSeedlings(mob);
             }
+        }
+        else if(species == Species.HAT_MAGE_BASE)
+        {
+            // levitate some up and down
+            int z = 16 + (int)(Math.sin(workStep/32.0 * Math.PI) * 16);
+            mob.zOff = z << 16;
         }
         else
         {

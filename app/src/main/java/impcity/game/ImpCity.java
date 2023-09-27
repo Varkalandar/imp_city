@@ -210,6 +210,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         
         player.stats.setCurrent(KeeperStats.GOLD, 0);
         player.stats.setCurrent(KeeperStats.RESEARCH, 0);
+        player.stats.setCurrent(KeeperStats.RESEARCH, KeeperStats.RESEARCH_LABS);
         player.stats.setMin(KeeperStats.RESEARCH, 0);
         player.stats.setMax(KeeperStats.RESEARCH, 10000); // research needed for next discovery
     }
@@ -454,6 +455,11 @@ public class ImpCity implements PostRenderHook, GameInterface
                 else if(ground >= Features.GROUND_FORGE && ground < Features.GROUND_FORGE + 3)
                 {
                     addForgeSquare(map, x, y);
+                    addClaimedSquare(x, y);
+                }
+                else if(ground >= Features.GROUND_LABORATORY && ground < Features.GROUND_LABORATORY + 3)
+                {
+                    addLabSquare(map, x, y);
                     addClaimedSquare(x, y);
                 }
                 else if(ground >= Features.GROUND_TREASURY && ground < Features.GROUND_TREASURY + 3)

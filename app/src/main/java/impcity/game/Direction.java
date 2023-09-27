@@ -30,35 +30,35 @@ public class Direction
     {
         int direction = 3;
         
-        if(dx == -1 && dy == 1)
+        if(dx <= -1 && dy >= 1)
         {
             direction = 0;
         }
-        else if(dx == 0 && dy == 1)
+        else if(dx == 0 && dy >= 1)
         {
             direction = 1;
         }
-        else if(dx == 1 && dy == 1)
+        else if(dx >= 1 && dy >= 1)
         {
             direction = 2;
         }
-        else if(dx == 1 && dy == 0)
+        else if(dx >= 1 && dy == 0)
         {
             direction = 3;
         }
-        else if(dx == 1 && dy == -1)
+        else if(dx >= 1 && dy <= -1)
         {
             direction = 4;
         }
-        else if(dx == 0 && dy == -1)
+        else if(dx == 0 && dy <= -1)
         {
             direction = 5;
         }
-        else if(dx == -1 && dy == -1)
+        else if(dx <= -1 && dy <= -1)
         {
             direction = 6;
         }
-        else if(dx == -1 && dy == 0)
+        else if(dx <= -1 && dy == 0)
         {
             direction = 7;
         }
