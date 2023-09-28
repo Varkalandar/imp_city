@@ -146,7 +146,8 @@ public class PortalSquare implements Processable
             ok &= req.libraries <= game.getLibraries().size();
             ok &= req.treasury <= game.getTreasuries().size();
             ok &= req.forges <= game.getForges().size();
-            
+            ok &= req.labs <= game.getLaboratoriums().size();
+
             if(ok)
             {
                 filteredList.add(description);
