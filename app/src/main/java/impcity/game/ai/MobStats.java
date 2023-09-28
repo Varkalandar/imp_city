@@ -18,4 +18,5 @@ public class MobStats
     // hack, hack ... generator types ...
     public final static int G_VOLCANO = 1;
     public final static int G_HEALING_WELL = 2;
+    public final static int G_DISTILL = 3;
 }

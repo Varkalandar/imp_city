@@ -808,6 +808,8 @@ public class ImpCity implements PostRenderHook, GameInterface
         int x = p.x + Map.SUB/2;
         int y = p.y + Map.SUB/2;
         map.setItem(x, y, Features.I_LAB_TABLE);
+        
+        addParticleGenerator(map, x, y, 4, MobStats.G_DISTILL);
     }
 
     public void addForgeSquare(final Map map, int rasterI, int rasterJ) 

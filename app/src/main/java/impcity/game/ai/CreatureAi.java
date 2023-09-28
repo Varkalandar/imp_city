@@ -269,6 +269,7 @@ public class CreatureAi extends AiBase
             // randomly stop working
             if(Math.random() < 0.01)
             {
+                finishWork(mob);
                 goal = Goal.GO_SLEEP;
                 // Hajo: small break before we go pathfinding.
                 thinkTime = Clock.time() + 10 * THINK_COOLDOWN;
@@ -605,6 +606,14 @@ public class CreatureAi extends AiBase
         }
     }
 
+    private void finishWork(Mob mob) 
+    {
+        if(mob.getSpecies() == Species.HAT_MAGE_BASE)
+        {
+            mob.zOff = 0;
+        }
+    }
+    
     private void work(Mob mob)
     {
         int species = mob.getSpecies();
@@ -704,6 +713,8 @@ public class CreatureAi extends AiBase
         int z = 16 + (int)(Math.sin(workStep/32.0 * Math.PI) * 16);
         mob.zOff = z << 16;
 
+        /*
+
         // spark some ideas
         int speed = (int)(Math.random() * 5.0);
 
@@ -718,6 +729,54 @@ public class CreatureAi extends AiBase
                 18,
                 Features.P_SILVER_SPARK_1 + (int)(Math.random() *3),
                 0xFFFFFFFF);
+        */
+        
+        int rasterI = mob.location.x/Map.SUB*Map.SUB;
+        int rasterJ = mob.location.y/Map.SUB*Map.SUB;
+        Point p = new Point(rasterI + Map.SUB/2, rasterJ + Map.SUB/2);
+
+        
+        Mob distillGenerator = null;
+        
+        for(Mob generator : game.generators)
+        {
+            if(p.equals(generator.location)) 
+            {
+                distillGenerator = generator;
+                break;
+            }
+        }
+        
+        if(distillGenerator != null)
+        {
+            int particle;
+            int color;
+            double speed;
+            
+            if(Math.random() < 0.5)
+            {
+                particle = Features.P_SILVER_SPARK_1 + (int)(Math.random() * 9);
+                color = 0xFFFFFFFF;
+                speed = 3;
+            }
+            else
+            {
+                // clouds
+                particle = 1948;
+                color = 0x40FFFFFF;
+                speed = 1.5;
+            }
+
+
+            distillGenerator
+                    .visuals
+                    .backParticles
+                    .addParticle(2 - (int)(Math.random() * 8.0), (int)(Math.random() * 40.0),
+                        speed * (1.0 - Math.random() * 2.0), speed * Math.random(),
+                18,
+                        particle,
+                        color);
+        }
     }
 
     private void produce(Mob mob)
@@ -734,6 +793,9 @@ public class CreatureAi extends AiBase
         else if(ground >= Features.GROUND_LIBRARY && ground <= Features.GROUND_LIBRARY + 3)
         {
             produceInLibrary(mob, rasterP);
+        }
+        else if(ground >= Features.GROUND_LABORATORY && ground <= Features.GROUND_LABORATORY + 3)
+        {
         }
     }
 

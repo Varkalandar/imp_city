@@ -131,6 +131,9 @@ public class DungeonProcessingThread extends Thread
             case MobStats.G_HEALING_WELL:
                 driveHealingWell(generator);
                 break;
+            case MobStats.G_DISTILL:
+                // nothing to do here, is driven by operator
+                break;
                 
             default:
                 logger.log(Level.WARNING, "Unknown generator type: {0}", type);
