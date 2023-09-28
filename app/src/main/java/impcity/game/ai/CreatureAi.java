@@ -615,59 +615,19 @@ public class CreatureAi extends AiBase
         // here, not species
         if(species == Species.CONIANS_BASE)
         {
-            if(nextSoundTime < Clock.time())
-            {
-                nextSoundTime = Clock.time() + 3000;
-                game.soundPlayer.playFromPosition(Sounds.FORGE_WORK, 0.2f, 1.0f, mob.location, game.getViewPosition());
-            }
-            
-            
-            // do something ... spin around
-            int dir = mob.visuals.getDisplayCode() - mob.getSpecies();
-            dir = (dir + 1) & 7;
-            mob.visuals.setDisplayCode(mob.getSpecies() + dir);
-            
-            double speed = 5;
-            mob.visuals.backParticles.addParticle(0, 0, 
-                                                  speed * Math.random() * 2.0 - speed, speed * Math.random(),
-                                                  20, 
-                                                  Features.P_ORANGE_SPARK_1 + (int)(Math.random() *3),
-                                                  0xFFFFFFFF);
-            mob.visuals.frontParticles.addParticle(0, 0, 
-                                                  speed * Math.random() * 2.0 - speed, speed * Math.random(),
-                                                  20, 
-                                                  Features.P_ORANGE_SPARK_1 + (int)(Math.random() *3),
-                                                  0xFFFFFFFF);
+            workingConian(mob);
         }
         else if(species == Species.BOOKWORMS_BASE)
         {
-            if((workStep & 15) == 0)
-            {
-                mob.visuals.frontParticles.addParticle(-2 + (2 - (int)(Math.random() * 5)), 24, 
-                                                      0, 0.6,
-                                                      120, 
-                                                      Features.GLYPHS_FIRST + (int)(Math.random() * Features.GLYPHS_COUNT),
-                                                      0x80FFFFFF);
-            }
+            workingBookworm(mob);
         }
         else if(species == Species.POWERSNAILS_BASE)
         {
-            // Hajo: powersnails spread plant seeds
-
-            if((workStep & 15) == 0)
-            {
-                int dir = mob.visuals.getDisplayCode() - species;
-                dir = (dir + 1) & 7;
-                mob.visuals.setDisplayCode(mob.getSpecies() + dir);
-                
-                spreadSeedlings(mob);
-            }
+            workingPowersnail(mob, species);
         }
         else if(species == Species.HAT_MAGE_BASE)
         {
-            // levitate some up and down
-            int z = 16 + (int)(Math.sin(workStep/32.0 * Math.PI) * 16);
-            mob.zOff = z << 16;
+            workingHatMage(mob);
         }
         else
         {
@@ -687,7 +647,79 @@ public class CreatureAi extends AiBase
             produce(mob);
         }    
     }
-    
+
+    private void workingPowersnail(Mob mob, int species) {
+        // Hajo: powersnails spread plant seeds
+
+        if((workStep & 15) == 0)
+        {
+            int dir = mob.visuals.getDisplayCode() - species;
+            dir = (dir + 1) & 7;
+            mob.visuals.setDisplayCode(mob.getSpecies() + dir);
+
+            spreadSeedlings(mob);
+        }
+    }
+
+    private void workingBookworm(Mob mob) {
+        if((workStep & 15) == 0)
+        {
+            mob.visuals.frontParticles.addParticle(-2 + (2 - (int)(Math.random() * 5)), 24,
+                                                  0, 0.6,
+                                                  120,
+                                                  Features.GLYPHS_FIRST + (int)(Math.random() * Features.GLYPHS_COUNT),
+                                                  0x80FFFFFF);
+        }
+    }
+
+    private void workingConian(Mob mob) {
+        if(nextSoundTime < Clock.time())
+        {
+            nextSoundTime = Clock.time() + 3000;
+            game.soundPlayer.playFromPosition(Sounds.FORGE_WORK, 0.2f, 1.0f, mob.location, game.getViewPosition());
+        }
+
+
+        // do something ... spin around
+        int dir = mob.visuals.getDisplayCode() - mob.getSpecies();
+        dir = (dir + 1) & 7;
+        mob.visuals.setDisplayCode(mob.getSpecies() + dir);
+
+        double speed = 5;
+        mob.visuals.backParticles.addParticle(0, 0,
+                                              speed * Math.random() * 2.0 - speed, speed * Math.random(),
+                                              20,
+                                              Features.P_ORANGE_SPARK_1 + (int)(Math.random() *3),
+                                              0xFFFFFFFF);
+        mob.visuals.frontParticles.addParticle(0, 0,
+                                              speed * Math.random() * 2.0 - speed, speed * Math.random(),
+                                              20,
+                                              Features.P_ORANGE_SPARK_1 + (int)(Math.random() *3),
+                                              0xFFFFFFFF);
+    }
+
+    private void workingHatMage(Mob mob)
+    {
+        // levitate some up and down
+        int z = 16 + (int)(Math.sin(workStep/32.0 * Math.PI) * 16);
+        mob.zOff = z << 16;
+
+        // spark some ideas
+        int speed = (int)(Math.random() * 5.0);
+
+        mob.visuals.backParticles.addParticle(10 - (int)(Math.random() * 20.0), (int)(Math.random() * 20.0),
+                speed * Math.random() * 2.0 - speed, speed * Math.random(),
+                18,
+                Features.P_SILVER_SPARK_1 + (int)(Math.random() *3),
+                0xFFFFFFFF);
+
+        mob.visuals.frontParticles.addParticle(10 - (int)(Math.random() * 20.0), (int)(Math.random() * 20.0),
+                speed * Math.random() * 2.0 - speed, -speed * Math.random(),
+                18,
+                Features.P_SILVER_SPARK_1 + (int)(Math.random() *3),
+                0xFFFFFFFF);
+    }
+
     private void produce(Mob mob)
     {
         int rasterI = mob.location.x/Map.SUB*Map.SUB;
