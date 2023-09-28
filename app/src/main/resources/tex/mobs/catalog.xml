@@ -2191,12 +2191,12 @@
       <Description>
         <version>4</version>
         <id>129</id>
-        <width>29</width>
-        <height>43</height>
+        <width>24</width>
+        <height>35</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
         <footX>12</footX>
-        <footY>35</footY>
+        <footY>28</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -2208,12 +2208,12 @@
       <Description>
         <version>4</version>
         <id>130</id>
-        <width>32</width>
-        <height>42</height>
+        <width>26</width>
+        <height>34</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>14</footX>
-        <footY>34</footY>
+        <footX>11</footX>
+        <footY>28</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -2225,12 +2225,12 @@
       <Description>
         <version>4</version>
         <id>131</id>
-        <width>40</width>
-        <height>38</height>
+        <width>33</width>
+        <height>31</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>20</footX>
-        <footY>35</footY>
+        <footX>17</footX>
+        <footY>28</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -2242,12 +2242,12 @@
       <Description>
         <version>4</version>
         <id>132</id>
-        <width>37</width>
-        <height>44</height>
+        <width>30</width>
+        <height>35</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>21</footX>
-        <footY>36</footY>
+        <footX>18</footX>
+        <footY>28</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -2259,12 +2259,12 @@
       <Description>
         <version>4</version>
         <id>133</id>
-        <width>29</width>
-        <height>44</height>
+        <width>24</width>
+        <height>37</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>14</footX>
-        <footY>35</footY>
+        <footX>12</footX>
+        <footY>29</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -2276,12 +2276,12 @@
       <Description>
         <version>4</version>
         <id>134</id>
-        <width>31</width>
-        <height>41</height>
+        <width>26</width>
+        <height>33</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>16</footX>
-        <footY>35</footY>
+        <footX>14</footX>
+        <footY>28</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -2293,12 +2293,12 @@
       <Description>
         <version>4</version>
         <id>135</id>
-        <width>40</width>
-        <height>37</height>
+        <width>33</width>
+        <height>30</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>19</footX>
-        <footY>33</footY>
+        <footX>16</footX>
+        <footY>28</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -2310,12 +2310,12 @@
       <Description>
         <version>4</version>
         <id>136</id>
-        <width>37</width>
-        <height>40</height>
+        <width>30</width>
+        <height>33</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>13</footX>
-        <footY>34</footY>
+        <footX>12</footX>
+        <footY>28</footY>
       </Description>
       <Metadata>
         <int>0</int>
