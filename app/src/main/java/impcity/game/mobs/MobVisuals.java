@@ -106,7 +106,6 @@ public class MobVisuals implements Drawable
             }
         }
         
-        backParticles.driveParticles();
         backParticles.drawParticlesAt(display, x, y);
         
         for(Spell spell : spells)
@@ -160,7 +159,6 @@ public class MobVisuals implements Drawable
                                 tempOverlaySize, tempOverlaySize, 0xFFFFFFFF);
         }
 
-        frontParticles.driveParticles();
         frontParticles.drawParticlesAt(display, x, y);
 
         if(timedMessage.message != null)

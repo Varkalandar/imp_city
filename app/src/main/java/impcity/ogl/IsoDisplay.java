@@ -648,6 +648,14 @@ public class IsoDisplay implements PostRenderHook
     public void update()
     {
         Display.update();
+        
+        Set <Cardinal> keys = mobs.keySet();
+        
+        for(Cardinal key : keys)
+        {
+            Mob mob = mobs.get(key.intValue());
+            mob.update();
+        }
     }
     
     private void safeSleep(int millis)

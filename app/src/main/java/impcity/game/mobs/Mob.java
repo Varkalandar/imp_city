@@ -285,11 +285,15 @@ public class Mob
         }
     }
     
-
-    public void update() 
+    /**
+     * Called every frame in between display
+     */
+    public void update()
     {
-        // Hajo: Avoid invisible monsters (can happen if the first of a "stack" dies
-        gameMap.setMob(location.x, location.y, getKey());
+        // drive particles in sync with display     
+            
+        visuals.frontParticles.driveParticles();
+        visuals.backParticles.driveParticles();    
 
         // Hajo: TODO: recovery should depend on real time
         // 
@@ -311,6 +315,15 @@ public class Mob
                 ai.findNewPath(this);
             }
         }
+    }
+
+    /**
+     * Called after all the ordinary stuff (map) has been drawn.
+     */
+    public void displayMoreUpdate() 
+    {
+        // Hajo: Avoid invisible monsters (can happen if the first of a "stack" dies
+        gameMap.setMob(location.x, location.y, getKey());
     }
         
     

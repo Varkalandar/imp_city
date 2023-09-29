@@ -259,7 +259,7 @@ public class ImpCity implements PostRenderHook, GameInterface
     public void displayMore() 
     {
         gameDisplay.displayMore();
-        update();
+        displayMoreUpdate();
     }
 
     private void loadMap(String mapName)
@@ -325,7 +325,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         System.exit(result);
     }
 
-    private void update()
+    private void displayMoreUpdate()
     {
         /*
         System.err.println("Jobs: " + jobList.size());
@@ -356,7 +356,7 @@ public class ImpCity implements PostRenderHook, GameInterface
                     }
                 }
 
-                mob.update();
+                mob.displayMoreUpdate();
             }
         } 
         catch(ConcurrentModificationException cmex)
