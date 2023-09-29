@@ -32207,8 +32207,8 @@
         <height>175</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>107</footX>
-        <footY>67</footY>
+        <footX>108</footX>
+        <footY>109</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -32226,8 +32226,8 @@
         <height>174</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>107</footX>
-        <footY>67</footY>
+        <footX>108</footX>
+        <footY>108</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -32245,8 +32245,8 @@
         <height>174</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>107</footX>
-        <footY>67</footY>
+        <footX>108</footX>
+        <footY>108</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -32378,8 +32378,8 @@
         <height>173</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>105</footX>
-        <footY>64</footY>
+        <footX>108</footX>
+        <footY>105</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -32455,7 +32455,7 @@
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
         <footX>107</footX>
-        <footY>25</footY>
+        <footY>126</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -32474,7 +32474,7 @@
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
         <footX>107</footX>
-        <footY>26</footY>
+        <footY>126</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -32493,7 +32493,7 @@
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
         <footX>107</footX>
-        <footY>25</footY>
+        <footY>126</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -32511,8 +32511,8 @@
         <height>157</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>107</footX>
-        <footY>52</footY>
+        <footX>108</footX>
+        <footY>91</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -32568,8 +32568,8 @@
         <height>191</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>107</footX>
-        <footY>84</footY>
+        <footX>108</footX>
+        <footY>127</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -32625,8 +32625,8 @@
         <height>149</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>107</footX>
-        <footY>43</footY>
+        <footX>108</footX>
+        <footY>83</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -32644,8 +32644,8 @@
         <height>149</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>107</footX>
-        <footY>43</footY>
+        <footX>108</footX>
+        <footY>83</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -32663,8 +32663,8 @@
         <height>147</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>107</footX>
-        <footY>40</footY>
+        <footX>108</footX>
+        <footY>80</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -41076,8 +41076,8 @@
       <Description>
         <version>4</version>
         <id>1949</id>
-        <width>1</width>
-        <height>1</height>
+        <width>13</width>
+        <height>11</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
         <footX>0</footX>
@@ -41085,8 +41085,8 @@
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>steam puff</string>
+        <string>rgba</string>
         <string></string>
         <string></string>
       </Metadata>
