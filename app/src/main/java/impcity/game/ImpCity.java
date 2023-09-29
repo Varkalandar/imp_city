@@ -210,7 +210,9 @@ public class ImpCity implements PostRenderHook, GameInterface
         
         player.stats.setCurrent(KeeperStats.GOLD, 0);
         player.stats.setCurrent(KeeperStats.RESEARCH, 0);
-        player.stats.setCurrent(KeeperStats.RESEARCH, KeeperStats.RESEARCH_LABS);
+
+        player.stats.setCurrent(KeeperStats.RESEARCH, KeeperStats.RESEARCH_LABS | KeeperStats.RESEARCH_FORGES);
+
         player.stats.setMin(KeeperStats.RESEARCH, 0);
         player.stats.setMax(KeeperStats.RESEARCH, 10000); // research needed for next discovery
     }
@@ -484,7 +486,7 @@ public class ImpCity implements PostRenderHook, GameInterface
                 {
                     logger.log(Level.SEVERE, "Unknown ground type {0} at {1}, {2}", new Object[]{ground, x, y});
                 }
-                
+
                 for(int j=0; j<Map.SUB; j++)
                 {
                     for(int i=0; i<Map.SUB; i++)
@@ -503,6 +505,22 @@ public class ImpCity implements PostRenderHook, GameInterface
                             map.setAreaMovementBlocked(r, true);
                         }
                     }
+                }
+            }
+        }
+
+        // old maps hat wall blocks at sub (0, 0) which have to be moved to
+        // (Map.SUB/2-1, Map.SUB/2-1) to avoid clipping errors in the display
+        for(int y = h; y >= 0; y -= Map.SUB)
+        {
+            for (int x = w; x >= 0; x -= Map.SUB)
+            {
+                int block = map.getItem(x, y) & Map.F_ITEM_MASK;
+                if (block >= Features.I_PERM_ROCK && block <= Features.I_STEEP_EARTH_BLOCK + 20)
+                {
+                    map.setItem(x, y, 0);
+                    map.setItem(x + Map.SUB/2-1, y + Map.SUB/2-1, block | Map.F_DECO);
+                    // System.out.println("Moving block " + block);
                 }
             }
         }

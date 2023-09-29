@@ -657,7 +657,8 @@ public class CreatureAi extends AiBase
         }    
     }
 
-    private void workingPowersnail(Mob mob, int species) {
+    private void workingPowersnail(Mob mob, int species)
+    {
         // Hajo: powersnails spread plant seeds
 
         if((workStep & 15) == 0)
@@ -670,7 +671,8 @@ public class CreatureAi extends AiBase
         }
     }
 
-    private void workingBookworm(Mob mob) {
+    private void workingBookworm(Mob mob)
+    {
         if((workStep & 15) == 0)
         {
             mob.visuals.frontParticles.addParticle(-2 + (2 - (int)(Math.random() * 5)), 24,
@@ -681,13 +683,13 @@ public class CreatureAi extends AiBase
         }
     }
 
-    private void workingConian(Mob mob) {
+    private void workingConian(Mob mob)
+    {
         if(nextSoundTime < Clock.time())
         {
             nextSoundTime = Clock.time() + 3000;
             game.soundPlayer.playFromPosition(Sounds.FORGE_WORK, 0.2f, 1.0f, mob.location, game.getViewPosition());
         }
-
 
         // do something ... spin around
         int dir = mob.visuals.getDisplayCode() - mob.getSpecies();
@@ -710,7 +712,7 @@ public class CreatureAi extends AiBase
     private void workingHatMage(Mob mob)
     {
         // levitate some up and down
-        int z = 16 + (int)(Math.sin(workStep/32.0 * Math.PI) * 16);
+        int z = 20 + (int)(Math.sin(workStep/32.0 * Math.PI) * 16);
         mob.zOff = z << 16;
 
         /*
@@ -735,7 +737,6 @@ public class CreatureAi extends AiBase
         int rasterJ = mob.location.y/Map.SUB*Map.SUB;
         Point p = new Point(rasterI + Map.SUB/2, rasterJ + Map.SUB/2);
 
-        
         Mob distillGenerator = null;
         
         for(Mob generator : game.generators)
@@ -762,11 +763,10 @@ public class CreatureAi extends AiBase
             else
             {
                 // clouds
-                particle = 1948;
+                particle = Features.I_STEAM_CLOUD + (int)(Math.random() * 2);
                 color = 0x40FFFFFF;
                 speed = 1.5;
             }
-
 
             distillGenerator
                     .visuals

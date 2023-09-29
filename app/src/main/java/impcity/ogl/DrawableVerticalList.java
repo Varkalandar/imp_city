@@ -36,7 +36,14 @@ public class DrawableVerticalList
         
         map.clear();
     }
-    
+
+    /**
+     *
+     * @param drawable The thing to draw
+     * @param x x coordinate on map
+     * @param y y coordinate on map
+     * @param id Element id
+     */
     public void addDrawable(Drawable drawable, int x, int y, int id)
     {
         int key = (y << 15) + x;

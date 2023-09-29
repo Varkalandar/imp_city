@@ -29,7 +29,7 @@ public class JobExcavate extends AbstractJob
         int rasterJ = location.y/Map.SUB*Map.SUB;
      
         Map map = worker.gameMap;
-        int mark = map.getItem(rasterI+4, rasterJ+4);
+        int mark = map.getItem(rasterI+Map.SUB/2, rasterJ+Map.SUB/2);
         
         return mark == Features.MINING_MARK;
     }
@@ -41,13 +41,13 @@ public class JobExcavate extends AbstractJob
         int rasterJ = location.y/Map.SUB*Map.SUB;
      
         Map map = worker.gameMap;
-        int mark = map.getItem(rasterI+4, rasterJ+4);
+        int mark = map.getItem(rasterI+Map.SUB/2, rasterJ+Map.SUB/2);
         
         // Hajo: see if the square is still marked for digging
         if(mark == Features.MINING_MARK)
         {
-            map.setItem(rasterI, rasterJ, 0);      // remove wall block
-            map.setItem(rasterI+4, rasterJ+4, 0);  // remove mining symbol
+            map.setItem(rasterI+Map.SUB/2-1, rasterJ+Map.SUB/2-1, 0);      // remove wall block
+            map.setItem(rasterI+Map.SUB/2, rasterJ+Map.SUB/2, 0);  // remove mining symbol
 
             game.jobQueue.add(new JobClaimGround(game, location.x, location.y), JobQueue.PRI_NORM);
             

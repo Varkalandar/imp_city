@@ -50,12 +50,12 @@ public class Features
     public static final int I_COPPER_COINS = 199;
     public static final int I_GOLD_COINS = 194;
     public static final int I_SILVER_COINS = 192;
-
-    
     
     public static final int I_COPPER_ORE = 1115;
     public static final int I_TIN_ORE = 1116;
 
+    public static final int I_STEAM_CLOUD = 1948;
+    public static final int I_STEAM_PUFF = 1949;
 
     public static final int I_LAB_TABLE = 1467;
     public static final int I_ANVIL = 1468;

@@ -145,11 +145,11 @@ public class ImpCityMouseHandler implements MouseHandler
             return;
         }
         
-        int item = map.getItem(rasterI, rasterJ) & 0xFFFF;
+        int item = map.getItem(rasterI + Map.SUB/2-1, rasterJ + Map.SUB/2-1) & 0xFFFF;
         // if(item >= Features.I_EARTH_BLOCK && item < Features.I_EARTH_BLOCK + 3) 
         if(item >= Features.I_STEEP_EARTH_BLOCK && item < Features.I_STEEP_EARTH_BLOCK + 3) 
         {
-            // this is should be a diggable sqaure, it has earth
+            // this should be a diggable square, it has earth
             createExcavationJob(map, rasterI, rasterJ);
         }
         // else if(item >= Features.I_TREASURE_BLOCK && item < Features.I_TREASURE_BLOCK + 3) 
@@ -159,8 +159,8 @@ public class ImpCityMouseHandler implements MouseHandler
         {
             createMiningJob(map, rasterI, rasterJ);
         }
-            
     }
+
     private void makeLair(Map map, int rasterI, int rasterJ) 
     {
         int n = map.getFloor(rasterI, rasterJ);
@@ -252,7 +252,7 @@ public class ImpCityMouseHandler implements MouseHandler
         int n = map.getFloor(rasterI, rasterJ);
         if(n >= Features.GROUND_POLY_TILES && n < Features.GROUND_POLY_TILES + 3)
         {
-            // actually, nothing to do, that's a free squre already
+            // actually, nothing to do, that's a free square already
         }
         else if(n >= Features.GROUND_LIBRARY && n < Features.GROUND_LIBRARY + 3)
         {
@@ -435,7 +435,7 @@ public class ImpCityMouseHandler implements MouseHandler
     private void createExcavationJob(Map map, int rasterI, int rasterJ) 
     {
         // check for digging mark
-        int mark = map.getItem(rasterI+4, rasterJ+4);
+        int mark = map.getItem(rasterI+Map.SUB/2, rasterJ+Map.SUB/2);
 
         if(mark == Features.MINING_MARK)
         {
@@ -454,7 +454,7 @@ public class ImpCityMouseHandler implements MouseHandler
 
             if(ok)
             {
-                // Hajo: clean sqaure
+                // Hajo: clean square
                 // try to cancel this job - only works if no worker
                 // has taken the job yet. But AI will check the mark
                 // too.
@@ -462,18 +462,18 @@ public class ImpCityMouseHandler implements MouseHandler
 
                 // now we unset the mark
                 map.setFloor(rasterI, rasterJ, Features.GROUND_IMPASSABLE);
-                map.setItem(rasterI+4, rasterJ+4, 0);
+                map.setItem(rasterI+Map.SUB/2, rasterJ+Map.SUB/2, 0);
             }
         }
         else
         {
-            // Hajo: is there still earth on this sqaure?
+            // Hajo: is there still earth on this square?
             int ground = map.getFloor(rasterI, rasterJ);
             if(ground >= Features.GROUND_IMPASSABLE && ground < Features.GROUND_IMPASSABLE+3)
             {
                 // Hajo: ok -> now set mining mark
                 map.setFloor(rasterI, rasterJ, Features.GROUND_LIGHT_SOIL);
-                map.setItem(rasterI+4, rasterJ+4, Features.MINING_MARK);
+                map.setItem(rasterI+Map.SUB/2, rasterJ+Map.SUB/2, Features.MINING_MARK);
 
                 JobExcavate job = new JobExcavate(game, rasterI + Map.SUB/2, rasterJ + Map.SUB/2);
                 game.jobQueue.add(job, JobQueue.PRI_HIGH);
@@ -485,7 +485,7 @@ public class ImpCityMouseHandler implements MouseHandler
 
     private void createMiningJob(Map map, int rasterI, int rasterJ) 
     {
-        int mark = map.getItem(rasterI+4, rasterJ+4);
+        int mark = map.getItem(rasterI+Map.SUB/2, rasterJ+Map.SUB/2);
 
         if(mark == Features.MINING_MARK)
         {
@@ -504,7 +504,7 @@ public class ImpCityMouseHandler implements MouseHandler
 
             if(ok)
             {
-                // Hajo: clean sqaure
+                // Hajo: clean square
                 // try to cancel this job - only works if no worker
                 // has taken the job yet. But AI will check the mark
                 // too.
@@ -512,7 +512,7 @@ public class ImpCityMouseHandler implements MouseHandler
 
                 // now we unset the mark
                 map.setFloor(rasterI, rasterJ, Features.GROUND_IMPASSABLE);
-                map.setItem(rasterI+4, rasterJ+4, 0);
+                map.setItem(rasterI+Map.SUB/2, rasterJ+Map.SUB/2, 0);
             }
         }
         else
@@ -524,7 +524,7 @@ public class ImpCityMouseHandler implements MouseHandler
                 mark = Features.MINING_MARK-3;
             }
 
-            map.setItem(rasterI+4, rasterJ+4, mark+1);
+            map.setItem(rasterI+Map.SUB/2, rasterJ+Map.SUB/2, mark+1);
 
             JobMining job = new JobMining(game, rasterI + Map.SUB/2, rasterJ + Map.SUB/2);
             game.jobQueue.add(job, JobQueue.PRI_LOW);

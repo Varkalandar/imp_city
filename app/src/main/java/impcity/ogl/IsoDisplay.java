@@ -122,7 +122,7 @@ public class IsoDisplay implements PostRenderHook
             frame.pack();
             
             frame.setLayout(new BorderLayout());
-            // frame.setResizable(false);
+
             frame.setResizable(true);
             frame.setLocation((screenSize.width - displayWidth)/2, (screenSize.height - displayHeight - 32) / 2);
             frame.addWindowListener(new MyWindowListener());
@@ -230,8 +230,8 @@ public class IsoDisplay implements PostRenderHook
         newDisplaySize.height = displayHeight = height;
         
         GL11.glMatrixMode(GL11.GL_PROJECTION);
-	GL11.glLoadIdentity();
-	GL11.glOrtho(0, displayWidth, 0, displayHeight, 1, -1);
+	    GL11.glLoadIdentity();
+	    GL11.glOrtho(0, displayWidth, 0, displayHeight, 1, -1);
         GL11.glViewport(0, 0, displayWidth, displayHeight);
         exitOnGLError("glViewport");
     }
@@ -311,59 +311,8 @@ public class IsoDisplay implements PostRenderHook
             {
                 int x0 = centerX + i*xd - j*xd;
                 int y0 = centerY + i*yd + j*yd;
-                
-                if(y0 < displayHeight && y0 > -216 && x0 > -216 && x0 < displayWidth)
-                {
-                    int mapI = i*Map.SUB;
-                    int mapJ = j*Map.SUB;
 
-                    int n = map.getFloor(mapI, mapJ);
-                    if(n > 0)
-                    {
-                        Texture tex = textureCache.grounds[n];
-
-                        if(tex != null)
-                        {
-                            int c1 = map.getColor(mapI, mapJ);
-                            int c2 = map.getColor(mapI+Map.SUB, mapJ);
-                            int c3 = map.getColor(mapI+Map.SUB, mapJ+Map.SUB);
-                            int c4 = map.getColor(mapI, mapJ+Map.SUB);
-
-                            drawGround(tex, x0, y0, c1, c2, c3, c4);
-                        }
-                        else
-                        {
-                            logger.log(Level.SEVERE, "No floor texture loaded for id={0}", n);
-                        }
-                    }
-
-                    n = map.getWay(mapI, mapJ);
-                    if(n > 0)
-                    {
-                        Texture tex = textureCache.grounds[n];
-
-                        if(tex != null)
-                        {
-                            int c1 = map.getColor(mapI, mapJ);
-                            int c2 = map.getColor(mapI+Map.SUB, mapJ);
-                            int c3 = map.getColor(mapI+Map.SUB, mapJ+Map.SUB);
-                            int c4 = map.getColor(mapI, mapJ+Map.SUB);
-
-                            drawGround(tex, x0, y0, c1, c2, c3, c4);
-                        }
-                    }
-
-                    n = map.getWayLikeItem(mapI, mapJ);
-                    if(n > 0)
-                    {
-                        Texture tex = textureCache.textures[n];
-
-                        if(tex != null)
-                        {
-                            drawTile(tex, x0 - xd - tex.footX, y0 - xd - tex.image.getHeight() + tex.footY);
-                        }
-                    }
-                }
+                drawFloor(xd, i, j, x0, y0);
             }
         }
         
@@ -375,32 +324,8 @@ public class IsoDisplay implements PostRenderHook
             {
                 int x0 = centerX + i*xd - j*xd;
                 int y0 = centerY + i*yd + j*yd;
-                
-                if(y0 < displayHeight && y0 > -216 && x0 > -216 && x0 < displayWidth)
-                {
-                    int mapI = i*Map.SUB;
-                    int mapJ = j*Map.SUB;
-                    
-                    for(int jj=0; jj<Map.SUB; jj++)
-                    {
-                        for(int ii=0; ii<Map.SUB; ii++)
-                        {
-                            int x = x0 - xd + ii*xd/Map.SUB - jj*xd/Map.SUB;
-                            int y = y0 - xd + ii*yd/Map.SUB + jj*yd/Map.SUB;        
 
-                            int n = map.getItem(mapI+ii, mapJ+jj);
-                            
-                            if(n > 0)
-                            {
-                                if((n & Map.F_FLOOR_DECO) != 0)
-                                {
-                                    Texture tex = textureCache.textures[n & 0xFFFF];
-                                    drawTile(tex, x-tex.footX, y - tex.image.getHeight() + tex.footY);
-                                }
-                            }
-                        }
-                    }
-                }
+                drawFloorDecoration(xd, yd, i, j, x0, y0);
             }
         }
 
@@ -410,140 +335,23 @@ public class IsoDisplay implements PostRenderHook
         // since the map can only hold one mob per 
         // cell
         buildVList();
-        
-        for(int i = iMin; i < iMax; i++)
+
+        int maxLine = 50;
+        for(int line = 0; line < maxLine; line++)
         {
-            for(int j = jMin; j < jMax; j++)
+            int j = jMin + line;
+            int i = iMin;
+            int maxStep = 1 + line;
+
+            for(int step = 0; step < maxStep; step++)
             {
                 int x0 = centerX + i*xd - j*xd;
-                int y0 = centerY + i*yd + j*yd; 
+                int y0 = centerY + i*yd + j*yd;
 
-                if(y0 < displayHeight + 200 && y0 > -500 && x0 > -400 && x0 < displayWidth + 400)
-                {
-                    int mapI = i*Map.SUB;
-                    int mapJ = j*Map.SUB;
+                drawItems(xd, yd, i, j, x0, y0);
 
-                    int n;
-                    n = map.getLeftWall(mapI, mapJ);
-                    if(n > 0)
-                    {
-                        drawWall(textureCache.textures[n], x0, y0-yd-10);
-                    }
-
-                    n = map.getRightWall(mapI, mapJ);
-                    if(n > 0)
-                    {
-                        drawWall(textureCache.textures[n], x0-xd, y0-yd-10);
-                    }
-
-                    for(int jj=0; jj<Map.SUB; jj++)
-                    {
-                        for(int ii=0; ii<Map.SUB; ii++)
-                        {
-                            int x = x0 - xd + ii*xd/Map.SUB - jj*xd/Map.SUB;
-                            int y = y0 - xd + ii*yd/Map.SUB + jj*yd/Map.SUB;        
-
-                            n = map.getItem(mapI+ii, mapJ+jj);
-                            if(n > 0)
-                            {
-                                if((n & Map.F_FLOOR_DECO) == 0)
-                                {
-                                    if((n & Map.F_DECO) == 0)
-                                    {
-                                        // Hajo: unregistered item
-                                        Texture tex = textureCache.textures[n];
-                                        if(tex == null)
-                                        {
-                                            logger.log(Level.SEVERE, "No item texture loaded for id={0}", n);
-                                        }
-                                        else
-                                        {
-                                            drawTile(tex, x-tex.footX, y - tex.image.getHeight() + tex.footY);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        int deco = n & 0xFFFF;
-                                        Texture tex = textureCache.textures[deco];
-                                        if(tex == null)
-                                        {
-                                            logger.log(Level.SEVERE, "No deco texture loaded for id={0}", n & 0xFFFF);
-                                        }
-                                        else
-                                        {
-                                            drawTile(tex, x-tex.footX, y - tex.image.getHeight() + tex.footY);
-                                            String name = decoDisplayNames[deco];
-                                            if(name != null &&
-                                               (showItemNames || 
-                                                (Math.abs(cursorI - mapI - ii) < 2 && Math.abs(cursorJ - mapJ - jj) < 2)))
-                                            {
-                                                hotspotMap.addHotspot(mapI + ii, mapJ + jj, 
-                                                                      x + (int)(font.getStringWidth(name) * 0.3), 
-                                                                      y + 16,
-                                                                      name );
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            // Hajo: debug blocked areas
-                            /*
-                            if(map.isPlacementBlocked(mapI+ii, mapJ+jj))
-                            {
-                                drawTileStanding(TextureCache.textures[6], x, y);
-                            }
-                            */
-
-                            /*
-                            if(map.isMovementBlocked(mapI+ii, mapJ+jj))
-                            {
-                                drawTileStanding(TextureCache.textures[13], x, y);
-                            }
-                            */
-
-                            /*
-                            if(centerI*Map.SUB == mapI && centerJ*Map.SUB == mapJ)
-                            {
-                                drawTileStanding(TextureCache.textures[13], x, y);
-                            }
-                            */
-                            
-                            n = map.getMob(mapI+ii, mapJ+jj);
-                            if(n > 0)
-                            {
-                                // more drawables here?
-                                DrawableVerticalList.DrawableLink dl = vList.get(mapI+ii, mapJ+jj);
-
-                                while(dl != null)
-                                {
-                                    Mob mob = mobs.get(dl.id);
-
-                                    int xoff = (mob.iOff*xd/Map.SUB - mob.jOff*xd/Map.SUB) >> 16;
-                                    int yoff = (mob.iOff*yd/Map.SUB + mob.jOff*yd/Map.SUB) >> 16;
-
-                                    yoff += mob.zOff >> 16;
-
-                                    mob.visuals.display(this, x + xoff, y + yoff);
-                                    dl = dl.next;
-                                }
-                            }
-
-                            // Hajo: spell effects and such
-                            Drawable drawable = map.getEffect(mapI+ii, mapJ+jj);
-                            if(drawable != null)
-                            {
-                                drawable.display(this, x, y);
-                            }
-                            
-                            if(mapI+ii == cursorI && mapJ+jj == cursorJ && cursorN > 0)
-                            {
-                                Texture tex = textureCache.textures[cursorN];
-                                drawTile(tex, x-tex.footX, y - tex.image.getHeight() + tex.footY);
-                            }
-                        }
-                    }
-                }
+                i = i+1;
+                j = j-1;
             }
         }
         
@@ -558,6 +366,230 @@ public class IsoDisplay implements PostRenderHook
             y0 += 108 + light.yoff;
             
             drawLight(lightTextures[light.type], x0, y0, light.argb, light.size);
+        }
+    }
+
+    private void drawItems(int xd, int yd, int i, int j, int x0, int y0)
+    {
+        if(y0 < displayHeight + 200 && y0 > -500 && x0 > -400 && x0 < displayWidth + 400)
+        {
+            int mapI = i * Map.SUB;
+            int mapJ = j * Map.SUB;
+
+            int n;
+            n = map.getLeftWall(mapI, mapJ);
+            if(n > 0)
+            {
+                drawWall(textureCache.textures[n], x0, y0 - yd -10);
+            }
+
+            n = map.getRightWall(mapI, mapJ);
+            if(n > 0)
+            {
+                drawWall(textureCache.textures[n], x0 - xd, y0 - yd -10);
+            }
+
+
+            int maxLine = Map.SUB * 2;
+            for(int line = 0; line < maxLine; line++)
+            {
+                int jj = line;
+                int ii = 0;
+                int maxStep = line;
+
+                for(int step = 0; step < maxStep; step++)
+                {
+                    int x = x0 - xd + ii* xd / Map.SUB - jj* xd / Map.SUB;
+                    int y = y0 - xd + ii* yd / Map.SUB + jj* yd / Map.SUB;
+
+                    n = map.getItem(mapI + ii, mapJ + jj);
+                    if(n > 0)
+                    {
+                        if((n & Map.F_FLOOR_DECO) == 0)
+                        {
+                            if((n & Map.F_DECO) == 0)
+                            {
+                                // Hajo: unregistered item
+                                Texture tex = textureCache.textures[n];
+                                if(tex == null)
+                                {
+                                    logger.log(Level.SEVERE, "No item texture loaded for id={0}", n);
+                                }
+                                else
+                                {
+                                    drawTile(tex, x-tex.footX, y - tex.image.getHeight() + tex.footY);
+                                }
+                            }
+                            else
+                            {
+                                int deco = n & 0xFFFF;
+                                Texture tex = textureCache.textures[deco];
+                                if(tex == null)
+                                {
+                                    logger.log(Level.SEVERE, "No deco texture loaded for id={0}", n & 0xFFFF);
+                                }
+                                else
+                                {
+                                    drawTile(tex, x-tex.footX, y - tex.image.getHeight() + tex.footY);
+                                    String name = decoDisplayNames[deco];
+                                    if(name != null &&
+                                       (showItemNames ||
+                                        (Math.abs(cursorI - mapI - ii) < 2 && Math.abs(cursorJ - mapJ - jj) < 2)))
+                                    {
+                                        hotspotMap.addHotspot(mapI + ii, mapJ + jj,
+                                                              x + (int)(font.getStringWidth(name) * 0.3),
+                                                              y + 16,
+                                                              name );
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // Hajo: debug blocked areas
+                    /*
+                    if(map.isPlacementBlocked(mapI+ii, mapJ+jj))
+                    {
+                        drawTileStanding(TextureCache.textures[6], x, y);
+                    }
+                    */
+
+                    /*
+                    if(map.isMovementBlocked(mapI+ii, mapJ+jj))
+                    {
+                        drawTileStanding(TextureCache.textures[13], x, y);
+                    }
+                    */
+
+                    /*
+                    if(centerI*Map.SUB == mapI && centerJ*Map.SUB == mapJ)
+                    {
+                        drawTileStanding(TextureCache.textures[13], x, y);
+                    }
+                    */
+
+                    n = map.getMob(mapI+ii, mapJ+jj);
+                    if(n > 0)
+                    {
+                        // more drawables here?
+                        DrawableVerticalList.DrawableLink dl = vList.get(mapI+ii, mapJ+jj);
+
+                        while(dl != null)
+                        {
+                            Mob mob = mobs.get(dl.id);
+
+                            int xoff = (mob.iOff * xd / Map.SUB - mob.jOff * xd / Map.SUB) >> 16;
+                            int yoff = (mob.iOff * yd / Map.SUB + mob.jOff * yd / Map.SUB) >> 16;
+
+                            yoff += mob.zOff >> 16;
+
+                            mob.visuals.display(this, x + xoff, y + yoff);
+                            dl = dl.next;
+                        }
+                    }
+
+                    // Hajo: spell effects and such
+                    Drawable drawable = map.getEffect(mapI+ii, mapJ+jj);
+                    if(drawable != null)
+                    {
+                        drawable.display(this, x, y);
+                    }
+
+                    if(mapI+ii == cursorI && mapJ+jj == cursorJ && cursorN > 0)
+                    {
+                        Texture tex = textureCache.textures[cursorN];
+                        drawTile(tex, x-tex.footX, y - tex.image.getHeight() + tex.footY);
+                    }
+
+                    ii ++;
+                    jj --;
+                }
+            }
+        }
+    }
+
+    private void drawFloorDecoration(int xd, int yd, int i, int j, int x0, int y0)
+    {
+        if(y0 < displayHeight && y0 > -216 && x0 > -216 && x0 < displayWidth)
+        {
+            int mapI = i * Map.SUB;
+            int mapJ = j * Map.SUB;
+
+            for(int jj=0; jj<Map.SUB; jj++)
+            {
+                for(int ii=0; ii<Map.SUB; ii++)
+                {
+                    int x = x0 - xd + ii* xd /Map.SUB - jj* xd /Map.SUB;
+                    int y = y0 - xd + ii* yd /Map.SUB + jj* yd /Map.SUB;
+
+                    int n = map.getItem(mapI+ii, mapJ+jj);
+
+                    if(n > 0)
+                    {
+                        if((n & Map.F_FLOOR_DECO) != 0)
+                        {
+                            Texture tex = textureCache.textures[n & 0xFFFF];
+                            drawTile(tex, x-tex.footX, y - tex.image.getHeight() + tex.footY);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void drawFloor(int xd, int i, int j, int x0, int y0)
+    {
+        if(y0 < displayHeight && y0 > -216 && x0 > -216 && x0 < displayWidth)
+        {
+            int mapI = i *Map.SUB;
+            int mapJ = j *Map.SUB;
+
+            int n = map.getFloor(mapI, mapJ);
+            if(n > 0)
+            {
+                Texture tex = textureCache.grounds[n];
+
+                if(tex != null)
+                {
+                    int c1 = map.getColor(mapI, mapJ);
+                    int c2 = map.getColor(mapI+Map.SUB, mapJ);
+                    int c3 = map.getColor(mapI+Map.SUB, mapJ+Map.SUB);
+                    int c4 = map.getColor(mapI, mapJ+Map.SUB);
+
+                    drawGround(tex, x0, y0, c1, c2, c3, c4);
+                }
+                else
+                {
+                    logger.log(Level.SEVERE, "No floor texture loaded for id={0}", n);
+                }
+            }
+
+            n = map.getWay(mapI, mapJ);
+            if(n > 0)
+            {
+                Texture tex = textureCache.grounds[n];
+
+                if(tex != null)
+                {
+                    int c1 = map.getColor(mapI, mapJ);
+                    int c2 = map.getColor(mapI+Map.SUB, mapJ);
+                    int c3 = map.getColor(mapI+Map.SUB, mapJ+Map.SUB);
+                    int c4 = map.getColor(mapI, mapJ+Map.SUB);
+
+                    drawGround(tex, x0, y0, c1, c2, c3, c4);
+                }
+            }
+
+            n = map.getWayLikeItem(mapI, mapJ);
+            if(n > 0)
+            {
+                Texture tex = textureCache.textures[n];
+
+                if(tex != null)
+                {
+                    drawTile(tex, x0 - xd - tex.footX, y0 - xd - tex.image.getHeight() + tex.footY);
+                }
+            }
         }
     }
 
@@ -998,7 +1030,7 @@ public class IsoDisplay implements PostRenderHook
         }
     }
     
-    private class DummyMouseHandler implements MouseHandler
+    private static class DummyMouseHandler implements MouseHandler
     {
         @Override
         public void processMouse()

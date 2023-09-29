@@ -10,7 +10,7 @@ import java.util.HashMap;
 public class SparseMapLayer <E>
 {
     // private final HashMap <Integer, E> map = new HashMap<>();
-    private final SparseArray <E> map = new SparseArray<>(127);
+    private final SparseArray <E> map = new SparseArray<>(2000);
 
     public SparseMapLayer(int width, int height)
     {
