@@ -1179,8 +1179,8 @@ public class ImpCity implements PostRenderHook, GameInterface
         IsoDisplay.drawTile(intro, 1200 - intro.image.getWidth(), 0);
         // display.font.drawString(nameVersion, 0xFFFFFF, 220, 440);
         // display.font.drawStringScaled(msg, 0xDDDDDD, 220, 400, 0.8);
-        gameDisplay.getFontLow().drawStringScaled(nameVersion, 0xFFDDAA, 210, 445, 0.5);
-        gameDisplay.getFontLow().drawStringScaled(msg, 0xDDDDDD, 210, 396, 0.3);
+        gameDisplay.getFontLow().drawStringScaled(nameVersion, 0xFFFFDDAA, 210, 445, 0.5);
+        gameDisplay.getFontLow().drawStringScaled(msg, 0xFFDDDDDD, 210, 396, 0.3);
         display.update();
     }
 
