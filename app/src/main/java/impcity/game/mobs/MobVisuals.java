@@ -23,7 +23,8 @@ public class MobVisuals implements Drawable
     public static final int OVERLAY_SHIELD = 3;
 
     public Animation animation;
-    
+
+    private int shadow;
     private int displayCode;
     private int bubble;
     
@@ -47,12 +48,14 @@ public class MobVisuals implements Drawable
     
     public String name;
     
-    public MobVisuals()
+    public MobVisuals(int shadow)
     {
         for(int i=0; i<equipmentOverlaysColors.length; i++)
         {
             equipmentOverlaysColors[i] = 0xFFFFFFFF;
         }
+
+        this.shadow = shadow;
     }
     
     public int getDisplayCode()
@@ -91,11 +94,13 @@ public class MobVisuals implements Drawable
         lastScreenY = y;
         
         // Hajo: draw the mob's shadow
-        Texture tex = display.textureCache.textures[Features.SHADOW_BASE];
-        int w = 20;  // Mob size?
-        int h = w / 2;
-        IsoDisplay.drawTile(tex, x-w/2, y-h/4, w, h, 0.4f, 0f, 0f, 0f);
-        
+        if(shadow != 0)
+        {
+            Texture tex = display.textureCache.textures[shadow];
+            int w = 20;  // Mob size?
+            int h = w / 2;
+            IsoDisplay.drawTile(tex, x - w / 2, y - h / 4, w, h, 0.4f, 0f, 0f, 0f);
+        }
         
         if(animation != null)
         {
@@ -115,6 +120,7 @@ public class MobVisuals implements Drawable
         }
         
         // Hajo: draw the mob itself
+        Texture tex;
         tex = display.textureCache.species[displayCode];
         int left, right, center;
         

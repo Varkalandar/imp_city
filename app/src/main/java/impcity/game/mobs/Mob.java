@@ -118,9 +118,9 @@ public class Mob
         this.key = key;
     }
                 
-    public Mob(World world, int playerX, int playerY, int species, Map gameMap, Ai ai, int speed, MovementPattern pattern)
+    public Mob(World world, int playerX, int playerY, int species, int shadow, Map gameMap, Ai ai, int speed, MovementPattern pattern)
     {
-        this.visuals = new MobVisuals();
+        this.visuals = new MobVisuals(shadow);
         this.world = world;
         this.species = species;
         this.gameMap = gameMap;
@@ -183,7 +183,7 @@ public class Mob
             Path.Node node = path.currentStep();
             
             if(node != null)
-            {                
+            {
                 int steps = deltaT * stepsPerSecond * (1 << 16) / 1000;
 
                 // System.err.println("Move: " + time + " steps=" + steps);
@@ -239,7 +239,6 @@ public class Mob
                 zOff = iOff = jOff = 0;
                 lastStep = true;
                 setPath(null);
-
             }
         }
 
@@ -261,6 +260,15 @@ public class Mob
         Path.Node node = path.currentStep();
         if(node != null)
         {
+            // check if this place has been blocked since the path was found
+            if(gameMap.isMovementBlocked(node.x, node.y))
+            {
+                // can't go there ...
+                path = null;
+                setPath(null);
+                return;
+            }
+
             gameMap.setMob(location.x, location.y, 0);
 
             int dx = node.x - location.x;

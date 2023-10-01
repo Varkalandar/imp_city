@@ -277,7 +277,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             logger.log(Level.SEVERE, mapName, ex);
         }
 
-        player = new Mob(world, 30, 350, Species.GLOBOS_BASE, gameMap, null, 45, new MovementJumping());
+        player = new Mob(world, 30, 350, Species.GLOBOS_BASE, 0, gameMap, null, 45, new MovementJumping());
         playerKey = world.mobs.nextFreeKey();
         world.mobs.put(playerKey, player);
         player.setKey(playerKey);
@@ -520,7 +520,6 @@ public class ImpCity implements PostRenderHook, GameInterface
                 {
                     map.setItem(x, y, 0);
                     map.setItem(x + Map.SUB/2-1, y + Map.SUB/2-1, block | Map.F_DECO);
-                    // System.out.println("Moving block " + block);
                 }
             }
         }
@@ -666,7 +665,7 @@ public class ImpCity implements PostRenderHook, GameInterface
                     logger.log(Level.INFO, "loading a " + desc.name);
 
                     Mob mob;
-                    mob = new Mob(world, 0, 0, species, map, null, desc.speed, desc.move);
+                    mob = new Mob(world, 0, 0, species, Features.SHADOW_BASE, map, null, desc.speed, desc.move);
                     mob.read(reader, null);
 
                     line = reader.readLine();
@@ -817,17 +816,31 @@ public class ImpCity implements PostRenderHook, GameInterface
             laboratoriums.add(p);
         }
 
-        furnishWorkshop(map, p);
+        furnishLab(map, p);
         refreshPillars(rasterI, rasterJ);
     }
 
-    private void furnishWorkshop(Map map, Point p)
+    private void furnishLab(Map map, Point p)
     {
         int x = p.x + Map.SUB/2;
         int y = p.y + Map.SUB/2;
         map.setItem(x, y, Features.I_LAB_TABLE);
         
         addParticleGenerator(map, x, y, 4, MobStats.G_DISTILL);
+
+        RectArea area = new RectArea(x - 2, y - 2, 3, 3);
+
+        area.traverseWithoutCorners(new LocationCallback()
+        {
+            @Override
+            public boolean visit(int x, int y)
+            {
+                map.setMovementBlocked(x, y, true);
+                return false;
+            }
+        });
+
+
     }
 
     public void addForgeSquare(final Map map, int rasterI, int rasterJ) 
@@ -1015,7 +1028,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         SpeciesDescription desc = Species.speciesTable.get(Species.IMPS_BASE);
         
         ImpAi impAi = new ImpAi(this);
-        Mob imp = new Mob(world, x, y, Species.IMPS_BASE, gameMap, impAi, desc.speed, desc.move);
+        Mob imp = new Mob(world, x, y, Species.IMPS_BASE, Features.SHADOW_BASE, gameMap, impAi, desc.speed, desc.move);
         int impKey = world.mobs.nextFreeKey();
         world.mobs.put(impKey, imp);
         imp.setKey(impKey);
@@ -1137,7 +1150,7 @@ public class ImpCity implements PostRenderHook, GameInterface
     {
         // Hajo: Hack: Generators must be mobs, due to display
         // restrictions. -> They have species 0 as marker!
-        Mob generator = new Mob(world, x, y, 0, map, null, 0, new MovementJumping());
+        Mob generator = new Mob(world, x, y, 0, 0, map, null, 0, new MovementJumping());
         generator.stats.setCurrent(MobStats.GENERATOR, type);
                 
         int key = world.mobs.nextFreeKey();

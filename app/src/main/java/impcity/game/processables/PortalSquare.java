@@ -1,5 +1,6 @@
 package impcity.game.processables;
 
+import impcity.game.Features;
 import impcity.game.ImpCity;
 import impcity.game.Sounds;
 import impcity.game.species.Species;
@@ -72,7 +73,7 @@ public class PortalSquare implements Processable
                     game.soundPlayer.playFromPosition(Sounds.CREATURE_ARRIVAL, 0.8f, 1.0f,
                                                       new Point(16, 355), game.getViewPosition());
                     
-                    Mob mob = new Mob(game.world, sx, sy, species, map, monsterAi, desc.speed, desc.move);
+                    Mob mob = new Mob(game.world, sx, sy, species, Features.SHADOW_BASE, map, monsterAi, desc.speed, desc.move);
                     int key = game.world.mobs.nextFreeKey();
                     game.world.mobs.put(key, mob);
                     mob.setKey(key);
@@ -84,9 +85,9 @@ public class PortalSquare implements Processable
                     // Hajo: give them slightly random shadaes
                     mob.visuals.color =
                             0xFF000000 + 
-                            ((210 + (int)(36 * Math.random())) << 16) + 
-                            ((210 + (int)(36 * Math.random())) << 8) + 
-                            ((210 + (int)(36 * Math.random()))); 
+                            ((204 + (int)(42 * Math.random())) << 16) +
+                            ((204 + (int)(42 * Math.random())) << 8) +
+                            ((204 + (int)(42 * Math.random())));
                 }
                 else
                 {
