@@ -221,7 +221,7 @@ public class Species
 
         SpeciesDescription hatMages = 
                 new SpeciesDescription("Hat Mage", 
-                                       3,                 // size 
+                                       2,                 // size
                                        HAT_MAGE_BASE,
                                        397,               // lair type
                                        3,                 // lair size
