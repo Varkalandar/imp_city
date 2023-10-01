@@ -325,17 +325,29 @@ public class CreatureAi extends AiBase
             area.findArea(new WayPathSource(mob.gameMap, desc.size), mob.location.x, mob.location.y);
             
             ArrayList <Point> locations = area.getArea();
-            
-            Point p = locations.get((int)(Math.random() * locations.size()));
-            
-            Path path = new Path();
-            
-            path.findPath(new WayPathSource(mob.gameMap, desc.size), 
-                          new LocationPathDestination(mob.gameMap, p.x, p.y, 0), 
-                          mob.location.x, mob.location.y);
-            
-            mob.setPath(path);
-            goal = Goal.GOING;
+
+            if(locations.size() == 0)
+            {
+                logger.log(Level.WARNING, "Creature #{0} is stuck at {1}, {2} and will be warped home.",
+                        new Object[]{mob.getKey(), mob.location.x, mob.location.y});
+                mob.gameMap.setMob(mob.location.x, mob.location.y, 0);
+                mob.location.x = home.x;
+                mob.location.y = home.y;
+                mob.gameMap.setMob(home.x, home.y, mob.getKey());
+            }
+            else
+            {
+                Point p = locations.get((int) (Math.random() * locations.size()));
+
+                Path path = new Path();
+
+                path.findPath(new WayPathSource(mob.gameMap, desc.size),
+                        new LocationPathDestination(mob.gameMap, p.x, p.y, 0),
+                        mob.location.x, mob.location.y);
+
+                mob.setPath(path);
+                goal = Goal.GOING;
+            }
         }
         else if(goal == Goal.FIND_FOOD)
         {
