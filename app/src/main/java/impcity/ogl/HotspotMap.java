@@ -155,7 +155,7 @@ public class HotspotMap
             int height = hotspots[i].screenH;
 
             IsoDisplay.fillRect(x, y+11, width, height, 0x80000000);
-            font.drawStringScaled(name, 0xFFFFFF, x+5, y+12, 0.6);
+            font.drawStringScaled(name, 0xFFFFFFFF, x+5, y+12, 0.6);
         }
     }
     

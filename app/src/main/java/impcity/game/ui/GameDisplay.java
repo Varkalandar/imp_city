@@ -162,13 +162,22 @@ public class GameDisplay
         int textColor = 0xFFFFDD99;
         Mob keeper = game.world.mobs.get(game.getPlayerKey());
 
+        /*
         drawShadowText("Rookie", textColor, textLeft, 64, 0.25);
         drawShadowText(calcReputationDisplay(keeper), textColor, textLeft, 34, 0.25);
         drawShadowText("" + keeper.stats.getCurrent(KeeperStats.GOLD) + " Gold", textColor, textLeft, 4, 0.25);
         
         drawShadowText("" + Clock.days() + " days " + Clock.hour() + " hours", 0xFFDDDDDD, 
                 display.displayWidth - 140, display.displayHeight - 30, 0.22);
+        */
         
+        drawMenuText("Rookie", textColor, textLeft, 68, 0.75);
+        drawMenuText(calcReputationDisplay(keeper), textColor, textLeft, 40, 0.75);
+        drawMenuText("" + keeper.stats.getCurrent(KeeperStats.GOLD) + " Gold", textColor, textLeft, 12, 0.75);
+
+        drawMenuText("" + Clock.days() + " days " + Clock.hour() + " hours", 0xFFDDDDDD, 
+                display.displayWidth - 140, display.displayHeight - 30, 0.5);
+
         if(topDialog != null)
         {
             topDialog.display((display.displayWidth - topDialog.width) / 2, 
@@ -229,21 +238,39 @@ public class GameDisplay
     private void drawShortButton(String text, int x, int y, int textColor, int buttonColor)
     {
         IsoDisplay.drawTile(buttonText, x, y, buttonColor);
+       
+        /*
         float f = 0.16f;
         int width = (int)(fontLow.getStringWidth(text) * f + 0.5f);
-        drawShadowText(text, textColor, x + (buttonText.image.getWidth() - width)/2, y+2, f);        
+        drawShadowText(text, textColor, x + (buttonText.image.getWidth() - width)/2, y+2, f);
+        */
+        
+        float f = 0.6f;
+        int width = (int)(display.font.getStringWidth(text) * f + 0.5f);
+        drawMenuText(text, textColor, x + (buttonText.image.getWidth() - width)/2, y+4, f);
     }
 
+    
+    private void drawMenuText(String text, int color, int x, int y, double f)
+    {
+        PixFont font = display.font;        
+        font.drawStringScaled(text, color, x, y, f);
+    }
+    
     
     public void drawShadowText(String text, int color, int x, int y, double f)
     {
         int shadow = 0x33000000;
-        fontLow.drawStringScaled(text, shadow, x+1, y, f);
-        fontLow.drawStringScaled(text, shadow, x, y+1, f);
-        fontLow.drawStringScaled(text, shadow, x-1, y, f);
-        fontLow.drawStringScaled(text, shadow, x, y-1, f);
+        // PixFont font = fontLow;
+        PixFont font = display.font; f *= 3.0;
+        
+        font.drawStringScaled(text, shadow, x+1, y, f);
+        font.drawStringScaled(text, shadow, x, y+1, f);
+        font.drawStringScaled(text, shadow, x-1, y, f);
+        font.drawStringScaled(text, shadow, x, y-1, f);
 
-        fontLow.drawStringScaled(text, color, x, y, f);
+        font.drawStringScaled(text, color, x, y, f);
+
     }
 
     public void drawBoxedShadowText(String text,

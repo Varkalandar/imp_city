@@ -215,14 +215,22 @@ public class ImpCity implements PostRenderHook, GameInterface
 
         player.stats.setMin(KeeperStats.RESEARCH, 0);
         player.stats.setMax(KeeperStats.RESEARCH, 10000); // research needed for next discovery
+        
+        // register some named features
+        display.setDecoDisplayName(Features.I_TUNNEL_PORTAL, "Tunnel Portal");
+        display.setDecoDisplayName(Features.I_MINERAL_BLOCK, "Coboltium Deposit");
+        display.setDecoDisplayName(Features.I_TIN_ORE_MOUND, "Tin Ore");
+        display.setDecoDisplayName(Features.I_COPPER_ORE_MOUND, "Copper Ore");
     }
 
+    
     @Override
     public World getWorld()
     {
         return world;
     }
 
+    
     @Override
     public int getPlayerKey()
     {
@@ -404,6 +412,10 @@ public class ImpCity implements PostRenderHook, GameInterface
                     else if(select > 0.96)
                     {
                         map.setItem(x, y, Map.F_DECO + Features.I_TIN_ORE_MOUND);
+                    }
+                    else if(select > 0.94)
+                    {
+                        map.setItem(x, y, Map.F_DECO + Features.I_MINERAL_BLOCK);
                     }
                     else
                     {

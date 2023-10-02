@@ -1,6 +1,7 @@
-Changes since v0.18
+Changes since v0.19
 
-- 
+- Added mineral deposit graphics
+- Some map elements now have mouse-over popups with explanatory texts
 
 Changes since v0.18
 

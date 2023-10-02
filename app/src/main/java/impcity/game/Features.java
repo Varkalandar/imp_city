@@ -75,6 +75,7 @@ public class Features
     public static final int I_COPPER_ORE_MOUND = 1498;
     public static final int I_TIN_ORE_MOUND = 1501;
     public static final int I_STEEP_EARTH_BLOCK = 1504;
+    public static final int I_MINERAL_BLOCK = 1507;
 
     public static final int I_FRAME_RIGHT = 26;
     public static final int I_FRAME_BOT = 27;
