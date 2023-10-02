@@ -315,7 +315,7 @@ public class CreatureAi extends AiBase
             else
             {
                 // Hajo: normal condition at start.
-                // try looking again in one seconds
+                // try looking again in one second
                 pathTime = pathTime + 1000;
             }
         }

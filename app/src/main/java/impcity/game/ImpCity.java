@@ -54,7 +54,7 @@ import rlgamekit.objects.Registry;
  */
 public class ImpCity implements PostRenderHook, GameInterface
 {
-    private static final String nameVersion = "Imp City v0.18";
+    private static final String nameVersion = "Imp City v0.19";
     
     private static final Logger logger = Logger.getLogger(ImpCity.class.getName());
     
@@ -211,7 +211,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         player.stats.setCurrent(KeeperStats.GOLD, 0);
         player.stats.setCurrent(KeeperStats.RESEARCH, 0);
 
-        player.stats.setCurrent(KeeperStats.RESEARCH, KeeperStats.RESEARCH_LABS | KeeperStats.RESEARCH_FORGES);
+        // player.stats.setCurrent(KeeperStats.RESEARCH, KeeperStats.RESEARCH_LABS | KeeperStats.RESEARCH_FORGES);
 
         player.stats.setMin(KeeperStats.RESEARCH, 0);
         player.stats.setMax(KeeperStats.RESEARCH, 10000); // research needed for next discovery
@@ -839,8 +839,6 @@ public class ImpCity implements PostRenderHook, GameInterface
                 return false;
             }
         });
-
-
     }
 
     public void addForgeSquare(final Map map, int rasterI, int rasterJ) 
@@ -1093,7 +1091,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         }
         else if(breakthrough == KeeperStats.RESEARCH_LABS)
         {
-            text = "Your researchers found out how to build workshops.\nRoom unlocked: Workshop";
+            text = "Your researchers found out how to build laboratories.\nRoom unlocked: Laboratory";
         }
         else if(breakthrough == KeeperStats.RESEARCH_HEALING)
         {

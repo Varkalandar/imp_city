@@ -353,7 +353,7 @@ public class GameDisplay
             }
             else if(x > left + 532 && x < left + 532 + 80)
             {
-                drawShadowText("Build a laboratorium", 0xFFFFFFFF, left + 532 - 90, tipY, 0.3);
+                drawShadowText("Build a laboratory", 0xFFFFFFFF, left + 532 - 90, tipY, 0.3);
             }
             else if(x > left + 616 && x < left + 616 + 80)
             {

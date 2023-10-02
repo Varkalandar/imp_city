@@ -535,7 +535,7 @@ public class ImpCityMouseHandler implements MouseHandler
     {
         int mouseX = Mouse.getX();
         int mouseY = Mouse.getY();
-        int left = gameDisplay.calcMainUiBarLeft() + 10;
+        int left = gameDisplay.calcMainUiBarLeft() - 10;
         int top = -10;
         
         // Hajo: this was a click into the menu bar
