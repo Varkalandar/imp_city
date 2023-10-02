@@ -1,5 +1,9 @@
 Changes since v0.18
 
+- 
+
+Changes since v0.18
+
 - Improved some vegetable plant graphics
 - Reduced jitter for moving bookworms
 - New table lair graphics for mosquitoes and wyverns
@@ -9,6 +13,7 @@ Changes since v0.18
 - Workshop was changed to laboratory and got new graphics
 - Added hat mages to do alchemy in laboratories
 - changed drawing order to reduce clipping artifacts
+- stuck creatures are now teleported back home
 
 Changes since v0.17
 

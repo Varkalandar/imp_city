@@ -828,7 +828,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         
         addParticleGenerator(map, x, y, 4, MobStats.G_DISTILL);
 
-        RectArea area = new RectArea(x - 2, y - 2, 3, 3);
+        RectArea area = new RectArea(x - 1, y - 1, 2, 2);
 
         area.traverseWithoutCorners(new LocationCallback()
         {
