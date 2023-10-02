@@ -32697,17 +32697,17 @@
       <Description>
         <version>4</version>
         <id>1508</id>
-        <width>1</width>
-        <height>1</height>
+        <width>214</width>
+        <height>155</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>107</footX>
+        <footY>95</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>mineral deposit</string>
+        <string>rgba</string>
         <string></string>
         <string></string>
       </Metadata>

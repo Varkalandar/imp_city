@@ -218,7 +218,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         
         // register some named features
         display.setDecoDisplayName(Features.I_TUNNEL_PORTAL, "Tunnel Portal");
-        display.setDecoDisplayName(Features.I_MINERAL_BLOCK, "Coboltium Deposit");
+        display.setDecoDisplayName(Features.I_MINERAL_BLOCK, "Raw Cobaltite Deposit");
         display.setDecoDisplayName(Features.I_TIN_ORE_MOUND, "Tin Ore");
         display.setDecoDisplayName(Features.I_COPPER_ORE_MOUND, "Copper Ore");
     }
