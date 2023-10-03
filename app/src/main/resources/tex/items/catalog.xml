@@ -22555,8 +22555,8 @@
         <height>12</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>6</footX>
-        <footY>10</footY>
+        <footX>7</footX>
+        <footY>66</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -22574,8 +22574,8 @@
         <height>25</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>13</footX>
-        <footY>23</footY>
+        <footX>14</footX>
+        <footY>72</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -22593,8 +22593,8 @@
         <height>39</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>22</footX>
-        <footY>37</footY>
+        <footX>21</footX>
+        <footY>80</footY>
       </Description>
       <Metadata>
         <int>0</int>
