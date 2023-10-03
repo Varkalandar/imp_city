@@ -39,6 +39,7 @@ import impcity.game.map.RectArea;
 import impcity.game.mobs.MovementJumping;
 import impcity.oal.SoundPlayer;
 import impcity.ogl.IsoDisplay;
+import impcity.ogl.Light;
 import impcity.ui.PostRenderHook;
 import impcity.ui.TimedMessage;
 import java.lang.reflect.Field;
@@ -839,7 +840,11 @@ public class ImpCity implements PostRenderHook, GameInterface
         map.setItem(x, y, Features.I_LAB_TABLE);
         
         addParticleGenerator(map, x, y, 4, MobStats.G_DISTILL);
-
+        
+        Light light = new Light(x, y, 20, 3, 0x4499CCFF, 0.7);
+        map.lights.add(light);
+        
+        // lab equipment is not walkable
         RectArea area = new RectArea(x - 3, y - 3, 5, 5);
 
         area.traverseWithoutCorners(new LocationCallback()
@@ -902,6 +907,9 @@ public class ImpCity implements PostRenderHook, GameInterface
             int voly = p.y + Map.SUB/4;
             map.setItem(volx, voly, Features.I_SMALL_VOLCANO);
 
+            Light light = new Light(volx, voly, 30, 3, 0x44FFAA55, 0.7);
+            map.lights.add(light);
+            
             RectArea area = new RectArea(volx - 2, voly - 2, 3, 3);
 
             area.traverseWithoutCorners(new LocationCallback() 

@@ -5,6 +5,7 @@ import impcity.game.ImpCity;
 import java.awt.Point;
 import impcity.game.mobs.Mob;
 import impcity.game.map.Map;
+import impcity.ogl.Light;
 
 /**
  * Excavate a tile.
@@ -52,6 +53,33 @@ public class JobFrame extends AbstractJob
         {
             map.setItem(rasterI+Map.SUB-1, rasterJ+Map.SUB-1, Features.I_FRAME_BOT);
         }
+        
+        
+        /*
+        
+        // left wall light
+        if(Features.isImpassable(l))
+        {        
+            int i = rasterI;
+            int j = rasterJ + Map.SUB/2 - 1;
+            map.removeLight(i, j);
+            Light light1 = new Light(i, j, 20, 3, 0xBBFFCC99, 0.7);
+            map.lights.add(light1);
+        }
+        
+        
+        // right wall light
+        if(Features.isImpassable(t))
+        {        
+            int i = rasterI + Map.SUB/2 - 1;
+            int j = rasterJ;
+            
+            map.removeLight(i, j);
+            Light light = new Light(i, j, 20, 3, 0xBBFFCC99, 0.7);
+            map.lights.add(light);
+        }
+
+        */
     }
     
     private static void clearPillar(Map map, int x, int y)
