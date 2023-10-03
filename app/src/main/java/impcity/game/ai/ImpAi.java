@@ -2,6 +2,7 @@ package impcity.game.ai;
 
 import impcity.game.Features;
 import impcity.game.ImpCity;
+import impcity.game.map.Map;
 import impcity.game.species.Species;
 import impcity.game.species.SpeciesDescription;
 import impcity.game.jobs.Job;
@@ -20,7 +21,6 @@ import impcity.game.Clock;
 import impcity.game.Sounds;
 import impcity.game.mobs.Mob;
 import impcity.game.map.LocationPathDestination;
-import impcity.oal.SoundPlayer;
 import rlgamekit.pathfinding.Path;
 
 /**
@@ -38,7 +38,7 @@ public class ImpAi extends AiBase
         FIND_JOB, FIND_PATH_TO_JOB, GO_TO_JOB, WORKING,
         GO_TO_SLEEP, SLEEP, 
         GOLD_TO_TREASURY, DROP_GOLD,
-        ITEM_TO_WORKSHOP, DROP_ITEM
+        ITEM_TO_FORGE, ITEM_TO_LAB, DROP_ITEM
     }
     
     private final Point home;
@@ -405,13 +405,15 @@ public class ImpAi extends AiBase
                 mob.setPath(null);
             }
         }
-        else if(goal == Goal.ITEM_TO_WORKSHOP)
+        else if(goal == Goal.ITEM_TO_FORGE || goal == Goal.ITEM_TO_LAB)
         {
             Path path = new Path();
-            
+
+            int requiredGround = (goal == Goal.ITEM_TO_FORGE) ? Features.GROUND_FORGE : Features.GROUND_LABORATORY;
+
             boolean ok = 
             path.findPath(new ImpPathSource(mob, desc.size), 
-                          new FeaturePathDestination(mob.gameMap, 0, 1, Features.GROUND_FORGE, 3), 
+                          new FeaturePathDestination(mob.gameMap, 0, 0, requiredGround, 3),
                           mob.location.x, mob.location.y);
             
             if(ok)
@@ -422,12 +424,23 @@ public class ImpAi extends AiBase
             }
             else
             {
-                // No more mining ...
+                logger.log(Level.WARNING, "Imp completed mining job but could not find a path for the produce.");
+
+                // No more mining ... clean up
+
+                // clear the mining symbol
+                Point p = currentJob.getLocation();
+                int rasterI = p.x/ Map.SUB*Map.SUB;
+                int rasterJ = p.y/Map.SUB*Map.SUB;
+                mob.gameMap.setItem(rasterI+Map.SUB/2, rasterJ+Map.SUB/2, 0);
+
+                // clear the job
                 currentJob = null;
                 goal = Goal.FIND_JOB;
                 mob.visuals.setBubble(0);
                 mob.stats.setCurrent(MobStats.CARRY, 0);
                 mob.setPath(null);
+
             }
         }
         else
@@ -575,8 +588,13 @@ public class ImpAi extends AiBase
         if(workStep < 30)
         {
             splashMiningSparks(mob);
-            
-            if(workStep % 8 == 1)
+
+            // spin some
+            int dir = mob.visuals.getDisplayCode() - mob.getSpecies();
+            dir = (dir + 1) & 7;
+            mob.visuals.setDisplayCode(mob.getSpecies() + dir);
+
+            if((workStep & 7) == 1)
             {
                 game.soundPlayer.playFromPosition(Sounds.DIG_SQUARE, 0.15f, (float)(0.7 + (Math.random() *  0.4)),
                         mob.location, game.getViewPosition());
@@ -588,24 +606,43 @@ public class ImpAi extends AiBase
         {
             logger.log(Level.INFO, "Imp #{0} completes mining job.", mob.getKey());
             
-            // Did we acquire gold in the job?
-            if(mob.stats.getCurrent(MobStats.GOLD) > 0)
-            {
-                goal = Goal.GOLD_TO_TREASURY;
-                mob.setPath(null);
-            }
-            else if(mob.stats.getCurrent(MobStats.CARRY) > 0)
-            {
-                // Imp is carrying something. At now, all stuff goes to the workshop
-                goal = Goal.ITEM_TO_WORKSHOP;
-                mob.setPath(null);
-            }
+            goal = calculateGoalForCargo(mob);
+            mob.setPath(null);
 
             // Hajo: wait a while extra
             pathTime = Clock.time() + 5 * thinkCooldown;
         }
     }
-    
+
+    private Goal calculateGoalForCargo(Mob mob)
+    {
+        Goal newGoal = Goal.GO_TO_SLEEP;
+        int cargo = mob.stats.getCurrent(MobStats.CARRY);
+
+        if(mob.stats.getCurrent(MobStats.GOLD) > 0)
+        {
+            newGoal = Goal.GOLD_TO_TREASURY;
+        }
+        else if(cargo > 0)
+        {
+            // Imp is carrying something. Check where it has to go
+            if(cargo == Features.I_MINERAL)
+            {
+                newGoal = Goal.ITEM_TO_LAB;
+            }
+            else if(cargo == Features.I_GOLD_COINS)
+            {
+                newGoal = Goal.GOLD_TO_TREASURY;
+            }
+            else
+            {
+                newGoal = Goal.ITEM_TO_FORGE;
+            }
+        }
+
+        return newGoal;
+    }
+
     private void completePickupJob(Mob mob)
     {
         logger.log(Level.INFO, "Imp #{0} completes pick up job.", mob.getKey());
@@ -617,18 +654,8 @@ public class ImpAi extends AiBase
         }
         else if(mob.stats.getCurrent(MobStats.CARRY) > 0)
         {
-            int n = mob.stats.getCurrent(MobStats.CARRY);
-            
-            if(n == Features.I_GOLD_COINS)
-            {
-                goal = Goal.GOLD_TO_TREASURY;
-                mob.setPath(null);
-            }
-            else
-            {
-                goal = Goal.ITEM_TO_WORKSHOP;
-                mob.setPath(null);
-            }
+            goal = calculateGoalForCargo(mob);
+            mob.setPath(null);
         }
         else
         {

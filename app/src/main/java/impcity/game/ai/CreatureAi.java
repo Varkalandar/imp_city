@@ -658,7 +658,7 @@ public class CreatureAi extends AiBase
             {
                 int dir = mob.visuals.getDisplayCode() - species;
                 dir = (dir + 1) & 7;
-                mob.visuals.setDisplayCode(mob.getSpecies() + dir);
+                mob.visuals.setDisplayCode(species + dir);
             }
         }        
 

@@ -19,7 +19,7 @@ public class FeaturePathDestination implements PathDestination
     
     public FeaturePathDestination(Map map, int feature, int featureSize, int ground, int groundSize)
     {
-        this(map, makeSet(feature), feature, ground, groundSize);
+        this(map, makeSet(feature), featureSize, ground, groundSize);
     }
 
     FeaturePathDestination(Map map, Set<Integer> features, int featureSize, int ground, int groundSize)
@@ -62,8 +62,7 @@ public class FeaturePathDestination implements PathDestination
                 }
             }
         }
-        
-        
+
         return ok;
     }
     

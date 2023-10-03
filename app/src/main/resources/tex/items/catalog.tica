@@ -23903,7 +23903,7 @@ data
 Tile Description
 v.5
 1115
-10 9
+11 9
 0 0
 4 4
 End Of Header
@@ -23939,16 +23939,16 @@ rgba,item
 Tile Description
 v.5
 1117
-1 1
+17 10
 0 0
-0 0
+8 8
 End Of Header
 Item
 v.1
 data
 4
-
-
+mineral_lump
+rgba
 
 
 1

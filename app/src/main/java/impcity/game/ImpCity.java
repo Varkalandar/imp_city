@@ -211,7 +211,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         player.stats.setCurrent(KeeperStats.GOLD, 0);
         player.stats.setCurrent(KeeperStats.RESEARCH, 0);
 
-        // player.stats.setCurrent(KeeperStats.RESEARCH, KeeperStats.RESEARCH_LABS | KeeperStats.RESEARCH_FORGES);
+        player.stats.setCurrent(KeeperStats.RESEARCH, KeeperStats.RESEARCH_LABS | KeeperStats.RESEARCH_FORGES);
 
         player.stats.setMin(KeeperStats.RESEARCH, 0);
         player.stats.setMax(KeeperStats.RESEARCH, 10000); // research needed for next discovery

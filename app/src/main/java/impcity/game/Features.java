@@ -13,6 +13,12 @@ public class Features
     public static final int GROUND_POLY_TILES_DARK = 13;
     public static final int GROUND_POLY_TILES = 16;
     public static final int GROUND_GRASS_DARK = 19;
+
+    /**
+     * Initially all floors under earth or deposits are GROUND_IMPASSABLE. After
+     * taking a mining or excarvation job, thes floor is changed to GROUND_LIGHT_SOIL
+     * to make it suitable for imps to find a path into this place.
+     */
     public static final int GROUND_LIGHT_SOIL = 28;
     public static final int GROUND_STAINED_MARBLE = 31;
     public static final int GROUND_WATER = 34;
@@ -53,6 +59,7 @@ public class Features
     
     public static final int I_COPPER_ORE = 1115;
     public static final int I_TIN_ORE = 1116;
+    public static final int I_MINERAL = 1117;
 
     public static final int I_STEAM_CLOUD = 1948;
     public static final int I_STEAM_PUFF = 1949;
@@ -139,5 +146,21 @@ public class Features
     public static boolean isEarth(int item) 
     {
         return item >= I_EARTH_BLOCK && item < I_EARTH_BLOCK + 3;
+    }
+
+    public static boolean canBeMined(int ground, int block)
+    {
+        return ((block >=  Features.I_GOLD_MOUND && block < Features.I_GOLD_MOUND + 3) ||
+                (block ==  Features.I_MINERAL_BLOCK) ||
+                (block >=  Features.I_COPPER_ORE_MOUND && block < Features.I_COPPER_ORE_MOUND + 3) ||
+                (block >=  Features.I_TIN_ORE_MOUND && block < Features.I_TIN_ORE_MOUND + 3))
+                &&
+               ((ground >= Features.GROUND_LIGHT_SOIL && ground <= Features.GROUND_LIGHT_SOIL+3) ||
+                (ground >= Features.GROUND_IMPASSABLE && ground < Features.GROUND_IMPASSABLE + 3));
+    }
+
+    public static boolean canBeDug(int ground, int block) {
+        return (block >= Features.I_STEEP_EARTH_BLOCK && block < Features.I_STEEP_EARTH_BLOCK + 3) &&
+                (ground >= Features.GROUND_IMPASSABLE && ground < Features.GROUND_IMPASSABLE + 3);
     }
 }

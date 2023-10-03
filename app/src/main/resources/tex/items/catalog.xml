@@ -25230,7 +25230,7 @@
       <Description>
         <version>4</version>
         <id>1115</id>
-        <width>10</width>
+        <width>11</width>
         <height>9</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
@@ -25268,17 +25268,17 @@
       <Description>
         <version>4</version>
         <id>1117</id>
-        <width>1</width>
-        <height>1</height>
+        <width>17</width>
+        <height>10</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>8</footX>
+        <footY>8</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>mineral_lump</string>
+        <string>rgba</string>
         <string></string>
         <string></string>
       </Metadata>

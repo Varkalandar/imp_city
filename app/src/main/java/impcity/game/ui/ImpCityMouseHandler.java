@@ -136,26 +136,14 @@ public class ImpCityMouseHandler implements MouseHandler
 
     private void markForExcavation(Map map, int rasterI, int rasterJ) 
     {
-        // Hajo: first check if this is a diggable square at all.
-        
         int ground = map.getFloor(rasterI, rasterJ);
-        if(ground < Features.GROUND_IMPASSABLE && ground >= Features.GROUND_IMPASSABLE + 3) 
+        int block = map.getItem(rasterI + Map.SUB/2-1, rasterJ + Map.SUB/2-1) & Map.F_ITEM_MASK;
+
+        if(Features.canBeDug(ground, block))
         {
-            // wrong ground
-            return;
-        }
-        
-        int item = map.getItem(rasterI + Map.SUB/2-1, rasterJ + Map.SUB/2-1) & 0xFFFF;
-        // if(item >= Features.I_EARTH_BLOCK && item < Features.I_EARTH_BLOCK + 3) 
-        if(item >= Features.I_STEEP_EARTH_BLOCK && item < Features.I_STEEP_EARTH_BLOCK + 3) 
-        {
-            // this should be a diggable square, it has earth
             createExcavationJob(map, rasterI, rasterJ);
         }
-        // else if(item >= Features.I_TREASURE_BLOCK && item < Features.I_TREASURE_BLOCK + 3) 
-        else if((item >= Features.I_GOLD_MOUND && item < Features.I_GOLD_MOUND + 3) ||
-                (item >= Features.I_COPPER_ORE_MOUND && item < Features.I_COPPER_ORE_MOUND + 3) ||
-                (item >= Features.I_TIN_ORE_MOUND && item < Features.I_TIN_ORE_MOUND + 3))
+        else if(Features.canBeMined(ground, block))
         {
             createMiningJob(map, rasterI, rasterJ);
         }
@@ -201,14 +189,14 @@ public class ImpCityMouseHandler implements MouseHandler
         }
     }
     
-    private void makeWorkshop(Map map, int rasterI, int rasterJ)
+    private void makeLab(Map map, int rasterI, int rasterJ)
     {
         int n = map.getFloor(rasterI, rasterJ);
         if(n >= Features.GROUND_POLY_TILES && n < Features.GROUND_POLY_TILES + 3)
         {
             map.setFloor(rasterI, rasterJ, Features.GROUND_LABORATORY + (int)(Math.random() * 3));
             game.addLabSquare(map, rasterI, rasterJ);
-            game.soundPlayer.play(Sounds.MAKE_WORKSHOP, 0.2f, 1.0f);
+            game.soundPlayer.play(Sounds.MAKE_FORGE, 0.2f, 1.0f);
         }
     }
 
@@ -219,7 +207,7 @@ public class ImpCityMouseHandler implements MouseHandler
         {
             map.setFloor(rasterI, rasterJ, Features.GROUND_FORGE + (int)(Math.random() * 3));
             game.addForgeSquare(map, rasterI, rasterJ);
-            game.soundPlayer.play(Sounds.MAKE_WORKSHOP, 0.2f, 1.0f);
+            game.soundPlayer.play(Sounds.MAKE_FORGE, 0.2f, 1.0f);
         }
     }
     
@@ -231,7 +219,7 @@ public class ImpCityMouseHandler implements MouseHandler
         {
             map.setFloor(rasterI, rasterJ, Features.GROUND_HOSPITAL + (int)(Math.random() * 1));
             game.addHospitalSquare(map, rasterI, rasterJ);
-            game.soundPlayer.play(Sounds.MAKE_WORKSHOP, 0.2f, 1.0f);            
+            game.soundPlayer.play(Sounds.MAKE_FORGE, 0.2f, 1.0f);
         }
     }
 
@@ -612,7 +600,7 @@ public class ImpCityMouseHandler implements MouseHandler
                     makeLibrary(map, rasterI, rasterJ);
                     break;
                 case MAKE_LAB:
-                    makeWorkshop(map, rasterI, rasterJ);
+                    makeLab(map, rasterI, rasterJ);
                     break;
                 case MAKE_FORGE:
                     makeForge(map, rasterI, rasterJ);

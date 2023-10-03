@@ -32,10 +32,7 @@ public class JobMining extends AbstractJob
         int block = map.getItem(rasterI + Map.SUB/2-1, rasterJ + Map.SUB/2-1) - Map.F_DECO;
         int ground = map.getFloor(rasterI, rasterJ);
         
-        return ((block >=  Features.I_GOLD_MOUND && block <  + Features.I_GOLD_MOUND + 3) ||
-               (block >=  Features.I_COPPER_ORE_MOUND && block <  + Features.I_COPPER_ORE_MOUND + 3) ||
-               (block >=  Features.I_TIN_ORE_MOUND && block <  + Features.I_TIN_ORE_MOUND + 3)) &&
-               ground >= Features.GROUND_LIGHT_SOIL && ground <= Features.GROUND_LIGHT_SOIL+3;
+        return Features.canBeMined(ground, block);
     }
     
     @Override
@@ -65,8 +62,12 @@ public class JobMining extends AbstractJob
             else if(block >= Features.I_TIN_ORE_MOUND && block <  + Features.I_TIN_ORE_MOUND + 3)
             {
                 worker.stats.setCurrent(MobStats.CARRY, Features.I_TIN_ORE); 
-            }            
-        }        
+            }
+            else if(block == Features.I_MINERAL_BLOCK)
+            {
+                worker.stats.setCurrent(MobStats.CARRY, Features.I_MINERAL);
+            }
+        }
     }
     
     @Override
