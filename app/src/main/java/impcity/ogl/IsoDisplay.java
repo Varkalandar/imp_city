@@ -488,7 +488,7 @@ public class IsoDisplay implements PostRenderHook
                     if(map.isMovementBlocked(mapI+ii, mapJ+jj))
                     {
                         Texture tex = textureCache.textures[1008];
-                        drawTile(tex, x -tex.footX, y - tex.image.getHeight() + tex.footY, 4, 4, 0xFFFFFFFF);
+                        drawTile(tex, x - tex.footX, y - tex.image.getHeight() + tex.footY);
                     }
 */
 

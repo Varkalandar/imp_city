@@ -840,7 +840,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         
         addParticleGenerator(map, x, y, 4, MobStats.G_DISTILL);
 
-        RectArea area = new RectArea(x - 1, y - 1, 2, 2);
+        RectArea area = new RectArea(x - 3, y - 3, 5, 5);
 
         area.traverseWithoutCorners(new LocationCallback()
         {
@@ -848,6 +848,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             public boolean visit(int x, int y)
             {
                 map.setMovementBlocked(x, y, true);
+                map.setPlacementBlocked(x, y, true);
                 return false;
             }
         });

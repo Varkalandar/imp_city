@@ -76,7 +76,7 @@ public class Species
         
         SpeciesDescription imps = 
                 new SpeciesDescription("Imp", 
-                                       3,
+                                       2,
                                        IMPS_BASE, 
                                        397,               // lair type
                                        2,                 // lair size
