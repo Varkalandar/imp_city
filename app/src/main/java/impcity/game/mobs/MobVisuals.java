@@ -88,18 +88,20 @@ public class MobVisuals implements Drawable
     }
     
     @Override
-    public void display(IsoDisplay display, int x, int y)
+    public void display(IsoDisplay display, int x, int y, int yoff)
     {
         lastScreenX = x;
         lastScreenY = y;
-        
+
+        Texture tex = display.textureCache.species[displayCode];
+
         // Hajo: draw the mob's shadow
-        if(shadow != 0)
+        if(shadow != 0 && tex != null)
         {
-            Texture tex = display.textureCache.textures[shadow];
-            int w = 20;  // Mob size?
+            Texture shadowTex = display.textureCache.textures[shadow];
+            int w = tex.image.getWidth();  // Mob size?
             int h = w / 2;
-            IsoDisplay.drawTile(tex, x - w / 2, y - h / 4, w, h, 0.4f, 0f, 0f, 0f);
+            IsoDisplay.drawTile(shadowTex, x - w / 2 - yoff / 4, y - h / 4 + yoff / 8, w, h, 0.4f, 0f, 0f, 0f);
         }
         
         if(animation != null)
@@ -111,17 +113,15 @@ public class MobVisuals implements Drawable
             }
         }
         
-        backParticles.drawParticlesAt(display, x, y);
+        backParticles.drawParticlesAt(display, x, y + yoff);
         
         for(Spell spell : spells)
         {
             spell.drive();
-            spell.displayBack(display, x, y);
+            spell.displayBack(display, x, y + yoff);
         }
         
         // Hajo: draw the mob itself
-        Texture tex;
-        tex = display.textureCache.species[displayCode];
         int left, right, center;
         
         // debug
@@ -138,19 +138,19 @@ public class MobVisuals implements Drawable
             right = left + tex.image.getWidth();
             center = (left + right) / 2;
             
-            IsoDisplay.drawTile(tex, left, y - tex.image.getHeight() + tex.footY, color);
+            IsoDisplay.drawTile(tex, left, y + yoff- tex.image.getHeight() + tex.footY, color);
             
             if(bubble > 0)
             {
                 IsoDisplay.drawTile(display.textureCache.textures[bubble], center, y+tex.image.getHeight() + 2);
             }
 
-            drawEquipmentOverlays(display, tex, left, y);
+            drawEquipmentOverlays(display, tex, left, y + yoff);
             
             if(name != null)
             {
                 int nw = display.font.getStringWidth(name);
-                display.font.drawStringScaled(name, 0xFFFFFFFF, center-nw/4, y+35, 0.5);
+                display.font.drawStringScaled(name, 0xFFFFFFFF, center-nw/4, y+35+yoff, 0.5);
             }
         }
         
@@ -161,18 +161,18 @@ public class MobVisuals implements Drawable
             Texture oTex = display.textureCache.textures[tempOverlayId];
             
             IsoDisplay.drawTile(oTex, 
-                                center - tempOverlaySize / 2, y+2, 
+                                center - tempOverlaySize / 2, y+2+yoff, 
                                 tempOverlaySize, tempOverlaySize, 0xFFFFFFFF);
         }
 
-        frontParticles.drawParticlesAt(display, x, y);
+        frontParticles.drawParticlesAt(display, x, y+yoff);
 
         if(timedMessage.message != null)
         {
-            int yoff = 8 + (((int)(Clock.time() - timedMessage.time)) >> 3);
-            display.drawString(timedMessage.message, timedMessage.color, x-2, y + yoff, 1.0 + yoff/120.0);
+            int messageYoff = 8 + (((int)(Clock.time() - timedMessage.time)) >> 3);
+            display.drawString(timedMessage.message, timedMessage.color, x-2, y + yoff + messageYoff, 1.0 + messageYoff/120.0);
 
-            if(yoff > 100)
+            if(messageYoff > 100)
             {
                 timedMessage.message = null;
                 timedMessage.time = 0;
@@ -182,7 +182,7 @@ public class MobVisuals implements Drawable
         ArrayList<Spell> killList = new ArrayList<Spell>();
         for(Spell spell : spells)
         {
-            spell.displayFront(display, x, y);
+            spell.displayFront(display, x, y + yoff);
             if(spell.isExpired()) 
             {
                 spell.end();

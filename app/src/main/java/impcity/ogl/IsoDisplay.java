@@ -512,9 +512,9 @@ public class IsoDisplay implements PostRenderHook
                 int xoff = (mob.iOff * xd / Map.SUB - mob.jOff * xd / Map.SUB) >> 16;
                 int yoff = (mob.iOff * yd / Map.SUB + mob.jOff * yd / Map.SUB) >> 16;
 
-                yoff += mob.zOff >> 16;
+                // yoff += mob.zOff >> 16;
 
-                mob.visuals.display(this, x + xoff, y + yoff);
+                mob.visuals.display(this, x + xoff, y + yoff, mob.zOff >> 16);
                 dl = dl.next;
             }
         }
@@ -523,7 +523,7 @@ public class IsoDisplay implements PostRenderHook
         Drawable drawable = map.getEffect(mapI + ii, mapJ + jj);
         if(drawable != null)
         {
-            drawable.display(this, x, y);
+            drawable.display(this, x, y, 0);
         }
 
         if(mapI + ii == cursorI && mapJ + jj == cursorJ && cursorN > 0)

@@ -6,5 +6,5 @@ package impcity.ogl;
  */
 public interface Drawable
 {
-    public void display(IsoDisplay display, int x, int y);    
+    public void display(IsoDisplay display, int x, int y, int yoff);    
 }

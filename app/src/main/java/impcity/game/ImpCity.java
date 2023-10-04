@@ -514,7 +514,7 @@ public class ImpCity implements PostRenderHook, GameInterface
                         
                         if(item == Map.F_DECO + Features.I_WELL)
                         {
-                            Rectangle r = new Rectangle(x+i-1, y+j-1, 4, 4);
+                            Rectangle r = new Rectangle(x+i-2, y+j-2, 4, 4);
                             map.setAreaMovementBlocked(r, true);
                         }
                     }
@@ -845,7 +845,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         map.lights.add(light);
         
         // lab equipment is not walkable
-        RectArea area = new RectArea(x - 3, y - 3, 5, 5);
+        RectArea area = new RectArea(x - 1, y - 1, 3, 3);
 
         area.traverseWithoutCorners(new LocationCallback()
         {

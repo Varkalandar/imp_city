@@ -475,7 +475,7 @@ public class CreatureAi extends AiBase
                             p.x = cx;
                             p.y = cy;
                             
-                            if(mob.gameMap.isMovementBlocked(cx, cy))
+                            if(mob.gameMap.isMovementBlockedRadius(cx, cy, desc.size))
                             {
                                 tries ++;
                             }

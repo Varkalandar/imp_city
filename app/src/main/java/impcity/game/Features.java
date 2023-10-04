@@ -16,7 +16,7 @@ public class Features
 
     /**
      * Initially all floors under earth or deposits are GROUND_IMPASSABLE. After
-     * taking a mining or excarvation job, thes floor is changed to GROUND_LIGHT_SOIL
+     * taking a mining or excavation job, the floor is changed to GROUND_LIGHT_SOIL
      * to make it suitable for imps to find a path into this place.
      */
     public static final int GROUND_LIGHT_SOIL = 28;

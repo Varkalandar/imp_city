@@ -76,7 +76,7 @@ public class DrawableVerticalList
         
         while(link != null)
         {
-            link.drawable.display(display, x, y);
+            link.drawable.display(display, x, y, 0);
             link = link.next;
         }        
     }
