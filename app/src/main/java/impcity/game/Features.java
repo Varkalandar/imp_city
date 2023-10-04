@@ -66,6 +66,8 @@ public class Features
 
     public static final int I_LAB_TABLE = 1467;
     public static final int I_ANVIL = 1468;
+    
+    public static final int I_TORCH_STAND = 1448;
     public static final int I_BOOKSHELF_HALF_RIGHT = 1469;
     public static final int I_BOOKSHELF_RIGHT = 1470;
     

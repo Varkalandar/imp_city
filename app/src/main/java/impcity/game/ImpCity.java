@@ -464,7 +464,7 @@ public class ImpCity implements PostRenderHook, GameInterface
                 }
                 else if(ground >= Features.GROUND_LIBRARY && ground < Features.GROUND_LIBRARY + 3)
                 {
-                    addLibrarySquare(x, y);
+                    addLibrarySquare(map, x, y);
                     addClaimedSquare(x, y);
                 }
                 else if(ground >= Features.GROUND_FORGE && ground < Features.GROUND_FORGE + 3)
@@ -810,31 +810,50 @@ public class ImpCity implements PostRenderHook, GameInterface
         refreshPillars(rasterI, rasterJ);
     }
 
-    public void addLibrarySquare(int rasterI, int rasterJ) 
+    public void addLibrarySquare(Map map, int rasterI, int rasterJ) 
     {
         Point p = new Point(rasterI, rasterJ);
         if(!libraries.contains(p))
         {
             // logger.log(Level.INFO, "Adding library square {0}, {1}", new Object[]{p.x, p.y});
             libraries.add(p);
+            furnishLibrary(map, p);
         }                
         refreshPillars(rasterI, rasterJ);
     }
+
     
-    public void addLabSquare(final Map map, int rasterI, int rasterJ)
+    private void furnishLibrary(Map map, Point p) 
+    {
+        cleanSquare(map, p);
+
+        map.setItem(p.x, p.y + 4, Map.F_DECO + Features.I_BOOKSHELF_HALF_RIGHT);
+
+        Rectangle r = new Rectangle(p.x, p.y + 3, 5, 1);
+        map.setAreaMovementBlocked(r, true);
+
+        map.setItem(p.x + 6, p.y + 2, Map.F_DECO + Features.I_TORCH_STAND);
+        Light light = new Light(p.x + 6, p.y + 2, 48, 3, 0xFFFFAA55, 0.25);
+        map.lights.add(light);
+    }
+
+    
+    public void addLabSquare(Map map, int rasterI, int rasterJ)
     {
         Point p = new Point(rasterI, rasterJ);
         if(!laboratoriums.contains(p))
         {
             laboratoriums.add(p);
+            furnishLab(map, p);
         }
 
-        furnishLab(map, p);
         refreshPillars(rasterI, rasterJ);
     }
 
     private void furnishLab(Map map, Point p)
     {
+        cleanSquare(map, p);
+
         int x = p.x + Map.SUB/2;
         int y = p.y + Map.SUB/2;
         map.setItem(x, y, Features.I_LAB_TABLE);
@@ -958,7 +977,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         Point p = new Point(rasterI, rasterJ);
         if(!hospitals.contains(p))
         {
-            cleanSquare(map, rasterI, rasterJ);
+            cleanSquare(map, p);
             
             hospitals.add(p);
             
@@ -1069,13 +1088,13 @@ public class ImpCity implements PostRenderHook, GameInterface
         }
     }
 
-    private void cleanSquare(Map map, int rasterI, int rasterJ)
+    private void cleanSquare(Map map, Point p)
     {
         for(int x=0; x<Map.SUB; x++)
         {
             for(int y=0; y<Map.SUB; y++)
             {
-                map.setItem(x, y, 0);
+                map.setItem(p.x + x, p.y + y, 0);
             }            
         }
     }
@@ -1221,6 +1240,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             world.mobs.remove(generator.getKey());
         }
     }
+
 
     private class MyClockListener implements Clock.ClockListener
     {

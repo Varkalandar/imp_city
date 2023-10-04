@@ -31557,17 +31557,17 @@
       <Description>
         <version>4</version>
         <id>1448</id>
-        <width>1</width>
-        <height>1</height>
+        <width>12</width>
+        <height>49</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>2</footX>
+        <footY>48</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>torch_stand</string>
+        <string>rgba</string>
         <string></string>
         <string></string>
       </Metadata>
