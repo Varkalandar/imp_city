@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import impcity.game.Clock;
 import impcity.game.Texture;
 import impcity.game.TextureCache;
+import impcity.game.map.Map;
 import impcity.game.mobs.Mob;
 import impcity.ogl.IsoDisplay;
 import impcity.ui.PixFont;
@@ -24,6 +25,9 @@ import static org.lwjgl.opengl.GL11.glBlendFunc;
  */
 public class GameDisplay
 {
+    public static boolean showMapInfo;   // show debug info about map
+    
+    
     private final static int defaultButtonColor = 0xFFFFFFFF;
     private final static int selectedButtonColor = 0xFFFFDD99;
     // private final static int selectedButtonColor = 0xD099DDFF;
@@ -153,14 +157,24 @@ public class GameDisplay
                 break;
         }
             
+        Mob keeper = game.world.mobs.get(game.getPlayerKey());
 
         // debug
-        // font.drawStringScaled("Mouse: " + display.cursorI + "," + display.cursorJ, 0xFFFFFF, 20, 600, 0.5);
-
+        if(showMapInfo) 
+        {
+            display.font.drawStringScaled("Map pos: " + display.cursorI + ", " + display.cursorJ, 0xFFFFFFFF, 20, 600, 0.5);
+            
+            
+            int item = keeper.gameMap.getItem(display.cursorI, display.cursorJ);
+            int ino = item & Map.F_ITEM_MASK;
+            String flags = (item & Map.F_DECO) == 0 ? "" : " Deco";
+            flags += (item & Map.F_FLOOR_DECO) == 0 ? "" : " Floor";
+            
+            display.font.drawStringScaled("Item: " + ino + flags, 0xFFFFFFFF, 20, 580, 0.5);
+        }
         
         int textLeft = left + 854;
         int textColor = 0xFFFFDD99;
-        Mob keeper = game.world.mobs.get(game.getPlayerKey());
 
         /*
         drawShadowText("Rookie", textColor, textLeft, 64, 0.25);

@@ -4,9 +4,6 @@ import impcity.game.Features;
 import impcity.game.ImpCity;
 import impcity.game.quests.Quest;
 import impcity.game.quests.QuestGenerator;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import impcity.game.mobs.Mob;
 import impcity.ogl.IsoDisplay;
 import impcity.ui.KeyHandler;
@@ -108,6 +105,10 @@ public class ImpCityKeyHandler implements KeyHandler
                 else if(Keyboard.getEventKey() == Keyboard.KEY_RETURN)
                 {
                     // collectString(null);
+                }
+                else if(Keyboard.getEventKey() == Keyboard.KEY_F1)
+                {
+                    GameDisplay.showMapInfo = !GameDisplay.showMapInfo;
                 }
             }
         }

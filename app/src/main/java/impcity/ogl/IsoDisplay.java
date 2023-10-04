@@ -382,8 +382,9 @@ public class IsoDisplay implements PostRenderHook
                 drawWall(textureCache.textures[n], x0 - xd, y0 - yd -10);
             }
 
+            
             // upper half of the diamond
-            for(int line = 0; line < Map.SUB; line++)
+            for(int line = 0; line < Map.SUB-1; line++)
             {
                 int jj = 0;
                 int ii = line;
@@ -393,8 +394,6 @@ public class IsoDisplay implements PostRenderHook
                 {
                     int x = x0 - xd + ii * xd / Map.SUB - jj * xd / Map.SUB;
                     int y = y0 - xd + ii * yd / Map.SUB + jj * yd / Map.SUB;
-
-                    // System.out.println("ii="+ ii + " jj=" + jj);
                     
                     n = map.getItem(mapI + ii, mapJ + jj);
                     // map.setItem(mapI + ii, mapJ + jj, 1004);
@@ -406,13 +405,12 @@ public class IsoDisplay implements PostRenderHook
                 }
             }
 
-
             // lower half of the diamond
-            for(int line = Map.SUB; line < Map.SUB * 2; line++)
+            for(int line = 0; line < Map.SUB; line++)
             {
-                int jj = line - Map.SUB;
-                int ii = Map.SUB;
-                int maxStep = Map.SUB * 2 - line;
+                int jj = line;
+                int ii = Map.SUB - 1;
+                int maxStep = Map.SUB - line;
 
                 for(int step = 0; step < maxStep; step++)
                 {
@@ -460,7 +458,7 @@ public class IsoDisplay implements PostRenderHook
                     }
                     else
                     {
-                        drawTile(tex, x -tex.footX, y - tex.image.getHeight() + tex.footY);
+                        drawTile(tex, x - tex.footX, y - tex.image.getHeight() + tex.footY);
                         String name = decoDisplayNames[deco];
                         if(name != null &&
                            (showItemNames ||
