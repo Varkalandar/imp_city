@@ -1,6 +1,5 @@
 package impcity.game.mobs;
 
-import impcity.game.Features;
 import java.util.ArrayList;
 import impcity.game.Clock;
 import impcity.game.particles.ParticleDriver;
@@ -47,8 +46,10 @@ public class MobVisuals implements Drawable
     public final int [] equipmentOverlaysColors = new int [12];
     
     public String name;
+    private boolean sleeping;
+    private int sleepImage;
     
-    public MobVisuals(int shadow)
+    public MobVisuals(int shadow, int sleepImage)
     {
         for(int i=0; i<equipmentOverlaysColors.length; i++)
         {
@@ -56,6 +57,8 @@ public class MobVisuals implements Drawable
         }
 
         this.shadow = shadow;
+        this.sleepImage = sleepImage;
+        this.sleeping = false;
     }
     
     public int getDisplayCode()
@@ -216,6 +219,16 @@ public class MobVisuals implements Drawable
 
                 IsoDisplay.drawTile(ovl, left, bot + ydiff, equipmentOverlaysColors[i]);
             }
+        }
+    }
+
+    public void setSleeping(boolean yesno) 
+    {
+        this.sleeping = yesno;
+        
+        if(sleepImage != 0)
+        {
+            this.displayCode = sleepImage;
         }
     }
 }

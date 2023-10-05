@@ -73,7 +73,10 @@ public class PortalSquare implements Processable
                     game.soundPlayer.playFromPosition(Sounds.CREATURE_ARRIVAL, 0.8f, 1.0f,
                                                       new Point(16, 355), game.getViewPosition());
                     
-                    Mob mob = new Mob(game.world, sx, sy, species, Features.SHADOW_BASE, map, monsterAi, desc.speed, desc.move);
+                    Mob mob = new Mob(game.world, sx, sy, species, 
+                            Features.SHADOW_BASE, desc.sleepImage,
+                            map, monsterAi, desc.speed, desc.move);
+                    
                     int key = game.world.mobs.nextFreeKey();
                     game.world.mobs.put(key, mob);
                     mob.setKey(key);

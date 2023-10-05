@@ -30,6 +30,7 @@ public class Species
                 new SpeciesDescription("Globo", 
                                        3,                 // size
                                        GLOBOS_BASE,       // base
+                                       0,             // sleep image
                                        398,               // lair type
                                        2,                 // lair size
                                        new MovementJumping(),
@@ -54,6 +55,7 @@ public class Species
                 new SpeciesDescription("Conian", 
                                        3, 
                                        CONIANS_BASE,
+                                       0,             // sleep image
                                        398,               // lair type
                                        2,                 // lair size
                                        new MovementJumping(),
@@ -78,6 +80,7 @@ public class Species
                 new SpeciesDescription("Imp", 
                                        2,
                                        IMPS_BASE, 
+                                       0,             // sleep image
                                        397,               // lair type
                                        2,                 // lair size
                                        new MovementJumping(),
@@ -102,6 +105,7 @@ public class Species
                 new SpeciesDescription("Powersnail", 
                                        3, 
                                        POWERSNAILS_BASE, 
+                                       0,             // sleep image
                                        396,               // lair type
                                        3,                 // lair size
                                        new MovementGliding(),
@@ -127,6 +131,7 @@ public class Species
                 new SpeciesDescription("Giant Beetle", 
                                        4,                 // size 
                                        KILLERBEETLES_BASE,
+                                       0,             // sleep image
                                        395,               // lair type
                                        4,                 // lair size
                                        new MovementJitter(7, 1),
@@ -151,6 +156,7 @@ public class Species
                 new SpeciesDescription("Wyvern", 
                                        3,                 // size 
                                        WYVERNS_BASE,
+                                       0,             // sleep image
                                        391,               // lair type
                                        3,                 // lair size
                                        new MovementJitter(7, 2 << 16),
@@ -175,6 +181,7 @@ public class Species
                 new SpeciesDescription("Bookworm", 
                                        3,                 // size 
                                        BOOKWORMS_BASE,
+                                       0,             // sleep image
                                        393,               // lair type
                                        3,                 // lair size
                                        new MovementJitter(8, 1 << 15),
@@ -199,6 +206,7 @@ public class Species
                 new SpeciesDescription("Mosquito", 
                                        3,                 // size 
                                        MOSQUITOES_BASE,
+                                       138,             // sleep image
                                        394,               // lair type
                                        3,                 // lair size
                                        new MovementJitter(6, 1 << 16),
@@ -223,6 +231,7 @@ public class Species
                 new SpeciesDescription("Hat Mage", 
                                        2,                 // size
                                        HAT_MAGE_BASE,
+                                       HAT_MAGE_BASE + 8,             // sleep image
                                        397,               // lair type
                                        3,                 // lair size
                                        new MovementJumping(),

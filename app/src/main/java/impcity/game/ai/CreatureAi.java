@@ -150,6 +150,7 @@ public class CreatureAi extends AiBase
             if(mob.location.equals(home))
             {
                 mob.visuals.setBubble(Features.BUBBLE_SLEEPING);
+                mob.visuals.setSleeping(true);
             }
             
             // Hajo: go for a walk?
@@ -157,6 +158,7 @@ public class CreatureAi extends AiBase
             {
                 goal = Goal.GO_RANDOM;
                 mob.visuals.setBubble(0);
+                mob.visuals.setSleeping(false);
                 mob.setPath(null); // trigger path finding
             }
             // Hajo: go to a library?
@@ -164,6 +166,7 @@ public class CreatureAi extends AiBase
             {
                 goal = Goal.GO_RANDOM;
                 mob.visuals.setBubble(0);
+                mob.visuals.setSleeping(false);
                 mob.setPath(null); // trigger path finding
             }
             if(hungry > MAX_HUNGER)
@@ -171,6 +174,7 @@ public class CreatureAi extends AiBase
                 // hungry?
                 goal = Goal.FIND_FOOD;
                 mob.visuals.setBubble(Features.BUBBLE_FOOD);
+                mob.visuals.setSleeping(false);
                 mob.setPath(null); // trigger path finding
             }
         }

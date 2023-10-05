@@ -118,9 +118,9 @@ public class Mob
         this.key = key;
     }
                 
-    public Mob(World world, int playerX, int playerY, int species, int shadow, Map gameMap, Ai ai, int speed, MovementPattern pattern)
+    public Mob(World world, int playerX, int playerY, int species, int shadow, int sleep, Map gameMap, Ai ai, int speed, MovementPattern pattern)
     {
-        this.visuals = new MobVisuals(shadow);
+        this.visuals = new MobVisuals(shadow, sleep);
         this.world = world;
         this.species = species;
         this.gameMap = gameMap;

@@ -2327,34 +2327,34 @@
       <Description>
         <version>4</version>
         <id>137</id>
-        <width>1</width>
-        <height>1</height>
+        <width>24</width>
+        <height>20</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>11</footX>
+        <footY>17</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>sleeping_hat_mage</string>
+        <string>rgba</string>
       </Metadata>
     </Tile>
     <Tile>
       <Description>
         <version>4</version>
         <id>138</id>
-        <width>1</width>
-        <height>1</height>
+        <width>20</width>
+        <height>14</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>10</footX>
+        <footY>34</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>sleeping_mosquito</string>
+        <string>rgba</string>
       </Metadata>
     </Tile>
     <Tile>

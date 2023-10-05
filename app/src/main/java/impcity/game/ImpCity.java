@@ -286,7 +286,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             logger.log(Level.SEVERE, mapName, ex);
         }
 
-        player = new Mob(world, 30, 350, Species.GLOBOS_BASE, 0, gameMap, null, 45, new MovementJumping());
+        player = new Mob(world, 30, 350, Species.GLOBOS_BASE, 0, 0, gameMap, null, 45, new MovementJumping());
         playerKey = world.mobs.nextFreeKey();
         world.mobs.put(playerKey, player);
         player.setKey(playerKey);
@@ -678,7 +678,7 @@ public class ImpCity implements PostRenderHook, GameInterface
                     logger.log(Level.INFO, "loading a " + desc.name);
 
                     Mob mob;
-                    mob = new Mob(world, 0, 0, species, Features.SHADOW_BASE, map, null, desc.speed, desc.move);
+                    mob = new Mob(world, 0, 0, species, desc.sleepImage, Features.SHADOW_BASE, map, null, desc.speed, desc.move);
                     mob.read(reader, null);
 
                     line = reader.readLine();
@@ -1066,7 +1066,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         SpeciesDescription desc = Species.speciesTable.get(Species.IMPS_BASE);
         
         ImpAi impAi = new ImpAi(this);
-        Mob imp = new Mob(world, x, y, Species.IMPS_BASE, Features.SHADOW_BASE, gameMap, impAi, desc.speed, desc.move);
+        Mob imp = new Mob(world, x, y, Species.IMPS_BASE, 0, Features.SHADOW_BASE, gameMap, impAi, desc.speed, desc.move);
         int impKey = world.mobs.nextFreeKey();
         world.mobs.put(impKey, imp);
         imp.setKey(impKey);
@@ -1188,7 +1188,7 @@ public class ImpCity implements PostRenderHook, GameInterface
     {
         // Hajo: Hack: Generators must be mobs, due to display
         // restrictions. -> They have species 0 as marker!
-        Mob generator = new Mob(world, x, y, 0, 0, map, null, 0, new MovementJumping());
+        Mob generator = new Mob(world, x, y, 0, 0, 0, map, null, 0, new MovementJumping());
         generator.stats.setCurrent(MobStats.GENERATOR, type);
                 
         int key = world.mobs.nextFreeKey();

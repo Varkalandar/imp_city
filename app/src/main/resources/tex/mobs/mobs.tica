@@ -2191,32 +2191,32 @@ rgba
 Tile Description
 v.5
 137
-1 1
+24 20
 0 0
-0 0
+11 17
 End Of Header
 Item
 v.1
 data
 2
-
-
+sleeping_hat_mage
+rgba
 1
 0
 0
 Tile Description
 v.5
 138
-1 1
+20 14
 0 0
-0 0
+10 34
 End Of Header
 Item
 v.1
 data
 2
-
-
+sleeping_mosquito
+rgba
 1
 0
 0

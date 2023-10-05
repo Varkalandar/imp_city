@@ -21,6 +21,9 @@ public class SpeciesDescription
      */
     public final int baseImage;
     
+    // Image to show if this creature is asleep
+    public final int sleepImage;
+    
     // are there additional display choices for this species?
     // Basic species have 8 unanimated directional frames
     public int animationSteps = 0;
@@ -48,6 +51,7 @@ public class SpeciesDescription
     public SpeciesDescription(String name,
                               int size,
                               int baseImage,
+                              int sleepImage,
                               int lair,
                               int lairSize,
                               MovementPattern move,
@@ -64,6 +68,7 @@ public class SpeciesDescription
             this.name = name;
             this.size = size;
             this.baseImage = baseImage;
+            this.sleepImage = sleepImage;
             this.lair = lair;
             this.lairSize = lairSize;
             this.move = move;

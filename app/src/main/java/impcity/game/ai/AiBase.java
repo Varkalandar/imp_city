@@ -4,6 +4,7 @@ import impcity.game.Features;
 import impcity.game.species.Species;
 import impcity.game.species.SpeciesDescription;
 import impcity.game.map.LocationCallback;
+import impcity.game.map.Map;
 import impcity.game.map.RectArea;
 import impcity.game.mobs.Mob;
 
@@ -20,8 +21,8 @@ public abstract class AiBase implements Ai
         int species = mob.getSpecies();
         SpeciesDescription desc = Species.speciesTable.get(species);
         
-        int n = mob.gameMap.getItem(x - desc.lairSize + 1, y - desc.lairSize + 1);
-        return n == Species.speciesTable.get(mob.getSpecies()).lair;
+        int n = mob.gameMap.getItem(x, y);
+        return n == desc.lair;
     }
     
     public void placeLair(final Mob mob, int x, int y)
@@ -29,7 +30,7 @@ public abstract class AiBase implements Ai
         int species = mob.getSpecies();
         SpeciesDescription desc = Species.speciesTable.get(species);
         int n = desc.lair;
-        mob.gameMap.setItem(x - desc.lairSize + 1, y - desc.lairSize + 1, n);
+        mob.gameMap.setItem(x, y, n);
         mob.visuals.setBubble(Features.BUBBLE_SLEEPING);
         
         RectArea area = new RectArea(x - desc.lairSize, y - desc.lairSize, desc.lairSize*2, desc.lairSize*2);
