@@ -532,7 +532,7 @@ public class ImpCity implements PostRenderHook, GameInterface
                 if (block >= Features.I_PERM_ROCK && block <= Features.I_STEEP_EARTH_BLOCK + 20)
                 {
                     map.setItem(x, y, 0);
-                    map.setItem(x + Map.SUB/2-1, y + Map.SUB/2-1, block | Map.F_DECO);
+                    map.setItem(x + Map.O_BLOCK, y + Map.O_BLOCK, block | Map.F_DECO);
                 }
             }
         }

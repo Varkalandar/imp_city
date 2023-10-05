@@ -55,7 +55,10 @@ public class Map implements Serializable
     private LayeredMap map;
     // public static final int SUB = 14;
     public static final int SUB = 12;
-    
+
+    // Offset for full tile blocks (earth, rock, resources)
+    public static final int O_BLOCK = Map.SUB/2-1;
+
     public static final int FLOOR_GRASS = 10;
     public static final int FLOOR_SAND = 7;
     public static final int FLOOR_DARK_GRASS = 19;
