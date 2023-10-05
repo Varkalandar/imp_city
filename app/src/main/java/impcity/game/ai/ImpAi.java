@@ -116,6 +116,7 @@ public class ImpAi extends AiBase
             if(mob.location.equals(home))
             {
                 mob.visuals.setBubble(Features.BUBBLE_SLEEPING);
+                mob.visuals.setSleeping(true);
             }
             
             // Hajo: are there jobs?
@@ -324,6 +325,7 @@ public class ImpAi extends AiBase
                 {
                     mob.setPath(path);
                     mob.visuals.setBubble(Features.BUBBLE_WORK);
+                    mob.visuals.setSleeping(false);
                     goal = Goal.GO_TO_JOB;
                     // System.err.println("Imp #" + mob.getKey() + " found a path to it's job at " + p);
                 }
@@ -401,6 +403,7 @@ public class ImpAi extends AiBase
                 currentJob = null;
                 goal = Goal.FIND_JOB;
                 mob.visuals.setBubble(0);
+                mob.visuals.setSleeping(false);
                 mob.stats.setCurrent(MobStats.GOLD, 0);
                 mob.setPath(null);
             }
@@ -438,9 +441,9 @@ public class ImpAi extends AiBase
                 currentJob = null;
                 goal = Goal.FIND_JOB;
                 mob.visuals.setBubble(0);
+                mob.visuals.setSleeping(false);
                 mob.stats.setCurrent(MobStats.CARRY, 0);
                 mob.setPath(null);
-
             }
         }
         else

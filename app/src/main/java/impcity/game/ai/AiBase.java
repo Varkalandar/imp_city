@@ -4,7 +4,6 @@ import impcity.game.Features;
 import impcity.game.species.Species;
 import impcity.game.species.SpeciesDescription;
 import impcity.game.map.LocationCallback;
-import impcity.game.map.Map;
 import impcity.game.map.RectArea;
 import impcity.game.mobs.Mob;
 

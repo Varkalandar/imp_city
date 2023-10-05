@@ -11479,7 +11479,7 @@
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
         <footX>21</footX>
-        <footY>7</footY>
+        <footY>24</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -11497,8 +11497,8 @@
         <height>21</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>19</footX>
-        <footY>12</footY>
+        <footX>20</footX>
+        <footY>10</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -11517,7 +11517,7 @@
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
         <footX>20</footX>
-        <footY>0</footY>
+        <footY>9</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -11535,8 +11535,8 @@
         <height>35</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>20</footX>
-        <footY>5</footY>
+        <footX>21</footX>
+        <footY>23</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -11554,8 +11554,8 @@
         <height>37</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>38</footX>
-        <footY>0</footY>
+        <footX>40</footX>
+        <footY>18</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -11573,8 +11573,8 @@
         <height>32</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>26</footX>
-        <footY>0</footY>
+        <footX>24</footX>
+        <footY>16</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -11592,8 +11592,8 @@
         <height>25</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>20</footX>
-        <footY>6</footY>
+        <footX>21</footX>
+        <footY>11</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -11611,8 +11611,8 @@
         <height>19</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>21</footX>
-        <footY>0</footY>
+        <footX>20</footX>
+        <footY>9</footY>
       </Description>
       <Metadata>
         <int>0</int>

@@ -2209,7 +2209,7 @@ v.5
 138
 20 14
 0 0
-10 34
+10 30
 End Of Header
 Item
 v.1
@@ -2223,16 +2223,16 @@ rgba
 Tile Description
 v.5
 139
-1 1
+18 17
 0 0
-0 0
+8 15
 End Of Header
 Item
 v.1
 data
 2
-
-
+sleeping_imp
+rgba
 1
 0
 0

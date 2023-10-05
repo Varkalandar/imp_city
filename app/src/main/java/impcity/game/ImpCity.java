@@ -1066,7 +1066,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         SpeciesDescription desc = Species.speciesTable.get(Species.IMPS_BASE);
         
         ImpAi impAi = new ImpAi(this);
-        Mob imp = new Mob(world, x, y, Species.IMPS_BASE, 0, Features.SHADOW_BASE, gameMap, impAi, desc.speed, desc.move);
+        Mob imp = new Mob(world, x, y, Species.IMPS_BASE, Features.SHADOW_BASE, desc.sleepImage, gameMap, impAi, desc.speed, desc.move);
         int impKey = world.mobs.nextFreeKey();
         world.mobs.put(impKey, imp);
         imp.setKey(impKey);
