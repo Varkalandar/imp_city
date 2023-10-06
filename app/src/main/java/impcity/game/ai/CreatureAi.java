@@ -151,6 +151,7 @@ public class CreatureAi extends AiBase
             {
                 mob.visuals.setBubble(Features.BUBBLE_SLEEPING);
                 mob.visuals.setSleeping(true);
+                mob.zOff = 0;
             }
             
             // Hajo: go for a walk?
@@ -438,7 +439,7 @@ public class CreatureAi extends AiBase
                     workplaces = game.getForges();
                     break;
                 case LABORATORY: 
-                    workplaces = game.getLaboratoriums();
+                    workplaces = game.getLaboratories();
                     break;
             }
             

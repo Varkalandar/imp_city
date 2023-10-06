@@ -185,9 +185,10 @@ public class GameDisplay
                 display.displayWidth - 140, display.displayHeight - 30, 0.22);
         */
         
-        drawMenuText("Rookie", textColor, textLeft, 68, 0.75);
-        drawMenuText(calcReputationDisplay(keeper), textColor, textLeft, 40, 0.75);
-        drawMenuText("" + keeper.stats.getCurrent(KeeperStats.GOLD) + " Gold", textColor, textLeft, 12, 0.75);
+        drawMenuText("Rookie", textColor, textLeft, 73, 0.6);
+        drawMenuText(calcReputationDisplay(keeper), textColor, textLeft, 52, 0.6);
+        drawMenuText("" + keeper.stats.getCurrent(KeeperStats.GOLD) + " Gold", textColor, textLeft, 31, 0.6);
+        drawMenuText("" + game.calcCurrentCreatureCount() + "/" + game.calcMaxCreatureCount() + " Creatures", textColor, textLeft, 10, 0.6);
 
         drawMenuText("" + Clock.days() + " days " + Clock.hour() + " hours", 0xFFDDDDDD, 
                 display.displayWidth - 140, display.displayHeight - 30, 0.5);
@@ -259,7 +260,7 @@ public class GameDisplay
         drawShadowText(text, textColor, x + (buttonText.image.getWidth() - width)/2, y+2, f);
         */
         
-        float f = 0.6f;
+        float f = 0.5f;
         int width = (int)(display.font.getStringWidth(text) * f + 0.5f);
         drawMenuText(text, textColor, x + (buttonText.image.getWidth() - width)/2, y+4, f);
     }

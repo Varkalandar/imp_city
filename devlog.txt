@@ -3,7 +3,9 @@ Changes since v0.19
 - Added mineral deposit graphics
 - Some map elements now have mouse-over popups with explanatory texts
 - Shadows of hopping creatures are now displayed at ground level
-- Some rooms now got lights
+- Some rooms got lights
+- Some creatures got extra sleeping poses
+- Introduced a creature limit based on lair and dungeon space
 
 Changes since v0.18
 

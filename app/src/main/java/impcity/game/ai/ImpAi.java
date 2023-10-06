@@ -86,6 +86,16 @@ public class ImpAi extends AiBase
                 goal = Goal.FIND_LAIR;
             }
         }
+        else
+        {
+            // sanity check - player might have built something over the imp
+            // and the imp is now stuck in a movement blocked area.
+            Point p = mob.location;
+            if(mob.gameMap.isMovementBlocked(p.x, p.y))
+            {
+                teleportToLair(mob);
+            }
+        }
         
         if(goal == Goal.BUILD_LAIR &&
            home.equals(mob.location))
@@ -117,6 +127,7 @@ public class ImpAi extends AiBase
             {
                 mob.visuals.setBubble(Features.BUBBLE_SLEEPING);
                 mob.visuals.setSleeping(true);
+                mob.zOff = 0;
             }
             
             // Hajo: are there jobs?
@@ -375,12 +386,7 @@ public class ImpAi extends AiBase
                 // Hajo: this is an emergeny case - the imp can't find
                 // a path to it's lair. As a workaround, we warp the imp home.
 
-                logger.log(Level.WARNING, "Imp #{0} is stuck at {1}, {2} and will be warped home.", 
-                           new Object[]{mob.getKey(), mob.location.x, mob.location.y});
-                mob.gameMap.setMob(mob.location.x, mob.location.y, 0);
-                mob.location.x = home.x;
-                mob.location.y = home.y;
-                mob.gameMap.setMob(home.x, home.y, mob.getKey());
+                teleportToLair(mob);
             }
         }
         else if(goal == Goal.GOLD_TO_TREASURY)
@@ -450,6 +456,18 @@ public class ImpAi extends AiBase
         {
             // no other goals yet
         }
+    }
+
+    private void teleportToLair(Mob mob)
+    {
+        logger.log(Level.WARNING, "Imp #{0} is stuck at {1}, {2} and will be warped home.",
+                   new Object[]{mob.getKey(), mob.location.x, mob.location.y});
+        mob.gameMap.setMob(mob.location.x, mob.location.y, 0);
+        mob.location.x = home.x;
+        mob.location.y = home.y;
+        mob.gameMap.setMob(home.x, home.y, mob.getKey());
+
+        // Todo: reset AI to sleeping?
     }
 
     @Override

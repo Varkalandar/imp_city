@@ -2349,7 +2349,7 @@
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
         <footX>10</footX>
-        <footY>30</footY>
+        <footY>26</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -2378,17 +2378,17 @@
       <Description>
         <version>4</version>
         <id>140</id>
-        <width>1</width>
-        <height>1</height>
+        <width>21</width>
+        <height>40</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>9</footX>
+        <footY>34</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>sleeping_conian</string>
+        <string>rgba</string>
       </Metadata>
     </Tile>
     <Tile>

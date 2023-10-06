@@ -283,6 +283,7 @@ public class Mob
 
             path.advance();
 
+
             visuals.setDisplayCode(species + Direction.dirFromVector(dx, dy));
         }
         else

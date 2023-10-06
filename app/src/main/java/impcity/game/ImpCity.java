@@ -263,7 +263,40 @@ public class ImpCity implements PostRenderHook, GameInterface
         soundPlayer.destroy();
         display.destroy();
     }
-    
+
+    public int countMobs(int type)
+    {
+        int count = 0;
+        int max = world.mobs.nextFreeKey();
+        for(int i=0; i<max; i++)
+        {
+            Mob mob = world.mobs.get(i);
+            if(mob != null && mob.getSpecies() == type) count++;
+        }
+
+        return count;
+    }
+
+
+    public int calcMaxCreatureCount()
+    {
+        // Todo: better calculation needed? Room types?
+        return lairs.size() / 2 + claimed.size() / 4;
+    }
+
+    public int calcCurrentCreatureCount()
+    {
+        int count = world.mobs.keySet().size();
+
+        // special case, that one hidden, invisible globo
+        count --;
+
+        // special case, the generators also should not count as creatures
+        count -= generators.size();
+
+        return count;
+    }
+
     @Override
     public void displayMore() 
     {
@@ -926,7 +959,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             int voly = p.y + Map.SUB/4;
             map.setItem(volx, voly, Features.I_SMALL_VOLCANO);
 
-            Light light = new Light(volx, voly, 30, 3, 0x44FFAA55, 0.7);
+            Light light = new Light(volx, voly, 30, 3, 0x11FFAA55, 0.7);
             map.lights.add(light);
             
             RectArea area = new RectArea(volx - 2, voly - 2, 3, 3);
@@ -1039,7 +1072,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         return forges;
     }
 
-    public List<Point> getLaboratoriums()
+    public List<Point> getLaboratories()
     {
         return laboratoriums;
     }

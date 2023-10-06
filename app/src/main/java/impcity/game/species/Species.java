@@ -56,7 +56,7 @@ public class Species
                 new SpeciesDescription("Conian", 
                                        3, 
                                        CONIANS_BASE,
-                                       0,             // sleep image
+                                       140,             // sleep image
                                        398 | Map.F_FLOOR_DECO,               // lair type
                                        2,                 // lair size
                                        new MovementJumping(),

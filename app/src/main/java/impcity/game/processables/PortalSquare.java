@@ -43,7 +43,7 @@ public class PortalSquare implements Processable
     @Override
     public void process(Map map) 
     {
-        if(time < Clock.time() && game.world.mobs.keySet().size() < game.getLairs().size() * 4)
+        if(time < Clock.time())
         {
             // int species = selectRandom();
             int species = selectFiltered();
@@ -54,9 +54,30 @@ public class PortalSquare implements Processable
             {
                 species = Species.POWERSNAILS_BASE;
             }
-            
+
+            // Special case - if there is library space but no bookworms at all, next
+            // creature should be a bookworm
+            if(game.getLibraries().size() >= 4 && game.countMobs(Species.BOOKWORMS_BASE) == 0)
+            {
+                species = Species.BOOKWORMS_BASE;
+            }
+
+            // Special case - if there is forge space but no conians at all, next
+            // creature should be a conian
+            if(game.getForges().size() >= 4 && game.countMobs(Species.CONIANS_BASE) == 0)
+            {
+                species = Species.CONIANS_BASE;
+            }
+
+            // Special case - if there is lab space but no mages at all, next
+            // creature should be a mage
+            if(game.getLaboratories().size() >= 4 && game.countMobs(Species.HAT_MAGE_BASE) == 0)
+            {
+                species = Species.HAT_MAGE_BASE;
+            }
+
             // Hajo: got something that matches?
-            if(species > 0)
+            if(species > 0 && game.calcCurrentCreatureCount() <= game.calcMaxCreatureCount())
             {
                 int sx = x + Map.SUB/3;
                 int sy = y + Map.SUB/2 + (int)(Math.random() * 2);
@@ -150,7 +171,7 @@ public class PortalSquare implements Processable
             ok &= req.libraries <= game.getLibraries().size();
             ok &= req.treasury <= game.getTreasuries().size();
             ok &= req.forges <= game.getForges().size();
-            ok &= req.labs <= game.getLaboratoriums().size();
+            ok &= req.labs <= game.getLaboratories().size();
 
             if(ok)
             {
