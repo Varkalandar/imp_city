@@ -47,6 +47,10 @@ public class QuestMessage extends PaperMessage
                     Logger.getLogger(QuestMessage.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+            else
+            {
+                gameDisplay.openQuestBook(quest);
+            }
         }
     }
 }

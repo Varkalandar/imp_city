@@ -861,6 +861,7 @@ public class IsoDisplay implements PostRenderHook
 
         glEnd();
     }
+    
     public static void fillRect(int x, int y, int w, int h, int argb)
     {
         glBindTexture(GL_TEXTURE_2D, 0);

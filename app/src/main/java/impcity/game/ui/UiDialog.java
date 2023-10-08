@@ -16,7 +16,7 @@ public abstract class UiDialog
 {
     private static final Logger logger = Logger.getLogger(UiDialog.class.getName());
 
-    private static Texture messagePaperBg;
+    protected static Texture messagePaperBg;
     
     public final int width;
     public final int height;

@@ -168,7 +168,7 @@ public class PixFont
         drawStringScaled(text, color, x + (w - width)/2, y, factor);
     }
     
-    public void drawText(final String text,
+    public int drawText(final String text,
                          final int color, final int left, int top, final int width,
                          int linespace, double factor)
     {
@@ -185,6 +185,7 @@ public class PixFont
         int x = 0;
         int y = 0;
         int wordWidth = 0;
+        int lines = 0;
         
         final int letters = text.length();
         
@@ -213,6 +214,7 @@ public class PixFont
                     // we need a line break
                     x = 0;
                     y += linespace;
+                    lines ++;
                 }
 
                 // draw word
@@ -231,6 +233,7 @@ public class PixFont
                     // hard line break
                     x = 0;
                     y += linespace;
+                    lines ++;
                 }
                          
                 // next word;
@@ -239,7 +242,10 @@ public class PixFont
             }
         }
         glEnd();
+        
+        return lines;
     }
+    
 
     private void drawCharacter(int x, int y, int color, int character)
     {

@@ -245,7 +245,11 @@ public class QuestGenerator
             }
                 
         }
-        quest.locationName = locationName.substring(p);
+        
+        // Upper case the first letter for display
+        quest.locationName =
+                Character.toUpperCase(locationName.charAt(p)) +
+                locationName.substring(p + 1);
 
         text.append(locationName);
         text.append(". ");

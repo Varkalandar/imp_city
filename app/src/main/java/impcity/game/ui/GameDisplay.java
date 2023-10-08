@@ -11,6 +11,7 @@ import impcity.game.Texture;
 import impcity.game.TextureCache;
 import impcity.game.map.Map;
 import impcity.game.mobs.Mob;
+import impcity.game.quests.Quest;
 import impcity.ogl.IsoDisplay;
 import impcity.ui.PixFont;
 import impcity.ui.TimedMessage;
@@ -35,6 +36,9 @@ public class GameDisplay
     
     // private final static int menuBarColor = 0xFF776655;
     private final static int menuBarColor = 0xFFCCCCCC;
+    
+    private final QuestBook questBook;
+    
     
     private final Texture buttonBar;
     private final ImpCity game;
@@ -72,6 +76,7 @@ public class GameDisplay
         this.game = game;
         this.display = display;
         this.fontLow = new PixFont("/font/humanistic_128_2");
+        this.questBook = new QuestBook(display, this);
         
         TextureCache textureCache = display.textureCache;
         
@@ -280,8 +285,8 @@ public class GameDisplay
     public void drawShadowText(String text, int color, int x, int y, double f)
     {
         int shadow = 0x33000000;
-        // PixFont font = fontLow;
-        PixFont font = display.font; f *= 3.0;
+        PixFont font = fontLow;
+        // PixFont font = display.font; f *= 3.0;
         
         font.drawStringScaled(text, shadow, x+1, y, f);
         font.drawStringScaled(text, shadow, x, y+1, f);
@@ -292,7 +297,7 @@ public class GameDisplay
 
     }
 
-    public void drawBoxedShadowText(String text,
+    public int drawBoxedShadowText(String text,
                                     int color, int left, int top, int width,
                                     int linespace, double factor)
     {
@@ -302,7 +307,8 @@ public class GameDisplay
         fontLow.drawText(text, shadow, left-1, top, width, linespace, factor);
         fontLow.drawText(text, shadow, left, top-1, width, linespace, factor);
 
-        fontLow.drawText(text, color, left, top, width, linespace, factor);
+        int y = fontLow.drawText(text, color, left, top, width, linespace, factor);
+        return y;
     }
 
     public int calcMainUiBarLeft()
@@ -565,5 +571,15 @@ public class GameDisplay
             hookedMessageStack.remove(n);
             hookedMessage.activate(this);
         }
+    }
+
+    void openQuestBook(Quest quest) 
+    {
+        if(quest != null)
+        {
+            questBook.addQuest(quest);
+        }
+        
+        showDialog(questBook);
     }
 }
