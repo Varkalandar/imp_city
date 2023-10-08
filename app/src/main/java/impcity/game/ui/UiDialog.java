@@ -40,7 +40,8 @@ public abstract class UiDialog
     public void display(int x, int y)
     {
         // IsoDisplay.drawTile(messagePaperBg, x, y, width, height, 0xFFCCCCCC);
-        IsoDisplay.drawTile(messagePaperBg, x, y, width, height, 0xFF776655);
+        // IsoDisplay.drawTile(messagePaperBg, x, y, width, height, 0xFF776655);
+        IsoDisplay.drawTile(messagePaperBg, x, y, width, height, 0xFF55504B);
     }
 
     public abstract void mouseEvent(int buttonPressed, int buttonReleased, int mouseX, int mouseY);

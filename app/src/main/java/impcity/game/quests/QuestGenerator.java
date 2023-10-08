@@ -146,16 +146,19 @@ public class QuestGenerator
     {
         String [] intros =
         {
-            "Your creatures discovered ",
-            "Hard working creatures of yours found ",
-            "Your creatures found ",
-            "A group of your creatures deciphered ",
-            "Your minions discovered ",
-            "A minion of yours found ",
-            "Your minions deciphered ",
-            "Your librarians stumbled upon ",
-            "Your library workers encountered ",
-            "A freelancer, sub-hired by a lazy minion of yours, brought up ",
+            "Your creatures discovered",
+            "Hard working creatures of yours found",
+            "Your creatures found",
+            "A group of your creatures deciphered",
+            "Your minions discovered",
+            "A minion of yours found",
+            "Your minions deciphered",
+            "Your librarians stumbled upon",
+            "Your library workers encountered",
+            "In a dusty corner appeared",
+            "Hidden under a pile of old papers there was",
+            "From some old portfolio a bookworm retrieved",
+            "Under a forgotten lunch box a janitor found"
         };
 
         String [] tellVars =

@@ -6,6 +6,7 @@ Changes since v0.19
 - Some rooms got lights
 - Some creatures got extra sleeping poses
 - Introduced a creature limit based on lair and dungeon space
+- Improved map dragging by mouse
 
 Changes since v0.18
 

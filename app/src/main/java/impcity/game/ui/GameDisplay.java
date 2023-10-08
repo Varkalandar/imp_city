@@ -96,6 +96,10 @@ public class GameDisplay
     {
         return fontLow;
     }
+    public PixFont getUiFont()
+    {
+        return display.font;
+    }
 
     public void addMessage(TimedMessage message)
     {
@@ -266,7 +270,7 @@ public class GameDisplay
     }
 
     
-    private void drawMenuText(String text, int color, int x, int y, double f)
+    public void drawMenuText(String text, int color, int x, int y, double f)
     {
         PixFont font = display.font;        
         font.drawStringScaled(text, color, x, y, f);

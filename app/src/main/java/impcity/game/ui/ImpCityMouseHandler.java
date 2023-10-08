@@ -38,6 +38,7 @@ public class ImpCityMouseHandler implements MouseHandler
     
     private int dragStartX, dragStartY;
     private int dragStartMx, dragStartMy;
+    private boolean dragging = false;
     
     public ImpCityMouseHandler(ImpCity game, 
                                GameDisplay gameDisplay,
@@ -109,13 +110,13 @@ public class ImpCityMouseHandler implements MouseHandler
                     dragStartY = display.centerY;
                     dragStartMx = Mouse.getX();
                     dragStartMy = Mouse.getY();
-                    
-                    // System.out.println("Setting drag start.");
+                    dragging = true;
+                    System.out.println("Setting drag start.");
                 }
 
                 // Hajo: Drag map while button 1 is pressed
                 
-                if(Mouse.isButtonDown(0))
+                if(Mouse.isButtonDown(0) && dragging)
                 {
                     int dx = Mouse.getX() - dragStartMx;
                     int dy = Mouse.getY() - dragStartMy;
@@ -123,11 +124,12 @@ public class ImpCityMouseHandler implements MouseHandler
                     display.centerX = dragStartX + dx;
                     display.centerY = dragStartY + dy;
 
-                    // System.out.println("Dragging map.");
+                    System.out.println("Dragging map.");
                 }
 
                 if(buttonReleased == 1)
                 {
+                    dragging = false;
                     handleMenuAndTools(rasterI, rasterJ);
                 }
             }
