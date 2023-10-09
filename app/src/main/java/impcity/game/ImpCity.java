@@ -55,7 +55,7 @@ import rlgamekit.objects.Registry;
  */
 public class ImpCity implements PostRenderHook, GameInterface
 {
-    private static final String nameVersion = "Imp City v0.19";
+    private static final String nameVersion = "Imp City v0.20";
     
     private static final Logger logger = Logger.getLogger(ImpCity.class.getName());
     

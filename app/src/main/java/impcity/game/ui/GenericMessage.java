@@ -1,12 +1,8 @@
 package impcity.game.ui;
 
 import impcity.game.ImpCity;
-import impcity.game.quests.Quest;
 import impcity.ogl.IsoDisplay;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 /**
