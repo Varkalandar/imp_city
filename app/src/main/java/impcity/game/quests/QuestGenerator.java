@@ -7,7 +7,7 @@ package impcity.game.quests;
 public class QuestGenerator
 {
     
-    private static String [] mapQualities = 
+    private static final String [] mapQualities = 
     {
         "a precise", 
         "a well readable", 
@@ -26,7 +26,7 @@ public class QuestGenerator
         "a heavily encrypted", 
     };
     
-    private static int [] mapQualityFindDifficulties = 
+    private static final int [] mapQualityFindDifficulties = 
     {
         1, 
         2, 

@@ -56,10 +56,13 @@ public class CreatureOverview extends UiDialog
     {
         super.display(x, y);
         
+        int gold = Colors.BRIGHT_GOLD_INK;
+        int silver = Colors.BRIGHT_SILVER_INK;
+        
         creatureDisplayList.clear();
         
-        font.drawStringScaled("Select Creatures",
-                              Colors.DARK_BLUE_INK, x+400, y+540, 0.5);
+        gameDisplay.drawShadowText("Select Creatures",
+                              gold, x+400, y+540, 0.5);
         
         Registry <Mob> mobs = game.world.mobs;
         
@@ -87,8 +90,8 @@ public class CreatureOverview extends UiDialog
                     
                     IsoDisplay.drawTileStanding(tex, x + 80, y + row);
 
-                    font.drawStringScaled("Level 1 " + desc.name, 
-                                          Colors.BLUE_INK, x + 105, y + row, 0.28);
+                    gameDisplay.drawShadowText("Level 1 " + desc.name, 
+                                          silver, x + 105, y + row, 0.28);
                     
                     creatureDisplayList.add(new Entry(mob.getKey(), x + 50, y + row - 4));
 
@@ -102,31 +105,31 @@ public class CreatureOverview extends UiDialog
         int col2 = 160;
         int yspace = 36;
         
-        font.drawStringScaled("Your Party Stats", Colors.BLUE_INK, x+xoff, y+yoff, 0.28);
+        gameDisplay.drawMenuText("Your Party Stats", gold, x+xoff, y+yoff, 0.6);
         yoff -= 44;
         
-        font.drawStringScaled("Intelligence:", Colors.BLUE_INK, x+xoff, y+yoff, 0.28);
-        font.drawStringScaled("" + party.intelligence, Colors.BLUE_INK, x+xoff + col2, y+yoff, 0.28);
+        gameDisplay.drawMenuText("Intelligence:", silver, x+xoff, y+yoff, 0.6);
+        gameDisplay.drawMenuText("" + party.intelligence, silver, x+xoff + col2, y+yoff, 0.6);
         yoff -= yspace;
         
-        font.drawStringScaled("Stealth:", Colors.BLUE_INK, x+xoff, y+yoff, 0.28);
-        font.drawStringScaled("" + party.stealth, Colors.BLUE_INK, x+xoff + col2, y+yoff, 0.28);
+        gameDisplay.drawMenuText("Stealth:", silver, x+xoff, y+yoff, 0.6);
+        gameDisplay.drawMenuText("" + party.stealth, silver, x+xoff + col2, y+yoff, 0.6);
         yoff -= yspace;
         
-        font.drawStringScaled("Combat:", Colors.BLUE_INK, x+xoff, y+yoff, 0.28);
-        font.drawStringScaled("" + party.combat, Colors.BLUE_INK, x+xoff + col2, y+yoff, 0.28);
+        gameDisplay.drawMenuText("Combat:", silver, x+xoff, y+yoff, 0.6);
+        gameDisplay.drawMenuText("" + party.combat, silver, x+xoff + col2, y+yoff, 0.6);
         yoff -= yspace;
 
-        font.drawStringScaled("Carry:", Colors.BLUE_INK, x+xoff, y+yoff, 0.28);
-        font.drawStringScaled("" + party.carry, Colors.BLUE_INK, x+xoff + col2, y+yoff, 0.28);
+        gameDisplay.drawMenuText("Carry:", silver, x+xoff, y+yoff, 0.6);
+        gameDisplay.drawMenuText("" + party.carry, silver, x+xoff + col2, y+yoff, 0.6);
         yoff -= yspace;
 
-        font.drawStringScaled("Speed:", Colors.BLUE_INK, x+xoff, y+yoff, 0.28);
-        font.drawStringScaled("" + party.speed, Colors.BLUE_INK, x+xoff + col2, y+yoff, 0.28);
+        gameDisplay.drawMenuText("Speed:", silver, x+xoff, y+yoff, 0.6);
+        gameDisplay.drawMenuText("" + party.speed, silver, x+xoff + col2, y+yoff, 0.6);
         yoff -= yspace;
 
         
-        font.drawStringScaled("[ Ready ]", Colors.BLUE_INK, x+540, y+40, 0.28);
+        gameDisplay.drawMenuText("[ Ready ]", gold, x+540, y+40, 0.6);
     }    
 
 
@@ -138,14 +141,16 @@ public class CreatureOverview extends UiDialog
             if(mouseY < 180)
             {
                 QuestProcessor processor = new QuestProcessor();
-                
+                /*
                 // Hajo: this calculates the quest durarion
                 quest.party = party;
                 processor.createLog(game.world, quest);
                 quest.eta = Clock.days() + quest.duration;
 
                 game.quests.add(quest);
+                */
                 gameDisplay.showDialog(null);
+                
                 
                 // QuestResult result = processor.createLog(game.world, quest, party);
                 // System.out.println(result.story);
