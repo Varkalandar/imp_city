@@ -75,17 +75,20 @@ public class QuestBook extends UiDialog
                 // hack: find height without actually showing the text - draw invisible
                 lines = gameDisplay.drawBoxedShadowText(quest.locationName, 0, leftX + textLeft, textTop, boxWidth, linespace *4, 0.25);
 
-                int boxH = 100 + lines * linespace;
-                IsoDisplay.fillRect(leftX + textLeft - 10, textTop - boxH + linespace/2, boxWidth + 20, boxH, 0x33000000);
+                int boxH = 120 + lines * linespace;
+                IsoDisplay.fillRect(leftX + textLeft - 10, textTop - boxH + linespace + 12, boxWidth + 20, boxH, 0x10FFCC99);
+                // IsoDisplay.fillRect(leftX + textLeft - 10, textTop, boxWidth + 20, 1, 0x77FFFFFF);
             }
 
             lines = gameDisplay.drawBoxedShadowText(quest.locationName, silver, leftX + textLeft, textTop, boxWidth, linespace *4, 0.25);
 
             textTop -= 30 + lines * linespace;
-            gameDisplay.drawShadowText("Location: " +  difficulty(17 - quest.findingDifficulty, 17), silver, leftX + textLeft, textTop, 0.20);
-            gameDisplay.drawShadowText("Expeditions: " +  0, silver, leftX + textLeft, textTop - linespace, 0.20);
+            gameDisplay.drawShadowText("Location: " +  difficulty(quest.findingDifficulty, 17), silver, leftX + textLeft, textTop, 0.20);
+            gameDisplay.drawShadowText("Guards: " +  quest.guardHardness, silver, leftX + textLeft, textTop - linespace, 0.20);
+            gameDisplay.drawShadowText("Expeditions: " +  0, silver, leftX + textLeft, textTop - linespace*2, 0.20);
 
-            textTop -= 80;
+
+            textTop -= 100;
 
 
             // silver = Colors.SILVER_INK;
@@ -127,7 +130,7 @@ public class QuestBook extends UiDialog
 
     private String difficulty(int actual, int max)
     {
-        final String [] words = {"Big landmark", "Easy to find", "Well described", "Not obvious", "Difficult to find", "Obscure"};
+        final String [] words = {"Impossible to miss", "Easy to find", "Well described", "Not obvious", "Difficult to find", "Obscure"};
         return words[actual * words.length / max];
     }
 }
