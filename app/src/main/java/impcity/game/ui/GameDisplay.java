@@ -76,7 +76,7 @@ public class GameDisplay
         this.game = game;
         this.display = display;
         this.fontLow = new PixFont("/font/humanistic_128_2");
-        this.questBook = new QuestBook(display, this);
+        this.questBook = new QuestBook(display, this, game);
         
         TextureCache textureCache = display.textureCache;
         

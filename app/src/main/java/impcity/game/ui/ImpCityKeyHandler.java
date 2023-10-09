@@ -64,31 +64,11 @@ public class ImpCityKeyHandler implements KeyHandler
                 }
                 else if(Keyboard.getEventKey() == Keyboard.KEY_T)
                 {
-                    Quest quest = QuestGenerator.makeTreasureQuest();
-                    QuestMessage questMessage = new QuestMessage(game, gameDisplay, display,
-                                                                 600, 400, quest,
-                                                                 "Discovery!",
-                                                                 "[ Send Party ]", "[ Leave It ]");
-
-                    MessageHook hookedMessage =
-                            new MessageHook(Features.MESSAGE_TROPHY_QUEST,
-                                            questMessage);
-
-                    gameDisplay.addHookedMessage(hookedMessage);
+                    game.makeTreasureQuest();
                 }
                 else if(Keyboard.getEventKey() == Keyboard.KEY_H)
                 {
-                    Quest quest = QuestGenerator.makeTechnologyQuest();
-                    QuestMessage questMessage = new QuestMessage(game, gameDisplay, display,
-                                                                 600, 400, quest,
-                                                                 "Humble Suggestion",
-                                                                 "[ Assemble Party ]", "[ Leave It ]");
-
-                    MessageHook hookedMessage =
-                            new MessageHook(Features.MESSAGE_RESEARCH_QUEST,
-                                            questMessage);
-
-                    gameDisplay.addHookedMessage(hookedMessage);
+                    game.makeTechnologyQuest();
                 }
                 else if(Keyboard.getEventKey() == Keyboard.KEY_L && isCtrlDown)
                 {

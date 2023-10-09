@@ -1192,7 +1192,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         QuestMessage questMessage = new QuestMessage(this, gameDisplay, display,
                                                      600, 400, quest,
                                                      "Discovery!",
-                                                     "[ Send Party ]", "[ Leave It ]");
+                                                     "[ Accept ]", "[ Dismiss ]");
 
         MessageHook hookedMessage =
                 new MessageHook(Features.MESSAGE_TROPHY_QUEST,
