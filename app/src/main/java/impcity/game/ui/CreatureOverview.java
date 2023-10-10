@@ -6,10 +6,8 @@ import impcity.game.quests.QuestProcessor;
 import impcity.game.species.Species;
 import impcity.game.species.SpeciesDescription;
 import impcity.game.quests.Quest;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
-import impcity.game.Clock;
 import impcity.game.Texture;
 import impcity.game.mobs.Mob;
 import impcity.ogl.IsoDisplay;
@@ -34,7 +32,7 @@ public class CreatureOverview extends UiDialog
     private Quest quest;
     
     
-    public CreatureOverview(ImpCity game, GameDisplay gameDisplay, IsoDisplay display, PixFont font) throws IOException
+    public CreatureOverview(ImpCity game, GameDisplay gameDisplay, IsoDisplay display, PixFont font)
     {
         super(display.textureCache, 1140, 620);
         this.game = game;

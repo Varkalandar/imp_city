@@ -19,7 +19,7 @@ public class QuestResultMessage extends PaperMessage
 
     
     public QuestResultMessage(ImpCity game, GameDisplay gameDisplay, IsoDisplay display, int width, int height,
-                              QuestResult result, String leftButton) throws IOException
+                              QuestResult result, String leftButton)
     {
         super(gameDisplay, display.textureCache, width, height, "Quest Summary", result.summary, leftButton, "[ Show Details ]");
         this.display = display;

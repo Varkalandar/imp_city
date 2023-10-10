@@ -4,10 +4,7 @@ import impcity.game.ImpCity;
 import impcity.game.quests.Quest;
 import impcity.ogl.IsoDisplay;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.List;
 
 /**
  *
@@ -15,31 +12,31 @@ import java.util.logging.Logger;
  */
 public class QuestBook extends UiDialog
 {
-    private final ArrayList<Quest> quests = new ArrayList<>();
     private final GameDisplay gameDisplay;
     private final ImpCity game;
     private final IsoDisplay display;
     private int selection = 0;
+    private int currentPage = 0;
+    private int maxPages = 0;
     
     public QuestBook(IsoDisplay display, GameDisplay gameDisplay, ImpCity game)
     {
         super(display.textureCache, 800, 600);
         this.display = display;
         this.gameDisplay = gameDisplay;
-        this.game = game;
+        this.game = game;        
     }
     
-    
-    public void addQuest(Quest quest)
-    {
-        quests.add(quest);
-    }
 
+    @Override
     public void display(int x, int y)
     {
         int gold = Colors.BRIGHT_GOLD_INK;
         int silver = Colors.BRIGHT_SILVER_INK;
+        int count = game.quests.size();
+        maxPages = (count + 2) / 3;
 
+        
         int leftX = x;
         int rightX = x + 400;
         int pageWidth = 400;
@@ -59,13 +56,16 @@ public class QuestBook extends UiDialog
 
     private void displayLeftPage(int gold, int silver, int leftX, int rightX, int textTop, int textLeft, int boxWidth, int linespace)
     {
+        List <Quest> quests = game.quests;
+
         // headline
         gameDisplay.drawShadowText("Fabled Locations", gold, leftX + textLeft, textTop, 0.40);
+        gameDisplay.drawMenuText("<< Page " +  (currentPage + 1) + " of " + (maxPages + 1) + " >>", gold, leftX + textLeft, textTop - 500, 0.6);
 
         textTop -= 40;
 
         // left page
-        for(int i=0; i<quests.size(); i++)
+        for(int i=currentPage*3; i<Math.min(currentPage * 3 + 3, quests.size()); i++)
         {
             Quest quest = quests.get(i);
             int lines;
@@ -84,27 +84,29 @@ public class QuestBook extends UiDialog
 
             textTop -= 30 + lines * linespace;
             gameDisplay.drawShadowText("Location: " +  difficulty(quest.findingDifficulty, 17), silver, leftX + textLeft, textTop, 0.20);
-            gameDisplay.drawShadowText("Guards: " +  quest.guardHardness, silver, leftX + textLeft, textTop - linespace, 0.20);
+            gameDisplay.drawShadowText("Guards: " +  protection(quest.guardHardness, 16), silver, leftX + textLeft, textTop - linespace, 0.20);
             gameDisplay.drawShadowText("Expeditions: " +  0, silver, leftX + textLeft, textTop - linespace*2, 0.20);
 
-
             textTop -= 100;
-
-
-            // silver = Colors.SILVER_INK;
         }
     }
 
     private void displayRightPage(int gold, int silver, int leftX, int rightX, int textTop, int textLeft, int boxWidth, int linespace)
     {
-        // right page starts with first quest story
-        int lines =
-                gameDisplay.drawBoxedShadowText(quests.get(0).story, silver,
-                        rightX + textLeft, textTop + 10, boxWidth,
-                        linespace * 5, 0.20);
+        gameDisplay.drawMenuText("[X]", gold, rightX + 350, textTop + 36, 0.6);
 
-        gameDisplay.drawMenuText("> Assemble Party", gold,
-                rightX + textLeft, textTop - lines * linespace - linespace, 0.6);
+        // right page starts with selected quest story
+        if(game.quests.size() > selection)
+        {
+            Quest quest = game.quests.get(selection);
+            int lines =
+                    gameDisplay.drawBoxedShadowText(quest.story, silver,
+                            rightX + textLeft, textTop + 10, boxWidth,
+                            linespace * 5, 0.20);
+
+            gameDisplay.drawMenuText("> Assemble Party", gold,
+                    rightX + textLeft, textTop - lines * linespace - linespace, 0.6);
+        }
     }
 
         @Override
@@ -112,19 +114,39 @@ public class QuestBook extends UiDialog
     {
         if(buttonReleased == 1)
         {
-            // gameDisplay.showDialog(null);
-
-            Quest quest = quests.get(0);
-            try
+            if(mouseX < display.displayWidth / 2 && mouseY > display.displayHeight / 2 - 230)
             {
+                // selection
+                int n = mouseY - (display.displayHeight / 2) + 100;
+                n = n / 140;  // 140 = Quest box
+                n = 2 - n;  // count upside down
+
+                // System.err.println("selection=" + n);
+                selection = currentPage * 3 + Math.max(0, Math.min(n, 2));
+            }
+            else if(mouseX < display.displayWidth / 2 - 280)
+            {
+                // pagination clicked?
+                if(currentPage > 0) currentPage --;
+            }
+            else if(mouseX < display.displayWidth / 2 - 100)
+            {
+                if(currentPage < maxPages) currentPage ++;
+            }
+            else if(mouseX > display.displayWidth / 2 && mouseY > display.displayHeight / 2 + 200)
+            {
+                // close button
+                gameDisplay.showDialog(null);
+            }
+            else if(game.quests.size() > selection && mouseX > display.displayWidth / 2)
+            {
+            // start quest clicked?
+                Quest quest = game.quests.get(selection);
+
                 CreatureOverview creatureOverview = new CreatureOverview(game, gameDisplay, display, gameDisplay.getFontLow());
                 creatureOverview.setQuest(quest);
                 gameDisplay.showDialog(creatureOverview);
             }
-            catch (IOException ex) {
-                Logger.getLogger(QuestBook.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
         }
     }
 
@@ -133,4 +155,11 @@ public class QuestBook extends UiDialog
         final String [] words = {"Impossible to miss", "Easy to find", "Well described", "Not obvious", "Difficult to find", "Obscure"};
         return words[actual * words.length / max];
     }
+
+    private String protection(int actual, int max)
+    {
+        final String [] words = {"Unguarded", "Few or no guards", "Some guards", "Well protected", "Strongly protected"};
+        return words[actual * words.length / max];
+    }
+
 }

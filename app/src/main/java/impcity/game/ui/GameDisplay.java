@@ -573,13 +573,8 @@ public class GameDisplay
         }
     }
 
-    void openQuestBook(Quest quest) 
+    void openQuestBook() 
     {
-        if(quest != null)
-        {
-            questBook.addQuest(quest);
-        }
-        
         showDialog(questBook);
     }
 }

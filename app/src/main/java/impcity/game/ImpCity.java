@@ -1188,6 +1188,15 @@ public class ImpCity implements PostRenderHook, GameInterface
 
     public void makeTreasureQuest()
     {
+        // debug quest book, add some extra quests
+        /*
+        for(int i=0; i<20; i++)
+        {
+            Quest quest = QuestGenerator.makeTreasureQuest();
+            quests.add(quest);
+        }
+        */
+        
         Quest quest = QuestGenerator.makeTreasureQuest();
         QuestMessage questMessage = new QuestMessage(this, gameDisplay, display,
                                                      600, 400, quest,

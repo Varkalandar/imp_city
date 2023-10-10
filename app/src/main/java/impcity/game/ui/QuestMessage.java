@@ -37,19 +37,8 @@ public class QuestMessage extends PaperMessage
             gameDisplay.showDialog(null);
             if(mouseX < display.displayWidth / 2)
             {
-                gameDisplay.openQuestBook(quest);
-                /*
-                try
-                {
-                    CreatureOverview creatureOverview = new CreatureOverview(game, gameDisplay, display, fontText);
-                    creatureOverview.setQuest(quest);
-                    gameDisplay.showDialog(creatureOverview);
-                }
-                catch (IOException ex) {
-                    Logger.getLogger(QuestMessage.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
-                 */
+                game.quests.add(quest);
+                gameDisplay.openQuestBook();
             }
         }
     }

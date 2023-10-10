@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import impcity.game.Clock;
 import impcity.game.map.Map;
 import impcity.game.mobs.Mob;
+import impcity.game.ui.MessageHook;
 import impcity.ogl.IsoDisplay;
 
 /**
@@ -71,14 +72,10 @@ public class DungeonSweepingThread extends Thread
                 }
                 
                 for(Quest quest : game.quests)
-                {
-                    if(quest.eta <= Clock.days())
+                {                    
+                    if(quest.party != null && quest.eta <= Clock.days())
                     {
-                        QuestProcessor processor = new QuestProcessor();
-                        QuestResult result = processor.createLog(game.world, quest);
-                        System.out.println(result.story);
-                        QuestResultMessage qrm = new QuestResultMessage(game, gameDisplay, display, 600, 700, result, "[ Ok ]");
-                        gameDisplay.showDialog(qrm);
+                        createQuestResult(quest);
                     }
                 }
             }
@@ -89,6 +86,21 @@ public class DungeonSweepingThread extends Thread
         }
     }
 
+    private void createQuestResult(Quest quest)
+    {
+        QuestProcessor processor = new QuestProcessor();
+        QuestResult result = processor.createLog(game.world, quest);
+        System.out.println(result.story);
+        QuestResultMessage message = 
+                new QuestResultMessage(game, gameDisplay, display, 600, 700, result, "[ Ok ]");
+
+        MessageHook hookedMessage =
+            new MessageHook(Features.MESSAGE_TROPHY_QUEST,
+                            message);
+
+        gameDisplay.addHookedMessage(hookedMessage);        
+    }
+    
     private void safeSleep(int millis)
     {
         try
