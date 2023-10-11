@@ -126,9 +126,9 @@ public class PixFont
         return runx - x;
     }
 
-    public int drawStringScaled(final String text, 
-                                 final int color, final int x, final int y,
-                                 final double factor)
+    public int drawStringScaled(String text, 
+                                int color, int x, int y,
+                                double factor)
     {
         final int letters = text.length();
         

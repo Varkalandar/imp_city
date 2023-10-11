@@ -1,7 +1,6 @@
 package impcity.game.ui;
 
 import impcity.game.TextureCache;
-import impcity.ogl.IsoDisplay;
 import impcity.ui.PixFont;
 import org.lwjgl.opengl.GL11;
 
@@ -63,18 +62,14 @@ public abstract class PaperMessage extends UiDialog
         if(rightButton == null)
         {
             int bwidth = (int)(fontUi.getStringWidth(leftButton) * 0.6);
-            gameDisplay.drawMenuText(rightButton, colorUi, x + width - 40 - bwidth, y + 40, 0.6); // 0.6);
-
-            // gameDisplay.drawShadowText(leftButton, colorUi, x + width/2 - bwidth/2, y + 40, 0.3); // 0.6);
+            gameDisplay.drawMenuText(leftButton, colorUi, x + (width - bwidth) / 2, y + 40, 0.6);
         }
         else
         {
             gameDisplay.drawMenuText(leftButton, colorUi, x + 40, y + 40, 0.6); // 0.6);
 
             int rwidth = (int)(fontUi.getStringWidth(rightButton) * 0.6);
-            gameDisplay.drawMenuText(rightButton, colorUi, x + width - 40 - rwidth, y + 40, 0.6); // 0.6);
-
-            // gameDisplay.drawShadowText(rightButton, colorUi, x + width - 40 - rwidth, y + 40, 0.3); // 0.6);
+            gameDisplay.drawMenuText(rightButton, colorUi, x + width - 40 - rwidth, y + 40, 0.6);
         }
     }
 }

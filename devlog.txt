@@ -1,5 +1,6 @@
 Changes since v0.19
 
+- Imps can now pass through laboratories
 - Added mineral deposit graphics
 - Some map elements now have mouse-over popups with explanatory texts
 - Shadows of hopping creatures are now displayed at ground level
