@@ -54,7 +54,6 @@ public class QuestGenerator
         "in {0} river bend",
         "in {0} lake",
         "in {0} cave",
-        "in {0} hole",
         "in {0} gorge",
         "in {0} forest",
         "in {0} desert",
@@ -67,6 +66,7 @@ public class QuestGenerator
         "under {0} sacred fig tree",
         "under {0} statue",
         "under {0} cairn",
+        "under {0} big rock",
         "at the foot of {0} massive crag",
         "at the foot of {0} obelisk",
         "near {0} scare crow",
@@ -93,6 +93,10 @@ public class QuestGenerator
         "storehouse",
         "palace",
         "crypt",
+        "tunnel",
+        "fortification",
+        "archive",    
+        "arsenal",    
     };
         
       
@@ -109,17 +113,18 @@ public class QuestGenerator
         "in {0} unholy",
         "in {0} abandoned",
         "in {0} cursed",
-        "in {0} guarded",
+        "in {0} haunted",
+        "in {0} spider infested",
     };
     
     private static String [] treasureMods = 
     {
-        "",  // just "riches"
-        "promising",
-        "big",
-        "huge",
-        "outstanding",
-        "abundant"
+        "one or two",
+        "a few",
+        "some",
+        "many",
+        "numerous",
+        "piles of"
     };
 
     private static int [] treasureModsSize = 
@@ -171,10 +176,23 @@ public class QuestGenerator
         
         String [] findVars =
         {
-            " riches to be found ",
-            " treasures being hidden ",
-            " rewards being buried ",
-            " riches to be retreived "
+          //  " riches to be found ",
+          //  " treasures being hidden ",
+          //  " rewards being buried ",
+          //  " riches to be retreived ",
+            " chests of gold ",
+            " chests of gold and silver ",
+            " urns of silver ",
+            " boxes of gems ",
+            " bags of coins ",
+            " bags of gold nuggets ",
+            " chests of valuables ",
+            " money pouches ",
+            " pots of ancient coins ",
+            " gold ingots ",
+            " silver ingots ",
+            " lumps of silver ",
+            " crates of artwork ",
         };
         
         Quest quest = new Quest();

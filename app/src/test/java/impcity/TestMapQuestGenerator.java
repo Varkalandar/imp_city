@@ -2,6 +2,7 @@ package impcity;
 
 import impcity.game.quests.Quest;
 import impcity.game.quests.QuestGenerator;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -9,14 +10,15 @@ import impcity.game.quests.QuestGenerator;
  */
 public class TestMapQuestGenerator
 {
-    public static void main(String [] args)
+    @Test
+    public void testStoryGeneration()
     {
         for(int i=0; i<50; i++)
         {
             Quest quest = QuestGenerator.makeTreasureQuest();
             // System.out.println(quest.story.substring(0, 60));
             // System.out.println(quest.story.substring(60, quest.story.length()));
-            System.out.println(quest.story + "\n");
+            System.err.println(quest.story + "\n");
         }
     }
 }
