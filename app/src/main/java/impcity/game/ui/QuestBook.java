@@ -1,8 +1,10 @@
 package impcity.game.ui;
 
 import impcity.game.ImpCity;
+import impcity.game.Texture;
 import impcity.game.quests.Quest;
 import impcity.ogl.IsoDisplay;
+import java.io.IOException;
 
 import java.util.List;
 
@@ -18,13 +20,27 @@ public class QuestBook extends UiDialog
     private int selection = 0;
     private int currentPage = 0;
     private int maxPages = 0;
+    private static Texture castle;
+    private static Texture riverscape;
+
     
     public QuestBook(IsoDisplay display, GameDisplay gameDisplay, ImpCity game)
     {
         super(display.textureCache, 800, 600);
         this.display = display;
         this.gameDisplay = gameDisplay;
-        this.game = game;        
+        this.game = game;
+
+        if(castle == null)
+        {
+            try {
+                castle = display.textureCache.loadTexture("/ui/castle.png", true);
+                riverscape = display.textureCache.loadTexture("/ui/river_house.png", true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        
     }
     
 
@@ -34,7 +50,7 @@ public class QuestBook extends UiDialog
         int gold = Colors.BRIGHT_GOLD_INK;
         int silver = Colors.BRIGHT_SILVER_INK;
         int count = game.quests.size();
-        maxPages = (count + 2) / 3;
+        maxPages = count / 3;
 
         
         int leftX = x;
@@ -80,7 +96,7 @@ public class QuestBook extends UiDialog
                 // IsoDisplay.fillRect(leftX + textLeft - 10, textTop, boxWidth + 20, 1, 0x77FFFFFF);
             }
 
-            lines = gameDisplay.drawBoxedShadowText(quest.locationName, silver, leftX + textLeft, textTop, boxWidth, linespace *4, 0.25);
+            lines = gameDisplay.drawBoxedShadowText(quest.locationName, Colors.WHITE, leftX + textLeft, textTop, boxWidth, linespace *4, 0.25);
 
             textTop -= 30 + lines * linespace;
             gameDisplay.drawShadowText("Location: " +  difficulty(quest.findingDifficulty, 17), silver, leftX + textLeft, textTop, 0.20);
@@ -95,17 +111,29 @@ public class QuestBook extends UiDialog
     {
         gameDisplay.drawMenuText("[X]", gold, rightX + 350, textTop + 36, 0.6);
 
+        gameDisplay.drawMenuText("> Assemble Party", gold,
+                    rightX + textLeft, textTop - 500, 0.6);
+        
         // right page starts with selected quest story
         if(game.quests.size() > selection)
         {
             Quest quest = game.quests.get(selection);
+
+            if(quest.locationIsBuilding)
+            {
+                IsoDisplay.drawTile(castle, rightX, textTop-castle.image.getHeight() + 50, 0xFFAAAAAA);
+            }
+            else
+            {
+                IsoDisplay.drawTile(riverscape, rightX, textTop-riverscape.image.getHeight() + 60, 0xFFFFFFFF);
+            }
+            
+            textTop -= 220;
+
             int lines =
                     gameDisplay.drawBoxedShadowText(quest.story, silver,
                             rightX + textLeft, textTop + 10, boxWidth,
                             linespace * 5, 0.20);
-
-            gameDisplay.drawMenuText("> Assemble Party", gold,
-                    rightX + textLeft, textTop - lines * linespace - linespace, 0.6);
         }
     }
 

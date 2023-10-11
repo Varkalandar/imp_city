@@ -64,8 +64,14 @@ http://opengameart.org/content/100-seamless-textures
 Wyvern by Clint Bellanger (CC-By-SA 3.0)
 http://opengameart.org/content/wyvern-1
 
-Medieval horn by Osmic (Ville Seppanen), CC-By 3.0
+Medieval horne by Osmic (Ville Seppanen), CC-By 3.0
 http://opengameart.org/content/medieval-horn
+
+Castle illustration derived from "Eilean Donan Castle" by Irena Jackson (CC0, Public Domain):
+https://www.publicdomainpictures.net/en/view-image.php?image=160223&picture=eilean-donan-castle
+
+House under trees illustration derived from "Vintage River" by Karen Arnold (CC0, Public Domain):
+https://www.publicdomainpictures.net/en/view-image.php?image=300363&picture=landscape-vintage-painting
 
 
 Sounds
