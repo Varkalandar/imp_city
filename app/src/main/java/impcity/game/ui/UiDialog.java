@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import impcity.game.Texture;
 import impcity.game.TextureCache;
 import impcity.ogl.IsoDisplay;
+import org.lwjgl.opengl.GL11;
 
 /**
  *
@@ -45,4 +46,18 @@ public abstract class UiDialog
     }
 
     public abstract void mouseEvent(int buttonPressed, int buttonReleased, int mouseX, int mouseY);
+
+    void displayDoublePage(int x, int y) 
+    {
+        // Overlap the pages in the middle
+        int hw = width/2;
+        
+        GL11.glEnable(GL11.GL_SCISSOR_TEST);
+        GL11.glScissor(x, y, hw, height);
+        IsoDisplay.drawTile(messagePaperBg, x, y, hw+5, height, 0xFF55504B);
+
+        GL11.glScissor(x+hw, y, hw, height);
+        IsoDisplay.drawTile(messagePaperBg, x+hw-5, y, hw+5, height, 0xFF55504B);
+        GL11.glDisable(GL11.GL_SCISSOR_TEST);
+    }
 }

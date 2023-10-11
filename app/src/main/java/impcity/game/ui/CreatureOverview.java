@@ -49,7 +49,7 @@ public class CreatureOverview extends UiDialog
     @Override
     public void display(int x, int y)
     {
-        super.display(x, y);
+        super.displayDoublePage(x, y);
         
         int gold = Colors.BRIGHT_GOLD_INK;
         int silver = Colors.BRIGHT_SILVER_INK;
@@ -57,15 +57,18 @@ public class CreatureOverview extends UiDialog
         
         creatureDisplayList.clear();
         
-        gameDisplay.drawShadowText("Select Creatures",
-                              gold, x+240, y+height-80, 0.5);
+        gameDisplay.drawShadowText("Your Creatures",
+                              gold, x+28, y+height-80, 0.4);
         
+        gameDisplay.drawShadowText("Your Party",
+                              gold, x+width/2+28, y+height-80, 0.4);
+
         Registry <Mob> mobs = game.world.mobs;
         
         Set <Cardinal> keys = mobs.keySet();
         
-        int row = 460;
-        
+        int row = 500;
+        int col = 20;
         for(Cardinal key : keys)
         {
             Mob mob = mobs.get(key.intValue());
@@ -76,32 +79,27 @@ public class CreatureOverview extends UiDialog
                 if(species > 0 && species != Species.IMPS_BASE)
                 {
                     SpeciesDescription desc = Species.speciesTable.get(species);
-                    Texture tex = display.textureCache.species[species+1];
 
-                    if(party.members.contains(key.intValue()))
+                    drawCreatureTile(x + col, row, desc, party.members.contains(key.intValue()));
+                    
+                    creatureDisplayList.add(new Entry(mob.getKey(), x + col, row));
+
+                    col += 170;
+                    if(col > width/2 - 169)
                     {
-                        IsoDisplay.fillRect(x + 50, y + row-2, 280, 38, 0x77000000);
-                        IsoDisplay.fillRect(x + 50+1, y + row - 1, 278, 36, 0x33FFCC99);
+                        col = 20;
+                        row -= 88;
                     }
-                    
-                    IsoDisplay.drawTileStanding(tex, x + 80, y + row + 2);
-
-                    gameDisplay.drawShadowText("Level 1 " + desc.name, 
-                                          silver, x + 105, y + row, 0.25);
-                    
-                    creatureDisplayList.add(new Entry(mob.getKey(), x + 50, y + row - 4));
-
-                    row -= 40;
                 }
             }
         }
         
-        int xoff = 480;
+        int xoff = width/2 + 28;
         int yoff = 460;
         int col2 = 160;
         int yspace = 36;
         
-        gameDisplay.drawShadowText("Party Stats", gold, x+xoff, y+yoff, 0.3);
+        gameDisplay.drawShadowText("Combined Stats", gold, x+xoff, y+yoff, 0.3);
         yoff -= 44;
         
         gameDisplay.drawShadowText("Intelligence:", silver, x+xoff, y+yoff, 0.25);
@@ -128,9 +126,30 @@ public class CreatureOverview extends UiDialog
         gameDisplay.drawShadowText("" + party.speed, silver, x+xoff + col2, y+yoff, 0.25);
         yoff -= yspace;
         
-        gameDisplay.drawMenuText("[ Ready ]", gold, x + 370, y + 20, 0.6);
+        gameDisplay.drawMenuText("> Start Expedition", gold, x + width/2 + 28, y + 46, 0.6);
+        gameDisplay.drawMenuText("> Cancel", gold, x + width/2 + 28, y + 22, 0.6);
     }    
 
+    private void drawCreatureTile(int x, int y, SpeciesDescription desc, boolean selected)
+    {
+        int tw = 160;
+        int th = 80;
+        
+        if(selected)
+        {
+            IsoDisplay.fillRect(x, y, tw, th, 0x77000000);
+            IsoDisplay.fillRect(x+1, y + 1, tw-2, th-2, 0x33FFCC99);
+        }
+
+        Texture tex = display.textureCache.species[desc.baseImage+1];
+
+        IsoDisplay.drawTileStanding(tex, x + tw/2, y + 32);
+
+        String text = "Level 1 " + desc.name;
+        int w = (int)(gameDisplay.getFontLow().getStringWidth(text) * 0.18);
+        gameDisplay.drawShadowText(text, 
+                              Colors.BRIGHT_SILVER_INK, x + (tw - w) / 2, y + 4, 0.18);
+    }
 
     @Override
     public void mouseEvent(int buttonPressed, int buttonReleased, int mouseX, int mouseY) 
@@ -161,7 +180,7 @@ public class CreatureOverview extends UiDialog
                 for(Entry entry : creatureDisplayList)
                 {
                     if(mouseX >= entry.x && mouseY >= entry.y &&
-                       mouseX < entry.x + 260 && mouseY < entry.y + 40)
+                       mouseX < entry.x + 160 && mouseY < entry.y + 80)
                     {
                         if(party.members.contains(entry.key))
                         {

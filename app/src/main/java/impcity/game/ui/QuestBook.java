@@ -62,9 +62,7 @@ public class QuestBook extends UiDialog
         int boxWidth = pageWidth - textLeft * 2;
         int linespace = 24;
         
-        // Overlap the pages in the middle
-        IsoDisplay.drawTile(messagePaperBg, leftX, y, pageWidth+5, pageHeight, 0xFF55504B);
-        IsoDisplay.drawTile(messagePaperBg, rightX-5, y, pageWidth+5, pageHeight, 0xFF55504B);
+        super.displayDoublePage(x, y);
 
         displayLeftPage(gold, silver, leftX, rightX, textTop, textLeft, boxWidth, linespace);
         displayRightPage(gold, silver, leftX, rightX, textTop, textLeft, boxWidth, linespace);
