@@ -24,6 +24,7 @@ public class Party
     public int combat;
     public int carry;
     public int speed;
+    public int scouting;
     
     public int kills;
     
@@ -34,6 +35,7 @@ public class Party
         stealth = 999;
         carry = members.size();
         speed = 999;
+        scouting = 0;
         
         for(int key : members)
         {
@@ -45,6 +47,7 @@ public class Party
             combat += desc.combat;
             stealth = Math.min(stealth, desc.stealth);
             speed = Math.min(speed, desc.speed);
+            scouting = Math.max(scouting, (desc.speed + desc.intelligence)/2);
         }
         
         if(members.isEmpty())

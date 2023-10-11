@@ -222,6 +222,8 @@ public class ImpCity implements PostRenderHook, GameInterface
         display.setDecoDisplayName(Features.I_MINERAL_BLOCK, "Raw Cobaltite Deposit");
         display.setDecoDisplayName(Features.I_TIN_ORE_MOUND, "Tin Ore");
         display.setDecoDisplayName(Features.I_COPPER_ORE_MOUND, "Copper Ore");
+        
+        gameDisplay.showDialog(new CreatureOverview(this, gameDisplay, display));
     }
 
     

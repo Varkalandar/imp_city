@@ -11,7 +11,6 @@ import java.util.Set;
 import impcity.game.Texture;
 import impcity.game.mobs.Mob;
 import impcity.ogl.IsoDisplay;
-import impcity.ui.PixFont;
 import rlgamekit.objects.Cardinal;
 import rlgamekit.objects.Registry;
 
@@ -25,20 +24,18 @@ public class CreatureOverview extends UiDialog
     private final ImpCity game;
     private final IsoDisplay display;
     private final GameDisplay gameDisplay;
-    private final PixFont font;
     private final Party party;
     private final ArrayList <Entry> creatureDisplayList;
     
     private Quest quest;
     
     
-    public CreatureOverview(ImpCity game, GameDisplay gameDisplay, IsoDisplay display, PixFont font)
+    public CreatureOverview(ImpCity game, GameDisplay gameDisplay, IsoDisplay display)
     {
-        super(display.textureCache, 1140, 620);
+        super(display.textureCache, 800, 600);
         this.game = game;
         this.gameDisplay = gameDisplay;
         this.display = display;
-        this.font = font;
         
         this.party = new Party();
         this.creatureDisplayList = new ArrayList<Entry>(64);
@@ -57,16 +54,17 @@ public class CreatureOverview extends UiDialog
         int gold = Colors.BRIGHT_GOLD_INK;
         int silver = Colors.BRIGHT_SILVER_INK;
         
+        
         creatureDisplayList.clear();
         
         gameDisplay.drawShadowText("Select Creatures",
-                              gold, x+400, y+540, 0.5);
+                              gold, x+240, y+height-80, 0.5);
         
         Registry <Mob> mobs = game.world.mobs;
         
         Set <Cardinal> keys = mobs.keySet();
         
-        int row = 480;
+        int row = 460;
         
         for(Cardinal key : keys)
         {
@@ -82,14 +80,14 @@ public class CreatureOverview extends UiDialog
 
                     if(party.members.contains(key.intValue()))
                     {
-                        IsoDisplay.fillRect(x + 50, y + row-2, 260, 38, 0x77000000);
-                        IsoDisplay.fillRect(x + 50+1, y + row - 1, 258, 36, 0x77FFFFFF);
+                        IsoDisplay.fillRect(x + 50, y + row-2, 280, 38, 0x77000000);
+                        IsoDisplay.fillRect(x + 50+1, y + row - 1, 278, 36, 0x33FFCC99);
                     }
                     
-                    IsoDisplay.drawTileStanding(tex, x + 80, y + row);
+                    IsoDisplay.drawTileStanding(tex, x + 80, y + row + 2);
 
                     gameDisplay.drawShadowText("Level 1 " + desc.name, 
-                                          silver, x + 105, y + row, 0.28);
+                                          silver, x + 105, y + row, 0.25);
                     
                     creatureDisplayList.add(new Entry(mob.getKey(), x + 50, y + row - 4));
 
@@ -98,36 +96,39 @@ public class CreatureOverview extends UiDialog
             }
         }
         
-        int xoff = 780;
-        int yoff = 480;
+        int xoff = 480;
+        int yoff = 460;
         int col2 = 160;
         int yspace = 36;
         
-        gameDisplay.drawMenuText("Your Party Stats", gold, x+xoff, y+yoff, 0.6);
+        gameDisplay.drawShadowText("Party Stats", gold, x+xoff, y+yoff, 0.3);
         yoff -= 44;
         
-        gameDisplay.drawMenuText("Intelligence:", silver, x+xoff, y+yoff, 0.6);
-        gameDisplay.drawMenuText("" + party.intelligence, silver, x+xoff + col2, y+yoff, 0.6);
+        gameDisplay.drawShadowText("Intelligence:", silver, x+xoff, y+yoff, 0.25);
+        gameDisplay.drawShadowText("" + party.intelligence, silver, x+xoff + col2, y+yoff, 0.25);
         yoff -= yspace;
         
-        gameDisplay.drawMenuText("Stealth:", silver, x+xoff, y+yoff, 0.6);
-        gameDisplay.drawMenuText("" + party.stealth, silver, x+xoff + col2, y+yoff, 0.6);
+        gameDisplay.drawShadowText("Stealth:", silver, x+xoff, y+yoff, 0.25);
+        gameDisplay.drawShadowText("" + party.stealth, silver, x+xoff + col2, y+yoff, 0.25);
         yoff -= yspace;
         
-        gameDisplay.drawMenuText("Combat:", silver, x+xoff, y+yoff, 0.6);
-        gameDisplay.drawMenuText("" + party.combat, silver, x+xoff + col2, y+yoff, 0.6);
+        gameDisplay.drawShadowText("Combat:", silver, x+xoff, y+yoff, 0.25);
+        gameDisplay.drawShadowText("" + party.combat, silver, x+xoff + col2, y+yoff, 0.25);
         yoff -= yspace;
 
-        gameDisplay.drawMenuText("Carry:", silver, x+xoff, y+yoff, 0.6);
-        gameDisplay.drawMenuText("" + party.carry, silver, x+xoff + col2, y+yoff, 0.6);
+        gameDisplay.drawShadowText("Scouting:", silver, x+xoff, y+yoff, 0.25);
+        gameDisplay.drawShadowText("" + party.scouting, silver, x+xoff + col2, y+yoff, 0.25);
         yoff -= yspace;
 
-        gameDisplay.drawMenuText("Speed:", silver, x+xoff, y+yoff, 0.6);
-        gameDisplay.drawMenuText("" + party.speed, silver, x+xoff + col2, y+yoff, 0.6);
+        gameDisplay.drawShadowText("Carry:", silver, x+xoff, y+yoff, 0.25);
+        gameDisplay.drawShadowText("" + party.carry, silver, x+xoff + col2, y+yoff, 0.25);
         yoff -= yspace;
 
+        gameDisplay.drawShadowText("Speed:", silver, x+xoff, y+yoff, 0.25);
+        gameDisplay.drawShadowText("" + party.speed, silver, x+xoff + col2, y+yoff, 0.25);
+        yoff -= yspace;
         
-        gameDisplay.drawMenuText("[ Ready ]", gold, x+540, y+40, 0.6);
+        gameDisplay.drawMenuText("[ Ready ]", gold, x + 370, y + 20, 0.6);
     }    
 
 
@@ -164,7 +165,7 @@ public class CreatureOverview extends UiDialog
                     {
                         if(party.members.contains(entry.key))
                         {
-                            party.members.remove(entry.key);
+                            party.members.remove((Object)entry.key);
                         }
                         else
                         {

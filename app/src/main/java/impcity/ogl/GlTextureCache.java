@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import impcity.game.Texture;
 import impcity.game.TextureCache;
+import java.io.BufferedInputStream;
 import org.lwjgl.opengl.Display;
 import static org.lwjgl.opengl.GL11.GL_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_MODULATE;
@@ -48,14 +49,13 @@ public class GlTextureCache extends TextureCache
     public static Texture loadTexture(Class owner, final String filename, final int textureUnit, final int hasAlpha) throws IOException
     {
         BufferedImage img;
-        int tWidth;
-        int tHeight;
         
         InputStream in = owner.getResourceAsStream(filename);
         img = ImageIO.read(in);
-        tWidth = img.getWidth();
-        tHeight = img.getHeight();
         in.close();
+
+        int tWidth = img.getWidth();
+        int tHeight = img.getHeight();
 
         // Create a new texture object in memory and bind it
         int texId = glGenTextures();
@@ -129,7 +129,8 @@ public class GlTextureCache extends TextureCache
         int width = img.getWidth();
         int height = img.getHeight();
         
-        ByteBuffer buf = ByteBuffer.allocateDirect(Math.max(width*height*4, 65536));
+        // ByteBuffer buf = ByteBuffer.allocateDirect(Math.max(width*height*4, 65536));
+        ByteBuffer buf = ByteBuffer.allocateDirect(width*height*4);
 
         int [] pixels = img.getRGB(0, 0, width, height, null, 0, width);
         
