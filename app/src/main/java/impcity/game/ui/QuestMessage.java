@@ -37,6 +37,7 @@ public class QuestMessage extends PaperMessage
             gameDisplay.showDialog(null);
             if(mouseX < display.displayWidth / 2)
             {
+                playClickSound();
                 game.quests.add(quest);
                 gameDisplay.openQuestBook();
             }

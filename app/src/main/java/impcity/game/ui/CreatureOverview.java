@@ -1,8 +1,11 @@
 package impcity.game.ui;
 
+import impcity.game.Clock;
 import impcity.game.ImpCity;
 import impcity.game.Party;
+import impcity.game.ai.Ai;
 import impcity.game.quests.QuestProcessor;
+import impcity.game.quests.QuestResult;
 import impcity.game.species.Species;
 import impcity.game.species.SpeciesDescription;
 import impcity.game.quests.Quest;
@@ -28,8 +31,10 @@ public class CreatureOverview extends UiDialog
     private final ArrayList <Entry> creatureDisplayList;
     
     private Quest quest;
-    
-    
+    private int currentPage;
+    private int maxPages;
+
+
     public CreatureOverview(ImpCity game, GameDisplay gameDisplay, IsoDisplay display)
     {
         super(display.textureCache, 800, 600);
@@ -69,6 +74,8 @@ public class CreatureOverview extends UiDialog
         
         int row = 500;
         int col = 20;
+        int count = 0;
+
         for(Cardinal key : keys)
         {
             Mob mob = mobs.get(key.intValue());
@@ -78,22 +85,27 @@ public class CreatureOverview extends UiDialog
                 int species = mob.getSpecies();
                 if(species > 0 && species != Species.IMPS_BASE)
                 {
-                    SpeciesDescription desc = Species.speciesTable.get(species);
-
-                    drawCreatureTile(x + col, row, desc, party.members.contains(key.intValue()));
-                    
-                    creatureDisplayList.add(new Entry(mob.getKey(), x + col, row));
-
-                    col += 170;
-                    if(col > width/2 - 169)
+                    if(count > currentPage * 10 && count < currentPage * 10 + 10)
                     {
-                        col = 20;
-                        row -= 88;
+                        SpeciesDescription desc = Species.speciesTable.get(species);
+                        drawCreatureTile(x + col, row, desc, party.members.contains(key.intValue()));
+                        creatureDisplayList.add(new Entry(mob.getKey(), x + col, row));
+
+                        col += 170;
+                        if (col > width / 2 - 169) {
+                            col = 20;
+                            row -= 88;
+                        }
                     }
+
+                    count ++;
                 }
             }
         }
-        
+
+        // We list 10 creatures per page
+        maxPages = creatureDisplayList.size() / 10;
+
         int xoff = width/2 + 28;
         int yoff = 460;
         int col2 = 160;
@@ -125,7 +137,9 @@ public class CreatureOverview extends UiDialog
         gameDisplay.drawShadowText("Speed:", silver, x+xoff, y+yoff, 0.25);
         gameDisplay.drawShadowText("" + party.speed, silver, x+xoff + col2, y+yoff, 0.25);
         yoff -= yspace;
-        
+
+        gameDisplay.drawMenuText("< Page " +  (currentPage + 1) + " of " + (maxPages + 1) + " >", gold, x + 28, y + 22, 0.6);
+
         gameDisplay.drawMenuText("> Start Expedition", gold, x + width/2 + 28, y + 46, 0.6);
         gameDisplay.drawMenuText("> Cancel", gold, x + width/2 + 28, y + 22, 0.6);
     }    
@@ -156,49 +170,99 @@ public class CreatureOverview extends UiDialog
     {
         if(buttonReleased == 1)
         {
-            if(mouseY < 180)
-            {
-                QuestProcessor processor = new QuestProcessor();
-                /*
-                // Hajo: this calculates the quest durarion
-                quest.party = party;
-                processor.createLog(game.world, quest);
-                quest.eta = Clock.days() + quest.duration;
+            // left or right page?
 
-                game.quests.add(quest);
-                */
-                gameDisplay.showDialog(null);
-                
-                
-                // QuestResult result = processor.createLog(game.world, quest, party);
-                // System.out.println(result.story);
-                // QuestResultMessage qrm = new QuestResultMessage(game, display, font, 600, height, result, "[ Ok ]");
-                // display.showDialog(qrm);
+            if(mouseX < display.displayWidth / 2)
+            {
+                if (mouseY < 180)
+                {
+                    // pagination clicked?
+                    if(mouseX < display.displayWidth / 2 - 280)
+                    {
+                        playClickSound();
+                        if(currentPage > 0) currentPage --;
+                    }
+                    else if(mouseX < display.displayWidth / 2 - 100)
+                    {
+                        playClickSound();
+                        if(currentPage < maxPages) currentPage ++;
+                    }
+                }
+                else
+                {
+                    playClickSound();
+                    updateCreatureSelection(mouseX, mouseY);
+                }
             }
             else
             {
-                for(Entry entry : creatureDisplayList)
+                if (mouseY < 180)
                 {
-                    if(mouseX >= entry.x && mouseY >= entry.y &&
-                       mouseX < entry.x + 160 && mouseY < entry.y + 80)
-                    {
-                        if(party.members.contains(entry.key))
-                        {
-                            party.members.remove((Object)entry.key);
-                        }
-                        else
-                        {
-                            party.members.add(entry.key);
-                        }
-                        
-                        party.calculateStats(game.world.mobs);
-                    }
+                    playClickSound();
+                    sendParty();
                 }
             }
         }
     }
 
-    
+    private void updateCreatureSelection(int mouseX, int mouseY)
+    {
+        for (Entry entry : creatureDisplayList)
+        {
+            if (mouseX >= entry.x && mouseY >= entry.y &&
+                mouseX < entry.x + 160 && mouseY < entry.y + 80)
+            {
+                if (party.members.contains(entry.key))
+                {
+                    party.members.remove((Object) entry.key);
+                }
+                else
+                {
+                    party.members.add(entry.key);
+                }
+
+                party.calculateStats(game.world.mobs);
+            }
+        }
+    }
+
+    private void sendParty()
+    {
+        // Preparations inside the dungeon
+
+        for (int mobId : party.members)
+        {
+            // first, bring the creatures to their lairs
+            Mob mob = game.world.mobs.get(mobId);
+            Ai ai = mob.getAi();
+            ai.teleportMob(mob, ai.getHome());
+
+            // then, make them inactive
+            mob.setAi(null);
+
+            // show coat of arms as indicator
+            mob.visuals.setBubble(0);
+            mob.visuals.setDisplayCode(141);
+        }
+
+
+        QuestProcessor processor = new QuestProcessor();
+
+        // Hajo: this calculates the quest duration
+        quest.party = party;
+        processor.createLog(game.world, quest);
+        quest.eta = Clock.days() + quest.duration;
+
+        // game.quests.add(quest);
+        // gameDisplay.showDialog(null);
+
+        QuestResult result = processor.createLog(game.world, quest);
+        System.out.println(result.story);
+        QuestResultMessage qrm = new QuestResultMessage(game, gameDisplay, display, 600, height, result, "[ Ok ]");
+        gameDisplay.showDialog(qrm);
+    }
+
+
     private class Entry
     {
         public final int key, x, y;

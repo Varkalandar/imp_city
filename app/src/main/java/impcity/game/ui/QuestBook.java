@@ -74,7 +74,7 @@ public class QuestBook extends UiDialog
 
         // headline
         gameDisplay.drawShadowText("Fabled Locations", gold, leftX + textLeft, textTop, 0.40);
-        gameDisplay.drawMenuText("<< Page " +  (currentPage + 1) + " of " + (maxPages + 1) + " >>", gold, leftX + textLeft, textTop - 500, 0.6);
+        gameDisplay.drawMenuText("< Page " +  (currentPage + 1) + " of " + (maxPages + 1) + " >", gold, leftX + textLeft, textTop - 500, 0.6);
 
         textTop -= 40;
 
@@ -149,20 +149,24 @@ public class QuestBook extends UiDialog
 
                 // System.err.println("selection=" + n);
                 selection = currentPage * 3 + Math.max(0, Math.min(n, 2));
+                playClickSound();
             }
             else if(mouseX < display.displayWidth / 2 - 280)
             {
                 // pagination clicked?
                 if(currentPage > 0) currentPage --;
+                playClickSound();
             }
             else if(mouseX < display.displayWidth / 2 - 100)
             {
                 if(currentPage < maxPages) currentPage ++;
+                playClickSound();
             }
             else if(mouseX > display.displayWidth / 2 && mouseY > display.displayHeight / 2 + 200)
             {
                 // close button
                 gameDisplay.showDialog(null);
+                playClickSound();
             }
             else if(game.quests.size() > selection && mouseX > display.displayWidth / 2)
             {
@@ -172,6 +176,7 @@ public class QuestBook extends UiDialog
                 CreatureOverview creatureOverview = new CreatureOverview(game, gameDisplay, display);
                 creatureOverview.setQuest(quest);
                 gameDisplay.showDialog(creatureOverview);
+                playClickSound();
             }
         }
     }

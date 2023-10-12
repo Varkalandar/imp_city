@@ -250,7 +250,9 @@ public class ImpCity implements PostRenderHook, GameInterface
         display.postRenderHook = this;
         display.mouseHandler = new ImpCityMouseHandler(this, gameDisplay, display, soundPlayer);
         display.keyHandler = new ImpCityKeyHandler(this, display, gameDisplay);
-        
+
+        UiDialog.setSoundPlayer(soundPlayer);
+
         DungeonProcessingThread dpt = new DungeonProcessingThread(this);
         dpt.start();
         

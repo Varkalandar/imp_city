@@ -46,7 +46,6 @@ public class CreatureAi extends AiBase
         FIND_WORKPLACE, GO_WORK, WORKING,
     }
     
-    private final Point home;
     private Goal goal;
     private long thinkTime;
     private long lastThinkTime;
@@ -62,7 +61,6 @@ public class CreatureAi extends AiBase
     public CreatureAi(ImpCity game)
     {
         this.game = game;
-        this.home = new Point(-1, -1);
         this.goal = Goal.FIND_LAIR;
         this.thinkTime = Clock.time() + (int)(Math.random() * 4000);
         this.pathTime = Clock.time() + (int)(Math.random() * 4000);
@@ -335,10 +333,8 @@ public class CreatureAi extends AiBase
             {
                 logger.log(Level.WARNING, "Creature #{0} is stuck at {1}, {2} and will be warped home.",
                         new Object[]{mob.getKey(), mob.location.x, mob.location.y});
-                mob.gameMap.setMob(mob.location.x, mob.location.y, 0);
-                mob.location.x = home.x;
-                mob.location.y = home.y;
-                mob.gameMap.setMob(home.x, home.y, mob.getKey());
+
+                teleportMob(mob, home);
             }
             else
             {

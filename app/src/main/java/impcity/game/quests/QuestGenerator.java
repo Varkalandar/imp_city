@@ -56,7 +56,7 @@ public class QuestGenerator
         "in {0} cave",
         "in {0} gorge",
         "in {0} forest",
-        "in {0} desert",
+        "in {0} quarry",
         "in {0} inactive volcano",
         "in {0} hollow tree trunk",
         "in {0} hilltop",
@@ -313,8 +313,8 @@ public class QuestGenerator
         
         n = (int)(distances.length * Math.random());
         text.append(distances[n]);
-
         n += 2;
+
         quest.travelTime = 2 + n*n;
         quest.findingDifficulty = 1;
         quest.treasureSize = 1; // Todo: Metallurgy level should go here

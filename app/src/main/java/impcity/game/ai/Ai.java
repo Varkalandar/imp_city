@@ -1,6 +1,8 @@
 package impcity.game.ai;
 
 import impcity.game.mobs.Mob;
+
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Writer;
@@ -39,4 +41,7 @@ public interface Ai
     
     public void read(BufferedReader reader) throws IOException;
 
+    public Point getHome();
+
+    public void teleportMob(Mob mob, Point destination);
 }

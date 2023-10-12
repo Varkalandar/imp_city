@@ -7,12 +7,23 @@ import impcity.game.map.LocationCallback;
 import impcity.game.map.RectArea;
 import impcity.game.mobs.Mob;
 
+import java.awt.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author hjm
  */
 public abstract class AiBase implements Ai
 {
+    private static final Logger logger = Logger.getLogger(AiBase.class.getName());
+
+    /**
+     * The creatures home location. Homeless creatures have (-1, -1)
+     */
+    protected final Point home = new Point(-1, -1);
+
     protected int workStep;
     
     public boolean isLair(Mob mob, int x, int y)
@@ -69,5 +80,18 @@ public abstract class AiBase implements Ai
         return ok;
     }
 
-    
+    public Point getHome()
+    {
+        return home;
+    }
+
+    public void teleportMob(Mob mob, Point destination)
+    {
+        logger.log(Level.INFO, "Creature #{0} at {1}, {2} will be teleported to {3}, {4}.",
+                new Object[]{mob.getKey(), mob.location.x, mob.location.y, destination.x, destination.y});
+        mob.gameMap.setMob(mob.location.x, mob.location.y, 0);
+        mob.location.x = destination.x;
+        mob.location.y = destination.y;
+        mob.gameMap.setMob(destination.x, destination.y, mob.getKey());
+    }
 }

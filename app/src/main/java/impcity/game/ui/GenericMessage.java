@@ -34,6 +34,7 @@ public class GenericMessage extends PaperMessage
             if(mouseX < display.displayWidth / 2)
             {
                 // Todo: Buttons?
+                playClickSound();
             }
         }
     }

@@ -53,8 +53,6 @@ public abstract class PaperMessage extends UiDialog
         GL11.glScissor(x+40, y+110, width-80, height-200);
 
         gameDisplay.drawBoxedShadowText(message, colorText, x+40, y+height - 128 + messageYOffset, width - 80, linespace, 0.2); // 0.6);
-        // fontUi.drawText(message, colorText, x+40, y+height - 128 + messageYOffset, width - 80, linespace, 0.33);
-
 
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
 
