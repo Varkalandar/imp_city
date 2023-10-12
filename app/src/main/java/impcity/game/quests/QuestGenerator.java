@@ -45,36 +45,36 @@ public class QuestGenerator
         16,
     };
     
-    private static String [] areaLocations = 
+    private static final String [] areaLocations = 
     {
-        "in {0} great plain",
-        "in {0} grassy plain",
-        "in {0} valley",
-        "in {0} bushland",
-        "in {0} river bend",
-        "in {0} lake",
-        "in {0} cave",
-        "in {0} gorge",
-        "in {0} forest",
-        "in {0} quarry",
-        "in {0} inactive volcano",
-        "in {0} hollow tree trunk",
-        "in {0} hilltop",
-        "under {0} huge oak tree",
-        "under {0} old linden tree",
-        "under {0} big ash tree",
-        "under {0} sacred fig tree",
-        "under {0} statue",
-        "under {0} cairn",
-        "under {0} big rock",
-        "at the foot of {0} massive crag",
-        "at the foot of {0} obelisk",
-        "near {0} scare crow",
-        "near {0} obelisk",
-        "near {0} ancient tree trunk",
+        "hidden in {0} great plain",
+        "buried in {0} grassy plain",
+        "hidden in {0} valley",
+        "hidden in {0} bushland",
+        "cached in {0} river bend",
+        "sunk in {0} lake",
+        "placed in {0} cave",
+        "enscounded in {0} gorge",
+        "hidden in {0} forest",
+        "covert in {0} quarry",
+        "hidden in {0} inactive volcano",
+        "covert in {0} hollow tree trunk",
+        "buried in {0} hilltop",
+        "buried under {0} huge oak tree",
+        "buried under {0} old linden tree",
+        "buried under {0} big ash tree",
+        "stashed under {0} sacred fig tree",
+        "hidden under {0} statue",
+        "stashed under {0} cairn",
+        "hidden under {0} big rock",
+        "hidden at the foot of {0} massive crag",
+        "hidden at the foot of {0} obelisk",
+        "buried near {0} scare crow",
+        "buried near {0} obelisk",
+        "to be found near {0} ancient tree trunk",
     };
     
-    private static String [] buildingLocations =
+    private static final String [] buildingTypes =
     {
         "tower",
         "temple",
@@ -100,7 +100,12 @@ public class QuestGenerator
     };
         
       
-    private static String [] buildingMods = 
+    private static final String [] buildingHidingModes = 
+    {
+        "stashed", "hidden", "cashed", "placed", "stored"
+    };
+    
+    private static final String [] buildingMods = 
     {
         "in {0}",
         "in {0} ruined",
@@ -117,7 +122,7 @@ public class QuestGenerator
         "in {0} spider infested",
     };
     
-    private static String [] treasureMods = 
+    private static final String [] treasureMods = 
     {
         "one or two",
         "a few",
@@ -127,7 +132,7 @@ public class QuestGenerator
         "piles of"
     };
 
-    private static int [] treasureModsSize = 
+    private static final int [] treasureModsSize = 
     {
         1, 
         2, 
@@ -137,7 +142,7 @@ public class QuestGenerator
         6,
     };
 
-    private static String [] distances =
+    private static final String [] distances =
     {
         "Your creatures can reach the place within some days.",
         "It'll probably take several days, maybe a week, to get there and back.",
@@ -218,14 +223,17 @@ public class QuestGenerator
         
         n = (int)(treasureMods.length * Math.random());
         text.append(treasureMods[n]);
+        quest.treasureName = treasureMods[n];
         quest.treasureSize = treasureModsSize[n];
         
         n = (int)(findVars.length * Math.random());
         text.append(findVars[n]);
+        quest.treasureName += findVars[n];
 
         boolean namedLocation = (Math.random() < 0.5);
         StringBuilder locationName = new StringBuilder();
         
+        // make a location or a building quest?
         if(Math.random() < 0.5)
         {
             n = (int)(areaLocations.length * Math.random());
@@ -233,13 +241,17 @@ public class QuestGenerator
             quest.locationIsBuilding = false;
         }
         else
-        {        
+        {
+            n = (int)(buildingHidingModes.length * Math.random());
+            locationName.append(buildingHidingModes[n]);
+            locationName.append(' ');
+            
             n = (int)(buildingMods.length * Math.random());
             locationName.append(buildingMods[n]);
             locationName.append(' ');
 
-            n = (int)(buildingLocations.length * Math.random());
-            locationName.append(buildingLocations[n]);
+            n = (int)(buildingTypes.length * Math.random());
+            locationName.append(buildingTypes[n]);
             
             quest.locationIsBuilding = true;
         }        
@@ -276,7 +288,7 @@ public class QuestGenerator
         text.append(distances[n]);
 
         n += 2;
-        quest.travelTime = 2 + n*n;
+        quest.travelTime = 2 + n*n * 4;
         
         quest.story = text.toString();
         

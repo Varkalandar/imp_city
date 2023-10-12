@@ -3,6 +3,8 @@ package impcity.game.quests;
 import impcity.game.Party;
 import java.util.Random;
 import impcity.game.World;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -11,9 +13,12 @@ import impcity.game.World;
  */
 public class QuestProcessor
 {
-    private final static int WIPED = -999999;
+    private static final Logger logger = Logger.getLogger(QuestProcessor.class.getName());
     
-    private TravelEvent [] travelEvents = 
+    private final static int WIPED = -999999;
+    private final static int DEMORALIZED = -1;
+    
+    private final TravelEvent [] travelEvents = 
     {    
        new TravelEvent("On our way. Clear path, nothing happened.", 0, 0),
        new TravelEvent("Made our way through bushland.", 0, 0),
@@ -27,7 +32,7 @@ public class QuestProcessor
        new TravelEvent("Been ambushed by wild animals!", 1, 5),
     };
    
-    private TravelEvent [] combatEvents = 
+    private final TravelEvent [] combatEvents = 
     {    
        new TravelEvent("Saw some upperworlders at a distance, they probably didn't noticed us.", 2, 0),
        new TravelEvent("Saw some upperworlders. Party might have been noticed.", 3, 0),
@@ -37,7 +42,7 @@ public class QuestProcessor
        new TravelEvent("We've been ambushed by upperworlders!", 5, 17),
     };
     
-    private TravelEvent [] hidingEvents =
+    private final TravelEvent [] hidingEvents =
     {
        new TravelEvent("Party is hiding in a group of trees.", -1, 0),
        new TravelEvent("Party is hiding between some huge rocks.", -1, 0),
@@ -49,24 +54,25 @@ public class QuestProcessor
 
     TravelEvent ambushedInHideout = new TravelEvent("We've been assaulted by upperworlders in our hideout!", 5, 24);
    
-    private LocationEvent [] locationEvents =
+    private final LocationEvent [] locationEvents =
     {
-       new LocationEvent("Could not find anything like the {0} described on the trasure map.", 0.0),
+       new LocationEvent("Could not find anything like {0} described on the trasure map.", 0.0),
     };
 
-    private LocationEvent [] buildingLocationEvents =
+    private final LocationEvent [] buildingLocationEvents =
     {
-       new LocationEvent("Could not find anything like the {0} described on the map.", 0.0),
-       new LocationEvent("Found a rock pile that might be the {0} described on the map.", 0.1),
-       new LocationEvent("Found a hut that might be the {0} described on the trasure map.", 0.2),
-       new LocationEvent("Found a building that looks a bit like the {0} described on the map.", 0.3),
-       new LocationEvent("Found a building that very much looks like the {0} described on the map.", 0.4),
-       new LocationEvent("Found a building which most certainly is the {0} described on the map.", 0.5),
-       new LocationEvent("Found a signpost and a building which seems to be the {0} described on the map.", 0.6),
-       new LocationEvent("Found a signpost, markings and a building which must be be the {0} described on the map.", 0.7),
-       new LocationEvent("Found a signpost, markings and a building which must be be the {0} described on the map. Also interrogated a captured local about the building who supoorted our findings.", 0.8),
+       new LocationEvent("Could not find anything like {0} described on the map.", 0.0),
+       new LocationEvent("Found a rock pile that might be {0} described on the map.", 0.1),
+       new LocationEvent("Found a hut that might be {0} described on the trasure map.", 0.2),
+       new LocationEvent("Found a building that looks a bit like {0} described on the map.", 0.3),
+       new LocationEvent("Found a building that very much looks like {0} described on the map.", 0.4),
+       new LocationEvent("Found a building which most certainly is  {0} described on the map.", 0.5),
+       new LocationEvent("Found a signpost and a building which seems to be {0} described on the map.", 0.6),
+       new LocationEvent("Found a signpost, markings and a building which must be be {0} described on the map.", 0.7),
+       new LocationEvent("Found a signpost, markings and a building which must be be {0} described on the map. Also interrogated a captured local about the building who supoorted our findings.", 0.8),
     };
     private Random rng;
+
    
     private enum State {TRAVELLING_TO, SEARCHING, RETREIVING, TRAVELLING_BACK};
     private State state;
@@ -137,7 +143,7 @@ public class QuestProcessor
         buffer.append("Travel Log:\n");
 
         int currentDangerLevel = 0;
-        int travelTimeDays = quest.travelTime;
+        int travelTimeDays = quest.travelTime / quest.party.speed;
         int hiding = 0;
         
         for(int i=0; i<travelTimeDays && travelTimeDays < 100; i++)
@@ -165,7 +171,10 @@ public class QuestProcessor
                 else
                 {
                     buffer.append("The remaining ").append(party.members.size()).append(" party members decided to reatreat, due to losses.\n");
-                    return - (i + 1);
+                    
+                    int daysLeft = - (i + 1);
+                    logger.log(Level.INFO, "Too many losses. Party retreats. Days left: " + daysLeft);
+                    return daysLeft;
                 }
             }
             
@@ -292,6 +301,13 @@ public class QuestProcessor
         
         do
         {
+            // Higher intelligence and scouting should increase the 
+            // probability of finding something, unless the map was fake.
+            
+            int boost = (quest.party.intelligence + quest.party.scouting) / 2;
+            
+            double p = boostedProbability(boost);
+            
             if(quest.locationIsBuilding)
             {
                 int n = (int)(rng.nextDouble() * buildingLocationEvents.length);
@@ -328,12 +344,12 @@ public class QuestProcessor
         if(best.probability == 0.0)
         {
             buffer.append("Day ").append(days + searchDays)
-                    .append(": We give up searching. The map must be wrong.");
+                    .append(": We give up searching. The map must be wrong.\n");
         }
         else
         {
             buffer.append("Day ").append(days + searchDays)
-                    .append(": We think we found the object described on the map.");
+                    .append(": We think we found the object described on the map.\n");
             // Found something which is considered the destination
             event.found = true;
         }
@@ -354,12 +370,18 @@ public class QuestProcessor
             if(quest.locationIsBuilding)
             {
                 buffer.append("Day ").append(days + retDays)
-                        .append(": We entered the ").append(quest.locationName).append(" and found XXX!");
+                        .append(": We entered ")
+                        .append(quest.locationName.toLowerCase())
+                        .append(" and found ")
+                        .append(quest.treasureName).append("!");
             }
             else
             {
                 buffer.append("Day ").append(days + retDays)
-                        .append(": We've been digging and searching around the ").append(quest.locationName).append(" and finally found XXX!");
+                        .append(": We've been digging and searching around ")
+                        .append(quest.locationName.toLowerCase())
+                        .append(" and finally found ")
+                        .append(quest.treasureName).append("!");
             }
         }
         else
@@ -395,9 +417,32 @@ public class QuestProcessor
         // never kill more than there are ...
         if(kills > party.members.size()) kills = party.members.size();
         
+        logger.log(Level.INFO, "Combat. Creatures killed: " + kills);
+        
         return kills;
     }
 
+    
+    /**
+     * Roll a probability (0 .. 1). Roll boost times, take best.
+     * @param boost Number of rolls.
+     * @return Best roll
+     */
+    private double boostedProbability(int boost) 
+    {
+        double p = 0;
+        
+        for(int i=0; i< boost; i++)
+        {
+            double pn = rng.nextDouble();
+            
+            if(pn > p) p = pn;
+        }
+        
+        return p;
+    }
+    
+    
     
     private static class TravelEvent
     {
@@ -426,5 +471,4 @@ public class QuestProcessor
             this.probability = probability;
         }
     }
-
 }

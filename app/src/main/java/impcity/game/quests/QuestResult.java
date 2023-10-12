@@ -50,7 +50,9 @@ public class QuestResult
         {
             if(locationEvent.found)
             {
-                sb.append("We assume that we actually found the location.").append('\n');
+                sb.append("We found the location and we are coming back with ")
+                        .append(quest.treasureName)
+                        .append("!\n");
             }
             else
             {

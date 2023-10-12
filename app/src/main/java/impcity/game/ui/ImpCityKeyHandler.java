@@ -1,9 +1,6 @@
 package impcity.game.ui;
 
-import impcity.game.Features;
 import impcity.game.ImpCity;
-import impcity.game.quests.Quest;
-import impcity.game.quests.QuestGenerator;
 import impcity.game.mobs.Mob;
 import impcity.ogl.IsoDisplay;
 import impcity.ui.KeyHandler;
@@ -69,6 +66,10 @@ public class ImpCityKeyHandler implements KeyHandler
                 else if(Keyboard.getEventKey() == Keyboard.KEY_H)
                 {
                     game.makeTechnologyQuest();
+                }
+                else if(Keyboard.getEventKey() == Keyboard.KEY_R)
+                {
+                    gameDisplay.openQuestBook();
                 }
                 else if(Keyboard.getEventKey() == Keyboard.KEY_L && isCtrlDown)
                 {

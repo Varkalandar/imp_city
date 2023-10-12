@@ -17,13 +17,13 @@ import rlgamekit.objects.Registry;
  */
 public class Party
 {
-    public final ArrayList <Integer> members = new ArrayList<Integer>();
+    public final ArrayList <Integer> members = new ArrayList<>();
     
     public int intelligence;
     public int stealth;
     public int combat;
     public int carry;
-    public int speed;
+    public int speed = 1;
     public int scouting;
     
     public int kills;
@@ -36,6 +36,7 @@ public class Party
         carry = members.size();
         speed = 999;
         scouting = 0;
+        kills = 0;
         
         for(int key : members)
         {

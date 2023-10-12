@@ -43,7 +43,7 @@ public class CreatureOverview extends UiDialog
         this.display = display;
         
         this.party = new Party();
-        this.creatureDisplayList = new ArrayList<Entry>(64);
+        this.creatureDisplayList = new ArrayList<>(64);
     }
     
     public void setQuest(Quest quest)
@@ -85,7 +85,7 @@ public class CreatureOverview extends UiDialog
                 int species = mob.getSpecies();
                 if(species > 0 && species != Species.IMPS_BASE)
                 {
-                    if(count > currentPage * 10 && count < currentPage * 10 + 10)
+                    if(count >= currentPage * 10 && count < currentPage * 10 + 10)
                     {
                         SpeciesDescription desc = Species.speciesTable.get(species);
                         drawCreatureTile(x + col, row, desc, party.members.contains(key.intValue()));
@@ -136,7 +136,13 @@ public class CreatureOverview extends UiDialog
 
         gameDisplay.drawShadowText("Speed:", silver, x+xoff, y+yoff, 0.25);
         gameDisplay.drawShadowText("" + party.speed, silver, x+xoff + col2, y+yoff, 0.25);
-        yoff -= yspace;
+        yoff -= yspace * 1.5;
+
+        gameDisplay.drawShadowText("Estimated time", gold, x+xoff, y+yoff, 0.3);
+        yoff -= 44;
+        
+        gameDisplay.drawShadowText("About " + quest.travelTime * 2 / party.speed + " days", 
+                silver, x+xoff, y+yoff, 0.25);
 
         gameDisplay.drawMenuText("< Page " +  (currentPage + 1) + " of " + (maxPages + 1) + " >", gold, x + 28, y + 22, 0.6);
 

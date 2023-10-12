@@ -15,6 +15,7 @@ public class Quest
     public boolean locationIsBuilding;
     public int findingDifficulty;
     public int treasureSize;
+    public String treasureName;
     public int guardHardness;
 
     /** input for quest processor */
