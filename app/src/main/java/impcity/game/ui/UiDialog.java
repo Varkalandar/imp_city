@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import impcity.game.Sounds;
 import impcity.game.Texture;
 import impcity.game.TextureCache;
+import impcity.oal.SoundPlayer;
 import impcity.ogl.IsoDisplay;
 import org.lwjgl.opengl.GL11;
 
@@ -21,7 +23,14 @@ public abstract class UiDialog
     
     public final int width;
     public final int height;
-    
+
+    private static SoundPlayer soundPlayer;
+
+    public static void setSoundPlayer(SoundPlayer sp)
+    {
+        soundPlayer = sp;
+    }
+
     public UiDialog(TextureCache textureCache, int width, int height)
     {
         this.width = width;
@@ -37,7 +46,7 @@ public abstract class UiDialog
             }
         }
     }
-    
+
     public void display(int x, int y)
     {
         // IsoDisplay.drawTile(messagePaperBg, x, y, width, height, 0xFFCCCCCC);
@@ -59,5 +68,10 @@ public abstract class UiDialog
         GL11.glScissor(x+hw, y, hw, height);
         IsoDisplay.drawTile(messagePaperBg, x+hw-5, y, hw+5, height, 0xFF55504B);
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
+    }
+
+    public static void playClickSound()
+    {
+        soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
     }
 }
