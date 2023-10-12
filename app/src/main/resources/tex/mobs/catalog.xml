@@ -2395,17 +2395,17 @@
       <Description>
         <version>4</version>
         <id>141</id>
-        <width>1</width>
-        <height>1</height>
+        <width>15</width>
+        <height>37</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>7</footX>
+        <footY>36</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>expedition_banner</string>
+        <string>rgba</string>
       </Metadata>
     </Tile>
     <Tile>
