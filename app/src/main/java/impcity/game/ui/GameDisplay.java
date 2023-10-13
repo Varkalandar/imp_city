@@ -11,7 +11,6 @@ import impcity.game.Texture;
 import impcity.game.TextureCache;
 import impcity.game.map.Map;
 import impcity.game.mobs.Mob;
-import impcity.game.quests.Quest;
 import impcity.ogl.IsoDisplay;
 import impcity.ui.PixFont;
 import impcity.ui.TimedMessage;
@@ -38,6 +37,7 @@ public class GameDisplay
     private final static int menuBarColor = 0xFFCCCCCC;
     
     private final QuestBook questBook;
+    private final ExpeditionBook expeditionBook;
     
     
     private final Texture buttonBar;
@@ -60,6 +60,7 @@ public class GameDisplay
     public static final int TAB_ROOMS_I = 1;
     public static final int TAB_ROOMS_II = 2;
     public static final int TAB_SPELLS = 3;
+    public static final int TAB_BOOKS = 4;
     
     private int tabSelected = TAB_ROOMS_I;
     
@@ -76,7 +77,9 @@ public class GameDisplay
         this.game = game;
         this.display = display;
         this.fontLow = new PixFont("/font/humanistic_128_2");
+        
         this.questBook = new QuestBook(display, this, game);
+        this.expeditionBook = new ExpeditionBook(display, this, game);
         
         TextureCache textureCache = display.textureCache;
         
@@ -146,7 +149,7 @@ public class GameDisplay
                 tabSelected == TAB_SPELLS ? 0xFFFFDD99 : 0xFFDDDDDD,
                 tabSelected == TAB_SPELLS ? selectedButtonColor : defaultButtonColor);
         
-        drawShortButton("Furniture", left+14, top+12, 
+        drawShortButton("Books", left+14, top+12, 
                 tabSelected == -1 ? 0xFFFFDD99 : 0xFFDDDDDD,
                 tabSelected == -1 ? selectedButtonColor : defaultButtonColor);
         
@@ -161,6 +164,9 @@ public class GameDisplay
                 break;
             case TAB_SPELLS:
                 displaySpellsTab(left-10, top);
+                break;
+            case TAB_BOOKS:
+                displayBooksTab(left-10, top);
                 break;
             default:
                 break;
@@ -468,6 +474,32 @@ public class GameDisplay
             }
         }
     }
+
+
+    private void displayBooksTab(int left, int top)
+    {
+        Texture [] textures = display.textureCache.textures;
+        
+        IsoDisplay.drawTile(textures[945], left + 196, top + 16, calculateButtonColor(Tools.SPELL_IMP));
+        IsoDisplay.drawTile(textures[946], left + 196 + 80, top + 16, calculateButtonColor(Tools.SPELL_IMP));
+
+        int tipY = 108;
+
+        // Hajo: testing tooltips
+        if(Mouse.getY() < 100)
+        {
+            int x = Mouse.getX();
+            
+            if(x > left + 196 && x < left + 196 + 80)
+            {
+                drawShadowText("Open quest book", 0xFFFFFFFF, left + 196 - 120, tipY, 0.3);
+            }
+            else if(x > left + 280 && x < left + 280 + 80)
+            {
+                drawShadowText("Open expeditions book", 0xFFFFFFFF, left + 280 - 170, tipY, 0.3);
+            }
+        }
+    }
     
     private String twoDigits(int v)
     {
@@ -577,4 +609,10 @@ public class GameDisplay
     {
         showDialog(questBook);
     }
+
+    void openExpeditionBook() 
+    {
+        showDialog(expeditionBook);
+    }
+
 }

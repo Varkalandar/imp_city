@@ -282,13 +282,15 @@ public class CreatureOverview extends UiDialog
         processor.createLog(game.world, quest);
         quest.eta = Clock.days() + quest.duration;
 
-        // game.quests.add(quest);
-        // gameDisplay.showDialog(null);
+        gameDisplay.showDialog(null);
 
+        // debug - show result immediately
+        /*
         QuestResult result = processor.createLog(game.world, quest);
         System.out.println(result.story);
         QuestResultMessage qrm = new QuestResultMessage(game, gameDisplay, display, 600, height, result, "[ Ok ]");
         gameDisplay.showDialog(qrm);
+        */
     }
 
 

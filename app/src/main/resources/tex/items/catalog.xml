@@ -22000,8 +22000,8 @@
       <Description>
         <version>4</version>
         <id>945</id>
-        <width>1</width>
-        <height>1</height>
+        <width>60</width>
+        <height>80</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
         <footX>0</footX>
@@ -22009,18 +22009,18 @@
       </Description>
       <Metadata>
         <int>0</int>
+        <string>quest_book</string>
+        <string>rgb</string>
         <string></string>
         <string></string>
-        <string></string>
-        <string>null</string>
       </Metadata>
     </Tile>
     <Tile>
       <Description>
         <version>4</version>
         <id>946</id>
-        <width>1</width>
-        <height>1</height>
+        <width>60</width>
+        <height>80</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
         <footX>0</footX>
@@ -22028,10 +22028,10 @@
       </Description>
       <Metadata>
         <int>0</int>
+        <string>expeditions_book</string>
+        <string>rgb</string>
         <string></string>
         <string></string>
-        <string></string>
-        <string>null</string>
       </Metadata>
     </Tile>
     <Tile>

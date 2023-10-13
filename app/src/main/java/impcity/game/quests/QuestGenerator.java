@@ -47,10 +47,10 @@ public class QuestGenerator
     
     private static final String [] areaLocations = 
     {
-        "hidden in {0} great plain",
-        "buried in {0} grassy plain",
-        "hidden in {0} valley",
-        "hidden in {0} bushland",
+        "hidden behind {0} waterfall",
+        "buried in {0} giant mole hill",
+        "hidden in {0} sinkhole",
+        "hidden in {0} group of bushes",
         "cached in {0} river bend",
         "sunk in {0} lake",
         "placed in {0} cave",

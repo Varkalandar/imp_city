@@ -20843,7 +20843,7 @@ null
 Tile Description
 v.5
 945
-1 1
+60 80
 0 0
 0 0
 End Of Header
@@ -20851,17 +20851,17 @@ Item
 v.1
 data
 4
+quest_book
+rgb
 
 
-
-null
 1
 0
 0
 Tile Description
 v.5
 946
-1 1
+60 80
 0 0
 0 0
 End Of Header
@@ -20869,10 +20869,10 @@ Item
 v.1
 data
 4
+expeditions_book
+rgb
 
 
-
-null
 1
 0
 0

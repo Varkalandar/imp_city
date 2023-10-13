@@ -8,7 +8,6 @@ import impcity.game.jobs.JobMining;
 import impcity.game.jobs.JobQueue;
 import impcity.game.processables.FarmSquare;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.util.logging.Logger;
 
 import impcity.game.map.Map;
@@ -394,6 +393,38 @@ public class ImpCityMouseHandler implements MouseHandler
         }
     }
 
+    private void handleBookButtons(int left, int mouseX)
+    {
+        if(mouseX >= left + 196 && mouseX <= left + 196 + 80)
+        {
+            gameDisplay.openQuestBook();
+            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
+        }
+        else if(mouseX >= left + 280 && mouseX <= left + 280 + 80)
+        {
+            gameDisplay.openExpeditionBook();
+            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
+        }
+        else if(mouseX >= left + 364 && mouseX <= left + 364 + 80)
+        {
+        }
+        else if(mouseX >= left + 448 && mouseX <= left + 448 + 80)
+        {
+        }
+        else if(mouseX >= left + 532 && mouseX <= left + 532 + 80)
+        {
+        }
+        else if(mouseX >= left + 616 && mouseX <= left + 616 + 80)
+        {
+        }
+        else if(mouseX >= left + 700 && mouseX <= left + 700 + 80)
+        {
+        }
+        else if(mouseX >= left + 784 && mouseX <= left + 784 + 80)
+        {
+        }
+    }
+
     private void resetSquare(Map map, int rasterI, int rasterJ) 
     {
         map.setWayLikeItem(rasterI, rasterJ, 0);
@@ -543,6 +574,11 @@ public class ImpCityMouseHandler implements MouseHandler
                 gameDisplay.selectTab(GameDisplay.TAB_SPELLS);
                 soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
             }
+            else if(mouseY >= 16+top && mouseY <= 16 + 30+top)
+            {
+                gameDisplay.selectTab(GameDisplay.TAB_BOOKS);
+                soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
+            }
         }
 
 
@@ -557,6 +593,10 @@ public class ImpCityMouseHandler implements MouseHandler
         else if(gameDisplay.getSelectedTab() == GameDisplay.TAB_SPELLS)
         {
             handleSpellButtons(left, mouseX);
+        }
+        else if(gameDisplay.getSelectedTab() == GameDisplay.TAB_BOOKS)
+        {
+            handleBookButtons(left, mouseX);
         }
     }
 
