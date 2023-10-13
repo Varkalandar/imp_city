@@ -43,5 +43,7 @@ public interface Ai
 
     public Point getHome();
 
+    public boolean isLair(Mob mob, int x, int y);
+
     public void teleportMob(Mob mob, Point destination);
 }

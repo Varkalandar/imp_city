@@ -18,6 +18,7 @@ public abstract class PaperMessage extends UiDialog
     protected String rightButton;
     protected String headline;
     private final int linespace;
+    private double scaleFactor = 0.2;
     
     protected int messageYOffset = 0;
     
@@ -35,7 +36,12 @@ public abstract class PaperMessage extends UiDialog
         this.leftButton = leftButton;
         this.rightButton = rightButton;
     }
-    
+
+    public void setScaleFactor(double factor)
+    {
+        this.scaleFactor = factor;
+    }
+
     @Override
     public void display(int x, int y)
     {
@@ -52,7 +58,7 @@ public abstract class PaperMessage extends UiDialog
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         GL11.glScissor(x+40, y+110, width-80, height-200);
 
-        gameDisplay.drawBoxedShadowText(message, colorText, x+40, y+height - 128 + messageYOffset, width - 80, linespace, 0.2); // 0.6);
+        gameDisplay.drawBoxedShadowText(message, colorText, x+40, y+height - 128 + messageYOffset, width - 80, linespace, scaleFactor);
 
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
 

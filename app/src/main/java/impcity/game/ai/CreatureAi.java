@@ -71,6 +71,13 @@ public class CreatureAi extends AiBase
         this.nextSoundTime = Clock.time() + 1000;
     }
 
+    public void setHome(Point p)
+    {
+        home.x = p.x;
+        home.y = p.y;
+        goal = Goal.SLEEP;
+    }
+
     @Override
     public void think(Mob mob) 
     {

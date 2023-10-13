@@ -14,7 +14,8 @@ public class QuestResultMessage extends PaperMessage
 {
     private final GameDisplay gameDisplay;
     private final IsoDisplay display;
-    
+    private final ImpCity game;
+
     private QuestResult questResult;
 
     
@@ -22,6 +23,7 @@ public class QuestResultMessage extends PaperMessage
                               QuestResult result, String leftButton)
     {
         super(gameDisplay, display.textureCache, width, height, "Quest Summary", result.summary, leftButton, "[ Show Details ]");
+        this.game = game;
         this.display = display;
         this.gameDisplay = gameDisplay;
         this.questResult = result;
@@ -66,6 +68,7 @@ public class QuestResultMessage extends PaperMessage
                 if(mouseX < display.displayWidth/2)
                 {
                     gameDisplay.showDialog(null);
+                    game.reactivateReturningCreatures(questResult.quest);
                 }
                 else
                 {
@@ -75,6 +78,7 @@ public class QuestResultMessage extends PaperMessage
                         headline = "Quest Summary";
                         rightButton = "[ Show Details ]";
                         messageYOffset = 0;
+                        setScaleFactor(0.2);
                     }
                     else
                     {
@@ -82,6 +86,7 @@ public class QuestResultMessage extends PaperMessage
                         headline = "Quest Details";
                         rightButton = "[ Show Summary ]";
                         messageYOffset = 0;
+                        setScaleFactor(0.18);
                     }
                 }
             }

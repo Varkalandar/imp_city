@@ -51,14 +51,18 @@ public class QuestResult
             if(locationEvent.found)
             {
                 sb.append("We found the location and we are coming back with ")
+                        .append(quest.party.carry)
+                        .append(' ')
                         .append(quest.treasureName)
                         .append("!\n");
             }
             else
             {
-                sb.append("We couldn't find the location, although we've searched the area for ")
+                sb.append("We couldn't find ")
+                        .append(quest.locationName.toLowerCase())
+                        .append(", although we've searched the area for ")
                         .append(locationEvent.searchTime)
-                        .append(" days!\n");
+                        .append(" days! The map must be wrong.\n");
             }
         }
         

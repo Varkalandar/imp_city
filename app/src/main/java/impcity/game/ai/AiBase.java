@@ -92,6 +92,6 @@ public abstract class AiBase implements Ai
         mob.gameMap.setMob(mob.location.x, mob.location.y, 0);
         mob.location.x = destination.x;
         mob.location.y = destination.y;
-        mob.gameMap.setMob(destination.x, destination.y, mob.getKey());
+        mob.gameMap.setMob(mob.location.x, mob.location.y, mob.getKey());
     }
 }

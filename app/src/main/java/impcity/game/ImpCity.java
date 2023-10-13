@@ -1287,6 +1287,33 @@ public class ImpCity implements PostRenderHook, GameInterface
         }
     }
 
+    public void reactivateReturningCreatures(Quest quest)
+    {
+        for(int key : quest.party.members)
+        {
+            Mob mob = world.mobs.get(key);
+
+            int species = mob.getSpecies();
+            mob.visuals.setDisplayCode(species);
+
+            if (mob.getAi() != null)
+            {
+                logger.log(Level.SEVERE, "AI must be null");
+            }
+
+            logger.log(Level.INFO, "Setting returned creature "  + key + " to " + mob.location.x + ", " + mob.location.y);
+
+            CreatureAi ai = new CreatureAi(this);
+            ai.setHome(mob.location);
+            mob.setAi(ai);
+
+            if (!ai.isLair(mob, mob.location.x, mob.location.y))
+            {
+                logger.log(Level.SEVERE, "Mob location must be their lair.");
+            }
+        }
+    }
+
 
     private class MyClockListener implements Clock.ClockListener
     {

@@ -4,13 +4,20 @@ import impcity.game.Clock;
 import impcity.game.ImpCity;
 import impcity.game.Party;
 import impcity.game.ai.Ai;
+import impcity.game.ai.AiBase;
+import impcity.game.ai.CreatureAi;
 import impcity.game.quests.QuestProcessor;
 import impcity.game.quests.QuestResult;
 import impcity.game.species.Species;
 import impcity.game.species.SpeciesDescription;
 import impcity.game.quests.Quest;
+
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import impcity.game.Texture;
 import impcity.game.mobs.Mob;
 import impcity.ogl.IsoDisplay;
@@ -24,6 +31,8 @@ import rlgamekit.objects.Registry;
  */
 public class CreatureOverview extends UiDialog
 {
+    private static final Logger logger = Logger.getLogger(CreatureOverview.class.getName());
+
     private final ImpCity game;
     private final IsoDisplay display;
     private final GameDisplay gameDisplay;
@@ -79,8 +88,11 @@ public class CreatureOverview extends UiDialog
         for(Cardinal key : keys)
         {
             Mob mob = mobs.get(key.intValue());
-            
-            if(mob.getKey() != game.getPlayerKey())
+            Ai ai = mob.getAi();
+
+            if(mob.getKey() != game.getPlayerKey() &&
+               ai != null &&
+               ai.isLair(mob, ai.getHome().x, ai.getHome().y))
             {
                 int species = mob.getSpecies();
                 if(species > 0 && species != Species.IMPS_BASE)
@@ -241,7 +253,18 @@ public class CreatureOverview extends UiDialog
             // first, bring the creatures to their lairs
             Mob mob = game.world.mobs.get(mobId);
             Ai ai = mob.getAi();
-            ai.teleportMob(mob, ai.getHome());
+            Point p = ai.getHome();
+            ai.teleportMob(mob, p);
+
+            if (!mob.location.equals(p))
+            {
+                logger.log(Level.SEVERE, "Mob was not properly sent home.");
+            }
+            if (((AiBase)ai).isLair(mob, mob.location.x, mob.location.y))
+            {
+                logger.log(Level.SEVERE, "Mob was not properly sent to its lair.");
+            }
+
 
             // then, make them inactive
             mob.setAi(null);

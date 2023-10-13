@@ -179,7 +179,7 @@ public class QuestGenerator
             "shows the location of",
         };
         
-        String [] findVars =
+        String [] treasureVariations =
         {
           //  " riches to be found ",
           //  " treasures being hidden ",
@@ -223,12 +223,11 @@ public class QuestGenerator
         
         n = (int)(treasureMods.length * Math.random());
         text.append(treasureMods[n]);
-        quest.treasureName = treasureMods[n];
         quest.treasureSize = treasureModsSize[n];
         
-        n = (int)(findVars.length * Math.random());
-        text.append(findVars[n]);
-        quest.treasureName += findVars[n];
+        n = (int)(treasureVariations.length * Math.random());
+        text.append(treasureVariations[n]);
+        quest.treasureName = treasureVariations[n];
 
         boolean namedLocation = (Math.random() < 0.5);
         StringBuilder locationName = new StringBuilder();

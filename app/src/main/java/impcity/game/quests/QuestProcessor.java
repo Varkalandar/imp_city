@@ -327,12 +327,14 @@ public class QuestProcessor
             {
                 best = event;
                 buffer.append("Day ").append(days + searchDays).append(": ");
-                buffer.append(event.message.replace("{0}", quest.locationName));
+                buffer.append(event.message.replace("{0}", quest.locationName.toLowerCase()));
             }
             else
             {
                 buffer.append("Day ").append(days + searchDays).append(": ");
-                buffer.append("We found nothing better yet.");
+                buffer.append("We found nothing ");
+                if(best != null && best.probability > 0.0) buffer.append("better ");
+                buffer.append("yet.");
             }
             
             buffer.append('\n');
