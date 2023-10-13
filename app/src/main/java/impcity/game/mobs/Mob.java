@@ -2,7 +2,6 @@ package impcity.game.mobs;
 
 import java.awt.Point;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import impcity.game.Direction;
@@ -10,8 +9,6 @@ import impcity.game.World;
 import impcity.game.ai.Ai;
 import impcity.game.map.Map;
 import impcity.oal.SoundPlayer;
-import rlgamekit.equipment.Equipment;
-import rlgamekit.equipment.EquipmentListener;
 import rlgamekit.item.ItemCatalog;
 import rlgamekit.map.data.LayeredMap;
 import rlgamekit.pathfinding.Path;

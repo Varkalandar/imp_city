@@ -715,7 +715,7 @@ public class ImpCity implements PostRenderHook, GameInterface
                     logger.log(Level.INFO, "loading a " + desc.name);
 
                     Mob mob;
-                    mob = new Mob(world, 0, 0, species, desc.sleepImage, Features.SHADOW_BASE, map, null, desc.speed, desc.move);
+                    mob = new Mob(world, 0, 0, species, Features.SHADOW_BASE, desc.sleepImage, map, null, desc.speed, desc.move);
                     mob.read(reader, null);
 
                     line = reader.readLine();
