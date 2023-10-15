@@ -18,13 +18,16 @@ public class Quest
     public String treasureName;
     public int guardHardness;
 
+    /** The day when the expedition was launched */
+    public int startTime;
+
     /** input for quest processor */
     public int travelTime;
     
     /** The calculated amount of time for this quest. */
     public int duration;
     
-    /** estimated time of arrival i.e. lunch time + duration */
+    /** estimated time of arrival i.e. launch time + duration */
     public int eta;
     
     public Party party;
@@ -39,6 +42,7 @@ public class Quest
         writer.write("fdiff=" + findingDifficulty + "\n");
         writer.write("tsize=" + treasureSize + "\n");
         writer.write("guard=" + guardHardness + "\n");
+        writer.write("start=" + startTime + "\n");
         writer.write("ttime=" + travelTime + "\n");
         writer.write("durat=" + duration + "\n");
         writer.write("eta=" + eta + "\n");
@@ -78,8 +82,11 @@ public class Quest
         guardHardness = Integer.parseInt(line.substring(6));
         
         line = reader.readLine();
-        travelTime = Integer.parseInt(line.substring(6));
+        startTime = Integer.parseInt(line.substring(6));
         
+        line = reader.readLine();
+        travelTime = Integer.parseInt(line.substring(6));
+
         line = reader.readLine();
         duration = Integer.parseInt(line.substring(6));
         

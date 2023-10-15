@@ -14,12 +14,14 @@ public class QuestResult
     public final String story;
     public final String summary;
     public final Quest quest;
-            
+    public final boolean success;
+
     QuestResult(Registry<Mob> mobs, Quest quest, QuestProcessor.LocationEvent locationEvent, String story)
     {
         this.quest = quest;
         this.story = story;
         this.summary = makeSummary(mobs, quest, locationEvent);
+        this.success = locationEvent != null && locationEvent.found;
     }
 
     private String makeSummary(Registry<Mob> mobs, Quest quest, QuestProcessor.LocationEvent locationEvent)

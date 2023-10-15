@@ -1,5 +1,6 @@
 package impcity.game;
 
+import impcity.game.quests.QuestResult;
 import impcity.game.ui.*;
 import impcity.game.species.Species;
 import impcity.game.species.SpeciesDescription;
@@ -1310,6 +1311,25 @@ public class ImpCity implements PostRenderHook, GameInterface
             if (!ai.isLair(mob, mob.location.x, mob.location.y))
             {
                 logger.log(Level.SEVERE, "Mob location must be their lair.");
+            }
+        }
+    }
+
+    public void storePartyTreasures(QuestResult questResult)
+    {
+        if(questResult.success)
+        {
+            // create treasures.
+            // TODO: calculate real amount and type
+
+            int count = questResult.quest.party.carry;
+            Mob player = world.mobs.get(getPlayerKey());
+            Map map = player.gameMap;
+            Point location = player.location;
+
+            for(int i=0; i<count; i++)
+            {
+                map.dropItem(location.x, location.y, Features.I_GOLD_COINS);
             }
         }
     }

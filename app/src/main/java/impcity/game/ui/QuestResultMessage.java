@@ -68,6 +68,7 @@ public class QuestResultMessage extends PaperMessage
                 if(mouseX < display.displayWidth/2)
                 {
                     gameDisplay.showDialog(null);
+                    game.storePartyTreasures(questResult);
                     game.reactivateReturningCreatures(questResult.quest);
                 }
                 else

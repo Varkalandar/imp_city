@@ -274,7 +274,7 @@ public class CreatureOverview extends UiDialog
             mob.visuals.setDisplayCode(141);
         }
 
-
+        quest.startTime = Clock.days();
         QuestProcessor processor = new QuestProcessor();
 
         // Hajo: this calculates the quest duration
@@ -285,12 +285,12 @@ public class CreatureOverview extends UiDialog
         gameDisplay.showDialog(null);
 
         // debug - show result immediately
-        /*
+
         QuestResult result = processor.createLog(game.world, quest);
         System.out.println(result.story);
         QuestResultMessage qrm = new QuestResultMessage(game, gameDisplay, display, 600, height, result, "[ Ok ]");
         gameDisplay.showDialog(qrm);
-        */
+
     }
 
 
