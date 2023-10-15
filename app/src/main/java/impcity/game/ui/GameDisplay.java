@@ -133,26 +133,11 @@ public class GameDisplay
         int left = calcMainUiBarLeft();
         int top = -8;
         
-        // IsoDisplay.drawTile(buttonBar, left, 0, 0xFF54463D);
-        IsoDisplay.drawTile(buttonBar, left, 0, menuBarColor);
-        // IsoDisplay.drawTile(buttonBar, left, 0, 0xFFFFFFFF);
+        IsoDisplay.fillRect(0, 26, 120, 70, 0x77000000);
 
-        drawShortButton("Rooms I", left+14, top+81, 
-                tabSelected == TAB_ROOMS_I ? 0xFFFFDD99 : 0xFFDDDDDD,
-                tabSelected == TAB_ROOMS_I ? selectedButtonColor : defaultButtonColor);
-        
-        drawShortButton("Rooms II", left+14, top+58, 
-                tabSelected == TAB_ROOMS_II ? 0xFFFFDD99 : 0xFFDDDDDD,
-                tabSelected == TAB_ROOMS_II ? selectedButtonColor : defaultButtonColor);
-        
-        drawShortButton("Spells", left+14, top+35, 
-                tabSelected == TAB_SPELLS ? 0xFFFFDD99 : 0xFFDDDDDD,
-                tabSelected == TAB_SPELLS ? selectedButtonColor : defaultButtonColor);
-        
-        drawShortButton("Books", left+14, top+12, 
-                tabSelected == -1 ? 0xFFFFDD99 : 0xFFDDDDDD,
-                tabSelected == -1 ? selectedButtonColor : defaultButtonColor);
-        
+        drawLeftButton("Rooms >", 120, 72, TAB_ROOMS_I);
+        drawLeftButton("Spells >", 120, 52, TAB_SPELLS);
+        drawLeftButton("Books >", 120, 32, TAB_BOOKS);
         
         switch (tabSelected) 
         {
@@ -188,22 +173,16 @@ public class GameDisplay
             display.font.drawStringScaled("Item: " + ino + flags, 0xFFFFFFFF, 20, 580, 0.5);
         }
         
-        int textLeft = left + 854;
-        int textColor = 0xFFFFDD99;
+        int textLeft = (display.displayWidth - 700) / 2;
+        int textColor = Colors.BRIGHT_GOLD_INK;
 
-        /*
-        drawShadowText("Rookie", textColor, textLeft, 64, 0.25);
-        drawShadowText(calcReputationDisplay(keeper), textColor, textLeft, 34, 0.25);
-        drawShadowText("" + keeper.stats.getCurrent(KeeperStats.GOLD) + " Gold", textColor, textLeft, 4, 0.25);
+        // status bar
+        IsoDisplay.fillRect(0, 0, display.displayWidth, 24, 0x77000000);
         
-        drawShadowText("" + Clock.days() + " days " + Clock.hour() + " hours", 0xFFDDDDDD, 
-                display.displayWidth - 140, display.displayHeight - 30, 0.22);
-        */
-        
-        drawMenuText("Rookie", textColor, textLeft, 73, 0.6);
-        drawMenuText(calcReputationDisplay(keeper), textColor, textLeft, 52, 0.6);
-        drawMenuText("" + keeper.stats.getCurrent(KeeperStats.GOLD) + " Gold", textColor, textLeft, 31, 0.6);
-        drawMenuText("" + game.calcCurrentCreatureCount() + "/" + game.calcMaxCreatureCount() + " Creatures", textColor, textLeft, 10, 0.6);
+        drawMenuText("Rookie", textColor, textLeft, 2, 0.6);
+        drawMenuText(calcReputationDisplay(keeper), textColor, textLeft + 200, 2, 0.6);
+        drawMenuText("" + keeper.stats.getCurrent(KeeperStats.GOLD) + " Gold", textColor, textLeft + 400, 2, 0.6);
+        drawMenuText("" + game.calcCurrentCreatureCount() + "/" + game.calcMaxCreatureCount() + " Creatures", textColor, textLeft + 600, 2, 0.6);
 
         drawMenuText("" + Clock.days() + " days " + Clock.hour() + " hours", 0xFFDDDDDD, 
                 display.displayWidth - 140, display.displayHeight - 30, 0.5);
@@ -260,26 +239,9 @@ public class GameDisplay
             }
             
             IsoDisplay.drawTile(display.textureCache.textures[hook.icon], display.displayWidth - 40, hook.yoff);
-            
         }
     }
     
-    
-    private void drawShortButton(String text, int x, int y, int textColor, int buttonColor)
-    {
-        IsoDisplay.drawTile(buttonText, x, y, buttonColor);
-       
-        /*
-        float f = 0.16f;
-        int width = (int)(fontLow.getStringWidth(text) * f + 0.5f);
-        drawShadowText(text, textColor, x + (buttonText.image.getWidth() - width)/2, y+2, f);
-        */
-        
-        float f = 0.5f;
-        int width = (int)(display.font.getStringWidth(text) * f + 0.5f);
-        drawMenuText(text, textColor, x + (buttonText.image.getWidth() - width)/2, y+4, f);
-    }
-
     
     public void drawMenuText(String text, int color, int x, int y, double f)
     {
@@ -376,15 +338,21 @@ public class GameDisplay
 
     private void displayRooms1Tab(int left, int top)
     {
-        IsoDisplay.drawTile(buttonDig, left + 196, top + 16, calculateButtonColor(Tools.MARK_DIG));
-        IsoDisplay.drawTile(buttonLair, left + 280, top + 16, calculateButtonColor(Tools.MAKE_LAIR));
-        IsoDisplay.drawTile(buttonFood, left + 364, top + 16, calculateButtonColor(Tools.MAKE_FARM));
-        IsoDisplay.drawTile(buttonBook, left + 448, top + 16, calculateButtonColor(Tools.MAKE_LIBRARY));
-        IsoDisplay.drawTile(buttonLab, left + 532, top + 16, calculateButtonColor(Tools.MAKE_LAB));
-        IsoDisplay.drawTile(buttonForge, left + 616, top + 16, calculateButtonColor(Tools.MAKE_FORGE));
-        IsoDisplay.drawTile(buttonHeal, left + 700, top + 16, calculateButtonColor(Tools.MAKE_HOSPITAL));
+        IsoDisplay.fillRect(122, 26, 650, 70, 0x77000000);
+        
+        left = 132;
+        top = 30;
+        
+        IsoDisplay.drawTile(buttonDig, left + 0, top, 60, 60, calculateButtonColor(Tools.MARK_DIG));
+        IsoDisplay.drawTile(buttonLair, left + 70, top, 60, 60, calculateButtonColor(Tools.MAKE_LAIR));
+        IsoDisplay.drawTile(buttonFood, left + 140, top, 60, 60, calculateButtonColor(Tools.MAKE_FARM));
+        IsoDisplay.drawTile(buttonBook, left + 210, top, 60, 60, calculateButtonColor(Tools.MAKE_LIBRARY));
+        IsoDisplay.drawTile(buttonTreasury, left + 280, top, 60, 60, calculateButtonColor(Tools.MAKE_TREASURY));
+        IsoDisplay.drawTile(buttonLab, left + 350, top, 60, 60, calculateButtonColor(Tools.MAKE_LAB));
+        IsoDisplay.drawTile(buttonForge, left + 420, top, 60, 60, calculateButtonColor(Tools.MAKE_FORGE));
+        IsoDisplay.drawTile(buttonHeal, left + 490, top, 60, 60, calculateButtonColor(Tools.MAKE_HOSPITAL));
 
-        IsoDisplay.drawTile(buttonDemolish, left + 784, top + 16, calculateButtonColor(Tools.DEMOLISH));
+        IsoDisplay.drawTile(buttonDemolish, left + 570, top, 60, 60, calculateButtonColor(Tools.DEMOLISH));
         
         int tipY = 108;
         
@@ -613,6 +581,15 @@ public class GameDisplay
     void openExpeditionBook() 
     {
         showDialog(expeditionBook);
+    }
+
+    private void drawLeftButton(String label, int x, int y, int tab) 
+    {
+        PixFont font = display.font;
+        int bw = (int)(font.getStringWidth(label) * 0.6);
+        int color = tabSelected == tab ? Colors.BRIGHT_GOLD_INK : Colors.DIM_GOLD_INK;
+
+        font.drawStringScaled(label, color, x - bw - 4, y, 0.6);
     }
 
 }

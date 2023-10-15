@@ -10,6 +10,7 @@ import java.awt.Color;
 public class Colors 
 {
     public static final int BRIGHT_GOLD_INK = 0xFFFFDD99;
+    public static final int DIM_GOLD_INK = 0xFFCCAA88;
     public static final int BRIGHT_SILVER_INK = 0xFFEEEEEE;
     public static final int WHITE = 0xFFFFFFFF;
     public static final int SILVER_INK = 0xFFCCCCCC;
