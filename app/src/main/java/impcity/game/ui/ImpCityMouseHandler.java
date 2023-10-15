@@ -305,54 +305,62 @@ public class ImpCityMouseHandler implements MouseHandler
         display.setMousePointer(mp);
     }
 
-    private void handleRoom1Buttons(int left, int mouseX)
+    private void handleRoom1Buttons(int mouseX, int mouseY)
     {
         Mob keeper = game.world.mobs.get(game.getPlayerKey());
         int research = keeper.stats.getCurrent(KeeperStats.RESEARCH);
 
-        if(mouseX >= left + 196 && mouseX <= left + 196 + 80)
+        int n = gameDisplay.calculateTabButtonNumber(mouseX, mouseY);
+        
+        if(n == 0)
         {
             Tools.selected = Tools.MARK_DIG;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
-        else if(mouseX >= left + 280 && mouseX <= left + 280 + 80)
+        else if(n == 1)
         {
             Tools.selected = Tools.MAKE_LAIR;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
-        else if(mouseX >= left + 364 && mouseX <= left + 364 + 80)
+        else if(n == 2)
         {
             Tools.selected = Tools.MAKE_FARM;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
-        else if(mouseX >= left + 448 && mouseX <= left + 448 + 80)
+        else if(n == 3)
         {
             Tools.selected = Tools.MAKE_LIBRARY;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
-        else if(mouseX >= left + 532 && mouseX <= left + 532 + 80 && (research & KeeperStats.RESEARCH_LABS) != 0)
+        else if(n == 4)
+        {
+            Tools.selected = Tools.MAKE_TREASURY;
+            setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
+            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
+        }
+        else if(n == 5)
         {
             Tools.selected = Tools.MAKE_LAB;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
-        else if(mouseX >= left + 616 && mouseX <= left + 616 + 80 && (research & KeeperStats.RESEARCH_FORGES) != 0)
+        else if(n == 6)
         {
             Tools.selected = Tools.MAKE_FORGE;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
-        else if(mouseX >= left + 700 && mouseX <= left + 700 + 80 && (research & KeeperStats.RESEARCH_HEALING) != 0)
+        else if(n == 7)
         {
             Tools.selected = Tools.MAKE_HOSPITAL;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
-        else if(mouseX >= left + 784 && mouseX <= left + 784 + 80)
+        else if(n == 8)
         {
             Tools.selected = Tools.DEMOLISH;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
@@ -360,27 +368,6 @@ public class ImpCityMouseHandler implements MouseHandler
         }
     }
 
-    private void handleRoom2Buttons(int left, int mouseX)
-    {
-        if(mouseX >= left + 196 && mouseX <= left + 196 + 80)
-        {
-            Tools.selected = Tools.MARK_DIG;
-            setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
-            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
-        }
-        else if(mouseX >= left + 528 && mouseX <= left + 528 + 80)
-        {
-            Tools.selected = Tools.MAKE_TREASURY;
-            setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
-            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
-        }
-        else if(mouseX >= left + 792 && mouseX <= left + 792 + 80)
-        {
-            Tools.selected = Tools.DEMOLISH;
-            setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
-            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
-        }
-    }
 
     private void handleSpellButtons(int left, int mouseX) 
     {
@@ -393,6 +380,7 @@ public class ImpCityMouseHandler implements MouseHandler
         }
     }
 
+    
     private void handleBookButtons(int left, int mouseX)
     {
         if(mouseX >= left + 196 && mouseX <= left + 196 + 80)
@@ -550,31 +538,24 @@ public class ImpCityMouseHandler implements MouseHandler
     {
         int mouseX = Mouse.getX();
         int mouseY = Mouse.getY();
-        int left = gameDisplay.calcMainUiBarLeft() - 10;
-        int top = -10;
         
         // Hajo: this was a click into the menu bar
 
         // Hajo: click on one of the left buttons?
 
-        if(mouseX >= left + 14 && mouseX <= left + 14 + 140)
+        if(mouseX >= 0 && mouseX <= 120)
         {
-            if(mouseY >= 85+top && mouseY <= 85 + 30+top)
+            if(mouseY >= 72 && mouseY <= 72+20)
             {
-                gameDisplay.selectTab(GameDisplay.TAB_ROOMS_I);
+                gameDisplay.selectTab(GameDisplay.TAB_ROOMS);
                 soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
             } 
-            else if(mouseY >= 62+top && mouseY <= 62 + 30+top)
-            {
-                gameDisplay.selectTab(GameDisplay.TAB_ROOMS_II);
-                soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
-            }
-            else if(mouseY >= 39+top && mouseY <= 39 + 30+top)
+            else if(mouseY >= 52 && mouseY <= 52+20)
             {
                 gameDisplay.selectTab(GameDisplay.TAB_SPELLS);
                 soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
             }
-            else if(mouseY >= 16+top && mouseY <= 16 + 30+top)
+            else if(mouseY >= 32 && mouseY <= 32+20)
             {
                 gameDisplay.selectTab(GameDisplay.TAB_BOOKS);
                 soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
@@ -582,23 +563,20 @@ public class ImpCityMouseHandler implements MouseHandler
         }
 
 
-        if(gameDisplay.getSelectedTab() == GameDisplay.TAB_ROOMS_I)
+        if(gameDisplay.getSelectedTab() == GameDisplay.TAB_ROOMS)
         {
-            handleRoom1Buttons(left, mouseX);
-        }
-        else if(gameDisplay.getSelectedTab() == GameDisplay.TAB_ROOMS_II)
-        {
-            handleRoom2Buttons(left, mouseX);
+            handleRoom1Buttons(mouseX, mouseY);
         }
         else if(gameDisplay.getSelectedTab() == GameDisplay.TAB_SPELLS)
         {
-            handleSpellButtons(left, mouseX);
+            handleSpellButtons(mouseX, mouseY);
         }
         else if(gameDisplay.getSelectedTab() == GameDisplay.TAB_BOOKS)
         {
-            handleBookButtons(left, mouseX);
+            handleBookButtons(mouseX, mouseY);
         }
     }
+    
 
     private void handleMenuAndTools(int rasterI, int rasterJ)
     {

@@ -40,29 +40,29 @@ public class GameDisplay
     private final ExpeditionBook expeditionBook;
     
     
-    private final Texture buttonBar;
+    // private final Texture buttonBar;
     private final ImpCity game;
     private final PixFont fontLow; // low contrast
 
-    private final Texture buttonText;
+    private final Texture buttonExpedition;
     private final Texture buttonDig;
     private final Texture buttonLair;
     private final Texture buttonFood;
     private final Texture buttonBook;
     private final Texture buttonTreasury;
     private final Texture buttonForge;
-    private final Texture buttonWork;
+    private final Texture buttonMap;
     private final Texture buttonLab;
     private final Texture buttonHeal;
     private final Texture buttonDemolish;
     private final Texture buttonImp;
     
-    public static final int TAB_ROOMS_I = 1;
-    public static final int TAB_ROOMS_II = 2;
+    public static final int TAB_NONE = 0;
+    public static final int TAB_ROOMS = 1;
     public static final int TAB_SPELLS = 3;
     public static final int TAB_BOOKS = 4;
     
-    private int tabSelected = TAB_ROOMS_I;
+    private int tabSelected = TAB_ROOMS;
     
     private final ArrayList<TimedMessage> messages = new ArrayList<TimedMessage>();
     private final ArrayList<MessageHook> hookedMessageStack = new ArrayList<MessageHook>();
@@ -84,20 +84,21 @@ public class GameDisplay
         TextureCache textureCache = display.textureCache;
         
         // buttonBar = textureCache.loadTexture("/ui/menu_bar.png", true);
-        buttonBar = textureCache.loadTexture("/ui/menu_bar_marble.png", true);
+        // buttonBar = textureCache.loadTexture("/ui/menu_bar_marble.png", true);
         buttonDig = textureCache.loadTexture("/ui/button_dig.png", true);
         buttonLair = textureCache.loadTexture("/ui/button_lair.png", true);
         buttonFood = textureCache.loadTexture("/ui/button_food.png", true);
         buttonBook = textureCache.loadTexture("/ui/button_library.png", true);
         buttonTreasury = textureCache.loadTexture("/ui/button_treasury.png", true);
         buttonForge = textureCache.loadTexture("/ui/button_forge.png", true);
-        buttonWork = textureCache.loadTexture("/ui/button_work.png", true);
         buttonLab = textureCache.loadTexture("/ui/button_alchemy.png", true);
         buttonHeal = textureCache.loadTexture("/ui/button_healing.png", true);
         buttonDemolish = textureCache.loadTexture("/ui/button_demolish.png", true);
+
         buttonImp = textureCache.loadTexture("/ui/button_imp.png", true);
         
-        buttonText = textureCache.loadTexture("/ui/button_text_short.png", true);
+        buttonMap = textureCache.loadTexture("/ui/button_map.png", true);
+        buttonExpedition = textureCache.loadTexture("/ui/button_expedition.png", true);
     }
 
     public PixFont getFontLow()
@@ -116,7 +117,14 @@ public class GameDisplay
 
     public void selectTab(int tab)
     {
-        tabSelected = tab;
+        if(tabSelected == tab)
+        {
+            tabSelected = TAB_NONE;
+        }
+        else
+        {
+            tabSelected = tab;
+        }
     }
     
     public int getSelectedTab()
@@ -130,28 +138,22 @@ public class GameDisplay
         
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        int left = calcMainUiBarLeft();
-        int top = -8;
-        
         IsoDisplay.fillRect(0, 26, 120, 70, 0x77000000);
 
-        drawLeftButton("Rooms >", 120, 72, TAB_ROOMS_I);
+        drawLeftButton("Rooms >", 120, 72, TAB_ROOMS);
         drawLeftButton("Spells >", 120, 52, TAB_SPELLS);
         drawLeftButton("Books >", 120, 32, TAB_BOOKS);
         
         switch (tabSelected) 
         {
-            case TAB_ROOMS_I:
-                displayRooms1Tab(left-10, top);
-                break;
-            case TAB_ROOMS_II:
-                displayRooms2Tab(left-10, top);
+            case TAB_ROOMS:
+                displayRooms1Tab(132, 30);
                 break;
             case TAB_SPELLS:
-                displaySpellsTab(left-10, top);
+                displaySpellsTab(132, 30);
                 break;
             case TAB_BOOKS:
-                displayBooksTab(left-10, top);
+                displayBooksTab(132, 30);
                 break;
             default:
                 break;
@@ -279,10 +281,6 @@ public class GameDisplay
         return y;
     }
 
-    public int calcMainUiBarLeft()
-    {
-        return (display.displayWidth-buttonBar.image.getWidth())/2;
-    }
     
     private void purgeOutdatedMessages() 
     {
@@ -336,12 +334,24 @@ public class GameDisplay
         return color;
     }
 
+    
+    int calculateTabButtonNumber(int x, int y)
+    {
+        int n = -1; // default - no button was hit
+        
+        if(y >= 30 && y <= 90)
+        {
+            n = x - 132; // left margin
+            n /= 70; // button width
+        }
+
+        return n;
+    }
+    
+    
     private void displayRooms1Tab(int left, int top)
     {
         IsoDisplay.fillRect(122, 26, 650, 70, 0x77000000);
-        
-        left = 132;
-        top = 30;
         
         IsoDisplay.drawTile(buttonDig, left + 0, top, 60, 60, calculateButtonColor(Tools.MARK_DIG));
         IsoDisplay.drawTile(buttonLair, left + 70, top, 60, 60, calculateButtonColor(Tools.MAKE_LAIR));
@@ -355,117 +365,80 @@ public class GameDisplay
         IsoDisplay.drawTile(buttonDemolish, left + 570, top, 60, 60, calculateButtonColor(Tools.DEMOLISH));
         
         int tipY = 108;
-        
-        // Hajo: testing tooltips
-        if(Mouse.getY() < 100)
+        int n = calculateTabButtonNumber(Mouse.getX(), Mouse.getY());
+
+        if(n == 0)
         {
-            int x = Mouse.getX();
-            
-            if(x > left + 196 && x < left + 196 + 80)
-            {
-                drawShadowText("Mark a block for digging", 0xFFFFFFFF, left + 196 - 120, tipY, 0.3);
-            }
-            else if(x > left + 280 && x < left + 280 + 80)
-            {
-                drawShadowText("Build lair space for your creatures", 0xFFFFFFFF, left + 280 - 170, tipY, 0.3);
-            }
-            else if(x > left + 364 && x < left + 364 + 80)
-            {
-                drawShadowText("Convert floor to farmland", 0xFFFFFFFF, left + 364 - 130, tipY, 0.3);
-            }
-            else if(x > left + 448 && x < left + 448 + 80)
-            {
-                drawShadowText("Set up a library", 0xFFFFFFFF, left + 448 - 70, tipY, 0.3);
-            }
-            else if(x > left + 532 && x < left + 532 + 80)
-            {
-                drawShadowText("Build a laboratory", 0xFFFFFFFF, left + 532 - 90, tipY, 0.3);
-            }
-            else if(x > left + 616 && x < left + 616 + 80)
-            {
-                drawShadowText("Create a forge", 0xFFFFFFFF, left + 616 - 70, tipY, 0.3);
-            }
-            else if(x > left + 700 && x < left + 700 + 80)
-            {
-                drawShadowText("Place a healing well", 0xFFFFFFFF, left + 700 - 110, tipY, 0.3);
-            }
-            else if(x > left + 784 && x < left + 784 + 80)
-            {
-                drawShadowText("Revert a room to empty space", 0xFFFFFFFF, left + 824 - 210, tipY, 0.3);
-            }
+            drawShadowText("Mark a block for digging", 0xFFFFFFFF, left + 196 - 120, tipY, 0.3);
+        }
+        else if(n == 1)
+        {
+            drawShadowText("Build lair space for your creatures", 0xFFFFFFFF, left + 280 - 170, tipY, 0.3);
+        }
+        else if(n == 2)
+        {
+            drawShadowText("Convert floor to farmland", 0xFFFFFFFF, left + 364 - 130, tipY, 0.3);
+        }
+        else if(n == 3)
+        {
+            drawShadowText("Set up a library", 0xFFFFFFFF, left + 448 - 70, tipY, 0.3);
+        }
+        else if(n == 4)
+        {
+            drawShadowText("Make a treasury", 0xFFFFFFFF, left + 448 - 70, tipY, 0.3);
+        }
+        else if(n == 5)
+        {
+            drawShadowText("Build a laboratory", 0xFFFFFFFF, left + 532 - 90, tipY, 0.3);
+        }
+        else if(n == 6)
+        {
+            drawShadowText("Create a forge", 0xFFFFFFFF, left + 616 - 70, tipY, 0.3);
+        }
+        else if(n == 7)
+        {
+            drawShadowText("Place a healing well", 0xFFFFFFFF, left + 700 - 110, tipY, 0.3);
+        }
+        else if(n == 8)
+        {
+            drawShadowText("Revert a room to empty space", 0xFFFFFFFF, left + 824 - 210, tipY, 0.3);
         }
     }
     
-    private void displayRooms2Tab(int left, int top)
-    {
-        IsoDisplay.drawTile(buttonDig, left + 196, top + 16, calculateButtonColor(Tools.MARK_DIG));
-        IsoDisplay.drawTile(buttonTreasury, left + 532, top + 16, calculateButtonColor(Tools.MAKE_TREASURY));
-
-        IsoDisplay.drawTile(buttonDemolish, left + 792, top + 16, calculateButtonColor(Tools.DEMOLISH));
-        
-        int tipY = 108;
-
-        // Hajo: testing tooltips
-        if(Mouse.getY() < 100)
-        {
-            int x = Mouse.getX();
-            
-            if(x > left + 196 && x < left + 196 + 80)
-            {
-                drawShadowText("Mark a block for digging", 0xFFFFFFFF, left + 196 - 120, tipY, 0.3);
-            }
-            else if(x > left + 532 && x < left + 532 + 80)
-            {
-                drawShadowText("Make a storage room", 0xFFFFFFFF, left + 532 - 90, tipY, 0.3);
-            }
-            else if(x > left + 784 && x < left + 784 + 80)
-            {
-                drawShadowText("Revert a room to empty space", 0xFFFFFFFF, left + 824 - 210, tipY, 0.3);
-            }
-        }
-    }
 
     private void displaySpellsTab(int left, int top)
     {
-        IsoDisplay.drawTile(buttonImp, left + 196, top + 16, calculateButtonColor(Tools.SPELL_IMP));
+        IsoDisplay.fillRect(122, 26, 650, 70, 0x77000000);
+        
+        IsoDisplay.drawTile(buttonImp, left + 0, top, 60, 60, calculateButtonColor(Tools.SPELL_IMP));
 
         int tipY = 108;
+        int n = calculateTabButtonNumber(Mouse.getX(), Mouse.getY());
 
-        // Hajo: testing tooltips
-        if(Mouse.getY() < 100)
+        if(n == 0)
         {
-            int x = Mouse.getX();
-            
-            if(x > left + 196 && x < left + 196 + 80)
-            {
-                drawShadowText("Spawn a new imp", 0xFFFFFFFF, left + 196 - 120, tipY, 0.3);
-            }
+            drawShadowText("Spawn a new imp", 0xFFFFFFFF, left + 196 - 120, tipY, 0.3);
         }
     }
 
 
     private void displayBooksTab(int left, int top)
     {
-        Texture [] textures = display.textureCache.textures;
+        IsoDisplay.fillRect(122, 26, 650, 70, 0x77000000);
         
-        IsoDisplay.drawTile(textures[945], left + 196, top + 16, calculateButtonColor(Tools.SPELL_IMP));
-        IsoDisplay.drawTile(textures[946], left + 196 + 80, top + 16, calculateButtonColor(Tools.SPELL_IMP));
+        IsoDisplay.drawTile(buttonMap, left + 0, top, 60, 60, calculateButtonColor(Tools.SPELL_IMP));
+        IsoDisplay.drawTile(buttonExpedition, left + 70, top, 60, 60, calculateButtonColor(Tools.SPELL_IMP));
 
         int tipY = 108;
+        int n = calculateTabButtonNumber(Mouse.getX(), Mouse.getY());
 
-        // Hajo: testing tooltips
-        if(Mouse.getY() < 100)
+        if(n == 0)
         {
-            int x = Mouse.getX();
-            
-            if(x > left + 196 && x < left + 196 + 80)
-            {
-                drawShadowText("Open quest book", 0xFFFFFFFF, left + 196 - 120, tipY, 0.3);
-            }
-            else if(x > left + 280 && x < left + 280 + 80)
-            {
-                drawShadowText("Open expeditions book", 0xFFFFFFFF, left + 280 - 170, tipY, 0.3);
-            }
+            drawShadowText("Open quest book", 0xFFFFFFFF, left + 196 - 120, tipY, 0.3);
+        }
+        else if(n == 1)
+        {
+            drawShadowText("Open expeditions book", 0xFFFFFFFF, left + 280 - 170, tipY, 0.3);
         }
     }
     
