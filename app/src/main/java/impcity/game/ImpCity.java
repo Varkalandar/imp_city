@@ -806,6 +806,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             {
                 Quest quest = new Quest();
                 quest.load(reader, world.mobs);
+                quests.add(quest);
             }
 
             line = reader.readLine();
