@@ -161,13 +161,15 @@ public class GameDisplay
         {
             display.font.drawStringScaled("Map pos: " + display.cursorI + ", " + display.cursorJ, 0xFFFFFFFF, 20, 600, 0.5);
             
-            
             int item = keeper.gameMap.getItem(display.cursorI, display.cursorJ);
             int ino = item & Map.F_ITEM_MASK;
             String flags = (item & Map.F_DECO) == 0 ? "" : " Deco";
             flags += (item & Map.F_FLOOR_DECO) == 0 ? "" : " Floor";
             
             display.font.drawStringScaled("Item: " + ino + flags, 0xFFFFFFFF, 20, 580, 0.5);
+
+            int mk = keeper.gameMap.getMob(display.cursorI, display.cursorJ);
+            display.font.drawStringScaled("Mob: " + mk + flags, 0xFFFFFFFF, 20, 560, 0.5);
         }
         
         int textLeft = (display.displayWidth - 700) / 2;

@@ -150,10 +150,13 @@ public class CreatureOverview extends UiDialog
 
         gameDisplay.drawShadowText("Estimated time", gold, x+xoff, y+yoff, 0.3);
         yoff -= 44;
-        
-        gameDisplay.drawShadowText("About " + quest.travelTime * 2 / party.speed + " days", 
-                silver, x+xoff, y+yoff, 0.25);
 
+        if(party.speed > 0)
+        {
+            gameDisplay.drawShadowText("About " + quest.travelTime * 2 / party.speed + " days", 
+                    silver, x+xoff, y+yoff, 0.25);
+        }
+        
         gameDisplay.drawMenuText("< Page " +  (currentPage + 1) + " of " + (maxPages + 1) + " >", gold, x + 28, y + 22, 0.6);
 
         gameDisplay.drawMenuText("> Start Expedition", gold, x + width/2 + 28, y + 46, 0.6);
@@ -258,11 +261,10 @@ public class CreatureOverview extends UiDialog
             {
                 logger.log(Level.SEVERE, "Mob was not properly sent home.");
             }
-            if (((AiBase)ai).isLair(mob, mob.location.x, mob.location.y))
+            if (!((AiBase)ai).isLair(mob, mob.location.x, mob.location.y))
             {
                 logger.log(Level.SEVERE, "Mob was not properly sent to its lair.");
             }
-
 
             // then, make them inactive
             mob.setAi(null);
