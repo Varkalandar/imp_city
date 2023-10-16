@@ -52,6 +52,7 @@ public class CreatureAi extends AiBase
     private long pathTime;
     private long researchTime;
     private long nextSoundTime;
+    private long questTime;
     private final ImpCity game;
     
     private int hungry;
@@ -69,6 +70,7 @@ public class CreatureAi extends AiBase
         this.sleepy = 0;
         this.lastThinkTime = Clock.time();
         this.nextSoundTime = Clock.time() + 1000;
+        this.questTime = Clock.time() + 360 * 1000 + (int)(Math.random() * 600 * 1000);
     }
 
     public void setHome(Point p)
@@ -822,7 +824,7 @@ public class CreatureAi extends AiBase
     private void spreadSeedlings(Mob mob) 
     {
         Map map = mob.gameMap;
-        int radius = Map.SUB + 5;
+        int radius = Map.SUB + 8;
         int xr = (int)(Math.random() * radius) - radius / 2;
         int yr = (int)(Math.random() * radius) - radius / 2;
 
@@ -929,6 +931,7 @@ public class CreatureAi extends AiBase
         }
     }
 
+    
     private void produceInLibrary(Mob mob, Point rasterP) 
     {
         Mob keeper = game.world.mobs.get(game.getPlayerKey());
@@ -976,20 +979,12 @@ public class CreatureAi extends AiBase
             }
         }
 
-/*
-            double w = Math.random();
-
-            if(w < 0.5)
-            {
-                game.makeTreasureQuest();
-            }
-            else
-            {
-                game.makeTechnologyQuest();
-            }
-
-            questTime = Clock.time() + 180 * 1000 + (int)(Math.random() * 300 * 1000);
+        // logger.log(Level.INFO, "Next quest in " + (questTime - Clock.time())  / 1000 + " seconds.");        
+        
+        if(Clock.time() > questTime)
+        {
+            game.makeTreasureQuest();
+            questTime = Clock.time() + 360 * 1000 + (int)(Math.random() * 600 * 1000);
         }
-*/
     }
 }

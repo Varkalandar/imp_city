@@ -144,10 +144,6 @@ public class Party
         String line;
         
         line = reader.readLine();
-        
-        assert("Party data start".equals(line));
-        
-        line = reader.readLine();
         int count = Integer.parseInt(line.substring(5));
     
         for(int i=0; i<count; i++)

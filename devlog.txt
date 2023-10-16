@@ -1,3 +1,13 @@
+Changes since v0.20
+
+- Added treasure quests. They appear infrequently and randomly while
+  creatures work in the library.
+- Added quest list and expedition log UIs
+- Reworked the main UI
+- Fixed a bug where creatures had their shadow and sleeping gfx
+  swapped after loading a saved game. 
+- Powersnails can spread plant seeds in a bigger radius now.
+
 Changes since v0.19
 
 - Imps can now pass through laboratories

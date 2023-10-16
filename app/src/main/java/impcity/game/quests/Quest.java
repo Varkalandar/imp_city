@@ -46,9 +46,15 @@ public class Quest
         writer.write("ttime=" + travelTime + "\n");
         writer.write("durat=" + duration + "\n");
         writer.write("eta=" + eta + "\n");
-        
-        party.write(writer);
-        
+
+        if(party != null)
+        {
+            party.write(writer);
+        }
+        else
+        {
+            writer.write("party=<null>\n");
+        }
         writer.write("Quest data end\n");
     }
     
@@ -93,14 +99,17 @@ public class Quest
         line = reader.readLine();
         eta = Integer.parseInt(line.substring(4));
 
-        if(party == null) 
+        line = reader.readLine();
+        if("party=<null>".equals(line))
+        {
+            party = null;
+        }
+        else 
         {
             party = new Party();
+            party.load(reader, mobs);
         }
-        
-        party.load(reader, mobs);
         
         assert("Quest data end".equals(line));
     }
-    
 }

@@ -5,9 +5,7 @@ import impcity.game.ImpCity;
 import impcity.game.Party;
 import impcity.game.ai.Ai;
 import impcity.game.ai.AiBase;
-import impcity.game.ai.CreatureAi;
 import impcity.game.quests.QuestProcessor;
-import impcity.game.quests.QuestResult;
 import impcity.game.species.Species;
 import impcity.game.species.SpeciesDescription;
 import impcity.game.quests.Quest;
@@ -285,12 +283,12 @@ public class CreatureOverview extends UiDialog
         gameDisplay.showDialog(null);
 
         // debug - show result immediately
-
+        /*
         QuestResult result = processor.createLog(game.world, quest);
         System.out.println(result.story);
         QuestResultMessage qrm = new QuestResultMessage(game, gameDisplay, display, 600, height, result, "[ Ok ]");
         gameDisplay.showDialog(qrm);
-
+        */
     }
 
 
