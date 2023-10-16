@@ -398,7 +398,7 @@ public class IsoDisplay implements PostRenderHook
                     n = map.getItem(mapI + ii, mapJ + jj);
                     // map.setItem(mapI + ii, mapJ + jj, 1004);
 
-                    drawItem(xd, yd, mapI, mapJ, n, jj, ii, x, y);
+                    drawItem(xd, yd, mapI + ii, mapJ + jj, n, x, y);
 
                     ii --;
                     jj ++;
@@ -420,7 +420,7 @@ public class IsoDisplay implements PostRenderHook
                     n = map.getItem(mapI + ii, mapJ + jj);
                     // map.setItem(mapI + ii, mapJ + jj, 1028);
 
-                    drawItem(xd, yd, mapI, mapJ, n, jj, ii, x, y);
+                    drawItem(xd, yd, mapI + ii, mapJ + jj, n, x, y);
 
                     ii --;
                     jj ++;
@@ -429,7 +429,8 @@ public class IsoDisplay implements PostRenderHook
         }
     }
 
-    private void drawItem(int xd, int yd, int mapI, int mapJ, int n, int jj, int ii, int x, int y) {
+    private void drawItem(int xd, int yd, int mi, int mj, int n, int x, int y) 
+    {
         if(n > 0)
         {
             if((n & Map.F_FLOOR_DECO) == 0)
@@ -462,9 +463,9 @@ public class IsoDisplay implements PostRenderHook
                         String name = decoDisplayNames[deco];
                         if(name != null &&
                            (showItemNames ||
-                            (Math.abs(cursorI - mapI - ii) < 2 && Math.abs(cursorJ - mapJ - jj) < 2)))
+                            (Math.abs(cursorI - mi) < 2 && Math.abs(cursorJ - mj) < 2)))
                         {
-                            hotspotMap.addHotspot(mapI + ii, mapJ + jj,
+                            hotspotMap.addHotspot(mi, mj,
                                                   x + (int)(font.getStringWidth(name) * 0.3),
                                                   y + 16,
                                                   name );
@@ -497,11 +498,11 @@ public class IsoDisplay implements PostRenderHook
                     }
                     */
 
-        n = map.getMob(mapI + ii, mapJ + jj);
+        n = map.getMob(mi, mj);
         if(n > 0)
         {
             // more drawables here?
-            DrawableVerticalList.DrawableLink dl = vList.get(mapI + ii, mapJ + jj);
+            DrawableVerticalList.DrawableLink dl = vList.get(mi, mj);
 
             while(dl != null)
             {
@@ -518,18 +519,19 @@ public class IsoDisplay implements PostRenderHook
         }
 
         // Hajo: spell effects and such
-        Drawable drawable = map.getEffect(mapI + ii, mapJ + jj);
+        Drawable drawable = map.getEffect(mi, mj);
         if(drawable != null)
         {
             drawable.display(this, x, y, 0);
         }
 
-        if(mapI + ii == cursorI && mapJ + jj == cursorJ && cursorN > 0)
+        if(mi == cursorI && mj == cursorJ && cursorN > 0)
         {
             Texture tex = textureCache.textures[cursorN];
             drawTile(tex, x -tex.footX, y - tex.image.getHeight() + tex.footY);
         }
     }
+    
 
     private void drawFloorDecoration(int xd, int yd, int i, int j, int x0, int y0)
     {
