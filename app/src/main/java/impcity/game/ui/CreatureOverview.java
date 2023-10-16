@@ -267,6 +267,7 @@ public class CreatureOverview extends UiDialog
             }
 
             // then, make them inactive
+            mob.setPath(null);
             mob.setAi(null);
 
             // show coat of arms as indicator

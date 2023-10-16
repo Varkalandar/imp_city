@@ -169,7 +169,10 @@ public class GameDisplay
             display.font.drawStringScaled("Item: " + ino + flags, 0xFFFFFFFF, 20, 580, 0.5);
 
             int mk = keeper.gameMap.getMob(display.cursorI, display.cursorJ);
-            display.font.drawStringScaled("Mob: " + mk + flags, 0xFFFFFFFF, 20, 560, 0.5);
+            if(mk > 0)
+            {
+                display.font.drawStringScaled("Mob: " + mk + game.world.mobs.get(mk).getAi(), 0xFFFFFFFF, 20, 560, 0.5);
+            }
         }
         
         int textLeft = (display.displayWidth - 700) / 2;
