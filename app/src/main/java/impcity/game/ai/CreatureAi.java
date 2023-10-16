@@ -459,16 +459,19 @@ public class CreatureAi extends AiBase
             }
             else
             {
-                Point p = new Point(workplaces.get((int)(Math.random() * workplaces.size())));
-
+                Point wp = workplaces.get((int)(Math.random() * workplaces.size()));
+                int px = wp.x;
+                int py = wp.y;
+                wp = null;
+                
                 // Hajo: adjust location to match the workplace layout
                 // todo: better code
                 switch(desc.jobPreference)
                 {
                     case LIBRARY:
                     case FORGE:
-                        p.x += 4 + (int)(Math.random() * 3);
-                        p.y += Map.SUB / 4 + (int)(Math.random() * Map.SUB/2);
+                        px += 4 + (int)(Math.random() * 3);
+                        py += Map.SUB / 4 + (int)(Math.random() * Map.SUB/2);
                         break;
                     case LABORATORY:                        
                         // sit in a circle around the lab table
@@ -479,11 +482,11 @@ public class CreatureAi extends AiBase
                         {
                             double angle = Math.random() * Math.PI * 2.0;
                             int cr = 5;                        
-                            int cx = Map.SUB / 2 + p.x + (int)(Math.cos(angle) * cr);
-                            int cy = Map.SUB / 2 + p.y + (int)(Math.sin(angle) * cr);
+                            int cx = Map.SUB / 2 + px + (int)(Math.cos(angle) * cr);
+                            int cy = Map.SUB / 2 + py + (int)(Math.sin(angle) * cr);
 
-                            p.x = cx;
-                            p.y = cy;
+                            px = cx;
+                            py = cy;
                             
                             if(mob.gameMap.isMovementBlockedRadius(cx, cy, desc.size))
                             {
@@ -499,15 +502,15 @@ public class CreatureAi extends AiBase
                         
                     default:
                         // around the middle ...
-                        p.x += Map.SUB / 4 + (int)(Math.random() * Map.SUB/2);
-                        p.y += Map.SUB / 4 + (int)(Math.random() * Map.SUB/2);
+                        px += Map.SUB / 4 + (int)(Math.random() * Map.SUB/2);
+                        py += Map.SUB / 4 + (int)(Math.random() * Map.SUB/2);
                 }
 
                 Path path = new Path();
 
                 boolean ok = 
                 path.findPath(new WayPathSource(mob.gameMap, desc.size),
-                              new LocationPathDestination(mob.gameMap, p.x, p.y, 0),
+                              new LocationPathDestination(mob.gameMap, px, py, 0),
                               mob.location.x, mob.location.y);
 
                 if(ok && path.length() > 0)
@@ -519,7 +522,7 @@ public class CreatureAi extends AiBase
                 {
                     mob.visuals.setBubble(0);
                     goal = Goal.GO_RANDOM;
-                    logger.log(Level.INFO, "Mob {0} could not find a path to {1}, {2} (workplace)", new Object[]{mob.getKey(), p.x, p.y});                    
+                    logger.log(Level.INFO, "Mob {0} could not find a path to {1}, {2} (workplace)", new Object[]{mob.getKey(), px, py});
                 }
             }
         }
@@ -805,16 +808,15 @@ public class CreatureAi extends AiBase
     {
         int rasterI = mob.location.x/Map.SUB*Map.SUB;
         int rasterJ = mob.location.y/Map.SUB*Map.SUB;
-        Point rasterP = new Point(rasterI, rasterJ);
         
         int ground = mob.gameMap.getFloor(rasterI, rasterJ);
         if(ground >= Features.GROUND_FORGE && ground <= Features.GROUND_FORGE + 3)
         {
-            produceInForge(mob, rasterP);
+            produceInForge(mob, rasterI, rasterJ);
         }
         else if(ground >= Features.GROUND_LIBRARY && ground <= Features.GROUND_LIBRARY + 3)
         {
-            produceInLibrary(mob, rasterP);
+            produceInLibrary();
         }
         else if(ground >= Features.GROUND_LABORATORY && ground <= Features.GROUND_LABORATORY + 3)
         {
@@ -899,8 +901,10 @@ public class CreatureAi extends AiBase
     }
 
 
-    private void produceInForge(Mob mob, Point rasterP) 
+    private void produceInForge(Mob mob, int rasterI, int rasterJ) 
     {
+        Point rasterP = new Point(rasterI, rasterJ);
+
         // scan for resources
         for(Room room : game.forgeRooms)
         {
@@ -932,7 +936,7 @@ public class CreatureAi extends AiBase
     }
 
     
-    private void produceInLibrary(Mob mob, Point rasterP) 
+    private void produceInLibrary() 
     {
         Mob keeper = game.world.mobs.get(game.getPlayerKey());
         int research = keeper.stats.getMin(KeeperStats.RESEARCH);
