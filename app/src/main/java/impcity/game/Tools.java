@@ -16,7 +16,10 @@ public enum Tools
     MAKE_TREASURY,
     DEMOLISH,
     
-    SPELL_IMP;
+    SPELL_IMP,
+
+    BOOK_QUESTS,
+    BOOK_EXPEDITION;
 
     public static Tools selected;
 }

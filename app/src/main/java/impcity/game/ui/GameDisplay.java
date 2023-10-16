@@ -28,21 +28,18 @@ public class GameDisplay
     public static boolean showMapInfo;   // show debug info about map
     
     
-    private final static int defaultButtonColor = 0xFFFFFFFF;
+    private final static int defaultButtonColor = 0xFFCCCCCC;
     private final static int selectedButtonColor = 0xFFFFDD99;
-    // private final static int selectedButtonColor = 0xD099DDFF;
-    private final static int disabledButtonColor = 0xFF555555;
-    
-    // private final static int menuBarColor = 0xFF776655;
-    private final static int menuBarColor = 0xFFCCCCCC;
-    
+    private final static int disabledButtonColor = 0x70CCCCCC;
+    private final static int toolTipColor = Colors.BRIGHT_SILVER_INK;
+
     private final QuestBook questBook;
     private final ExpeditionBook expeditionBook;
     
     
     // private final Texture buttonBar;
     private final ImpCity game;
-    private final PixFont fontLow; // low contrast
+    private final PixFont fontLow; // script font, for in-game text
 
     private final Texture buttonExpedition;
     private final Texture buttonDig;
@@ -69,8 +66,7 @@ public class GameDisplay
     private final IsoDisplay display;
     
     public UiDialog topDialog;
-    
-    
+
     
     public GameDisplay(ImpCity game, IsoDisplay display) throws IOException
     {
@@ -83,8 +79,6 @@ public class GameDisplay
         
         TextureCache textureCache = display.textureCache;
         
-        // buttonBar = textureCache.loadTexture("/ui/menu_bar.png", true);
-        // buttonBar = textureCache.loadTexture("/ui/menu_bar_marble.png", true);
         buttonDig = textureCache.loadTexture("/ui/button_dig.png", true);
         buttonLair = textureCache.loadTexture("/ui/button_lair.png", true);
         buttonFood = textureCache.loadTexture("/ui/button_food.png", true);
@@ -100,6 +94,7 @@ public class GameDisplay
         buttonMap = textureCache.loadTexture("/ui/button_map.png", true);
         buttonExpedition = textureCache.loadTexture("/ui/button_expedition.png", true);
     }
+
 
     public PixFont getFontLow()
     {
@@ -215,12 +210,10 @@ public class GameDisplay
         
         purgeOutdatedMessages();
         
-        yoff = 8;
+        yoff = 24;
         
         for(MessageHook hook : hookedMessageStack)
         {
-            // int y = yoff;
-            
             // Hajo: Is this message still falling?
             if(hook.yoff > yoff)
             {
@@ -341,7 +334,7 @@ public class GameDisplay
         
         if(y >= 30 && y <= 90)
         {
-            n = x - 132; // left margin
+            n = x - 132 - 5; // left margin - half button gap
             n /= 70; // button width
         }
 
@@ -369,39 +362,39 @@ public class GameDisplay
 
         if(n == 0)
         {
-            drawShadowText("Mark a block for digging", 0xFFFFFFFF, left + 196 - 120, tipY, 0.3);
+            drawMenuText("Mark a block for digging", toolTipColor, 70, tipY, 0.6);
         }
         else if(n == 1)
         {
-            drawShadowText("Build lair space for your creatures", 0xFFFFFFFF, left + 280 - 170, tipY, 0.3);
+            drawMenuText("Build lair space for your creatures", toolTipColor, 140, tipY, 0.6);
         }
         else if(n == 2)
         {
-            drawShadowText("Convert floor to farmland", 0xFFFFFFFF, left + 364 - 130, tipY, 0.3);
+            drawMenuText("Convert floor to farmland", toolTipColor, 210, tipY, 0.6);
         }
         else if(n == 3)
         {
-            drawShadowText("Set up a library", 0xFFFFFFFF, left + 448 - 70, tipY, 0.3);
+            drawMenuText("Set up a library", toolTipColor, 280, tipY, 0.6);
         }
         else if(n == 4)
         {
-            drawShadowText("Make a treasury", 0xFFFFFFFF, left + 448 - 70, tipY, 0.3);
+            drawMenuText("Make a treasury", toolTipColor, 350, tipY, 0.6);
         }
         else if(n == 5)
         {
-            drawShadowText("Build a laboratory", 0xFFFFFFFF, left + 532 - 90, tipY, 0.3);
+            drawMenuText("Build a laboratory", toolTipColor, 420, tipY, 0.6);
         }
         else if(n == 6)
         {
-            drawShadowText("Create a forge", 0xFFFFFFFF, left + 616 - 70, tipY, 0.3);
+            drawMenuText("Create a forge", toolTipColor, 490, tipY, 0.6);
         }
         else if(n == 7)
         {
-            drawShadowText("Place a healing well", 0xFFFFFFFF, left + 700 - 110, tipY, 0.3);
+            drawMenuText("Place a healing well", toolTipColor, 560, tipY, 0.6);
         }
         else if(n == 8)
         {
-            drawShadowText("Revert a room to empty space", 0xFFFFFFFF, left + 824 - 210, tipY, 0.3);
+            drawMenuText("Revert a room to empty space", toolTipColor, 640, tipY, 0.6);
         }
     }
     
@@ -417,7 +410,7 @@ public class GameDisplay
 
         if(n == 0)
         {
-            drawShadowText("Spawn a new imp", 0xFFFFFFFF, left + 196 - 120, tipY, 0.3);
+            drawMenuText("Spawn a new imp", toolTipColor, 70, tipY, 0.6);
         }
     }
 
@@ -426,21 +419,22 @@ public class GameDisplay
     {
         IsoDisplay.fillRect(122, 26, 650, 70, 0x77000000);
         
-        IsoDisplay.drawTile(buttonMap, left + 0, top, 60, 60, calculateButtonColor(Tools.SPELL_IMP));
-        IsoDisplay.drawTile(buttonExpedition, left + 70, top, 60, 60, calculateButtonColor(Tools.SPELL_IMP));
+        IsoDisplay.drawTile(buttonMap, left + 0, top, 60, 60, calculateButtonColor(Tools.BOOK_QUESTS));
+        IsoDisplay.drawTile(buttonExpedition, left + 70, top, 60, 60, calculateButtonColor(Tools.BOOK_EXPEDITION));
 
         int tipY = 108;
         int n = calculateTabButtonNumber(Mouse.getX(), Mouse.getY());
 
         if(n == 0)
         {
-            drawShadowText("Open quest book", 0xFFFFFFFF, left + 196 - 120, tipY, 0.3);
+            drawMenuText("Open quest location list", toolTipColor, 70, tipY, 0.6);
         }
         else if(n == 1)
         {
-            drawShadowText("Open expeditions book", 0xFFFFFFFF, left + 280 - 170, tipY, 0.3);
+            drawMenuText("Open expeditions book", toolTipColor, 140, tipY, 0.6);
         }
     }
+
     
     private String twoDigits(int v)
     {
@@ -453,6 +447,7 @@ public class GameDisplay
             return "0" + v;
         }
     }
+
 
     private String calcReputationDisplay(Mob keeper)
     {
@@ -496,6 +491,7 @@ public class GameDisplay
         return base + " (" + rep + ")";
     }
 
+
     private static String calcLevelString(int level, int maxLevel)
     {
         String [] names = 
@@ -513,11 +509,13 @@ public class GameDisplay
         return names[(int)(f * names.length)];
     
     }
-    
+
+
     public final synchronized void showDialog(UiDialog dialog)
     {
         topDialog = dialog;
     }
+
 
     public void addHookedMessage(MessageHook hookedMessage) 
     {
@@ -536,6 +534,7 @@ public class GameDisplay
         hookedMessageStack.add(hookedMessage);
     }
 
+
     void activateHookedMessage(int n) 
     {
         if(n >= 0 && n < hookedMessageStack.size())
@@ -546,23 +545,25 @@ public class GameDisplay
         }
     }
 
+
     void openQuestBook() 
     {
         showDialog(questBook);
     }
+
 
     void openExpeditionBook() 
     {
         showDialog(expeditionBook);
     }
 
+
     private void drawLeftButton(String label, int x, int y, int tab) 
     {
-        PixFont font = display.font;
+        PixFont font = getUiFont();
         int bw = (int)(font.getStringWidth(label) * 0.6);
         int color = tabSelected == tab ? Colors.BRIGHT_GOLD_INK : Colors.DIM_GOLD_INK;
 
         font.drawStringScaled(label, color, x - bw - 4, y, 0.6);
     }
-
 }
