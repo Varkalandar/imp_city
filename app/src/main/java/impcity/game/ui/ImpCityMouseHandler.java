@@ -223,9 +223,9 @@ public class ImpCityMouseHandler implements MouseHandler
         int n = map.getFloor(rasterI, rasterJ);
         if(n >= Features.GROUND_POLY_TILES && n < Features.GROUND_POLY_TILES + 3)
         {
+            game.soundPlayer.play(Sounds.MAKE_TREASURY, 0.4f, 1.0f);            
             map.setFloor(rasterI, rasterJ, Features.GROUND_TREASURY + (int)(Math.random() * 2));
             game.addTreasurySquare(rasterI, rasterJ);
-            game.soundPlayer.play(Sounds.MAKE_TREASURY, 0.4f, 1.0f);            
         }
     }
 

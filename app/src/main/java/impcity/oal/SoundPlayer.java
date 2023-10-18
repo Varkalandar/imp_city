@@ -257,7 +257,7 @@ public class SoundPlayer
 
         if (AL10.alGetError() != AL10.AL_NO_ERROR)
         {
-            logger.log(Level.SEVERE, "AL Error {0}", AL10.alGetError());            
+            logger.log(Level.SEVERE, "AL Error after gen buffer " + n + " : " + AL10.alGetError() + " " + filename);            
             return false;
         }
         
@@ -278,6 +278,15 @@ public class SoundPlayer
         }
         
         AL10.alBufferData(buffers[n].get(0), waveFile.format, waveFile.data, waveFile.samplerate);
+
+        if (AL10.alGetError() != AL10.AL_NO_ERROR)
+        {
+            logger.log(Level.SEVERE, "AL Error after alBufferData " + n + " : " + AL10.alGetError() + " " + filename);            
+            return false;
+        }
+
+
+
         waveFile.dispose();
         
         return true;

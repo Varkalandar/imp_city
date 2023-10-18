@@ -192,7 +192,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             PATH + "magic_library.wav",
             PATH + "deselect.wav",
             PATH + "arrival_new.wav",
-            PATH + "magic_treasury.wav",
+            PATH + "hjm-coin_clicker_3.wav",
             PATH + "magic_lair.wav",
             PATH + "magic_workshop.wav",
             PATH + "381547__tumbleweed3288__falling-and-rolling-stones_excerpt.wav",
