@@ -24,4 +24,5 @@ public class Sounds
     public static final int FORGE_WORK = 14;
     public static final int METAL_HIT = 15;
     public static final int CRUNCH_MUNCH = 16;
+    public static final int COINS_DROP = 17;
 }

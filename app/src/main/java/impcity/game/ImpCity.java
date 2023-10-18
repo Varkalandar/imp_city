@@ -201,7 +201,8 @@ public class ImpCity implements PostRenderHook, GameInterface
             PATH + "445974__breviceps__cartoon-slurp_excerpt.wav",
             PATH + "273722__thearxx08__angle-grinder.wav",
             PATH + "170957__timgormly__metal-ping.wav",
-            PATH + "428953__jbp__crunching-on-a-snack-chomping.wav"
+            PATH + "428953__jbp__crunching-on-a-snack-chomping.wav",
+            PATH + "hjm-coindrop_v2.wav"
         };
 
         splash(intro, "Loading sounds ...");

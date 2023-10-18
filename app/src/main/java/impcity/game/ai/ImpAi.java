@@ -582,8 +582,16 @@ public class ImpAi extends AiBase
         if(mob.stats.getCurrent(MobStats.CARRY) > 0)
         {
             // Hajo: imp carries an item -> drop this item
-            mob.gameMap.dropItem(mob.location.x, mob.location.y, 
-                                 mob.stats.getCurrent(MobStats.CARRY));
+            int item = mob.stats.getCurrent(MobStats.CARRY); 
+
+            // make some noise?
+            if(item == Features.I_GOLD_COINS)
+            {
+                game.soundPlayer.playFromPosition(Sounds.COINS_DROP, 0.4f, 1.0f,
+                        mob.location, game.getViewPosition());
+            }
+            
+            mob.gameMap.dropItem(mob.location.x, mob.location.y, item);
             mob.stats.setCurrent(MobStats.CARRY, 0);
         }
     }
