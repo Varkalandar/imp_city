@@ -201,6 +201,13 @@ public class SoundPlayer
         AL10.alGetError();
     }
 
+    
+    public boolean play(int sample, float volume, float pitchLow, float pitchHigh)
+    {
+        return play(sample, volume, pitchLow + (float)Math.random() * (pitchHigh - pitchLow));
+    }
+    
+    
     public boolean play(int sample, float volume, float pitch)
     {
         if(initialized)

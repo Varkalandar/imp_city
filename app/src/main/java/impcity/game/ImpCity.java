@@ -188,7 +188,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             PATH + "click.wav",
             PATH + "wosh.wav",
             PATH + "new_plant.wav",
-            PATH + "magic_farmland.wav",
+            PATH + "farmland.wav",
             PATH + "magic_library.wav",
             PATH + "deselect.wav",
             PATH + "arrival_new.wav",

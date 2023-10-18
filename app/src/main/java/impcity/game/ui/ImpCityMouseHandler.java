@@ -167,9 +167,9 @@ public class ImpCityMouseHandler implements MouseHandler
         int n = map.getFloor(rasterI, rasterJ);
         if(n >= Features.GROUND_POLY_TILES && n < Features.GROUND_POLY_TILES + 3)
         {
+            game.soundPlayer.play(Sounds.MAKE_FARMLAND, 0.5f, 0.5f, 0.55f);            
             map.setFloor(rasterI, rasterJ, Features.GROUND_GRASS_DARK + (int)(Math.random() * 2));
             game.addFarmlandSquare(rasterI, rasterJ);
-            game.soundPlayer.play(Sounds.MAKE_FARMLAND, 1.0f, 1.0f);            
         }
     }
     
