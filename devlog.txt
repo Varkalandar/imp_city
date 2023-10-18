@@ -1,3 +1,8 @@
+Changes since v0.21
+
+- Replaced "make treasury" and "make farmland" sounds
+- Added a new sound for dropping coins
+
 Changes since v0.20
 
 - Added treasure quests. They appear infrequently and randomly while
