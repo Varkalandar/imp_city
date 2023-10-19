@@ -493,12 +493,12 @@ public class ImpCity implements PostRenderHook, GameInterface
                 int ground = map.getFloor(x, y);
                 if(ground >= Features.GROUND_GRASS_DARK && ground < Features.GROUND_GRASS_DARK + 3)
                 {
-                    addFarmlandSquare(x, y);
+                    addFarmlandSquare(map, x, y);
                     addClaimedSquare(x, y);
                 }
                 else if(ground >= Features.GROUND_LAIR && ground < Features.GROUND_LAIR + 3)
                 {
-                    addLairSquare(x, y);
+                    addLairSquare(map, x, y);
                     addClaimedSquare(x, y);
                 }
                 else if(ground >= Features.GROUND_LIBRARY && ground < Features.GROUND_LIBRARY + 3)
@@ -518,7 +518,7 @@ public class ImpCity implements PostRenderHook, GameInterface
                 }
                 else if(ground >= Features.GROUND_TREASURY && ground < Features.GROUND_TREASURY + 3)
                 {
-                    addTreasurySquare(x, y);
+                    addTreasurySquare(map, x, y);
                     addClaimedSquare(x, y);
                 }
                 else if(ground >= Features.GROUND_POLY_TILES && ground < Features.GROUND_POLY_TILES + 3)
@@ -819,32 +819,35 @@ public class ImpCity implements PostRenderHook, GameInterface
         }
     }
 
-    public void addFarmlandSquare(int rasterI, int rasterJ) 
+    public void addFarmlandSquare(Map map, int rasterI, int rasterJ) 
     {
         FarmSquare p = new FarmSquare(rasterI, rasterJ, Clock.time() + (long)(Math.random() * 1000));
                 
         if(!farmland.contains(p))
         {
+            map.setFloor(rasterI, rasterJ, Features.GROUND_GRASS_DARK + (int)(Math.random() * 2));
             farmland.add(p);
         }                
         refreshPillars(rasterI, rasterJ);
     }
     
-    public void addLairSquare(int rasterI, int rasterJ) 
+    public void addLairSquare(Map map, int rasterI, int rasterJ) 
     {
         Point p = new Point(rasterI, rasterJ);
         if(!lairs.contains(p))
         {
+            map.setFloor(rasterI, rasterJ, Features.GROUND_LAIR + (int)(Math.random() * 3));
             lairs.add(p);
         }                
         refreshPillars(rasterI, rasterJ);
     }
 
-    public void addTreasurySquare(int rasterI, int rasterJ) 
+    public void addTreasurySquare(Map map, int rasterI, int rasterJ) 
     {
         Point p = new Point(rasterI, rasterJ);
         if(!treasuries.contains(p))
         {
+            map.setFloor(rasterI, rasterJ, Features.GROUND_TREASURY + (int)(Math.random() * 2));
             treasuries.add(p);
         }                
         refreshPillars(rasterI, rasterJ);
@@ -865,7 +868,8 @@ public class ImpCity implements PostRenderHook, GameInterface
     
     private void furnishLibrary(Map map, Point p) 
     {
-        cleanSquare(map, p);
+        resetSquare(map, p.x, p.y);
+        map.setFloor(p.x, p.y, Features.GROUND_LIBRARY + (int)(Math.random() * 1));
 
         map.setItem(p.x, p.y + 4, Map.F_DECO + Features.I_BOOKSHELF_HALF_RIGHT);
 
@@ -892,7 +896,8 @@ public class ImpCity implements PostRenderHook, GameInterface
 
     private void furnishLab(Map map, Point p)
     {
-        cleanSquare(map, p);
+        resetSquare(map, p.x, p.y);
+        map.setFloor(p.x, p.y, Features.GROUND_LABORATORY + (int)(Math.random() * 3));
 
         int x = p.x + Map.SUB/2;
         int y = p.y + Map.SUB/2;
@@ -923,6 +928,8 @@ public class ImpCity implements PostRenderHook, GameInterface
         Point p = new Point(rasterI, rasterJ);
         if(!forges.contains(p))
         {
+            map.setFloor(rasterI, rasterJ, Features.GROUND_FORGE + (int)(Math.random() * 3));
+            
             // Hajo: see if this is a new room or if it is
             // an extension of a room
 
@@ -1017,7 +1024,8 @@ public class ImpCity implements PostRenderHook, GameInterface
         Point p = new Point(rasterI, rasterJ);
         if(!hospitals.contains(p))
         {
-            cleanSquare(map, p);
+            resetSquare(map, p.x, p.y);
+            map.setFloor(rasterI, rasterJ, Features.GROUND_HOSPITAL + (int)(Math.random() * 1));
             
             hospitals.add(p);
             
@@ -1128,16 +1136,33 @@ public class ImpCity implements PostRenderHook, GameInterface
         }
     }
 
-    private void cleanSquare(Map map, Point p)
+    
+    public void resetSquare(Map map, int rasterI, int rasterJ) 
     {
-        for(int x=0; x<Map.SUB; x++)
+        map.setWayLikeItem(rasterI, rasterJ, 0);
+        for(int j=0; j<Map.SUB; j++)
         {
-            for(int y=0; y<Map.SUB; y++)
+            for(int i=0; i<Map.SUB; i++)
             {
-                map.setItem(p.x + x, p.y + y, 0);
-            }            
+                int ii = rasterI + i;
+                int jj = rasterJ + j;
+                
+                map.setItem(ii, jj, 0);
+                map.setMovementBlocked(ii, jj, false);
+                map.setPlacementBlocked(ii, jj, false);
+                map.removeLight(ii, jj);
+                
+                removeGeneratorFrom(ii, jj);
+            }
+        }
+        
+        int n = map.getFloor(rasterI, rasterJ);
+        if(n < Features.GROUND_POLY_TILES || n >= Features.GROUND_POLY_TILES + 3)
+        {
+            map.setFloor(rasterI, rasterJ, Features.GROUND_POLY_TILES + (int)(Math.random() * 3));            
         }
     }
+
     
     public void refreshPillars(int rasterI, int rasterJ)
     {

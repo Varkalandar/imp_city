@@ -156,8 +156,7 @@ public class ImpCityMouseHandler implements MouseHandler
         int n = map.getFloor(rasterI, rasterJ);
         if(n >= Features.GROUND_POLY_TILES && n < Features.GROUND_POLY_TILES + 3)
         {
-            map.setFloor(rasterI, rasterJ, Features.GROUND_LAIR + (int)(Math.random() * 3));
-            game.addLairSquare(rasterI, rasterJ);
+            game.addLairSquare(map, rasterI, rasterJ);
             game.soundPlayer.play(Sounds.MAKE_LAIR, 0.2f, 2.0f);            
         }
     }
@@ -168,8 +167,7 @@ public class ImpCityMouseHandler implements MouseHandler
         if(n >= Features.GROUND_POLY_TILES && n < Features.GROUND_POLY_TILES + 3)
         {
             game.soundPlayer.play(Sounds.MAKE_FARMLAND, 0.5f, 0.5f, 0.55f);            
-            map.setFloor(rasterI, rasterJ, Features.GROUND_GRASS_DARK + (int)(Math.random() * 2));
-            game.addFarmlandSquare(rasterI, rasterJ);
+            game.addFarmlandSquare(map, rasterI, rasterJ);
         }
     }
     
@@ -178,7 +176,6 @@ public class ImpCityMouseHandler implements MouseHandler
         int n = map.getFloor(rasterI, rasterJ);
         if(n >= Features.GROUND_POLY_TILES && n < Features.GROUND_POLY_TILES + 3)
         {
-            map.setFloor(rasterI, rasterJ, Features.GROUND_LIBRARY + (int)(Math.random() * 1));
             game.addLibrarySquare(map, rasterI, rasterJ);
             game.soundPlayer.play(Sounds.MAKE_LIBRARY, 0.8f, 1.0f);            
         }
@@ -189,7 +186,6 @@ public class ImpCityMouseHandler implements MouseHandler
         int n = map.getFloor(rasterI, rasterJ);
         if(n >= Features.GROUND_POLY_TILES && n < Features.GROUND_POLY_TILES + 3)
         {
-            map.setFloor(rasterI, rasterJ, Features.GROUND_LABORATORY + (int)(Math.random() * 3));
             game.addLabSquare(map, rasterI, rasterJ);
             game.soundPlayer.play(Sounds.MAKE_FORGE, 0.2f, 1.0f);
         }
@@ -200,7 +196,6 @@ public class ImpCityMouseHandler implements MouseHandler
         int n = map.getFloor(rasterI, rasterJ);
         if(n >= Features.GROUND_POLY_TILES && n < Features.GROUND_POLY_TILES + 3)
         {
-            map.setFloor(rasterI, rasterJ, Features.GROUND_FORGE + (int)(Math.random() * 3));
             game.addForgeSquare(map, rasterI, rasterJ);
             game.soundPlayer.play(Sounds.MAKE_FORGE, 0.2f, 1.0f);
         }
@@ -212,7 +207,6 @@ public class ImpCityMouseHandler implements MouseHandler
         if((n >= Features.GROUND_POLY_TILES && n < Features.GROUND_POLY_TILES + 3) ||
            (n >= Features.GROUND_HOSPITAL && n < Features.GROUND_HOSPITAL + 3))
         {
-            map.setFloor(rasterI, rasterJ, Features.GROUND_HOSPITAL + (int)(Math.random() * 1));
             game.addHospitalSquare(map, rasterI, rasterJ);
             game.soundPlayer.play(Sounds.MAKE_FORGE, 0.2f, 1.0f);
         }
@@ -224,8 +218,7 @@ public class ImpCityMouseHandler implements MouseHandler
         if(n >= Features.GROUND_POLY_TILES && n < Features.GROUND_POLY_TILES + 3)
         {
             game.soundPlayer.play(Sounds.MAKE_TREASURY, 0.4f, 1.0f);            
-            map.setFloor(rasterI, rasterJ, Features.GROUND_TREASURY + (int)(Math.random() * 2));
-            game.addTreasurySquare(rasterI, rasterJ);
+            game.addTreasurySquare(map, rasterI, rasterJ);
         }
     }
 
@@ -240,13 +233,13 @@ public class ImpCityMouseHandler implements MouseHandler
         else if(n >= Features.GROUND_LIBRARY && n < Features.GROUND_LIBRARY + 3)
         {
             game.getLibraries().remove(p);
-            resetSquare(map, rasterI, rasterJ);
+            game.resetSquare(map, rasterI, rasterJ);
         }
         else if(n >= Features.GROUND_LAIR && n < Features.GROUND_LAIR + 3)
         {
             // lair
             game.getLairs().remove(p);
-            resetSquare(map, rasterI, rasterJ);
+            game.resetSquare(map, rasterI, rasterJ);
         }
         else if(n >= Features.GROUND_GRASS_DARK && n < Features.GROUND_GRASS_DARK + 3)
         {
@@ -257,7 +250,7 @@ public class ImpCityMouseHandler implements MouseHandler
                 if(farm.x == p.x && farm.y == p.y)
                 {
                     game.getFarmland().remove(i);
-                    resetSquare(map, rasterI, rasterJ);
+                    game.resetSquare(map, rasterI, rasterJ);
                     break;
                 }
             }
@@ -265,22 +258,22 @@ public class ImpCityMouseHandler implements MouseHandler
         else if(n >= Features.GROUND_TREASURY && n < Features.GROUND_TREASURY + 3)
         {
             game.getTreasuries().remove(p);
-            resetSquare(map, rasterI, rasterJ);
+            game.resetSquare(map, rasterI, rasterJ);
         }
         else if(n >= Features.GROUND_FORGE && n < Features.GROUND_FORGE + 3)
         {
             game.getForges().remove(p);
-            resetSquare(map, rasterI, rasterJ);
+            game.resetSquare(map, rasterI, rasterJ);
         }
         else if(n >= Features.GROUND_HOSPITAL && n < Features.GROUND_HOSPITAL + 3)
         {
             game.getHospitals().remove(p);
-            resetSquare(map, rasterI, rasterJ);
+            game.resetSquare(map, rasterI, rasterJ);
         }
         else if(n >= Features.GROUND_LABORATORY && n < Features.GROUND_LABORATORY + 3)
         {
             game.getLaboratories().remove(p);
-            resetSquare(map, rasterI, rasterJ);
+            game.resetSquare(map, rasterI, rasterJ);
         }
 
         game.refreshPillars(rasterI, rasterJ);
@@ -404,29 +397,6 @@ public class ImpCityMouseHandler implements MouseHandler
         }
     }
 
-    
-    private void resetSquare(Map map, int rasterI, int rasterJ) 
-    {
-        map.setWayLikeItem(rasterI, rasterJ, 0);
-        for(int j=0; j<Map.SUB; j++)
-        {
-            for(int i=0; i<Map.SUB; i++)
-            {
-                map.setItem(rasterI+i, rasterJ+j, 0);
-                map.setMovementBlocked(rasterI+i, rasterJ+j, false);
-                map.setPlacementBlocked(rasterI+i, rasterJ+j, false);
-                
-                game.removeGeneratorFrom(rasterI+i, rasterJ+j);
-            }
-        }
-        
-        int n = map.getFloor(rasterI, rasterJ);
-        if(n < Features.GROUND_POLY_TILES || n >= Features.GROUND_POLY_TILES + 3)
-        {
-            map.setFloor(rasterI, rasterJ, Features.GROUND_POLY_TILES + (int)(Math.random() * 3));            
-        }
-    }
-    
     
     private void createExcavationJob(Map map, int rasterI, int rasterJ) 
     {
