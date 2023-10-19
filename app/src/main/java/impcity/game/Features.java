@@ -163,6 +163,7 @@ public class Features
 
     public static boolean canBeDug(int ground, int block) {
         return (block >= Features.I_STEEP_EARTH_BLOCK && block < Features.I_STEEP_EARTH_BLOCK + 3) &&
-                (ground >= Features.GROUND_IMPASSABLE && ground < Features.GROUND_IMPASSABLE + 3);
+               ((ground >= Features.GROUND_LIGHT_SOIL && ground <= Features.GROUND_LIGHT_SOIL+3) ||
+                (ground >= Features.GROUND_IMPASSABLE && ground < Features.GROUND_IMPASSABLE + 3));
     }
 }

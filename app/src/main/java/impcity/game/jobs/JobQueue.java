@@ -50,6 +50,15 @@ public class JobQueue
         
         return null;
     }
+    
+    public synchronized List<Job> getAllJobs()
+    {
+        ArrayList<Job> all = new ArrayList<>(queues.get(PRI_HIGH));
+        all.addAll(queues.get(PRI_NORM));
+        all.addAll(queues.get(PRI_LOW));
+        
+        return all;
+    }
 
     public synchronized boolean isEmpty()
     {
@@ -82,6 +91,7 @@ public class JobQueue
                     if(job.getLocation().equals(p))
                     {
                         ok |= (queue.remove(i) != null);
+                        logger.log(Level.INFO, "Removing job of " + jc + " at " + p);
                     }
                 }
             }

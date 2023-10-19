@@ -9,11 +9,13 @@ import java.util.ArrayList;
 import impcity.game.Clock;
 import impcity.game.Texture;
 import impcity.game.TextureCache;
+import impcity.game.jobs.Job;
 import impcity.game.map.Map;
 import impcity.game.mobs.Mob;
 import impcity.ogl.IsoDisplay;
 import impcity.ui.PixFont;
 import impcity.ui.TimedMessage;
+import java.util.List;
 import org.lwjgl.input.Mouse;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
@@ -25,8 +27,9 @@ import static org.lwjgl.opengl.GL11.glBlendFunc;
  */
 public class GameDisplay
 {
-    public static boolean showMapInfo;   // show debug info about map
-    
+    public static boolean debugShowMapInfo;   // show debug info about map
+    public static boolean debugShowJobQueue;   // show debug info about map
+    private static int debugMobKey;
     
     private final static int defaultButtonColor = 0xFFCCCCCC;
     private final static int selectedButtonColor = 0xFFFFDD99;
@@ -167,22 +170,13 @@ public class GameDisplay
         Mob keeper = game.world.mobs.get(game.getPlayerKey());
 
         // debug
-        if(showMapInfo) 
+        if(debugShowMapInfo) 
         {
-            display.font.drawStringScaled("Map pos: " + display.cursorI + ", " + display.cursorJ, 0xFFFFFFFF, 20, 600, 0.5);
-            
-            int item = keeper.gameMap.getItem(display.cursorI, display.cursorJ);
-            int ino = item & Map.F_ITEM_MASK;
-            String flags = (item & Map.F_DECO) == 0 ? "" : " Deco";
-            flags += (item & Map.F_FLOOR_DECO) == 0 ? "" : " Floor";
-            
-            display.font.drawStringScaled("Item: " + ino + flags, 0xFFFFFFFF, 20, 580, 0.5);
-
-            int mk = keeper.gameMap.getMob(display.cursorI, display.cursorJ);
-            if(mk > 0)
-            {
-                display.font.drawStringScaled("Mob: " + mk + game.world.mobs.get(mk).getAi(), 0xFFFFFFFF, 20, 560, 0.5);
-            }
+            showMapInfo(keeper);
+        }
+        if(debugShowJobQueue) 
+        {
+            showJobQueue();
         }
         
         int textLeft = (display.displayWidth - 700) / 2;
@@ -580,5 +574,53 @@ public class GameDisplay
         int color = tabSelected == tab ? Colors.BRIGHT_GOLD_INK : Colors.DIM_GOLD_INK;
 
         font.drawStringScaled(label, color, x - bw - 4, y, 0.6);
+    }
+    
+    
+    private void showMapInfo(Mob keeper)
+    {
+        display.font.drawStringScaled("Map pos: " + display.cursorI + ", " + display.cursorJ, 0xFFFFFFFF, 20, 600, 0.5);
+
+        int item = keeper.gameMap.getItem(display.cursorI, display.cursorJ);
+        int ino = item & Map.F_ITEM_MASK;
+        String flags = (item & Map.F_DECO) == 0 ? "" : " Deco";
+        flags += (item & Map.F_FLOOR_DECO) == 0 ? "" : " Floor";
+
+        display.font.drawStringScaled("Item: " + ino + flags, 0xFFFFFFFF, 20, 580, 0.5);
+
+        int mk;
+        if(debugMobKey > 0)
+        {
+            mk = debugMobKey;
+        }
+        else
+        {
+            mk = keeper.gameMap.getMob(display.cursorI, display.cursorJ);
+        }
+        
+        if(mk > 0)
+        {
+            display.font.drawStringScaled("Mob: " + mk + " " + game.world.mobs.get(mk).getAi(), 0xFFFFFFFF, 20, 560, 0.5);
+        }        
+    }
+    
+    private void showJobQueue()
+    {
+        List <Job> allJobs = game.jobQueue.getAllJobs();
+        int yoff = 0;
+        
+        for(Job job : allJobs)
+        {
+            drawMenuText(job.toString(), Colors.WHITE, 200, 500-yoff, 0.4);
+            yoff += 20;
+        }
+    }
+
+    void debugCatchMob() 
+    {
+        Mob player = game.world.mobs.get(game.getPlayerKey());
+        Map map = player.gameMap;        
+        
+        debugMobKey = map.getMob(display.cursorI, display.cursorJ);
     }
 }

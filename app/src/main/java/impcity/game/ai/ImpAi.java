@@ -704,4 +704,21 @@ public class ImpAi extends AiBase
                                                   0xFFFFFFFF);
         }
     }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append("ImpAi, goal=");
+        sb.append(goal.toString());
+        
+        if(currentJob != null)
+        {
+            sb.append(", job=");
+            sb.append(currentJob.getClass().getName());
+        }
+        
+        return sb.toString();
+    }
 }

@@ -55,9 +55,9 @@ public class ImpCityKeyHandler implements KeyHandler
         {
             if(Keyboard.getEventKeyState() == true && !Keyboard.isRepeatEvent())
             {
-                if(Keyboard.getEventKey() == Keyboard.KEY_I)
+                if(Keyboard.getEventKey() == Keyboard.KEY_J)
                 {
-                    // gameDisplay.showCreatureList = !gameDisplay.showCreatureList;
+                    gameDisplay.debugShowJobQueue = !gameDisplay.debugShowJobQueue;
                 }
                 else if(Keyboard.getEventKey() == Keyboard.KEY_T)
                 {
@@ -93,7 +93,7 @@ public class ImpCityKeyHandler implements KeyHandler
                 }
                 else if(Keyboard.getEventKey() == Keyboard.KEY_F1)
                 {
-                    GameDisplay.showMapInfo = !GameDisplay.showMapInfo;
+                    GameDisplay.debugShowMapInfo = !GameDisplay.debugShowMapInfo;
                 }
             }
         }

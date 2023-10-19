@@ -16,6 +16,7 @@ import impcity.oal.SoundPlayer;
 import impcity.ogl.IsoDisplay;
 import impcity.ui.MouseHandler;
 import impcity.ui.MousePointerBitmap;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 /**
@@ -130,6 +131,8 @@ public class ImpCityMouseHandler implements MouseHandler
                 {
                     dragging = false;
                     handleMenuAndTools(rasterI, rasterJ);
+                    
+                    if(gameDisplay.debugShowMapInfo && Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) gameDisplay.debugCatchMob();
                 }
             }
         }
@@ -527,18 +530,19 @@ public class ImpCityMouseHandler implements MouseHandler
         else
         {
             // not left, then check the bar button
-
-            if(gameDisplay.getSelectedTab() == GameDisplay.TAB_ROOMS)
+            switch (gameDisplay.getSelectedTab()) 
             {
-                handleRoom1Buttons(mouseX, mouseY);
-            }
-            else if(gameDisplay.getSelectedTab() == GameDisplay.TAB_SPELLS)
-            {
-                handleSpellButtons(mouseX, mouseY);
-            }
-            else if(gameDisplay.getSelectedTab() == GameDisplay.TAB_BOOKS)
-            {
-                handleBookButtons(mouseX, mouseY);
+                case GameDisplay.TAB_ROOMS:
+                    handleRoom1Buttons(mouseX, mouseY);
+                    break;
+                case GameDisplay.TAB_SPELLS:
+                    handleSpellButtons(mouseX, mouseY);
+                    break;
+                case GameDisplay.TAB_BOOKS:
+                    handleBookButtons(mouseX, mouseY);
+                    break;
+                default:
+                    break;
             }
         }
     }
