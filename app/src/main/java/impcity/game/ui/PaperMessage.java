@@ -1,6 +1,5 @@
 package impcity.game.ui;
 
-import impcity.game.TextureCache;
 import impcity.ui.PixFont;
 import org.lwjgl.opengl.GL11;
 
@@ -22,11 +21,11 @@ public abstract class PaperMessage extends UiDialog
     
     protected int messageYOffset = 0;
     
-    public PaperMessage(GameDisplay gameDisplay, TextureCache textureCache, int width, int height,
+    public PaperMessage(GameDisplay gameDisplay, int width, int height,
             String headline,
             String message, String leftButton, String rightButton)
     {
-        super(textureCache, width, height);
+        super(gameDisplay.getDisplay().textureCache, width, height);
         this.gameDisplay = gameDisplay;
         this.fontUi = gameDisplay.getUiFont();
         this.fontText = gameDisplay.getFontLow();

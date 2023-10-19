@@ -2,9 +2,6 @@ package impcity.game.ui;
 
 import impcity.game.ImpCity;
 import impcity.game.quests.Quest;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import impcity.ogl.IsoDisplay;
 
 
@@ -22,7 +19,7 @@ public class QuestMessage extends PaperMessage
     public QuestMessage(ImpCity game, GameDisplay gameDisplay, IsoDisplay display, int width, int height,
             Quest quest, String title, String leftButton, String rightButton)
     {
-        super(gameDisplay, display.textureCache, width, height, title, quest.story, leftButton, rightButton);
+        super(gameDisplay, width, height, title, quest.story, leftButton, rightButton);
         this.game = game;
         this.display = display;
         this.gameDisplay = gameDisplay;

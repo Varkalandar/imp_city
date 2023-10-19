@@ -1,8 +1,5 @@
 package impcity.game.ui;
 
-import impcity.game.ImpCity;
-import impcity.ogl.IsoDisplay;
-
 
 
 /**
@@ -11,17 +8,13 @@ import impcity.ogl.IsoDisplay;
  */
 public class GenericMessage extends PaperMessage
 {
-    private final ImpCity game;
-    private final IsoDisplay display;
     private final GameDisplay gameDisplay;
 
 
-    public GenericMessage(ImpCity game, GameDisplay gameDisplay, IsoDisplay display, int width, int height,
+    public GenericMessage(GameDisplay gameDisplay, int width, int height,
                           String title, String message, String leftButton, String rightButton)
     {
-        super(gameDisplay, display.textureCache, width, height, title, message, leftButton, rightButton);
-        this.game = game;
-        this.display = display;
+        super(gameDisplay, width, height, title, message, leftButton, rightButton);
         this.gameDisplay = gameDisplay;
     }
 
@@ -31,7 +24,7 @@ public class GenericMessage extends PaperMessage
         if(buttonReleased == 1)
         {
             gameDisplay.showDialog(null);
-            if(mouseX < display.displayWidth / 2)
+            if(mouseX < gameDisplay.getDisplay().displayWidth / 2)
             {
                 // Todo: Buttons?
                 playClickSound();

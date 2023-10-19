@@ -95,21 +95,31 @@ public class GameDisplay
         buttonExpedition = textureCache.loadTexture("/ui/button_expedition.png", true);
     }
 
-
+    
+    public IsoDisplay getDisplay()
+    {
+        return display;
+    }
+    
+    
     public PixFont getFontLow()
     {
         return fontLow;
     }
+    
+    
     public PixFont getUiFont()
     {
         return display.font;
     }
 
+    
     public void addMessage(TimedMessage message)
     {
         messages.add(message);
     }
 
+    
     public void selectTab(int tab)
     {
         if(tabSelected == tab)

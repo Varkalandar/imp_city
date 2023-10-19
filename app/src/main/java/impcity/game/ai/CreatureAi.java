@@ -939,50 +939,13 @@ public class CreatureAi extends AiBase
     private void produceInLibrary() 
     {
         Mob keeper = game.world.mobs.get(game.getPlayerKey());
-        int research = keeper.stats.getMin(KeeperStats.RESEARCH);
 
         // first, accumulate wisdom
-        int time = (int)(Clock.time() - researchTime) >> 3;
-        int total = research + time;
-        int limit = keeper.stats.getMax(KeeperStats.RESEARCH); 
+        int research = (int)(Clock.time() - researchTime) >> 3;        
 
-        logger.log(Level.INFO, "Mob researched " + time + " points, total is now " + total + " limit is " + limit);
-        
-        keeper.stats.setMin(KeeperStats.RESEARCH, total);
+        game.research.addRoomResearch(keeper.stats, research);
         researchTime = Clock.time();
         
-        
-        if(total > limit)
-        {
-            // step by step research
-
-            int researchBits = keeper.stats.getCurrent(KeeperStats.RESEARCH);
-            if((researchBits & KeeperStats.RESEARCH_FORGES) == 0)
-            {
-                researchBits |= KeeperStats.RESEARCH_FORGES;
-                game.announceResearchResult(KeeperStats.RESEARCH_FORGES);
-                keeper.stats.setMin(KeeperStats.RESEARCH, 0);
-                keeper.stats.setCurrent(KeeperStats.RESEARCH, researchBits);
-                keeper.stats.setMax(KeeperStats.RESEARCH, limit * 2);
-            }
-            else if((researchBits & KeeperStats.RESEARCH_LABS) == 0)
-            {
-                researchBits |= KeeperStats.RESEARCH_LABS;
-                game.announceResearchResult(KeeperStats.RESEARCH_LABS);
-                keeper.stats.setMin(KeeperStats.RESEARCH, 0);
-                keeper.stats.setCurrent(KeeperStats.RESEARCH, researchBits);
-                keeper.stats.setMax(KeeperStats.RESEARCH, limit * 2);
-            }
-            else if((researchBits & KeeperStats.RESEARCH_HEALING) == 0)
-            {
-                researchBits |= KeeperStats.RESEARCH_HEALING;
-                game.announceResearchResult(KeeperStats.RESEARCH_HEALING);
-                keeper.stats.setMin(KeeperStats.RESEARCH, 0);
-                keeper.stats.setCurrent(KeeperStats.RESEARCH, researchBits);
-                keeper.stats.setMax(KeeperStats.RESEARCH, limit * 2);
-            }
-        }
-
         // logger.log(Level.INFO, "Next quest in " + (questTime - Clock.time())  / 1000 + " seconds.");        
         
         if(Clock.time() > questTime)

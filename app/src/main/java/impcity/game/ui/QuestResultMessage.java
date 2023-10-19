@@ -2,7 +2,6 @@ package impcity.game.ui;
 
 import impcity.game.ImpCity;
 import impcity.game.quests.QuestResult;
-import java.io.IOException;
 import impcity.ogl.IsoDisplay;
 import org.lwjgl.input.Mouse;
 
@@ -16,13 +15,13 @@ public class QuestResultMessage extends PaperMessage
     private final IsoDisplay display;
     private final ImpCity game;
 
-    private QuestResult questResult;
+    private final QuestResult questResult;
 
     
     public QuestResultMessage(ImpCity game, GameDisplay gameDisplay, IsoDisplay display, int width, int height,
                               QuestResult result, String leftButton)
     {
-        super(gameDisplay, display.textureCache, width, height, "Quest Summary", result.summary, leftButton, "[ Show Details ]");
+        super(gameDisplay, width, height, "Quest Summary", result.summary, leftButton, "[ Show Details ]");
         this.game = game;
         this.display = display;
         this.gameDisplay = gameDisplay;

@@ -67,6 +67,7 @@ public class ImpCity implements PostRenderHook, GameInterface
     private final TextureCache textureCache;
     private final IsoDisplay display;
     public final SoundPlayer soundPlayer;
+    public final Research research;
     
     public int mouseI, mouseJ;
 
@@ -150,6 +151,8 @@ public class ImpCity implements PostRenderHook, GameInterface
         gameDisplay = new GameDisplay(this, display);
         
         soundPlayer = new SoundPlayer();
+        
+        research = new Research(gameDisplay);
     }
     
     
@@ -209,15 +212,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         if(!soundPlayer.loadSamples(sampleFiles))
         {
             logger.log(Level.SEVERE, "Error while loading sound data.");
-        }
-        
-        player.stats.setCurrent(KeeperStats.GOLD, 0);
-        player.stats.setCurrent(KeeperStats.RESEARCH, 0);
-
-        // player.stats.setCurrent(KeeperStats.RESEARCH, KeeperStats.RESEARCH_LABS | KeeperStats.RESEARCH_FORGES);
-
-        player.stats.setMin(KeeperStats.RESEARCH, 0);
-        player.stats.setMax(KeeperStats.RESEARCH, 10000); // research needed for next discovery
+        }        
         
         // register some named features
         display.setDecoDisplayName(Features.I_TUNNEL_PORTAL, "Tunnel Portal");
@@ -226,6 +221,8 @@ public class ImpCity implements PostRenderHook, GameInterface
         display.setDecoDisplayName(Features.I_COPPER_ORE_MOUND, "Copper Ore");
         
         // gameDisplay.showDialog(new CreatureOverview(this, gameDisplay, display));
+    
+        research.initialize(player.stats);
     }
 
     
@@ -1187,36 +1184,6 @@ public class ImpCity implements PostRenderHook, GameInterface
         return result;
     }
 
-    public void announceResearchResult(int breakthrough)
-    {
-        String text = "";
-        if(breakthrough == KeeperStats.RESEARCH_FORGES)
-        {
-            text = "Your researchers found out how to build forges.\nRoom unlocked: Forge";
-        }
-        else if(breakthrough == KeeperStats.RESEARCH_LABS)
-        {
-            text = "Your researchers found out how to build laboratories.\nRoom unlocked: Laboratory";
-        }
-        else if(breakthrough == KeeperStats.RESEARCH_HEALING)
-        {
-            text = "Your researchers discovered healing.\nRoom unlocked: Healing Well";
-        }
-
-        GenericMessage message =
-                new GenericMessage(
-                        this, gameDisplay, display,
-                        600, 400,
-                        "Discovery!",
-                        text,
-                        "[ Acknowledged ]", null);
-
-        MessageHook hookedMessage =
-                new MessageHook(Features.MESSAGE_RESEARCH_RESULT,
-                        message);
-
-        gameDisplay.addHookedMessage(hookedMessage);
-    }
 
     public void makeTreasureQuest()
     {
