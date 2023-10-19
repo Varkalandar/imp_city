@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import impcity.game.Direction;
 import impcity.game.World;
 import impcity.game.ai.Ai;
+import impcity.game.ai.MobStats;
 import impcity.game.map.Map;
 import impcity.oal.SoundPlayer;
 import rlgamekit.item.ItemCatalog;
@@ -23,13 +24,6 @@ public class Mob
 {
     public static final Logger logger = Logger.getLogger(Mob.class.getName());
     
-    public static final int I_STR = 0;
-    public static final int I_DEX = 1;
-    public static final int I_INT = 2;
-    public static final int I_WIS = 3;
-    public static final int I_VIT = 4;
-    public static final int I_MANA = 5;
-
     public static final int SLOT_HEAD = 0;
     public static final int SLOT_BODY = 1;
     public static final int SLOT_LEGS = 2;
@@ -47,7 +41,6 @@ public class Mob
     public MobVisuals visuals;
     public MovementPattern pattern = new MovementJumping();
     
-    private final World world;
     private Ai ai;
     public boolean isDying;
 
@@ -115,10 +108,9 @@ public class Mob
         this.key = key;
     }
                 
-    public Mob(World world, int playerX, int playerY, int species, int shadow, int sleep, Map gameMap, Ai ai, int speed, MovementPattern pattern)
+    public Mob(int playerX, int playerY, int species, int shadow, int sleep, Map gameMap, Ai ai, int speed, MovementPattern pattern)
     {
         this.visuals = new MobVisuals(shadow, sleep);
-        this.world = world;
         this.species = species;
         this.gameMap = gameMap;
         this.location = new Point(playerX, playerY);
@@ -132,13 +124,6 @@ public class Mob
         {
             "Str", "Dex", "Int", "Wis", "Vit", "Ext1", "Ext2", "Ext3", "Ext4", "Ext5"
         });
-
-        
-        stats.setCurrent(I_STR, 20);
-        stats.setCurrent(I_DEX, 20);
-        stats.setCurrent(I_INT, 20);
-        stats.setCurrent(I_WIS, 20);
-        stats.setCurrent(I_VIT, 20);
         
         visuals.setDisplayCode(species);
         
@@ -300,22 +285,12 @@ public class Mob
             
         visuals.frontParticles.driveParticles();
         visuals.backParticles.driveParticles();    
-
-        // Hajo: TODO: recovery should depend on real time
-        // 
-        // Hajo: stored with 8 precision bits.
-        int mana = stats.getCurrent(I_MANA);
-        mana += 5;
-        if(stats.getMax(I_MANA) >= mana >> 8)
-        {
-            stats.setCurrent(I_MANA, mana);
-        }
               
         if(path == null && ai != null)
         {
             // Hajo: we need a new path ...
             // ... but only if we are still alive
-            if(stats.getCurrent(I_VIT) >= 0)
+            if(stats.getCurrent(MobStats.VITALITY) >= 0)
             {
                 ai.think(this);
                 ai.findNewPath(this);

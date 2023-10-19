@@ -1,6 +1,7 @@
 package impcity.game.combat;
 
 import impcity.game.Features;
+import impcity.game.ai.MobStats;
 import impcity.game.mobs.Mob;
 import impcity.game.particles.ParticleDriver;
 
@@ -98,7 +99,7 @@ public class Damage
                 chaos;
 
         
-        int life = target.stats.getCurrent(Mob.I_VIT);
+        int life = target.stats.getCurrent(MobStats.VITALITY);
         
         if(total > 255) // Hajo: total >= 1.0
         {
@@ -110,7 +111,7 @@ public class Damage
             
             life -= total;
 
-            target.stats.setCurrent(Mob.I_VIT, life);
+            target.stats.setCurrent(MobStats.VITALITY, life);
             target.visuals.setMessage("" + (total >> 8), 0xFF0000);
             target.setPath(null); // Todo: do some stun/shock delay
         }

@@ -125,6 +125,9 @@ public class ExpeditionBook extends UiDialog
                         IsoDisplay.drawTileStanding(tex, rightX + textLeft + 20, textTop + 4);
 
                         gameDisplay.drawShadowText(desc.name, silver, rightX + textLeft + 50, textTop, 0.20);
+                        
+                        // debug - show vitality
+                        // gameDisplay.drawShadowText(desc.name + " " + mob.stats.getCurrent(MobStats.VITALITY), silver, rightX + textLeft + 50, textTop, 0.20);
                         textTop -= 48;
                     }
                 }

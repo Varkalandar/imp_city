@@ -28,6 +28,7 @@ public class Party
     
     public int kills;
     
+    
     public void calculateStats(Registry <Mob> mobs) 
     {
         intelligence = 0;
@@ -58,6 +59,7 @@ public class Party
         }
     }
     
+    
     public String decimate(Registry <Mob> mobs, Random rng, int kills)
     {
         int injuries = 0;
@@ -83,14 +85,14 @@ public class Party
                 else
                 {
                     // critical hit -> dead
-                    members.remove(n);
+                    mob.stats.setCurrent(MobStats.VITALITY, 0);
                     fatalities++;
                 }
             }
             else
             {
                 // injured again -> dead
-                members.remove(n);
+                mob.stats.setCurrent(MobStats.VITALITY, 0);
                 fatalities++;
             }
         }
@@ -108,6 +110,7 @@ public class Party
         return sb.toString();
     }
 
+    
     private void count(StringBuilder buffer, int n, String what)
     {
         if(n == 0)
@@ -124,6 +127,7 @@ public class Party
         }
     }
 
+    
     public void write(FileWriter writer) throws IOException
     {
         writer.write("Party data start\n");
@@ -137,6 +141,7 @@ public class Party
         writer.write("Party data end\n");
     }
 
+    
     public void load(BufferedReader reader, Registry <Mob> mobs) throws IOException
     {
         members.clear();
@@ -159,5 +164,23 @@ public class Party
         
         
         calculateStats(mobs);
+    }
+
+    
+    public int calculateStillAlive(Registry <Mob> mobs) 
+    {
+        int count = 0;
+        
+        for(int key : members)
+        {
+            Mob mob = mobs.get(key);
+            
+            if(mob.stats.getCurrent(MobStats.VITALITY) > 0)
+            {
+                count ++;
+            }
+        }
+
+        return count;
     }
 }

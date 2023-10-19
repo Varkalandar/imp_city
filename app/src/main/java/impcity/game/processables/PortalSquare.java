@@ -94,7 +94,7 @@ public class PortalSquare implements Processable
                     game.soundPlayer.playFromPosition(Sounds.CREATURE_ARRIVAL, 0.8f, 1.0f,
                                                       new Point(16, 355), game.getViewPosition());
                     
-                    Mob mob = new Mob(game.world, sx, sy, species, 
+                    Mob mob = new Mob(sx, sy, species, 
                             Features.SHADOW_BASE, desc.sleepImage,
                             map, monsterAi, desc.speed, desc.move);
                     
@@ -104,8 +104,11 @@ public class PortalSquare implements Processable
 
                     // Hajo: make creature look south-east
                     mob.visuals.setDisplayCode(species+3);
+                    
                     // Hajo: they arrive at full health
                     mob.stats.setCurrent(MobStats.INJURIES, 0);
+                    mob.stats.setCurrent(MobStats.VITALITY, 20);
+
                     // Hajo: give them slightly random shadaes
                     mob.visuals.color =
                             0xFF000000 + 

@@ -7,16 +7,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * 
- * @author Create a quest log
+ * Create a quest log
  */
 public class QuestProcessor
 {
     private static final Logger logger = Logger.getLogger(QuestProcessor.class.getName());
     
     private final static int WIPED = -999999;
-    private final static int DEMORALIZED = -1;
     
     private final TravelEvent [] travelEvents = 
     {    
@@ -137,6 +134,7 @@ public class QuestProcessor
         return result;
     }
 
+    
     private int processTravel(World world, Quest quest, StringBuilder buffer, int days)
     {
         Party party = quest.party;
@@ -212,7 +210,7 @@ public class QuestProcessor
                     event = travelEvents[n];
                     
                     buffer.append(event.message).append(' ');
-                    int kills = calculateKills(buffer, party, event);
+                    int kills = calculateKills(world, buffer, party, event);
                     if(kills > 0)
                     {
                         String kf = party.decimate(world.mobs, rng, kills);
@@ -262,7 +260,7 @@ public class QuestProcessor
             
             buffer.append(event.message).append(' ');
 
-            int kills = calculateKills(buffer, party, event);
+            int kills = calculateKills(world, buffer, party, event);
             if(kills > 0)
             {
                 String kf = party.decimate(world.mobs, rng, kills);
@@ -394,7 +392,7 @@ public class QuestProcessor
         return retDays;
     }
 
-    private int calculateKills(StringBuilder buffer, Party party, TravelEvent event) 
+    private int calculateKills(World world, StringBuilder buffer, Party party, TravelEvent event) 
     {
         int kills = 0;
         
@@ -406,18 +404,21 @@ public class QuestProcessor
         }
         
         // Hajo: we need one to return and tell ... at least most of the time
-        
-        if(kills >= party.members.size())
+        int stillAlive = party.calculateStillAlive(world.mobs);
+        if(kills >= stillAlive)
         {
             if(rng.nextDouble() < 0.95)
             {
                 // spare one
-                kills = party.members.size() - 1;
+                kills = stillAlive - 1;
             }
         }
         
         // never kill more than there are ...
-        if(kills > party.members.size()) kills = party.members.size();
+        if(kills > stillAlive) 
+        {
+            kills = stillAlive;
+        }
         
         logger.log(Level.INFO, "Combat. Creatures killed: " + kills);
         
