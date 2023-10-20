@@ -22152,8 +22152,8 @@
       <Description>
         <version>4</version>
         <id>953</id>
-        <width>1</width>
-        <height>1</height>
+        <width>64</width>
+        <height>64</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
         <footX>0</footX>
@@ -22161,8 +22161,8 @@
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>discovery_blue</string>
+        <string>rgba</string>
         <string></string>
         <string>null</string>
       </Metadata>
@@ -22171,8 +22171,8 @@
       <Description>
         <version>4</version>
         <id>954</id>
-        <width>1</width>
-        <height>1</height>
+        <width>64</width>
+        <height>64</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
         <footX>0</footX>
@@ -22180,8 +22180,8 @@
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>discovery_green</string>
+        <string>rgba</string>
         <string></string>
         <string>null</string>
       </Metadata>
@@ -22190,8 +22190,8 @@
       <Description>
         <version>4</version>
         <id>955</id>
-        <width>1</width>
-        <height>1</height>
+        <width>64</width>
+        <height>64</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
         <footX>0</footX>
@@ -22199,8 +22199,8 @@
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>discovery_red</string>
+        <string>rgba</string>
         <string></string>
         <string>null</string>
       </Metadata>
@@ -22209,8 +22209,8 @@
       <Description>
         <version>4</version>
         <id>956</id>
-        <width>1</width>
-        <height>1</height>
+        <width>64</width>
+        <height>64</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
         <footX>0</footX>
@@ -22218,8 +22218,8 @@
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>prize_blue</string>
+        <string>rgba</string>
         <string></string>
         <string>null</string>
       </Metadata>
@@ -22228,8 +22228,8 @@
       <Description>
         <version>4</version>
         <id>957</id>
-        <width>1</width>
-        <height>1</height>
+        <width>64</width>
+        <height>64</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
         <footX>0</footX>
@@ -22237,8 +22237,8 @@
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>prize_green</string>
+        <string>rgba</string>
         <string></string>
         <string>null</string>
       </Metadata>
@@ -22247,8 +22247,8 @@
       <Description>
         <version>4</version>
         <id>958</id>
-        <width>1</width>
-        <height>1</height>
+        <width>64</width>
+        <height>64</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
         <footX>0</footX>
@@ -22256,8 +22256,8 @@
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>prize_red</string>
+        <string>rgba</string>
         <string></string>
         <string></string>
       </Metadata>
@@ -32735,17 +32735,17 @@
       <Description>
         <version>4</version>
         <id>1510</id>
-        <width>1</width>
-        <height>1</height>
+        <width>216</width>
+        <height>149</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>107</footX>
+        <footY>90</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>graphite_deposit</string>
+        <string>rgba</string>
         <string></string>
         <string></string>
       </Metadata>
@@ -32792,17 +32792,17 @@
       <Description>
         <version>4</version>
         <id>1513</id>
-        <width>1</width>
-        <height>1</height>
+        <width>216</width>
+        <height>163</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>107</footX>
+        <footY>97</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>iron_ore_mound</string>
+        <string>rgba</string>
         <string></string>
         <string></string>
       </Metadata>
