@@ -553,7 +553,7 @@ public class ImpCityMouseHandler implements MouseHandler
         int mouseX = Mouse.getX();
         int mouseY = Mouse.getY();
         
-        if(mouseX > display.displayWidth - 40)
+        if(mouseX > display.displayWidth - 69)
         {
             handleMessageStack(mouseX, mouseY);
         }
@@ -604,7 +604,7 @@ public class ImpCityMouseHandler implements MouseHandler
 
     private void handleMessageStack(int mouseX, int mouseY) 
     {
-        int n = (mouseY - 24) / 32;
+        int n = (mouseY - 24) / 64;
         gameDisplay.activateHookedMessage(n);
     }
 }    

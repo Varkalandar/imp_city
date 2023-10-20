@@ -72,6 +72,6 @@ public abstract class UiDialog
 
     public static void playClickSound()
     {
-        soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
+        soundPlayer.play(Sounds.UI_BUTTON_CLICK, 0.5f, 1.0f);
     }
 }

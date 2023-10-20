@@ -242,7 +242,7 @@ public class GameDisplay
                 yoff += 32;
             }
             
-            IsoDisplay.drawTile(display.textureCache.textures[hook.icon], display.displayWidth - 40, hook.yoff);
+            IsoDisplay.drawTile(display.textureCache.textures[hook.icon], display.displayWidth - 68, hook.yoff);
         }
     }
     

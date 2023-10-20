@@ -95,7 +95,7 @@ public class DungeonSweepingThread extends Thread
                 new QuestResultMessage(game, gameDisplay, display, 600, 700, result, "[ Ok ]");
 
         MessageHook hookedMessage =
-            new MessageHook(Features.MESSAGE_TROPHY_QUEST,
+            new MessageHook(Features.MESSAGE_TROPHY_RESULT,
                             message);
 
         gameDisplay.addHookedMessage(hookedMessage);        

@@ -446,13 +446,21 @@ public class ImpCity implements PostRenderHook, GameInterface
                     {
                         map.setItem(x, y, Map.F_DECO + Features.I_COPPER_ORE_MOUND);
                     }
-                    else if(select > 0.96)
+                    else if(select > 0.97)
                     {
                         map.setItem(x, y, Map.F_DECO + Features.I_TIN_ORE_MOUND);
                     }
-                    else if(select > 0.94)
+                    else if(select > 0.96)
                     {
                         map.setItem(x, y, Map.F_DECO + Features.I_MINERAL_BLOCK);
+                    }
+                    else if(select > 0.95)
+                    {
+                        map.setItem(x, y, Map.F_DECO + Features.I_GRAPHITE_BLOCK);
+                    }
+                    else if(select > 0.94)
+                    {
+                        map.setItem(x, y, Map.F_DECO + Features.I_IRON_ORE_BLOCK);
                     }
                     else
                     {
