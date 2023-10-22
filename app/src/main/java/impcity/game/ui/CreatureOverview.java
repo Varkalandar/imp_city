@@ -159,8 +159,10 @@ public class CreatureOverview extends UiDialog
         
         gameDisplay.drawMenuText("< Page " +  (currentPage + 1) + " of " + (maxPages + 1) + " >", gold, x + 28, y + 22, 0.6);
 
-        gameDisplay.drawMenuText("> Start Expedition", gold, x + width/2 + 28, y + 46, 0.6);
-        gameDisplay.drawMenuText("> Cancel", gold, x + width/2 + 28, y + 22, 0.6);
+        int color = party.members.size() > 0 ? gold : Colors.DIM_GOLD_INK;
+        gameDisplay.drawMenuText("> Start Expedition", color, x + width/2 + 28, y + 22, 0.6);
+
+        gameDisplay.drawMenuText("[X]", gold, x + width/2 + 350, y + 570, 0.6);
     }    
 
     private void drawCreatureTile(int x, int y, SpeciesDescription desc, boolean selected)
@@ -217,8 +219,17 @@ public class CreatureOverview extends UiDialog
             {
                 if (mouseY < 180)
                 {
+                    if(party.members.size() > 0)
+                    {
+                        playClickSound();
+                        sendParty();
+                    }
+                }
+                else if(mouseY > display.displayHeight / 2 + 200)
+                {
+                    // close button
+                    gameDisplay.showDialog(null);
                     playClickSound();
-                    sendParty();
                 }
             }
         }
