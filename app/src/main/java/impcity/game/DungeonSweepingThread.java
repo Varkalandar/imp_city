@@ -116,7 +116,7 @@ public class DungeonSweepingThread extends Thread
 
     private void processItem(Map map, int i, int j, int item) 
     {
-        if(item == Features.I_GOLD_COINS)
+        if(Features.isCoins(item))
         {
             if(!game.getTreasuries().isEmpty())
             {

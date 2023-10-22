@@ -223,7 +223,7 @@ public class ImpAi extends AiBase
             // Hajo: are we there yet?
             if(mob.getPath() == null)
             {
-                dropGoldOrItem(mob);
+                dropCarryItem(mob);
                 if(currentJob == null)
                 {
                     goal = Goal.FIND_JOB;
@@ -239,7 +239,7 @@ public class ImpAi extends AiBase
             // Hajo: are we there yet?
             if(mob.getPath() == null)
             {
-                dropItem(mob);
+                dropCarryItem(mob);
                 goal = Goal.FIND_PATH_TO_JOB;
             }
         }
@@ -562,30 +562,15 @@ public class ImpAi extends AiBase
         }
     }
     
-    private void dropGoldOrItem(Mob mob) 
+    private void dropCarryItem(Mob mob) 
     {
-        // Hajo: money converts to random treasures
-        if(mob.stats.getCurrent(MobStats.GOLD) > 0)
-        {
-            int [] treasures = new int [] {
-                Features.I_GOLD_COINS, Features.I_SILVER_COINS, Features.I_COPPER_COINS,
-                Features.I_GOLD_COINS, Features.I_SILVER_COINS, Features.I_COPPER_COINS_FEW,
-                1060, 1066, 1072, 1078, 1083, 1089, 1095, 1101,
-                223, 229, 235
-            };
-
-            mob.gameMap.dropItem(mob.location.x, mob.location.y, 
-                                 treasures[(int)(Math.random() * treasures.length)]);
-            mob.stats.setCurrent(MobStats.GOLD, 0);
-        }
-        
         if(mob.stats.getCurrent(MobStats.CARRY) > 0)
         {
             // Hajo: imp carries an item -> drop this item
             int item = mob.stats.getCurrent(MobStats.CARRY); 
 
             // make some noise?
-            if(item == Features.I_GOLD_COINS)
+            if(Features.isCoins(item))
             {
                 game.soundPlayer.playFromPosition(Sounds.COINS_DROP, 0.4f, 1.0f,
                         mob.location, game.getViewPosition());
@@ -594,12 +579,6 @@ public class ImpAi extends AiBase
             mob.gameMap.dropItem(mob.location.x, mob.location.y, item);
             mob.stats.setCurrent(MobStats.CARRY, 0);
         }
-    }
-
-    private void dropItem(Mob mob)
-    {
-        mob.gameMap.dropItem(mob.location.x, mob.location.y, mob.stats.getCurrent(MobStats.CARRY));
-        mob.stats.setCurrent(MobStats.CARRY, 0);
     }
 
     private void completeMiningJob(Mob mob) 
@@ -639,18 +618,14 @@ public class ImpAi extends AiBase
         Goal newGoal = Goal.GO_TO_SLEEP;
         int cargo = mob.stats.getCurrent(MobStats.CARRY);
 
-        if(mob.stats.getCurrent(MobStats.GOLD) > 0)
-        {
-            newGoal = Goal.GOLD_TO_TREASURY;
-        }
-        else if(cargo > 0)
+        if(cargo > 0)
         {
             // Imp is carrying something. Check where it has to go
             if(cargo == Features.I_MINERAL)
             {
                 newGoal = Goal.ITEM_TO_LAB;
             }
-            else if(cargo == Features.I_GOLD_COINS)
+            else if(Features.isCoins(cargo))
             {
                 newGoal = Goal.GOLD_TO_TREASURY;
             }
@@ -667,12 +642,7 @@ public class ImpAi extends AiBase
     {
         logger.log(Level.INFO, "Imp #{0} completes pick up job.", mob.getKey());
         
-        if(mob.stats.getCurrent(MobStats.GOLD) > 0)
-        {
-            goal = Goal.GOLD_TO_TREASURY;
-            mob.setPath(null);
-        }
-        else if(mob.stats.getCurrent(MobStats.CARRY) > 0)
+        if(mob.stats.getCurrent(MobStats.CARRY) > 0)
         {
             goal = calculateGoalForCargo(mob);
             mob.setPath(null);

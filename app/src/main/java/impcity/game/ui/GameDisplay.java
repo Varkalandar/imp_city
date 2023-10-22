@@ -239,7 +239,7 @@ public class GameDisplay
             {
                 // nope, it already sits
                 // -> raise stack level.
-                yoff += 32;
+                yoff += 64;
             }
             
             IsoDisplay.drawTile(display.textureCache.textures[hook.icon], display.displayWidth - 68, hook.yoff);

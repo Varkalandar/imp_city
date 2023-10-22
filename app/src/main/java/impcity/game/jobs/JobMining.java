@@ -53,7 +53,7 @@ public class JobMining extends AbstractJob
             int block = map.getItem(rasterI + Map.O_BLOCK, rasterJ + Map.O_BLOCK) - Map.F_DECO;
             if(block >=  Features.I_GOLD_MOUND && block <  + Features.I_GOLD_MOUND + 3)
             {
-                worker.stats.setCurrent(MobStats.GOLD, 100);                
+                // worker.stats.setCurrent(MobStats.GOLD, 100);                
             }
             else if(block >= Features.I_COPPER_ORE_MOUND && block <  + Features.I_COPPER_ORE_MOUND + 3)
             {

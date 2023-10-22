@@ -1,5 +1,6 @@
 package impcity.game.map;
 
+import impcity.game.Features;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.BufferedReader;
@@ -468,7 +469,13 @@ public class Map implements Serializable
                 @Override
                 public boolean visit(int x, int y) 
                 {
-                    if(getItem(x, y) == 0 && !isPlacementBlocked(x, y))
+                    int rasterI = x - x % Map.SUB;
+                    int rasterJ = y - y % Map.SUB;
+                    
+                    if(getItem(x, y) == 0 && 
+                            !isPlacementBlocked(x, y) &&
+                            !isMovementBlockedRadius(x, y, 2) && // Imps must be able to reach it  
+                            !Features.isImpassable(getFloor(rasterI, rasterJ)))
                     {
                         setItem(x, y, itemKey);
                         return true;
@@ -477,7 +484,7 @@ public class Map implements Serializable
                 }
             };        
                 
-        return area.spirallyTraverse(callback, 5);
+        return area.spirallyTraverse(callback, Map.SUB/2);
     }
 
     public int getTemperature(int i, int j)

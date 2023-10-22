@@ -522,7 +522,8 @@ public class CreatureAi extends AiBase
                 {
                     mob.visuals.setBubble(0);
                     goal = Goal.GO_RANDOM;
-                    logger.log(Level.INFO, "Mob {0} could not find a path to {1}, {2} (workplace)", new Object[]{mob.getKey(), px, py});
+                    logger.log(Level.INFO, "Mob {0}, a {1} could not find a path to {2}, {3} (workplace)", 
+                            new Object[]{mob.getKey(), Species.speciesTable.get(mob.getSpecies()).name, px, py});
                 }
             }
         }
@@ -925,7 +926,7 @@ public class CreatureAi extends AiBase
                                n == Features.I_TIN_ORE)
                             {
                                 // todo: produce correct product
-                                mob.gameMap.setItem(p.x + i, p.y + j, Features.I_GOLD_COINS);
+                                mob.gameMap.setItem(p.x + i, p.y + j, Features.I_BRONZE_COINS);
                                 return;
                             }
                         }

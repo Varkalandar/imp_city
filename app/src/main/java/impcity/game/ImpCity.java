@@ -195,7 +195,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             PATH + "magic_library.wav",
             PATH + "deselect.wav",
             PATH + "arrival_new.wav",
-            PATH + "hjm-coin_clicker_3.wav",
+            PATH + "hjm-coindrop_v2.wav",
             PATH + "magic_lair.wav",
             PATH + "magic_workshop.wav",
             PATH + "381547__tumbleweed3288__falling-and-rolling-stones_excerpt.wav",
@@ -205,7 +205,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             PATH + "273722__thearxx08__angle-grinder.wav",
             PATH + "170957__timgormly__metal-ping.wav",
             PATH + "428953__jbp__crunching-on-a-snack-chomping.wav",
-            PATH + "hjm-coindrop_v2.wav"
+            PATH + "hjm-coin_clicker_3.wav",
         };
 
         splash(intro, "Loading sounds ...");
@@ -1325,13 +1325,18 @@ public class ImpCity implements PostRenderHook, GameInterface
             // TODO: calculate real amount and type
 
             int count = questResult.quest.party.carry;
-            Mob player = world.mobs.get(getPlayerKey());
-            Map map = player.gameMap;
-            Point location = player.location;
+            Mob keeper = world.mobs.get(getPlayerKey());
+            Map map = keeper.gameMap;
+            Point location = keeper.location;
 
+            int item = 
+                    questResult.summary.contains("ilver") ? 
+                    Features.I_SILVER_COINS :
+                    Features.I_GOLD_COINS;
+            
             for(int i=0; i<count; i++)
             {
-                map.dropItem(location.x, location.y, Features.I_GOLD_COINS);
+                map.dropItem(location.x, location.y, item);
             }
         }
     }
