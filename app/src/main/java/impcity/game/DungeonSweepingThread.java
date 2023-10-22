@@ -76,6 +76,7 @@ public class DungeonSweepingThread extends Thread
                     if(quest.party != null && quest.eta <= Clock.days())
                     {
                         createQuestResult(quest);
+                        quest.party = null; // only return once.
                     }
                 }
             }
@@ -90,7 +91,7 @@ public class DungeonSweepingThread extends Thread
     {
         QuestProcessor processor = new QuestProcessor();
         QuestResult result = processor.createLog(game.world, quest);
-        System.out.println(result.story);
+        // System.out.println(result.story);
         QuestResultMessage message = 
                 new QuestResultMessage(game, gameDisplay, display, 600, 700, result, "[ Ok ]");
 

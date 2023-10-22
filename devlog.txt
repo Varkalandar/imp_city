@@ -3,7 +3,11 @@ Changes since v0.21
 - Replaced "make treasury" and "make farmland" sounds
 - Added a new sound for dropping coins
 - Added iron ore and coal deposits
-- Fixed a bug where blocks marked for excavation could not be unmarked again
+- Fixed a bug where blocks marked for excavation could not be unmarked
+  again
+- It's no longer possible to start an expedition without any creatures
+  assigned to it
+- Expeditions only trigger one return message now
 
 Changes since v0.20
 

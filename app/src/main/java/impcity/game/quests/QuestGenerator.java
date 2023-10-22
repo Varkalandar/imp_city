@@ -147,10 +147,19 @@ public class QuestGenerator
         "Your creatures can reach the place within some days.",
         "It'll probably take several days, maybe a week, to get there and back.",
         "Quite the journey, but within a few weeks your minions should be able to get there and back.",
+        "It'll be a several weeks long expedition into barely known territory.",
         "It'll be a several months long ride into mostly unknown territory.",
-        "The distance makes you wonder though, if you'll be still alive when your expedition returns.",
     };
-    
+
+    private static final int [] distanceDays =
+    {
+            3,
+            5,
+            12,
+            24,
+            36,
+    };
+
     
     public static Quest makeTreasureQuest()
     {
@@ -286,8 +295,8 @@ public class QuestGenerator
         n = (int)(distances.length * Math.random());
         text.append(distances[n]);
 
-        n += 2;
-        quest.travelTime = 2 + n*n * 4;
+        int travelDays = distanceDays[n];
+        quest.travelTime = travelDays + (int)(Math.random() * travelDays);
         
         quest.story = text.toString();
         
@@ -324,9 +333,10 @@ public class QuestGenerator
         
         n = (int)(distances.length * Math.random());
         text.append(distances[n]);
-        n += 2;
 
-        quest.travelTime = 2 + n*n;
+        int travelDays = distanceDays[n];
+        quest.travelTime = travelDays + (int)(Math.random() * travelDays);
+
         quest.findingDifficulty = 1;
         quest.treasureSize = 1; // Todo: Metallurgy level should go here
         

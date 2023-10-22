@@ -68,6 +68,7 @@ public class QuestBook extends UiDialog
         displayRightPage(gold, silver, leftX, rightX, textTop, textLeft, boxWidth, linespace);
     }
 
+
     private void displayLeftPage(int gold, int silver, int leftX, int rightX, int textTop, int textLeft, int boxWidth, int linespace)
     {
         List <Quest> quests = game.quests;
@@ -105,6 +106,7 @@ public class QuestBook extends UiDialog
         }
     }
 
+
     private void displayRightPage(int gold, int silver, int leftX, int rightX, int textTop, int textLeft, int boxWidth, int linespace)
     {
         gameDisplay.drawMenuText("[X]", gold, rightX + 350, textTop + 36, 0.6);
@@ -135,7 +137,8 @@ public class QuestBook extends UiDialog
         }
     }
 
-        @Override
+
+    @Override
     public void mouseEvent(int buttonPressed, int buttonReleased, int mouseX, int mouseY) 
     {
         if(buttonReleased == 1)
@@ -170,7 +173,7 @@ public class QuestBook extends UiDialog
             }
             else if(game.quests.size() > selection && mouseX > display.displayWidth / 2)
             {
-            // start quest clicked?
+                // start quest clicked?
                 Quest quest = game.quests.get(selection);
 
                 CreatureOverview creatureOverview = new CreatureOverview(game, gameDisplay, display);
