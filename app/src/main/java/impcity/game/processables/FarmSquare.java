@@ -61,7 +61,7 @@ public class FarmSquare implements Processable
                     int ypos = yr + j;
 
                     int ground = map.getFloor(xpos - (xpos % Map.SUB), ypos - (ypos % Map.SUB));
-                    ok &= !(ground >= Features.GROUND_IMPASSABLE && ground < Features.GROUND_IMPASSABLE+3);
+                    ok &= (ground >= Features.GROUND_GRASS_DARK && ground < Features.GROUND_GRASS_DARK + 3);
                 }
             }
 
@@ -69,8 +69,7 @@ public class FarmSquare implements Processable
             
             if(ok)
             {
-
-                if(n >= Features.PLANTS_FIRST && n < Features.PLANTS_FIRST + Features.PLANTS_STRIDE*3)
+                if(n >= Features.PLANTS_FIRST && n < Features.PLANTS_FIRST + Features.PLANTS_STRIDE*6)
                 {
                     // Hajo: a 5-stage plant. 7 types
                     map.setItem(xr, yr, n + Features.PLANTS_STRIDE);
@@ -109,7 +108,7 @@ public class FarmSquare implements Processable
                     }
                 }
             }
-            time = Clock.time() + 3000;
+            time = Clock.time() + 2500;
         }
     }
 }
