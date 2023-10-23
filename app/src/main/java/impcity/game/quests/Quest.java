@@ -5,10 +5,14 @@ import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import impcity.game.mobs.Mob;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import rlgamekit.objects.Registry;
 
 public class Quest
 {
+    private static final Logger logger = Logger.getLogger(Quest.class.getName());
+    
     public long seed;
     public String story;
     public String locationName;
@@ -38,6 +42,7 @@ public class Quest
         writer.write("qseed=" + seed + "\n");
         writer.write("story=" + story + "\n");
         writer.write("lname=" + locationName + "\n");
+        writer.write("tname=" + treasureName + "\n");
         writer.write("build=" + locationIsBuilding + "\n");
         writer.write("fdiff=" + findingDifficulty + "\n");
         writer.write("tsize=" + treasureSize + "\n");
@@ -64,7 +69,11 @@ public class Quest
         
         line = reader.readLine();
         
-        assert("Quest data start".equals(line));
+        if(!"Quest data start".equals(line))
+        {
+            logger.log(Level.SEVERE, "Game data seems corrupted:" + line);
+            logger.log(Level.SEVERE, "Expected: Quest data start");
+        }
         
         line = reader.readLine();
         seed = Long.parseLong(line.substring(6));
@@ -74,6 +83,9 @@ public class Quest
 
         line = reader.readLine();
         locationName = line.substring(6);
+        
+        line = reader.readLine();
+        treasureName = line.substring(6);
         
         line = reader.readLine();
         locationIsBuilding = Boolean.parseBoolean(line.substring(6));
@@ -110,6 +122,12 @@ public class Quest
             party.load(reader, mobs);
         }
         
-        assert("Quest data end".equals(line));
+        line = reader.readLine();
+        
+        if(!"Quest data end".equals(line))
+        {
+            logger.log(Level.SEVERE, "Game data seems corrupted:" + line);
+            logger.log(Level.SEVERE, "Expected: Quest data end");
+        }
     }
 }

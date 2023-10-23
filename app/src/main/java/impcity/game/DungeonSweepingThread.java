@@ -89,7 +89,6 @@ public class DungeonSweepingThread extends Thread
                     if(quest.party != null && quest.eta <= Clock.days())
                     {
                         createQuestResult(quest);
-                        quest.party = null; // only return once.
                     }
                 }
             }

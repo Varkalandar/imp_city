@@ -154,7 +154,7 @@ public class Party
         for(int i=0; i<count; i++)
         {
             line = reader.readLine();
-            int key = Integer.parseInt(line.substring(5));
+            int key = Integer.parseInt(line.substring(6));
             members.add(key);
         }
 

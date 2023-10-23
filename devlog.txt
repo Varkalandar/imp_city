@@ -13,6 +13,8 @@ Changes since v0.21
 - Made plants grow faster to reduce food crisis events
 - Tried to improve imp path finding for digging and carrying jobs
 - Creatures returning from an expedition now arrive in the entrance hall
+- Fixed a bug where saved games with ongoing expeditions could not be
+  loaded anymore
 
 Changes since v0.20
 

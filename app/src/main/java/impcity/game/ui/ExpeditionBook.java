@@ -90,7 +90,7 @@ public class ExpeditionBook extends UiDialog
                 lines = gameDisplay.drawBoxedShadowText(headline, Colors.WHITE, leftX + textLeft, textTop, boxWidth, linespace *4, 0.25);
 
                 textTop -= 30 + lines * linespace;
-                gameDisplay.drawShadowText("Expected return: " +  ((quest.startTime - Clock.days()) + (quest.travelTime * 2 / quest.party.speed - Clock.days())) + " days", silver, leftX + textLeft, textTop, 0.20);
+                gameDisplay.drawShadowText("Expected return: " +  (quest.travelTime * 2 / quest.party.speed - (Clock.days() - quest.startTime)) + " days", silver, leftX + textLeft, textTop, 0.20);
 
                 textTop -= 60;
                 i++;
