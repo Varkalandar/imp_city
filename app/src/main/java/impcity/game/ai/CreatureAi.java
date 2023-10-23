@@ -77,7 +77,7 @@ public class CreatureAi extends AiBase
     {
         home.x = p.x;
         home.y = p.y;
-        goal = Goal.SLEEP;
+        goal = Goal.GO_SLEEP;
     }
 
     @Override

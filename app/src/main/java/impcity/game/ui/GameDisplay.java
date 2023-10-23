@@ -251,7 +251,7 @@ public class GameDisplay
                         keeper.stats.getMin(KeeperStats.GOLD) + " Bronze",
                         textColor, textLeft + 400, 2, 0.6);
         drawMenuText("" + game.calcCurrentCreatureCount() + "/" + game.calcMaxCreatureCount() + " Creatures",
-                        textColor, textLeft + 800, 2, 0.6);
+                        textColor, textLeft + 760, 2, 0.6);
     }
 
 

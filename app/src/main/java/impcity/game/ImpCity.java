@@ -1292,19 +1292,24 @@ public class ImpCity implements PostRenderHook, GameInterface
 
     public void reactivateReturningCreatures(Quest quest)
     {
+        Mob keeper = world.mobs.get(getPlayerKey());
+        Map map = keeper.gameMap;
+        int count = 0;
+        
         for(int key : quest.party.members)
         {
             Mob mob = world.mobs.get(key);
 
+            // Hajo: make creature look south-east
             int species = mob.getSpecies();
-            mob.visuals.setDisplayCode(species);
+            mob.visuals.setDisplayCode(species+3);
 
             if (mob.getAi() != null)
             {
                 logger.log(Level.SEVERE, "AI must be null");
             }
 
-            logger.log(Level.INFO, "Setting returned creature "  + key + " to " + mob.location.x + ", " + mob.location.y);
+            logger.log(Level.INFO, "Setting returned creature "  + key + " home to " + mob.location.x + ", " + mob.location.y);
 
             CreatureAi ai = new CreatureAi(this);
             ai.setHome(mob.location);
@@ -1314,9 +1319,21 @@ public class ImpCity implements PostRenderHook, GameInterface
             {
                 logger.log(Level.SEVERE, "Mob location must be their lair.");
             }
-        }
+            
+
+            // now line them up 
+            Point p = keeper.location;
+            
+            mob.location.x = p.x;
+            mob.location.y = p.y + count * 2 - quest.party.members.size();
+
+            logger.log(Level.INFO, "Setting returned creature "  + key + " location to " + mob.location.x + ", " + mob.location.y);
+            
+            count ++;
+        }            
     }
 
+    
     public void storePartyTreasures(QuestResult questResult)
     {
         if(questResult.success)

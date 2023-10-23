@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 
 import impcity.game.Texture;
 import impcity.game.mobs.Mob;
+import impcity.game.quests.QuestResult;
 import impcity.ogl.IsoDisplay;
 import rlgamekit.objects.Cardinal;
 import rlgamekit.objects.Registry;
