@@ -346,7 +346,7 @@ public class IsoDisplay implements PostRenderHook
         }
         
         glBlendFunc(GL_SRC_ALPHA, GL_DST_ALPHA);
-        
+
         for(Light light : map.lights)
         {
             int x0 = centerX + light.x*xd/Map.SUB - light.y*xd/Map.SUB;
@@ -354,10 +354,10 @@ public class IsoDisplay implements PostRenderHook
             
             x0 += 108;
             y0 += 108 + light.yoff;
-            
+
             drawLight(lightTextures[light.type], x0, y0, light.argb, light.size);
         }
-    }
+   }
 
     private void drawItems(int xd, int yd, int i, int j)
     {

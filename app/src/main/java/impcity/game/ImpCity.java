@@ -910,7 +910,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         
         addParticleGenerator(map, x, y, 4, MobStats.G_DISTILL);
         
-        Light light = new Light(x, y, 20, 3, 0x4499CCFF, 0.7);
+        Light light = new Light(x, y, 30, 2, 0xFF556677, 0.7);
         map.lights.add(light);
         
         // lab equipment is not walkable
@@ -978,7 +978,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             int voly = p.y + Map.SUB/4;
             map.setItem(volx, voly, Features.I_SMALL_VOLCANO);
 
-            Light light = new Light(volx, voly, 30, 3, 0x11FFAA55, 0.7);
+            Light light = new Light(volx, voly, 30, 3, 0xFF302010, 0.5);
             map.lights.add(light);
             
             RectArea area = new RectArea(volx - 2, voly - 2, 3, 3);

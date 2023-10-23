@@ -179,16 +179,7 @@ public class GameDisplay
             showJobQueue();
         }
         
-        int textLeft = (display.displayWidth - 700) / 2;
-        int textColor = Colors.BRIGHT_GOLD_INK;
-
-        // status bar
-        IsoDisplay.fillRect(0, 0, display.displayWidth, 24, 0x77000000);
-        
-        drawMenuText("Rookie", textColor, textLeft, 2, 0.6);
-        drawMenuText(calcReputationDisplay(keeper), textColor, textLeft + 200, 2, 0.6);
-        drawMenuText("" + keeper.stats.getCurrent(KeeperStats.GOLD) + " Gold", textColor, textLeft + 400, 2, 0.6);
-        drawMenuText("" + game.calcCurrentCreatureCount() + "/" + game.calcMaxCreatureCount() + " Creatures", textColor, textLeft + 600, 2, 0.6);
+        drawStatusBar(keeper);
 
         drawMenuText("" + Clock.days() + " days " + Clock.hour() + " hours", 0xFFDDDDDD, 
                 display.displayWidth - 140, display.displayHeight - 30, 0.5);
@@ -245,8 +236,25 @@ public class GameDisplay
             IsoDisplay.drawTile(display.textureCache.textures[hook.icon], display.displayWidth - 68, hook.yoff);
         }
     }
-    
-    
+
+    private void drawStatusBar(Mob keeper)
+    {
+        int textLeft = (display.displayWidth - 900) / 2;
+        int textColor = Colors.BRIGHT_GOLD_INK;
+
+        IsoDisplay.fillRect(0, 0, display.displayWidth, 24, 0x77000000);
+
+        drawMenuText("Rookie", textColor, textLeft, 2, 0.6);
+        drawMenuText(calcReputationDisplay(keeper), textColor, textLeft + 200, 2, 0.6);
+        drawMenuText("" + keeper.stats.getMax(KeeperStats.GOLD) + " Gold, " +
+                        keeper.stats.getCurrent(KeeperStats.GOLD) + " Silver, " +
+                        keeper.stats.getMin(KeeperStats.GOLD) + " Bronze",
+                        textColor, textLeft + 400, 2, 0.6);
+        drawMenuText("" + game.calcCurrentCreatureCount() + "/" + game.calcMaxCreatureCount() + " Creatures",
+                        textColor, textLeft + 800, 2, 0.6);
+    }
+
+
     public void drawMenuText(String text, int color, int x, int y, double f)
     {
         PixFont font = display.font;        

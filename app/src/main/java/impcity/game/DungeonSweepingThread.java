@@ -30,7 +30,10 @@ public class DungeonSweepingThread extends Thread
     private final ImpCity game;
     private final GameDisplay gameDisplay;
     private final IsoDisplay display;
-    
+
+    // count the treasures
+    private int gold, silver, bronze;
+
     public DungeonSweepingThread(ImpCity game, GameDisplay gameDisplay, IsoDisplay display)
     {
         setDaemon(true);
@@ -51,6 +54,10 @@ public class DungeonSweepingThread extends Thread
         {
             try
             {
+                gold = 0;
+                silver = 0;
+                bronze = 0;
+
                 for(int j=0; j<map.getHeight(); j++)
                 {
                     player = game.world.mobs.get(game.getPlayerKey());
@@ -70,7 +77,13 @@ public class DungeonSweepingThread extends Thread
                     safeSleep(50);
                     // logger.log(Level.INFO, "Dungeon sweeping thread completes row {0}", j);
                 }
-                
+
+                // record treasures
+
+                player.stats.setMax(KeeperStats.GOLD, gold);
+                player.stats.setCurrent(KeeperStats.GOLD, silver);
+                player.stats.setMin(KeeperStats.GOLD, bronze);
+
                 for(Quest quest : game.quests)
                 {                    
                     if(quest.party != null && quest.eta <= Clock.days())
@@ -133,9 +146,9 @@ public class DungeonSweepingThread extends Thread
             }
             
             // bookkeeping
-            Mob player = game.world.mobs.get(game.getPlayerKey());
-            int gold = player.stats.getCurrent(KeeperStats.GOLD);
-            player.stats.setCurrent(KeeperStats.GOLD, gold + 1);
+            if(item == Features.I_GOLD_COINS) gold ++;
+            if(item == Features.I_SILVER_COINS) silver ++;
+            if(item == Features.I_BRONZE_COINS) bronze ++;
         }
     }
 }

@@ -320,7 +320,7 @@ public class ImpAi extends AiBase
                    currentJob instanceof JobExcavate)
                 {
                     int length = path.length();
-                    Path.Node node = path.getStep(length-8);
+                    Path.Node node = path.getStep(length-9);
 
                     if(node != null)
                     {
@@ -398,7 +398,7 @@ public class ImpAi extends AiBase
             
             boolean ok = 
             path.findPath(new ImpPathSource(mob, desc.size), 
-                          new FeaturePathDestination(mob.gameMap, 0, 1, Features.GROUND_TREASURY, 3), 
+                          new FeaturePathDestination(mob.gameMap, 0, 0, Features.GROUND_TREASURY, 3),
                           mob.location.x, mob.location.y);
             
             if(ok)

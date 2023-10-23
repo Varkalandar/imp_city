@@ -25,11 +25,10 @@ public class Research
     
     public void initialize(Stats stats)
     {
-        
         stats.setCurrent(KeeperStats.GOLD, 0);
         stats.setCurrent(KeeperStats.RESEARCH, 0);
 
-        // stats.setCurrent(KeeperStats.RESEARCH, KeeperStats.RESEARCH_LABS | KeeperStats.RESEARCH_FORGES);
+        stats.setCurrent(KeeperStats.RESEARCH, KeeperStats.RESEARCH_LABS | KeeperStats.RESEARCH_FORGES);
 
         stats.setMin(KeeperStats.RESEARCH, 0);
         stats.setMax(KeeperStats.RESEARCH, 10000); // research needed for next discovery        

@@ -371,7 +371,6 @@ public class CreatureAi extends AiBase
             plants.add(Features.PLANTS_FIRST + Features.PLANTS_STRIDE * 3 + 4);
             plants.add(Features.PLANTS_FIRST + Features.PLANTS_STRIDE * 3 + 5);
             plants.add(Features.PLANTS_FIRST + Features.PLANTS_STRIDE * 3 + 6);
-            plants.add(Features.PLANTS_FIRST + Features.PLANTS_STRIDE * 3 + 7);
 
             Path path = new Path();
             

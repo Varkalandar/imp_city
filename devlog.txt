@@ -10,6 +10,8 @@ Changes since v0.21
 - Expeditions only trigger one return message now
 - Introduced silver and bronze coins. Forges now produce bronze coins,
   gold and silver only can be won through expeditions now.
+- Made plants grow faster
+- Tried to improve imp pathfinding for digging and carrying jobs
 
 Changes since v0.20
 
