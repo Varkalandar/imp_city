@@ -64,8 +64,8 @@ public class GameDisplay
     
     private int tabSelected = TAB_ROOMS;
     
-    private final ArrayList<TimedMessage> messages = new ArrayList<TimedMessage>();
-    private final ArrayList<MessageHook> hookedMessageStack = new ArrayList<MessageHook>();
+    private final ArrayList<TimedMessage> messages = new ArrayList<>();
+    private final ArrayList<MessageHook> hookedMessageStack = new ArrayList<>();
     private final IsoDisplay display;
     
     public UiDialog topDialog;
@@ -210,7 +210,7 @@ public class GameDisplay
         
         purgeOutdatedMessages();
         
-        yoff = 24;
+        yoff = 0;
         
         for(MessageHook hook : hookedMessageStack)
         {
@@ -223,6 +223,7 @@ public class GameDisplay
                 // sitting now?
                 if(hook.yoff <= yoff)
                 {
+                    hook.yoff = yoff;
                     game.soundPlayer.play(Sounds.METAL_HIT, 0.2f, 1.0f);
                 }
             }
@@ -233,7 +234,7 @@ public class GameDisplay
                 yoff += 64;
             }
             
-            IsoDisplay.drawTile(display.textureCache.textures[hook.icon], display.displayWidth - 68, hook.yoff);
+            IsoDisplay.drawTile(display.textureCache.textures[hook.icon], display.displayWidth - 68, hook.yoff + 24);
         }
     }
 
@@ -543,7 +544,7 @@ public class GameDisplay
         
         if(!hookedMessageStack.isEmpty())
         {
-            int top = hookedMessageStack.get(hookedMessageStack.size()-1).yoff + 40;
+            int top = hookedMessageStack.get(hookedMessageStack.size()-1).yoff + 80;
             if(top > height) height = top;
         }
 
