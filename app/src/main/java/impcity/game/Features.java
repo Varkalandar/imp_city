@@ -12,6 +12,7 @@ public class Features
     public static final int GROUND_IMPASSABLE = 10;
     public static final int GROUND_POLY_TILES_DARK = 13;
     public static final int GROUND_POLY_TILES = 16;
+    public static final int GROUND_QUAD_TILES = 64;
     public static final int GROUND_GRASS_DARK = 19;
 
     /**
@@ -94,8 +95,9 @@ public class Features
     public static final int I_FRAME_LEFT = 28;
     public static final int I_FRAME_TOP = 29;
     
-    public static final int MESSAGE_RESEARCH_QUEST = 954;
-    public static final int MESSAGE_RESEARCH_RESULT = 955;
+    public static final int MESSAGE_IDEA_RED = 955;
+    public static final int MESSAGE_IDEA_BLUE = 953;
+    public static final int MESSAGE_IDEA_GREEN = 954;
     public static final int MESSAGE_TROPHY_QUEST = 957;
     public static final int MESSAGE_TROPHY_RESULT = 958;
     public static final int MESSAGE_SUCCESS = 960;

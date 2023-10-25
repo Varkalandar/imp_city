@@ -60,17 +60,13 @@ public class DungeonSweepingThread extends Thread
 
                 for(int j=0; j<map.getHeight(); j++)
                 {
-                    player = game.world.mobs.get(game.getPlayerKey());
-                    if(player != null)
+                    map = player.gameMap;
+                    for(int i=0; i<map.getHeight(); i++)
                     {
-                        map = player.gameMap;
-                        for(int i=0; i<map.getHeight(); i++)
+                        int item = map.getItem(i, j);
+                        if(item > 0)
                         {
-                            int item = map.getItem(i, j);
-                            if(item > 0)
-                            {
-                                processItem(map, i, j, item);
-                            }
+                            processItem(map, i, j, item);
                         }
                     }
                 
@@ -102,16 +98,22 @@ public class DungeonSweepingThread extends Thread
     private void createQuestResult(Quest quest)
     {
         QuestProcessor processor = new QuestProcessor();
-        QuestResult result = processor.createLog(game.world, quest);
+        QuestResult questResult = processor.createLog(game.world, quest);
         // System.out.println(result.story);
+        
+        game.storePartyTreasures(questResult);
+        game.reactivateReturningCreatures(questResult.quest);
+
+        questResult.quest.party = null;  // only return once.
+        
         QuestResultMessage message = 
-                new QuestResultMessage(game, gameDisplay, display, 600, 700, result, "[ Ok ]");
+                new QuestResultMessage(game, gameDisplay, display, 600, 700, questResult, "[ Ok ]");
 
         MessageHook hookedMessage =
             new MessageHook(Features.MESSAGE_TROPHY_RESULT,
                             message);
 
-        gameDisplay.addHookedMessage(hookedMessage);        
+        gameDisplay.addHookedMessage(hookedMessage); 
     }
     
     private void safeSleep(int millis)

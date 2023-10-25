@@ -5,7 +5,6 @@ import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import impcity.game.Direction;
-import impcity.game.World;
 import impcity.game.ai.Ai;
 import impcity.game.ai.MobStats;
 import impcity.game.map.Map;

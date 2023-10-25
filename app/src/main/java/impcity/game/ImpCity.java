@@ -1226,7 +1226,7 @@ public class ImpCity implements PostRenderHook, GameInterface
                                                      "[ Assemble Party ]", "[ Leave It ]");
 
         MessageHook hookedMessage =
-                new MessageHook(Features.MESSAGE_RESEARCH_QUEST,
+                new MessageHook(Features.MESSAGE_IDEA_RED,
                                 questMessage);
 
 

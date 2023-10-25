@@ -1,3 +1,11 @@
+Changes since v0.22
+
+- Powersnails seed plants faster now
+- Improved message icons
+- Entrance hall got a new floor. This also helps to prevent accidental
+  removal of the entrance portal.
+
+
 Changes since v0.21
 
 - Replaced "make treasury" and "make farmland" sounds

@@ -104,7 +104,7 @@ public class Research
                         "[ Acknowledged ]", null);
 
         MessageHook hookedMessage =
-                new MessageHook(Features.MESSAGE_RESEARCH_RESULT,
+                new MessageHook(Features.MESSAGE_IDEA_GREEN,
                         message);
 
         gameDisplay.addHookedMessage(hookedMessage);

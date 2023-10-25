@@ -72,7 +72,8 @@ public class ExpeditionBook extends UiDialog
         int i = 0;
         for(Quest quest : game.quests)
         {
-            if(quest.party != null)
+            Party party = quest.party;
+            if(party != null)
             {
                 int lines;
                 String headline = "Find " + quest.locationName.toLowerCase();
@@ -90,7 +91,7 @@ public class ExpeditionBook extends UiDialog
                 lines = gameDisplay.drawBoxedShadowText(headline, Colors.WHITE, leftX + textLeft, textTop, boxWidth, linespace *4, 0.25);
 
                 textTop -= 30 + lines * linespace;
-                gameDisplay.drawShadowText("Expected return: " +  (quest.travelTime * 2 / quest.party.speed - (Clock.days() - quest.startTime)) + " days", silver, leftX + textLeft, textTop, 0.20);
+                gameDisplay.drawShadowText("Expected return: " +  (quest.travelTime * 2 / party.speed - (Clock.days() - quest.startTime)) + " days", silver, leftX + textLeft, textTop, 0.20);
 
                 textTop -= 60;
                 i++;

@@ -13,7 +13,6 @@ public class QuestResultMessage extends PaperMessage
 {
     private final GameDisplay gameDisplay;
     private final IsoDisplay display;
-    private final ImpCity game;
 
     private final QuestResult questResult;
 
@@ -22,7 +21,6 @@ public class QuestResultMessage extends PaperMessage
                               QuestResult result, String leftButton)
     {
         super(gameDisplay, width, height, "Quest Summary", result.summary, leftButton, "[ Show Details ]");
-        this.game = game;
         this.display = display;
         this.gameDisplay = gameDisplay;
         this.questResult = result;
@@ -67,12 +65,6 @@ public class QuestResultMessage extends PaperMessage
                 if(mouseX < display.displayWidth/2)
                 {
                     gameDisplay.showDialog(null);
-                    if(questResult.quest.party != null)
-                    {
-                        game.storePartyTreasures(questResult);
-                        game.reactivateReturningCreatures(questResult.quest);
-                        questResult.quest.party = null; // only return once.
-                    }
                 }
                 else
                 {
