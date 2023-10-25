@@ -69,38 +69,19 @@ test {
     }
 }
 
-/*
-tasks.register('generateVersionSource', Delete)
-{
-    Directory directory = layout.buildDirectory.dir("generated/sources/headers/java/main").get()
-    Directory tmp = layout.buildDirectory.dir("tmp/generateVersionSource").get()
 
-    println "Generating version class in: " + directory
+task runEditor(type: Exec) {
+    dependsOn build
+    group = "Execution"
+    description = "Run the main class with ExecTask"
 
-    Files.createDirectories(directory.asFile.toPath())
+    def sep = File.pathSeparator
+    def jvmArgs =
+            "-Djava.library.path=lwjgl-2.9.3\\native\\windows" + sep + "lwjgl-2.9.3/native/linux"
 
-    java.io.File file = new java.io.File(tmp.file("Version.java").toString())
-
-    file.withWriter('utf-8') { 
-         writer -> writer.writeLine 'package impcity; public class ImpCityVersion { public static final String VERSION = "XYZ"; }'
-    }
+    commandLine "java", "-classpath", sourceSets.main.runtimeClasspath.getAsPath(), jvmArgs, "impcity.editor.Editor"
 }
 
-
-tasks.register('copyVersionSource', Copy)
-{
-    dependsOn generateVersionSource
-
-    Directory directory = layout.buildDirectory.dir("generated/sources/java/main").get()
-    Directory tmp = layout.buildDirectory.dir("tmp/generateVersionSource").get()
-
-    from tmp.file("Version.java")
-    into directory.dir("impcity")
-}
-
-
-compileJava.dependsOn copyVersionSource
-*/
 
 tasks.register('cleanDistributionFiles', Delete) {
 
