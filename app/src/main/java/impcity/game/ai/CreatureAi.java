@@ -686,7 +686,7 @@ public class CreatureAi extends AiBase
     {
         // Hajo: powersnails spread plant seeds
 
-        if((workStep & 15) == 0)
+        if((workStep % 10) == 0)
         {
             int dir = mob.visuals.getDisplayCode() - species;
             dir = (dir + 1) & 7;
