@@ -14,13 +14,16 @@ public class RoomRequirements
     public final int forges;
     public final int labs;
 
+    public final int goldOrSilver;
+
     public RoomRequirements(
                 int lairs,
                 int farms,
                 int treasury,
                 int libraries,
                 int forges,
-                int labs
+                int labs,
+                int goldOrSilver
             )
     {
         this.lairs = lairs;
@@ -29,5 +32,6 @@ public class RoomRequirements
         this.libraries = libraries;
         this.forges = forges;
         this.labs = labs;
+        this.goldOrSilver = goldOrSilver;
     }
 }

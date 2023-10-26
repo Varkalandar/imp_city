@@ -1,6 +1,5 @@
 package impcity.game.ui;
 
-import impcity.game.Clock;
 import impcity.game.Features;
 import impcity.game.KeeperStats;
 import java.util.logging.Level;
@@ -25,7 +24,7 @@ public class Research
     
     public void initialize(Stats stats)
     {
-        stats.setCurrent(KeeperStats.GOLD, 0);
+        stats.setCurrent(KeeperStats.COINS, 0);
         stats.setCurrent(KeeperStats.RESEARCH, 0);
 
         // stats.setCurrent(KeeperStats.RESEARCH, KeeperStats.RESEARCH_LABS | KeeperStats.RESEARCH_FORGES);
@@ -104,7 +103,7 @@ public class Research
                         "[ Acknowledged ]", null);
 
         MessageHook hookedMessage =
-                new MessageHook(Features.MESSAGE_IDEA_GREEN,
+                new MessageHook(Features.MESSAGE_IDEA_BLUE,
                         message);
 
         gameDisplay.addHookedMessage(hookedMessage);

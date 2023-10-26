@@ -1,10 +1,16 @@
 Changes since v0.22
 
+- Expeditions really should trigger only one return message now.
 - Powersnails seed plants faster now.
 - Improved message icons.
-- Entrance hall got a new floor. This also helps to prevent accidental
-  removal of the entrance portal.
+- The entrance hall got a new floor. This also helps to prevent
+  accidental removal of the entrance portal.
 - Message icons should stack properly again.
+- Dwarf wyverns now require 4 gold or silver to join, killer beetles 30.
+- Dunmgeon reputation now actually goes up if creatures find workplaces
+  they like.
+- Fixed a bug where food plants grew too old and caused graphics
+  glitches in farmland areas.
 
 Changes since v0.21
 

@@ -17,7 +17,7 @@ public class KeeperStats
     /**
      * Bookkeeping for the treasuries.
      */
-    public static final int GOLD = 2;
+    public static final int COINS = 2;
     
     // Stats 3 to 5 are used in Mob update
     // for mana and vitality

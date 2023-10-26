@@ -1,8 +1,6 @@
 package impcity.game.processables;
 
-import impcity.game.Features;
-import impcity.game.ImpCity;
-import impcity.game.Sounds;
+import impcity.game.*;
 import impcity.game.species.Species;
 import impcity.game.species.SpeciesDescription;
 import impcity.game.ai.CreatureAi;
@@ -13,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import impcity.game.Clock;
+
 import impcity.game.map.Map;
 import impcity.game.mobs.Mob;
 import rlgamekit.pathfinding.Path;
@@ -157,6 +155,9 @@ public class PortalSquare implements Processable
 
     private int selectFiltered()
     {
+        Mob keeper = game.world.mobs.get(game.getPlayerKey());
+        int goldOrSilver = keeper.stats.getCurrent(KeeperStats.COINS) + keeper.stats.getMax(KeeperStats.COINS);
+
         ArrayList <SpeciesDescription> filteredList = new ArrayList<SpeciesDescription>();
         
         Set<Integer> keys = Species.speciesTable.keySet();
@@ -175,12 +176,14 @@ public class PortalSquare implements Processable
             ok &= req.treasury <= game.getTreasuries().size();
             ok &= req.forges <= game.getForges().size();
             ok &= req.labs <= game.getLaboratories().size();
+            ok &= req.goldOrSilver <= goldOrSilver;
 
             if(ok)
             {
                 filteredList.add(description);
             }
         }
+
         int species = 0;
         
         if(!filteredList.isEmpty())

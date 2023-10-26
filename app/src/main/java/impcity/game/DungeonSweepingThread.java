@@ -11,7 +11,7 @@ import impcity.game.ui.QuestResultMessage;
 import static java.lang.Thread.sleep;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import impcity.game.Clock;
+
 import impcity.game.map.Map;
 import impcity.game.mobs.Mob;
 import impcity.game.ui.MessageHook;
@@ -76,9 +76,9 @@ public class DungeonSweepingThread extends Thread
 
                 // record treasures
 
-                player.stats.setMax(KeeperStats.GOLD, gold);
-                player.stats.setCurrent(KeeperStats.GOLD, silver);
-                player.stats.setMin(KeeperStats.GOLD, bronze);
+                player.stats.setMax(KeeperStats.COINS, gold);
+                player.stats.setCurrent(KeeperStats.COINS, silver);
+                player.stats.setMin(KeeperStats.COINS, bronze);
 
                 for(Quest quest : game.quests)
                 {                    
