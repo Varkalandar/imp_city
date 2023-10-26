@@ -458,6 +458,9 @@ public class CreatureAi extends AiBase
             }
             else
             {
+                // Some creatures are actually happy to have a workplace
+                addReputation(+10);
+
                 Point wp = workplaces.get((int)(Math.random() * workplaces.size()));
                 int px = wp.x;
                 int py = wp.y;
