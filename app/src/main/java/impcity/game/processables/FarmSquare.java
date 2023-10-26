@@ -69,14 +69,14 @@ public class FarmSquare implements Processable
             
             if(ok)
             {
-                if(n >= Features.PLANTS_FIRST && n < Features.PLANTS_FIRST + Features.PLANTS_STRIDE*6)
+                if(n >= Features.PLANTS_FIRST && n < Features.PLANTS_FIRST_OLD)
                 {
-                    // Hajo: a 5-stage plant. 7 types
+                    // Hajo: a 5-stage plant. 7 types, Growing
                     map.setItem(xr, yr, n + Features.PLANTS_STRIDE);
                 }
-                else if(n >= Features.PLANTS_FIRST && n <= Features.PLANTS_LAST)
+                else if(n >= Features.PLANTS_FIRST_OLD && n <= Features.PLANTS_LAST)
                 {
-                    // too old plant ...
+                    // remove too old plants ...
                     map.setItem(xr, yr, 0);
 
                 }
