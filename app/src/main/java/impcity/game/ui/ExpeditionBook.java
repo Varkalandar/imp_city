@@ -91,11 +91,33 @@ public class ExpeditionBook extends UiDialog
                 lines = gameDisplay.drawBoxedShadowText(headline, Colors.WHITE, leftX + textLeft, textTop, boxWidth, linespace *4, 0.25);
 
                 textTop -= 30 + lines * linespace;
-                gameDisplay.drawShadowText("Expected return: " +  (quest.travelTime * 2 / party.speed - (Clock.days() - quest.startTime)) + " days", silver, leftX + textLeft, textTop, 0.20);
 
+                int timeMin = (quest.travelTime * 2 / party.speed - (Clock.days() - quest.startTime));
+
+                if(timeMin > 0)
+                {
+                    gameDisplay.drawShadowText("Expected return: Between " + timeMin + " and " +
+                            (timeMin + 6) + " days.", silver, leftX + textLeft, textTop, 0.20);
+                }
+                else
+                {
+                    if(timeMin >= -6) {
+                        gameDisplay.drawShadowText("Expected return: Within " +
+                                (timeMin + 6) + " days.", silver, leftX + textLeft, textTop, 0.20);
+                    } else {
+                        gameDisplay.drawShadowText("Overdue since " +
+                                -(timeMin + 6) + " days.", silver, leftX + textLeft, textTop, 0.20);
+                    }
+                }
                 textTop -= 60;
                 i++;
             }
+        }
+
+        if(i == 0)
+        {
+            gameDisplay.drawShadowText("There are no ongoing Expeditions.",
+                    silver, leftX + textLeft + 20, textTop - 160, 0.20);
         }
     }
 
