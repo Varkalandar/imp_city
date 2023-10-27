@@ -103,9 +103,11 @@ public class PortalSquare implements Processable
                     // Hajo: make creature look south-east
                     mob.visuals.setDisplayCode(species+3);
                     
-                    // Hajo: they arrive at full health
+                    // Hajo: they arrive at full health and with
+                    // basic experience
                     mob.stats.setCurrent(MobStats.INJURIES, 0);
                     mob.stats.setCurrent(MobStats.VITALITY, 20);
+                    mob.stats.setCurrent(MobStats.EXPERIENCE, MobStats.BEGINNER_EXPERIENCE);
 
                     // Hajo: give them slightly random shadaes
                     mob.visuals.color =

@@ -824,6 +824,9 @@ public class CreatureAi extends AiBase
         else if(ground >= Features.GROUND_LABORATORY && ground <= Features.GROUND_LABORATORY + 3)
         {
         }
+
+        // Mobs gain experience while working
+        mob.addExperience(1);
     }
 
     private void spreadSeedlings(Mob mob) 

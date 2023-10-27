@@ -305,8 +305,17 @@ public class Mob
         // Hajo: Avoid invisible monsters (can happen if the first of a "stack" dies
         gameMap.setMob(location.x, location.y, getKey());
     }
-        
-    
+
+    public void addExperience(int howmuch)
+    {
+        stats.setCurrent(MobStats.EXPERIENCE, stats.getCurrent(MobStats.EXPERIENCE) + howmuch);
+    }
+
+    public int getLevel()
+    {
+        return (int)(Math.log(stats.getCurrent(MobStats.EXPERIENCE) * 0.01) * 1.5);
+    }
+
     public void write(final Writer writer)  throws IOException
     {
         writer.write("Inventory start\n");
@@ -537,6 +546,12 @@ public class Mob
         }
         
         visuals.setDisplayCode(species);
+
+        // Hajo: give pre-experience-code saved mobs some basic experience after loading
+        if(stats.getCurrent(MobStats.EXPERIENCE) == 0)
+        {
+            stats.setCurrent(MobStats.EXPERIENCE, MobStats.BEGINNER_EXPERIENCE);
+        }
     }
     
     public void load(File folder, final ItemCatalog itemCatalog) throws IOException

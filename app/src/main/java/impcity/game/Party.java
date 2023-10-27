@@ -41,15 +41,17 @@ public class Party
         
         for(int key : members)
         {
-            int species = mobs.get(key).getSpecies();
-            
+            Mob mob = mobs.get(key);
+            int species = mob.getSpecies();
+            double factor = 1 + mob.getLevel() * 0.3;
+
             SpeciesDescription desc = Species.speciesTable.get(species);
             
-            intelligence = Math.max(intelligence, desc.intelligence);
-            combat += desc.combat;
+            intelligence = Math.max(intelligence, (int)(desc.intelligence * factor));
+            combat += (int)(desc.combat * factor);
             stealth = Math.min(stealth, desc.stealth);
-            speed = Math.min(speed, desc.speed);
-            scouting = Math.max(scouting, (desc.speed + desc.intelligence)/2);
+            speed = Math.min(speed, (int)(desc.speed * factor));
+            scouting = Math.max(scouting, (int)((desc.speed + desc.intelligence) * 0.5 * factor));
         }
         
         if(members.isEmpty())

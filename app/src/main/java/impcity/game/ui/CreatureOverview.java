@@ -98,8 +98,7 @@ public class CreatureOverview extends UiDialog
                 {
                     if(count >= currentPage * 10 && count < currentPage * 10 + 10)
                     {
-                        SpeciesDescription desc = Species.speciesTable.get(species);
-                        drawCreatureTile(x + col, row, desc, party.members.contains(key.intValue()));
+                        drawCreatureTile(x + col, row, mob, party.members.contains(key.intValue()));
                         creatureDisplayList.add(new Entry(mob.getKey(), x + col, row));
 
                         col += 170;
@@ -166,8 +165,10 @@ public class CreatureOverview extends UiDialog
         gameDisplay.drawMenuText("[X]", gold, x + width/2 + 350, y + 570, 0.6);
     }    
 
-    private void drawCreatureTile(int x, int y, SpeciesDescription desc, boolean selected)
+    private void drawCreatureTile(int x, int y, Mob mob, boolean selected)
     {
+        SpeciesDescription desc = Species.speciesTable.get(mob.getSpecies());
+
         int tw = 160;
         int th = 80;
         
@@ -181,7 +182,7 @@ public class CreatureOverview extends UiDialog
 
         IsoDisplay.drawTileStanding(tex, x + tw/2, y + 32);
 
-        String text = "Level 1 " + desc.name;
+        String text = "Level " + mob.getLevel() + " " + desc.name;
         int w = (int)(gameDisplay.getFontLow().getStringWidth(text) * 0.18);
         gameDisplay.drawShadowText(text, 
                               Colors.BRIGHT_SILVER_INK, x + (tw - w) / 2, y + 4, 0.18);

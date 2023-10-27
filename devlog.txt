@@ -1,3 +1,7 @@
+Changes since v0.23
+
+- Creatures gain experience now and can level up.
+
 Changes since v0.22
 
 - Expeditions really should trigger only one return message now.

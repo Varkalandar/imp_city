@@ -1319,7 +1319,9 @@ public class ImpCity implements PostRenderHook, GameInterface
             {
                 logger.log(Level.SEVERE, "Mob location must be their lair.");
             }
-            
+
+            // give them some experience
+            mob.addExperience(200);
 
             // now line them up 
             Point p = keeper.location;
