@@ -1340,10 +1340,15 @@ public class ImpCity implements PostRenderHook, GameInterface
     {
         if(questResult.success)
         {
+            int treasure = questResult.quest.party.carry;
+            if(questResult.quest.treasureSize < treasure)
+            {
+                questResult.quest.status |= Quest.SF_PLUNDERED;
+                treasure = questResult.quest.treasureSize;
+            }
+            
             // create treasures.
-            // TODO: calculate real amount and type
 
-            int count = questResult.quest.party.carry;
             Mob keeper = world.mobs.get(getPlayerKey());
             Map map = keeper.gameMap;
             Point location = keeper.location;
@@ -1353,7 +1358,7 @@ public class ImpCity implements PostRenderHook, GameInterface
                     Features.I_SILVER_COINS :
                     Features.I_GOLD_COINS;
             
-            for(int i=0; i<count; i++)
+            for(int i = 0; i < treasure; i++)
             {
                 map.dropItem(location.x, location.y, item);
             }

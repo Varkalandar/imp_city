@@ -99,8 +99,11 @@ public class QuestBook extends UiDialog
 
             textTop -= 30 + lines * linespace;
             gameDisplay.drawShadowText("Location: " +  difficulty(quest.findingDifficulty, 17), silver, leftX + textLeft, textTop, 0.20);
-            gameDisplay.drawShadowText("Guards: " +  protection(quest.guardHardness, 16), silver, leftX + textLeft, textTop - linespace, 0.20);
-            gameDisplay.drawShadowText("Expeditions: " +  0, silver, leftX + textLeft, textTop - linespace*2, 0.20);
+            gameDisplay.drawShadowText("Guarded: " +  protection(quest.guardHardness, 16), silver, leftX + textLeft, textTop - linespace, 0.20);
+            gameDisplay.drawShadowText("Expeditions: " +  quest.expeditions, silver, leftX + textLeft, textTop - linespace*2, 0.20);
+
+            gameDisplay.drawShadowText("Found: " +  ((quest.status & Quest.SF_FOUND) != 0 ? "Yes" : "Not yet"), 
+                                 silver, leftX + textLeft + 150, textTop - linespace*2, 0.20);
 
             textTop -= 100;
         }

@@ -296,7 +296,10 @@ public class PartySelector extends UiDialog
         quest.eta = Clock.days() + quest.duration;
 
         gameDisplay.showDialog(null);
-
+        
+        // Just send one more
+        quest.expeditions ++;
+        
         // debug - show result immediately
         /*
         QuestResult result = processor.createLog(game.world, quest);

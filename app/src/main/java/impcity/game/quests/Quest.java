@@ -13,6 +13,12 @@ public class Quest
 {
     private static final Logger logger = Logger.getLogger(Quest.class.getName());
     
+    /** set to true if this quest locations had been found already */
+    public static int SF_FOUND = 1;
+    /** set to true if this quest locations has been completely plundered */
+    public static int SF_PLUNDERED = 2;
+    
+    
     public long seed;
     public String story;
     public String locationName;
@@ -34,6 +40,12 @@ public class Quest
     /** estimated time of arrival i.e. launch time + duration */
     public int eta;
     
+    /** Bitfield made from status flags */
+    public int status;
+        
+    /** Keeps track how many expeditions have been sent so far */
+    public int expeditions;
+    
     public Party party;
 
     public void write(FileWriter writer) throws IOException
@@ -50,6 +62,8 @@ public class Quest
         writer.write("start=" + startTime + "\n");
         writer.write("ttime=" + travelTime + "\n");
         writer.write("durat=" + duration + "\n");
+        writer.write("state=" + status + "\n");
+        writer.write("exped=" + expeditions + "\n");
         writer.write("eta=" + eta + "\n");
 
         if(party != null)
@@ -109,6 +123,25 @@ public class Quest
         duration = Integer.parseInt(line.substring(6));
         
         line = reader.readLine();
+        
+        // old quests didn't have status or expeditions
+        if(line.startsWith("eta="))
+        {
+            eta = Integer.parseInt(line.substring(4));
+            status = 0;
+            expeditions = 0;
+        }
+        else
+        {
+            status = Integer.parseInt(line.substring(6));
+    
+            line = reader.readLine();
+            expeditions = Integer.parseInt(line.substring(6));
+            
+            line = reader.readLine();
+            eta = Integer.parseInt(line.substring(4));
+        }
+        
         eta = Integer.parseInt(line.substring(4));
 
         line = reader.readLine();

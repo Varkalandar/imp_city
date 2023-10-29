@@ -361,6 +361,8 @@ public class QuestProcessor
 
     private int processRetrieval(Quest quest, StringBuilder buffer, int days)
     {
+        quest.status |= Quest.SF_FOUND;
+        
         int retDays = 0;
         // is it guarded
         if(quest.guardHardness == 0)
