@@ -1,6 +1,7 @@
 Changes since v0.23
 
 - Creatures gain experience now and can level up.
+- Tried to improve the name generator artifact names routines.
 
 Changes since v0.22
 

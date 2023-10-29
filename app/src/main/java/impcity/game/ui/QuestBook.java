@@ -176,9 +176,9 @@ public class QuestBook extends UiDialog
                 // start quest clicked?
                 Quest quest = game.quests.get(selection);
 
-                CreatureOverview creatureOverview = new CreatureOverview(game, gameDisplay, display);
-                creatureOverview.setQuest(quest);
-                gameDisplay.showDialog(creatureOverview);
+                PartySelector partySelector = new PartySelector(game, gameDisplay, display);
+                partySelector.setQuest(quest);
+                gameDisplay.showDialog(partySelector);
                 playClickSound();
             }
         }

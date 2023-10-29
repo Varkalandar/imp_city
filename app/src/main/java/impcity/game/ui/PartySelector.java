@@ -18,7 +18,6 @@ import java.util.logging.Logger;
 
 import impcity.game.Texture;
 import impcity.game.mobs.Mob;
-import impcity.game.quests.QuestResult;
 import impcity.ogl.IsoDisplay;
 import rlgamekit.objects.Cardinal;
 import rlgamekit.objects.Registry;
@@ -28,9 +27,9 @@ import rlgamekit.objects.Registry;
  * 
  * @author Hj. Malthaner
  */
-public class CreatureOverview extends UiDialog
+public class PartySelector extends UiDialog
 {
-    private static final Logger logger = Logger.getLogger(CreatureOverview.class.getName());
+    private static final Logger logger = Logger.getLogger(PartySelector.class.getName());
 
     private final ImpCity game;
     private final IsoDisplay display;
@@ -43,7 +42,7 @@ public class CreatureOverview extends UiDialog
     private int maxPages;
 
 
-    public CreatureOverview(ImpCity game, GameDisplay gameDisplay, IsoDisplay display)
+    public PartySelector(ImpCity game, GameDisplay gameDisplay, IsoDisplay display)
     {
         super(display.textureCache, 800, 600);
         this.game = game;
