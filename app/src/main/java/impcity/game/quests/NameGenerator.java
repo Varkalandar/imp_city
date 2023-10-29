@@ -21,15 +21,29 @@ public class NameGenerator
         "ca", "te", "pe", "tl", "tli", "tz"
     };
 
-    private static String [] asianSyllables =
+    private static String [] strangeSyllables =
     {
-        "Ho", "Chi", "Minh", "Deng", "Xiao", "Ping", "Be", "Jing", "Mao", "Tse", 
-        "Tung", "Mi", "Do", "Pa", "Xi", "Li", "Lang", "Biao", "Chang", "Bu", 
-        "Cheng", "Gao", "Guan", "Han", "Ling", "Shui", "Sun", "Jin", "Gis", "Kan",
-        "Feng",
+        "Ka", "Ti", "Ben", "Wa", "On", "Tu", "Be", "Daco", "Et", "Nam",
+        "Fer", "Mi", "Do", "Pa", "Ki", "Li", "So", "Per", "Mut", "Bu",
+        "Fu", "Klen", "Gram", "Fort", "Zing", "Lemo", "Orka", "Dera", "Aray", "Kan",
+        "Malo", "Ter", "Walt", "Kass", "Dron", "Tefer", "Erret", "Tandu", "Emmo",
+            "Krati", "Bul", "Baro", "Arbo", "Irwen", "Nitak", "Strel", "Baku", "Nami",
+            "Lade", "Kab", "Chew", "Falg", "Ran", "Gelo", "Gruwin", "Fradon", "Eskrem",
+            "Karduf", "Smoka", "Teraf", "Actel", "Zepnik", "Pellin", "Ahrer", "Ermut"
     };
     
-    private static String [] locationSyllables =
+    private static final String [] nordicFirstSyllables =
+    {
+        "Helm", "Fried", "Hart", "Diet", "Hein", "Ulf", "Giesel", "Andwara",
+        "Gott", "Fran", "Fren", "Chlod", "Lud", "Stark", "Irm"
+    };
+            
+    private static final String [] nordicLastSyllables =
+    {
+        "mut", "run", "rich", "bar", "bert", "wig", "gard" 
+    };
+            
+    private static final String [] locationSyllables =
     {
         "er", "dro", "za", "en", "in", "un", "ko", "k'la", "me",
         "fra", "cur", "uz", "mon", "gor", "keif", "zir", "con",
@@ -53,6 +67,37 @@ public class NameGenerator
         return buf.toString();
     }
 
+
+    private static boolean isVowel(char c)
+    {
+        return "aeiou".indexOf(c) >= 0;
+    }
+
+
+    private static String addVowels(String input)
+    {
+        int consonantRun = 0;
+
+        for(int i = 0; i<input.length(); i++)
+        {
+            if(isVowel(input.charAt(i)))
+            {
+                consonantRun ++;
+            }
+
+            if(consonantRun == 4)
+            {
+                String fillers = "aeiou'";
+                return input.substring(0, i-1) +
+                        fillers.charAt((int)(Math.random() * fillers.length())) +
+                        addVowels(input.substring(i-1));
+            }
+        }
+
+        return input;
+    }
+
+
     public static String makeGenericName(int syllableCount)
     {
         return makeName(syllableCount, syllables);
@@ -63,17 +108,63 @@ public class NameGenerator
         return makeName(syllableCount, aztekSyllables);
     }
 
-    public static String makeAsianName(int syllableCount)
+    
+    public static String makeNordicName()
+    {
+        String first = nordicFirstSyllables[(int)(Math.random() * nordicFirstSyllables.length)];
+
+        // add a filler vowel?
+        String filler;
+        double chance = Math.random();
+        if(chance < 0.1)
+        {
+            filler = "e";
+        }
+        else if(chance < 0.2)
+        {
+            filler = "a";
+        }
+        else if(chance < 0.3)
+        {
+            filler = "o";
+        }
+        else if(chance < 0.4)
+        {
+            filler = "u";
+        }
+        else if(chance < 0.5)
+        {
+            filler = "i";
+        }
+        else
+        {
+            filler = "";
+        }
+        
+        String last = nordicLastSyllables[(int)(Math.random() * nordicLastSyllables.length)];
+        
+        return first + filler + last;
+    }
+        
+    
+    public static String makeStrangeName(int syllableCount)
     {
         StringBuilder buf = new StringBuilder();
         
         for(int i=0; i<syllableCount; i++)
         {
-            String syllable = asianSyllables[(int)(Math.random()*asianSyllables.length)];
+            String syllable = strangeSyllables[(int)(Math.random() * strangeSyllables.length)];
             buf.append(syllable);
             if(i < syllableCount - 1)
             {
-                buf.append("-");
+                if(Math.random() < 0.4)
+                {
+                    buf.append("-");
+                }
+                else
+                {
+                    buf.append(" ");
+                }
             }
         }
         
@@ -84,18 +175,27 @@ public class NameGenerator
 
     public static String makeRandomName(int syllableCount)
     {
-        int i = (int)(Math.random() * 3);
+        String result = "";
+
+        int i = (int)(Math.random() * 4);
         switch(i)
         {
-            case 0: return makeGenericName(syllableCount);
-            case 1: return makeAztekName(syllableCount);
-            case 2: return makeAsianName(syllableCount);
+            case 0: result = makeGenericName(syllableCount);
+                break;
+            case 1: result = makeAztekName(syllableCount);
+                break;
+            case 2: result = makeStrangeName(Math.max(2, syllableCount - 1));
+                break;
+            case 3: result = makeNordicName();
+                break;
         }
-        return "";
+
+        return addVowels(result);
     }
+    
 
     /**
-     * Create a name for a in-game location.
+     * Create a name for an in-game location.
      * 
      * @param min Minimum syllable count for name
      * @param additional Up to this many syllables with be randomly appended
