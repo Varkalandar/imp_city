@@ -43,7 +43,6 @@ public class ExpeditionBook extends UiDialog
         int count = game.quests.size();
         maxPages = count / 3;
         
-        int leftX = x;
         int rightX = x + 400;
         int pageWidth = 400;
         int pageHeight = 600;
@@ -54,9 +53,10 @@ public class ExpeditionBook extends UiDialog
         
         super.displayDoublePage(x, y);
 
-        displayLeftPage(gold, silver, leftX, rightX, textTop, textLeft, boxWidth, linespace);
-        displayRightPage(gold, silver, leftX, rightX, textTop, textLeft, boxWidth, linespace);
+        displayLeftPage(gold, silver, x, rightX, textTop, textLeft, boxWidth, linespace);
+        displayRightPage(gold, silver, x, rightX, textTop, textLeft, boxWidth, linespace);
     }
+
 
     private void displayLeftPage(int gold, int silver, int leftX, int rightX, int textTop, int textLeft, int boxWidth, int linespace)
     {
@@ -121,6 +121,7 @@ public class ExpeditionBook extends UiDialog
         }
     }
 
+
     private void displayRightPage(int gold, int silver, int leftX, int rightX, int textTop, int textLeft, int boxWidth, int linespace)
     {
         gameDisplay.drawMenuText("[X]", gold, rightX + 350, textTop + 36, 0.6);
@@ -160,7 +161,8 @@ public class ExpeditionBook extends UiDialog
         }
     }
 
-        @Override
+
+    @Override
     public void mouseEvent(int buttonPressed, int buttonReleased, int mouseX, int mouseY) 
     {
         if(buttonReleased == 1)
@@ -195,27 +197,7 @@ public class ExpeditionBook extends UiDialog
             }
             else if(game.quests.size() > selection && mouseX > display.displayWidth / 2)
             {
-            // start quest clicked?
-                Quest quest = game.quests.get(selection);
-
-                CreatureOverview creatureOverview = new CreatureOverview(game, gameDisplay, display);
-                creatureOverview.setQuest(quest);
-                gameDisplay.showDialog(creatureOverview);
-                playClickSound();
             }
         }
     }
-
-    private String difficulty(int actual, int max)
-    {
-        final String [] words = {"Impossible to miss", "Easy to find", "Well described", "Not obvious", "Difficult to find", "Obscure"};
-        return words[actual * words.length / max];
-    }
-
-    private String protection(int actual, int max)
-    {
-        final String [] words = {"Unguarded", "Few or no guards", "Some guards", "Well protected", "Strongly protected"};
-        return words[actual * words.length / max];
-    }
-
 }
