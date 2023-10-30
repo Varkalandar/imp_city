@@ -59,6 +59,10 @@ public class ImpCityKeyHandler implements KeyHandler
                 {
                     gameDisplay.debugShowJobQueue = !gameDisplay.debugShowJobQueue;
                 }
+                else if(Keyboard.getEventKey() == Keyboard.KEY_A && isCtrlDown)
+                {
+                    game.makeArtifactQuest();
+                }
                 else if(Keyboard.getEventKey() == Keyboard.KEY_T)
                 {
                     game.makeTreasureQuest();

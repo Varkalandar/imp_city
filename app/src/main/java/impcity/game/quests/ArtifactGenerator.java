@@ -120,7 +120,7 @@ public class ArtifactGenerator
             att += " ";
         }
         
-        return "The " + att + artifact.name + of;
+        return "the " + att + artifact.name + of;
     }
     
 }

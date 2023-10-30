@@ -1261,6 +1261,23 @@ public class ImpCity implements PostRenderHook, GameInterface
 
         gameDisplay.addHookedMessage(hookedMessage);
     }
+
+
+    public void makeArtifactQuest()
+    {
+        Quest quest = QuestGenerator.makeArtifactQuest();
+        QuestMessage questMessage = new QuestMessage(this, gameDisplay, display,
+                                                     600, 400, quest,
+                                                     "Artifact Discovered!",
+                                                     "[ Accept ]", "[ Dismiss ]");
+
+        MessageHook hookedMessage =
+                new MessageHook(Features.MESSAGE_ARTIFACT_QUEST,
+                                questMessage);
+
+        gameDisplay.addHookedMessage(hookedMessage);
+    }
+
     
     public void makeTechnologyQuest()
     {

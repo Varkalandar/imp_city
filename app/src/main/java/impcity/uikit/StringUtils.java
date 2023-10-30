@@ -10,6 +10,14 @@ public class StringUtils
 {
     private static final NumberFormat nf = NumberFormat.getInstance();
     
+    
+    public static final String upperCaseFirst(String word)
+    {
+        return word.substring(0, 1).toUpperCase() +
+                word.substring(1);
+    }
+    
+    
     public static String setDecimal(int base, int position)
     {
         StringBuilder stb = new StringBuilder();

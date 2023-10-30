@@ -4,6 +4,7 @@ import impcity.game.ImpCity;
 import impcity.game.Texture;
 import impcity.game.quests.Quest;
 import impcity.ogl.IsoDisplay;
+import impcity.uikit.StringUtils;
 import java.io.IOException;
 
 import java.util.List;
@@ -52,8 +53,6 @@ public class QuestBook extends UiDialog
         int count = game.quests.size();
         maxPages = count / 3;
 
-        
-        int leftX = x;
         int rightX = x + 400;
         int pageWidth = 400;
         int pageHeight = 600;
@@ -64,12 +63,12 @@ public class QuestBook extends UiDialog
         
         super.displayDoublePage(x, y);
 
-        displayLeftPage(gold, silver, leftX, rightX, textTop, textLeft, boxWidth, linespace);
-        displayRightPage(gold, silver, leftX, rightX, textTop, textLeft, boxWidth, linespace);
+        displayLeftPage(gold, silver, x, textTop, textLeft, boxWidth, linespace);
+        displayRightPage(gold, silver, rightX, textTop, textLeft, boxWidth, linespace);
     }
 
 
-    private void displayLeftPage(int gold, int silver, int leftX, int rightX, int textTop, int textLeft, int boxWidth, int linespace)
+    private void displayLeftPage(int gold, int silver, int leftX, int textTop, int textLeft, int boxWidth, int linespace)
     {
         List <Quest> quests = game.quests;
 
@@ -83,19 +82,21 @@ public class QuestBook extends UiDialog
         for(int i=currentPage*3; i<Math.min(currentPage * 3 + 3, quests.size()); i++)
         {
             Quest quest = quests.get(i);
+            String headline = quest.treasureType == Quest.TT_ARTIFACT ? 
+                    StringUtils.upperCaseFirst(quest.treasureName) : quest.locationName;
             int lines;
 
             if(i == selection)
             {
                 // hack: find height without actually showing the text - draw invisible
-                lines = gameDisplay.drawBoxedShadowText(quest.locationName, 0, leftX + textLeft, textTop, boxWidth, linespace *4, 0.25);
+                lines = gameDisplay.drawBoxedShadowText(headline, 0, leftX + textLeft, textTop, boxWidth, linespace *4, 0.25);
 
                 int boxH = 120 + lines * linespace;
                 IsoDisplay.fillRect(leftX + textLeft - 10, textTop - boxH + linespace + 12, boxWidth + 20, boxH, 0x10FFCC99);
                 // IsoDisplay.fillRect(leftX + textLeft - 10, textTop, boxWidth + 20, 1, 0x77FFFFFF);
             }
 
-            lines = gameDisplay.drawBoxedShadowText(quest.locationName, Colors.WHITE, leftX + textLeft, textTop, boxWidth, linespace *4, 0.25);
+            lines = gameDisplay.drawBoxedShadowText(headline, Colors.WHITE, leftX + textLeft, textTop, boxWidth, linespace *4, 0.25);
 
             textTop -= 30 + lines * linespace;
             gameDisplay.drawShadowText("Location: " +  difficulty(quest.findingDifficulty, 17), silver, leftX + textLeft, textTop, 0.20);
@@ -110,7 +111,7 @@ public class QuestBook extends UiDialog
     }
 
 
-    private void displayRightPage(int gold, int silver, int leftX, int rightX, int textTop, int textLeft, int boxWidth, int linespace)
+    private void displayRightPage(int gold, int silver, int rightX, int textTop, int textLeft, int boxWidth, int linespace)
     {
         gameDisplay.drawMenuText("[X]", gold, rightX + 350, textTop + 36, 0.6);
 

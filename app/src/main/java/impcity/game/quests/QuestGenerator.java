@@ -161,9 +161,7 @@ public class QuestGenerator
     };
 
     
-    public static Quest makeTreasureQuest()
-    {
-        String [] intros =
+    private static final String [] intros =
         {
             "Your creatures discovered",
             "Hard working creatures of yours found",
@@ -179,15 +177,19 @@ public class QuestGenerator
             "From some old portfolio a bookworm retrieved",
             "Under a forgotten lunch box a janitor found"
         };
+    
 
-        String [] tellVars =
+    private static final String [] tellVars =
         {
             "tells of",
             "describes",
             "unveils",
             "shows the location of",
         };
-        
+
+    
+    public static Quest makeTreasureQuest()
+    {        
         String [] treasureVariations =
         {
           //  " riches to be found ",
@@ -228,7 +230,6 @@ public class QuestGenerator
         n = (int)(tellVars.length * Math.random());
         text.append(tellVars[n]);
         text.append(' ');
-
         
         n = (int)(treasureMods.length * Math.random());
         text.append(treasureMods[n]);
@@ -236,8 +237,9 @@ public class QuestGenerator
         
         n = (int)(treasureVariations.length * Math.random());
         text.append(treasureVariations[n]);
-        quest.treasureName = treasureVariations[n];
-
+        quest.treasureName = treasureVariations[n].trim();
+        calculateTreasureType(quest);
+        
         boolean namedLocation = (Math.random() < 0.5);
         StringBuilder locationName = new StringBuilder();
         
@@ -302,7 +304,106 @@ public class QuestGenerator
         
         return quest;
     }
- 
+
+    
+    public static Quest makeArtifactQuest() 
+    {
+        Quest quest = new Quest();
+        quest.seed = System.currentTimeMillis();
+        
+        StringBuilder text = new StringBuilder();
+        int n;
+
+        n = (int)(intros.length * Math.random());
+        text.append(intros[n]);
+        text.append(' ');
+                
+        n = (int)(mapQualities.length * Math.random());
+        text.append(mapQualities[n]);
+        quest.findingDifficulty = mapQualityFindDifficulties[n];
+
+        text.append( " note. The note ");
+        
+        n = (int)(tellVars.length * Math.random());
+        text.append(tellVars[n]);
+        text.append(' ');
+
+        String artifact = ArtifactGenerator.makeArtifactName(0);
+        
+        quest.treasureSize = 1;        
+        quest.treasureName = artifact;
+        quest.treasureType = Quest.TT_ARTIFACT;
+        
+        boolean namedLocation = (Math.random() < 0.5);
+        StringBuilder locationName = new StringBuilder();
+        
+        text.append(artifact);
+        text.append(" being ");
+        
+        // make a location or a building quest?
+        if(Math.random() < 0.2)
+        {
+            n = (int)(areaLocations.length * Math.random());
+            locationName.append(areaLocations[n]);
+            quest.locationIsBuilding = false;
+        }
+        else
+        {
+            n = (int)(buildingHidingModes.length * Math.random());
+            locationName.append(buildingHidingModes[n]);
+            locationName.append(' ');
+            
+            n = (int)(buildingMods.length * Math.random());
+            locationName.append(buildingMods[n]);
+            locationName.append(' ');
+
+            n = (int)(buildingTypes.length * Math.random());
+            locationName.append(buildingTypes[n]);
+            
+            quest.locationIsBuilding = true;
+        }        
+                
+        int p = locationName.indexOf("{0}");
+        if(namedLocation)
+        {
+            locationName.replace(p, p+3, "the");
+            locationName.append(" of ");
+            locationName.append(NameGenerator.makeLocationName(2, 5));
+        }
+        else
+        {
+            if("aeoui".indexOf(locationName.charAt(p+4)) > -1)
+            {
+                locationName.replace(p, p+3, "an");
+            }
+            else
+            {
+                locationName.replace(p, p+3, "a");
+            }
+                
+        }
+        
+        // Upper case the first letter for display
+        quest.locationName =
+                Character.toUpperCase(locationName.charAt(p)) +
+                locationName.substring(p + 1);
+
+        text.append(locationName);
+        text.append(". ");
+        
+        n = (int)(distances.length * Math.random());
+        text.append(distances[n]);
+
+        int travelDays = distanceDays[n];
+        quest.travelTime = travelDays + (int)(Math.random() * travelDays);
+        
+        quest.story = text.toString();
+        
+        return quest;        
+    }
+    
+    
+    
     public static Quest makeTechnologyQuest()
     {
         String [] intros =
@@ -344,4 +445,22 @@ public class QuestGenerator
         
         return quest;
     }
+
+    
+    private static void calculateTreasureType(Quest quest) 
+    {
+        if(quest.treasureName.contains("gold"))
+        {
+            quest.treasureType = Quest.TT_GOLD;
+        }
+        else if(quest.treasureName.contains("silver"))
+        {
+            quest.treasureType = Quest.TT_SILVER;
+        }
+        else
+        {
+            quest.treasureType = Quest.TT_GEMS;
+        }
+    }
+
 }

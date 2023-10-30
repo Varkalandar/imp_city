@@ -18,6 +18,11 @@ public class Quest
     /** set to true if this quest locations has been completely plundered */
     public static int SF_PLUNDERED = 2;
     
+    // Treasure types
+    public static int TT_SILVER = 1;
+    public static int TT_GOLD = 2;
+    public static int TT_GEMS = 4;
+    public static int TT_ARTIFACT = 8;
     
     public long seed;
     public String story;
@@ -25,6 +30,7 @@ public class Quest
     public boolean locationIsBuilding;
     public int findingDifficulty;
     public int treasureSize;
+    public int treasureType;
     public String treasureName;
     public int guardHardness;
 
@@ -64,6 +70,7 @@ public class Quest
         writer.write("durat=" + duration + "\n");
         writer.write("state=" + status + "\n");
         writer.write("exped=" + expeditions + "\n");
+        writer.write("ttype=" + treasureType + "\n");
         writer.write("eta=" + eta + "\n");
 
         if(party != null)
@@ -130,6 +137,7 @@ public class Quest
             eta = Integer.parseInt(line.substring(4));
             status = 0;
             expeditions = 0;
+            treasureType = TT_GOLD;
         }
         else
         {
@@ -138,6 +146,9 @@ public class Quest
             line = reader.readLine();
             expeditions = Integer.parseInt(line.substring(6));
             
+            line = reader.readLine();
+            treasureType = Integer.parseInt(line.substring(6));
+
             line = reader.readLine();
             eta = Integer.parseInt(line.substring(4));
         }

@@ -95,15 +95,12 @@ public class Features
     public static final int I_FRAME_LEFT = 28;
     public static final int I_FRAME_TOP = 29;
     
-    public static final int MESSAGE_IDEA_RED = 955;
     public static final int MESSAGE_IDEA_BLUE = 953;
     public static final int MESSAGE_IDEA_GREEN = 954;
+    public static final int MESSAGE_IDEA_RED = 955;
+    public static final int MESSAGE_ARTIFACT_QUEST = 956;
     public static final int MESSAGE_TROPHY_QUEST = 957;
     public static final int MESSAGE_TROPHY_RESULT = 958;
-    public static final int MESSAGE_SUCCESS = 960;
-    public static final int MESSAGE_NORMAL = 965;
-    public static final int MESSAGE_IMPORTANT = 966;
-    
     
     public static final int P_FROST_SPRITE_1 = 1941;
     
