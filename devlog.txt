@@ -1,7 +1,9 @@
 Changes since v0.23
 
 - Creatures gain experience now and can level up.
-- Tried to improve the name generator artifact names routines.
+- Tried to improve the name generator artifact name routines.
+- Player starts with restricted dungeon space now and has to collect
+  artifacts to gain access to additional space.
 
 Changes since v0.22
 

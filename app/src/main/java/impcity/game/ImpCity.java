@@ -539,6 +539,10 @@ public class ImpCity implements PostRenderHook, GameInterface
                 {
                     // Nothing to do ...
                 }
+                else if(ground >= Features.GROUND_QUAD_TILES && ground < Features.GROUND_QUAD_TILES + 3)
+                {
+                    // Nothing to do ...
+                }
                 else
                 {
                     logger.log(Level.SEVERE, "Unknown ground type {0} at {1}, {2}", new Object[]{ground, x, y});
@@ -580,6 +584,8 @@ public class ImpCity implements PostRenderHook, GameInterface
                 }
             }
         }
+
+        placeWalls(map, 12, Features.GROUND_IMPASSABLE, Features.I_PERM_ROCK);
     }
 
     public void save() 
@@ -1190,6 +1196,45 @@ public class ImpCity implements PostRenderHook, GameInterface
         }
         
         return result;
+    }
+
+    /**
+     * The player starts with a restricted area. This method is used to set these walls
+     * and later to remover them again
+     */
+    public void placeWalls(Map map, int distance, int ground, int block)
+    {
+        PortalSquare ps = getPortals().get(0);
+        Point p = ps.getLocation();
+
+        System.err.println(p);
+
+        int x = p.x / Map.SUB;
+        int y = p.y / Map.SUB;
+
+
+        // left and right wall (relative to portal)
+        for(int i = 0; i < distance*2; i++)
+        {
+            int rasterI = (x + i) * Map.SUB;
+            int rasterJ = y * Map.SUB;
+
+            map.setFloor(rasterI, rasterJ - distance*Map.SUB, ground);
+            map.setFloor(rasterI, rasterJ + distance*Map.SUB, ground);
+
+            map.setItem(rasterI + Map.O_BLOCK, rasterJ - distance*Map.SUB + Map.O_BLOCK, block + (int)(Math.random() * 3.0));
+            map.setItem(rasterI + Map.O_BLOCK, rasterJ + distance*Map.SUB + Map.O_BLOCK, block + (int)(Math.random() * 3.0));
+        }
+
+        // bottom wall (opposite to portal)
+        for(int j = 1; j < distance * 2; j++)
+        {
+            int rasterI = (x + distance * 2 - 1) * Map.SUB;
+            int rasterJ = (y + j - distance) * Map.SUB;
+
+            map.setFloor(rasterI, rasterJ, ground);
+            map.setItem(rasterI + Map.O_BLOCK, rasterJ + Map.O_BLOCK, block + (int)(Math.random() * 3.0));
+        }
     }
 
 

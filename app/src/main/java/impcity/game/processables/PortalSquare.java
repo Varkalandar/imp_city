@@ -29,7 +29,14 @@ public class PortalSquare implements Processable
     private final ImpCity game;
 
     private long time;
-    
+
+
+    public Point getLocation()
+    {
+        return new Point(x, y);
+    }
+
+
     public PortalSquare(ImpCity game, int x, int y, long time) 
     {
         this.game = game;
@@ -37,6 +44,7 @@ public class PortalSquare implements Processable
         this.y = y;
         this.time = time;
     }
+
 
     @Override
     public void process(Map map) 

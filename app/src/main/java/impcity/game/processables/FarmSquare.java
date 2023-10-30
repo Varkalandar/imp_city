@@ -4,6 +4,8 @@ import impcity.game.Features;
 import impcity.game.Clock;
 import impcity.game.map.Map;
 
+import java.awt.*;
+
 /**
  *
  * @author Hj. Malthaner
@@ -13,12 +15,20 @@ public class FarmSquare implements Processable
     public int x, y;
     public long time;
 
+
+    public Point getLocation()
+    {
+        return new Point(x, y);
+    }
+
+
     public FarmSquare(int rasterI, int rasterJ, long time) 
     {
         this.x = rasterI;
         this.y = rasterJ;
         this.time = time;
     }
+
 
     @Override
     public boolean equals(Object other)
