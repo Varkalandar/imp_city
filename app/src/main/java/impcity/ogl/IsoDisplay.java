@@ -303,7 +303,6 @@ public class IsoDisplay implements PostRenderHook
         int jMin = Math.max(0, centerJ-viewDist);
         int jMax = Math.min(mapH, centerJ+viewDist);
         
-        
         // Hajo: first, draw floors
         
         for(int i = iMin; i < iMax; i++)
@@ -369,61 +368,66 @@ public class IsoDisplay implements PostRenderHook
             int mapI = i * Map.SUB;
             int mapJ = j * Map.SUB;
 
-            int n;
-            n = map.getLeftWall(mapI, mapJ);
-            if(n > 0)
-            {
-                drawWall(textureCache.textures[n], x0, y0 - yd -10);
-            }
+            int c1 = map.getColor(mapI, mapJ);
 
-            n = map.getRightWall(mapI, mapJ);
-            if(n > 0)
+            if(c1 != 0)  // is this square visible?
             {
-                drawWall(textureCache.textures[n], x0 - xd, y0 - yd -10);
-            }
-
-            
-            // upper half of the diamond
-            for(int line = 0; line < Map.SUB-1; line++)
-            {
-                int jj = 0;
-                int ii = line;
-                int maxStep = line+1;
-
-                for(int step = 0; step < maxStep; step++)
+                int n;
+                n = map.getLeftWall(mapI, mapJ);
+                if(n > 0)
                 {
-                    int x = x0 - xd + ii * xd / Map.SUB - jj * xd / Map.SUB;
-                    int y = y0 - xd + ii * yd / Map.SUB + jj * yd / Map.SUB;
-                    
-                    n = map.getItem(mapI + ii, mapJ + jj);
-                    // map.setItem(mapI + ii, mapJ + jj, 1004);
-
-                    drawItem(xd, yd, mapI + ii, mapJ + jj, n, x, y);
-
-                    ii --;
-                    jj ++;
+                    drawWall(textureCache.textures[n], x0, y0 - yd -10);
                 }
-            }
 
-            // lower half of the diamond
-            for(int line = 0; line < Map.SUB; line++)
-            {
-                int jj = line;
-                int ii = Map.SUB - 1;
-                int maxStep = Map.SUB - line;
-
-                for(int step = 0; step < maxStep; step++)
+                n = map.getRightWall(mapI, mapJ);
+                if(n > 0)
                 {
-                    int x = x0 - xd + ii* xd / Map.SUB - jj* xd / Map.SUB;
-                    int y = y0 - xd + ii* yd / Map.SUB + jj* yd / Map.SUB;
+                    drawWall(textureCache.textures[n], x0 - xd, y0 - yd -10);
+                }
 
-                    n = map.getItem(mapI + ii, mapJ + jj);
-                    // map.setItem(mapI + ii, mapJ + jj, 1028);
 
-                    drawItem(xd, yd, mapI + ii, mapJ + jj, n, x, y);
+                // upper half of the diamond
+                for(int line = 0; line < Map.SUB-1; line++)
+                {
+                    int jj = 0;
+                    int ii = line;
+                    int maxStep = line+1;
 
-                    ii --;
-                    jj ++;
+                    for(int step = 0; step < maxStep; step++)
+                    {
+                        int x = x0 - xd + ii * xd / Map.SUB - jj * xd / Map.SUB;
+                        int y = y0 - xd + ii * yd / Map.SUB + jj * yd / Map.SUB;
+
+                        n = map.getItem(mapI + ii, mapJ + jj);
+                        // map.setItem(mapI + ii, mapJ + jj, 1004);
+
+                        drawItem(xd, yd, mapI + ii, mapJ + jj, n, x, y);
+
+                        ii --;
+                        jj ++;
+                    }
+                }
+
+                // lower half of the diamond
+                for(int line = 0; line < Map.SUB; line++)
+                {
+                    int jj = line;
+                    int ii = Map.SUB - 1;
+                    int maxStep = Map.SUB - line;
+
+                    for(int step = 0; step < maxStep; step++)
+                    {
+                        int x = x0 - xd + ii* xd / Map.SUB - jj* xd / Map.SUB;
+                        int y = y0 - xd + ii* yd / Map.SUB + jj* yd / Map.SUB;
+
+                        n = map.getItem(mapI + ii, mapJ + jj);
+                        // map.setItem(mapI + ii, mapJ + jj, 1028);
+
+                        drawItem(xd, yd, mapI + ii, mapJ + jj, n, x, y);
+
+                        ii --;
+                        jj ++;
+                    }
                 }
             }
         }
@@ -566,17 +570,17 @@ public class IsoDisplay implements PostRenderHook
     {
         if(y0 < displayHeight && y0 > -216 && x0 > -216 && x0 < displayWidth)
         {
-            int mapI = i *Map.SUB;
-            int mapJ = j *Map.SUB;
+            int mapI = i * Map.SUB;
+            int mapJ = j * Map.SUB;
 
             int n = map.getFloor(mapI, mapJ);
-            if(n > 0)
+            int c1 = map.getColor(mapI, mapJ);
+            if(n > 0 && c1 != 0)
             {
                 Texture tex = textureCache.grounds[n];
 
                 if(tex != null)
                 {
-                    int c1 = map.getColor(mapI, mapJ);
                     int c2 = map.getColor(mapI+Map.SUB, mapJ);
                     int c3 = map.getColor(mapI+Map.SUB, mapJ+Map.SUB);
                     int c4 = map.getColor(mapI, mapJ+Map.SUB);
@@ -590,13 +594,12 @@ public class IsoDisplay implements PostRenderHook
             }
 
             n = map.getWay(mapI, mapJ);
-            if(n > 0)
+            if(n > 0 && c1 != 0)
             {
                 Texture tex = textureCache.grounds[n];
 
                 if(tex != null)
                 {
-                    int c1 = map.getColor(mapI, mapJ);
                     int c2 = map.getColor(mapI+Map.SUB, mapJ);
                     int c3 = map.getColor(mapI+Map.SUB, mapJ+Map.SUB);
                     int c4 = map.getColor(mapI, mapJ+Map.SUB);
@@ -606,7 +609,7 @@ public class IsoDisplay implements PostRenderHook
             }
 
             n = map.getWayLikeItem(mapI, mapJ);
-            if(n > 0)
+            if(n > 0 && c1 != 0)
             {
                 Texture tex = textureCache.textures[n];
 

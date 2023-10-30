@@ -4,7 +4,9 @@ Changes since v0.23
 - Tried to improve the name generator artifact name routines.
 - Player starts with restricted dungeon space now and has to collect
   artifacts to gain access to additional space.
-
+- Added a fog of war effect, so the player can only see what is right
+  besides the excavated areas
+ 
 Changes since v0.22
 
 - Expeditions really should trigger only one return message now.

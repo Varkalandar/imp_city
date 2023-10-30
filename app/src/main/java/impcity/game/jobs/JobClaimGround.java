@@ -32,7 +32,7 @@ public class JobClaimGround extends AbstractJob
         Map map = worker.gameMap;
         map.setFloor(rasterI, rasterJ, Features.GROUND_POLY_TILES + (int)(Math.random() * 3));
         
-        game.addClaimedSquare(rasterI, rasterJ);
+        game.addClaimedSquare(map, rasterI, rasterJ);
         
         game.soundPlayer.play(Sounds.CLAIM_SQUARE, 0.5f, 1.0f);
     }

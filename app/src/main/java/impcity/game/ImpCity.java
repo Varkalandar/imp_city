@@ -474,6 +474,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             }
         }
     }
+    
 
     private void activateMap(Map map)
     {
@@ -495,45 +496,54 @@ public class ImpCity implements PostRenderHook, GameInterface
         {
             for(int x=0; x<w; x+=Map.SUB)
             {
+                // initialize with invisible. Claimed squares will light up
+                map.setColor(x, y, 0);
+            }
+        }
+        
+        for(int y=0; y<h; y+=Map.SUB)
+        {
+            for(int x=0; x<w; x+=Map.SUB)
+            {
                 int ground = map.getFloor(x, y);
                 if(ground >= Features.GROUND_GRASS_DARK && ground < Features.GROUND_GRASS_DARK + 3)
                 {
                     addFarmlandSquare(map, x, y);
-                    addClaimedSquare(x, y);
+                    addClaimedSquare(map, x, y);
                 }
                 else if(ground >= Features.GROUND_LAIR && ground < Features.GROUND_LAIR + 3)
                 {
                     addLairSquare(map, x, y);
-                    addClaimedSquare(x, y);
+                    addClaimedSquare(map, x, y);
                 }
                 else if(ground >= Features.GROUND_LIBRARY && ground < Features.GROUND_LIBRARY + 3)
                 {
                     addLibrarySquare(map, x, y);
-                    addClaimedSquare(x, y);
+                    addClaimedSquare(map, x, y);
                 }
                 else if(ground >= Features.GROUND_FORGE && ground < Features.GROUND_FORGE + 3)
                 {
                     addForgeSquare(map, x, y);
-                    addClaimedSquare(x, y);
+                    addClaimedSquare(map, x, y);
                 }
                 else if(ground >= Features.GROUND_LABORATORY && ground < Features.GROUND_LABORATORY + 3)
                 {
                     addLabSquare(map, x, y);
-                    addClaimedSquare(x, y);
+                    addClaimedSquare(map, x, y);
                 }
                 else if(ground >= Features.GROUND_TREASURY && ground < Features.GROUND_TREASURY + 3)
                 {
                     addTreasurySquare(map, x, y);
-                    addClaimedSquare(x, y);
+                    addClaimedSquare(map, x, y);
                 }
                 else if(ground >= Features.GROUND_POLY_TILES && ground < Features.GROUND_POLY_TILES + 3)
                 {
-                    addClaimedSquare(x, y);
+                    addClaimedSquare(map, x, y);
                 }
                 else if(ground >= Features.GROUND_HOSPITAL && ground < Features.GROUND_HOSPITAL + 3)
                 {
                     addHospitalSquare(map, x, y);
-                    addClaimedSquare(x, y);
+                    addClaimedSquare(map, x, y);
                 }
                 else if(ground >= Features.GROUND_IMPASSABLE && ground < Features.GROUND_IMPASSABLE + 3)
                 {
@@ -541,7 +551,7 @@ public class ImpCity implements PostRenderHook, GameInterface
                 }
                 else if(ground >= Features.GROUND_QUAD_TILES && ground < Features.GROUND_QUAD_TILES + 3)
                 {
-                    // Nothing to do ...
+                    addClaimedSquare(map, x, y);
                 }
                 else
                 {
@@ -585,9 +595,10 @@ public class ImpCity implements PostRenderHook, GameInterface
             }
         }
 
-        placeWalls(map, 12, Features.GROUND_IMPASSABLE, Features.I_PERM_ROCK);
+        placeEnclosure(map, 12, Features.GROUND_IMPASSABLE, Features.I_PERM_ROCK);
     }
 
+    
     public void save() 
     {
         try
@@ -1058,15 +1069,21 @@ public class ImpCity implements PostRenderHook, GameInterface
         refreshPillars(rasterI, rasterJ);
     }
     
-    public void addClaimedSquare(int rasterI, int rasterJ) 
+    
+    public void addClaimedSquare(Map map, int rasterI, int rasterJ) 
     {
         Point p = new Point(rasterI, rasterJ);
+        
+        logger.log(Level.INFO, "Claiming square " + rasterI + ", " + rasterJ);
+        
         if(!claimed.contains(p))
         {
             claimed.add(p);
             refreshPillars(rasterI, rasterJ);
+            revealArea(map, p);
         }                
     }
+    
     
     public List<FarmSquare> getFarmland()
     {
@@ -1202,7 +1219,7 @@ public class ImpCity implements PostRenderHook, GameInterface
      * The player starts with a restricted area. This method is used to set these walls
      * and later to remover them again
      */
-    public void placeWalls(Map map, int distance, int ground, int block)
+    public void placeEnclosure(Map map, int distance, int ground, int block)
     {
         PortalSquare ps = getPortals().get(0);
         Point p = ps.getLocation();
@@ -1424,6 +1441,20 @@ public class ImpCity implements PostRenderHook, GameInterface
             {
                 map.dropItem(location.x, location.y, item);
             }
+        }
+    }
+
+    
+    private void revealArea(Map map, Point p) 
+    {
+        int d = 2;
+        
+        for(int i=-d; i<=d; i++)
+        {
+            for(int j=-d; j<=d; j++)
+            {
+                map.setColor(p.x + i * Map.SUB, p.y + j * Map.SUB, 0xFFA0A0A0);
+            }            
         }
     }
 
