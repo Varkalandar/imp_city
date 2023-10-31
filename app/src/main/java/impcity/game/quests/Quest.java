@@ -14,15 +14,15 @@ public class Quest
     private static final Logger logger = Logger.getLogger(Quest.class.getName());
     
     /** set to true if this quest locations had been found already */
-    public static int SF_FOUND = 1;
+    public static final int SF_FOUND = 1;
     /** set to true if this quest locations has been completely plundered */
-    public static int SF_PLUNDERED = 2;
+    public static final int SF_PLUNDERED = 2;
     
     // Treasure types
-    public static int TT_SILVER = 1;
-    public static int TT_GOLD = 2;
-    public static int TT_GEMS = 4;
-    public static int TT_ARTIFACT = 8;
+    public static final int TT_SILVER = 1;
+    public static final int TT_GOLD = 2;
+    public static final int TT_GEMS = 4;
+    public static final int TT_ARTIFACT = 8;
     
     public long seed;
     public String story;

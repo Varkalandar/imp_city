@@ -6,7 +6,8 @@ Changes since v0.23
   artifacts to gain access to additional space.
 - Added a fog of war effect, so the player can only see what is right
   besides the excavated areas
- 
+- Produce in forges is now deposit near the producing mob
+
 Changes since v0.22
 
 - Expeditions really should trigger only one return message now.

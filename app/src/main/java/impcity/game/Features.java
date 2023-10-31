@@ -120,7 +120,11 @@ public class Features
     public static final int PLANTS_FIRST_OLD = 152;
     public static final int PLANTS_LAST = 158;
     public static final int PLANTS_STRIDE = 9;  // Beware, only 7 plant types, 2 unused!
-    
+
+    public static final int ARTIFACTS_FIRST = 1975;
+    public static final int ARTIFACTS_LAST = 1975;
+
+
     public static final int GLYPHS_FIRST = 1975;
     public static final int GLYPHS_LAST = 1990;
     public static final int GLYPHS_COUNT = GLYPHS_LAST - GLYPHS_FIRST + 1;

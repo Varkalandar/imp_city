@@ -52,7 +52,8 @@ public class QuestGenerator
         "hidden in {0} sinkhole",
         "hidden in {0} group of bushes",
         "cached in {0} river bend",
-        "sunk in {0} lake",
+        "stored in {0} tunnel",
+        "stored in {0} dry well",
         "placed in {0} cave",
         "enscounded in {0} gorge",
         "hidden in {0} forest",
@@ -71,7 +72,7 @@ public class QuestGenerator
         "hidden at the foot of {0} obelisk",
         "buried near {0} scare crow",
         "buried near {0} obelisk",
-        "to be found near {0} ancient tree trunk",
+        "stored near {0} ancient tree trunk",
     };
     
     private static final String [] buildingTypes =
