@@ -931,7 +931,8 @@ public class CreatureAi extends AiBase
                                n == Features.I_TIN_ORE)
                             {
                                 // todo: produce correct product
-                                mob.gameMap.setItem(p.x + i, p.y + j, Features.I_BRONZE_COINS);
+                                // mob.gameMap.setItem(p.x + i, p.y + j, Features.I_BRONZE_COINS);
+                                mob.gameMap.dropItem(mob.location.x, mob.location.y, Features.I_BRONZE_COINS);
                                 return;
                             }
                         }
@@ -956,7 +957,15 @@ public class CreatureAi extends AiBase
         
         if(Clock.time() > questTime)
         {
-            game.makeTreasureQuest();
+            if(Math.random() < 0.25)
+            {
+                game.makeArtifactQuest();
+            }
+            else
+            {
+                game.makeTreasureQuest();
+            }
+
             questTime = Clock.time() + 360 * 1000 + (int)(Math.random() * 600 * 1000);
         }
     }
