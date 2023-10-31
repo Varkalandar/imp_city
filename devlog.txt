@@ -7,6 +7,7 @@ Changes since v0.23
 - Added a fog of war effect, so the player can only see what is right
   besides the excavated areas
 - Produce in forges is now deposit near the producing mob
+- Added artifact quests.
 
 Changes since v0.22
 

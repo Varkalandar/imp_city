@@ -134,6 +134,12 @@ public class ImpCityMouseHandler implements MouseHandler
                     
                     if(gameDisplay.debugShowMapInfo && Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) gameDisplay.debugCatchMob();
                 }
+
+                if(buttonReleased == 2)
+                {
+                    Map map = gameDisplay.getDisplay().map;
+                    map.setItem(game.mouseI, game.mouseJ, Features.ARTIFACTS_FIRST);
+                }
             }
         }
     }

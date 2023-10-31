@@ -121,8 +121,8 @@ public class Features
     public static final int PLANTS_LAST = 158;
     public static final int PLANTS_STRIDE = 9;  // Beware, only 7 plant types, 2 unused!
 
-    public static final int ARTIFACTS_FIRST = 1975;
-    public static final int ARTIFACTS_LAST = 1975;
+    public static final int ARTIFACTS_FIRST = 1208;
+    public static final int ARTIFACTS_LAST = 1208;
 
 
     public static final int GLYPHS_FIRST = 1975;
@@ -180,5 +180,11 @@ public class Features
         return (block >= Features.I_STEEP_EARTH_BLOCK && block < Features.I_STEEP_EARTH_BLOCK + 3) &&
                ((ground >= Features.GROUND_LIGHT_SOIL && ground <= Features.GROUND_LIGHT_SOIL+3) ||
                 (ground >= Features.GROUND_IMPASSABLE && ground < Features.GROUND_IMPASSABLE + 3));
+    }
+
+    
+    public static boolean isArtifact(int item) 
+    {
+        return item >= ARTIFACTS_FIRST && item <= ARTIFACTS_LAST;
     }
 }

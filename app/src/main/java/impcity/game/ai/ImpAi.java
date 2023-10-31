@@ -396,9 +396,11 @@ public class ImpAi extends AiBase
         {
             Path path = new Path();
             
+            int itemSize = Features.isArtifact(mob.stats.getCurrent(MobStats.CARRY)) ? 2 : 0; 
+            
             boolean ok = 
             path.findPath(new ImpPathSource(mob, desc.size), 
-                          new FeaturePathDestination(mob.gameMap, 0, 0, Features.GROUND_TREASURY, 3),
+                          new FeaturePathDestination(mob.gameMap, 0, itemSize, Features.GROUND_TREASURY, 3),
                           mob.location.x, mob.location.y);
             
             if(ok)
@@ -576,6 +578,7 @@ public class ImpAi extends AiBase
                         mob.location, game.getViewPosition());
             }
             
+            mob.visuals.setBubble(0);
             mob.gameMap.dropItem(mob.location.x, mob.location.y, item);
             mob.stats.setCurrent(MobStats.CARRY, 0);
         }
@@ -625,7 +628,7 @@ public class ImpAi extends AiBase
             {
                 newGoal = Goal.ITEM_TO_LAB;
             }
-            else if(Features.isCoins(cargo))
+            else if(Features.isCoins(cargo) || Features.isArtifact(cargo))
             {
                 newGoal = Goal.GOLD_TO_TREASURY;
             }
