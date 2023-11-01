@@ -18,7 +18,7 @@ public class ClearDeco implements LocationCallback
     {
         int n = map.getItem(x, y);
         
-        if((n & Map.F_DECO) != 0)
+        if((n & Map.F_ITEM) == 0)
         {
             map.setItem(x, y, 0);
         }

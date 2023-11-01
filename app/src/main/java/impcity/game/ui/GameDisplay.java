@@ -592,7 +592,7 @@ public class GameDisplay
 
         int item = keeper.gameMap.getItem(display.cursorI, display.cursorJ);
         int ino = item & Map.F_ITEM_MASK;
-        String flags = (item & Map.F_DECO) == 0 ? "" : " Deco";
+        String flags = (item & Map.F_ITEM) == 0 ? "" : " Item";
         flags += (item & Map.F_FLOOR_DECO) == 0 ? "" : " Floor";
 
         display.font.drawStringScaled("Item: " + ino + flags, 0xFFFFFFFF, 20, 580, 0.5);

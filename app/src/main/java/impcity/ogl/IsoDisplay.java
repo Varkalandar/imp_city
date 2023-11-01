@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import impcity.game.Clock;
+import impcity.game.Item;
 import impcity.game.Texture;
 import impcity.game.TextureCache;
 import impcity.game.map.Map;
@@ -67,6 +68,7 @@ public class IsoDisplay implements PostRenderHook
     
     public Map map;
     private final Registry<Mob> mobs;
+    private final Registry<Item> items;
 
     private final DrawableVerticalList vList = new DrawableVerticalList();
     
@@ -91,9 +93,10 @@ public class IsoDisplay implements PostRenderHook
     private boolean showItemNames;
     private final String[] decoDisplayNames;
     
-    public IsoDisplay(Registry<Mob> mobs, TextureCache textureCache)
+    public IsoDisplay(Registry<Mob> mobs, Registry<Item> items, TextureCache textureCache)
     {
         this.mobs = mobs;
+        this.items = items;
         this.textureCache = textureCache;
         this.decoDisplayNames = new String[textureCache.textures.length];
         
@@ -439,7 +442,7 @@ public class IsoDisplay implements PostRenderHook
         {
             if((n & Map.F_FLOOR_DECO) == 0)
             {
-                if((n & Map.F_DECO) == 0)
+                if((n & Map.F_ITEM) == 0)
                 {
                     // Hajo: unregistered item
                     Texture tex = textureCache.textures[n];
@@ -450,30 +453,29 @@ public class IsoDisplay implements PostRenderHook
                     else
                     {
                         drawTile(tex, x-tex.footX, y - tex.image.getHeight() + tex.footY);
-                        // drawTile(tex, x -tex.footX, y - tex.image.getHeight() + tex.footY, 4, 4, 0xFFFFFFFF);
+
+                        String name = decoDisplayNames[n];
+                        if(name != null)
+                        {
+                            showName(name, mi, mj, x, y);
+                        }
                     }
                 }
                 else
                 {
-                    int deco = n & 0xFFFF;
-                    Texture tex = textureCache.textures[deco];
+                    int key = n & 0xFFFF;
+                    Item item = items.get(key);
+
+                    Texture tex = textureCache.textures[item.texId];
+
                     if(tex == null)
                     {
-                        logger.log(Level.SEVERE, "No deco texture loaded for id={0}", n & 0xFFFF);
+                        logger.log(Level.SEVERE, "No deco texture loaded for id={0}", item.texId);
                     }
                     else
                     {
                         drawTile(tex, x - tex.footX, y - tex.image.getHeight() + tex.footY);
-                        String name = decoDisplayNames[deco];
-                        if(name != null &&
-                           (showItemNames ||
-                            (Math.abs(cursorI - mi) < 2 && Math.abs(cursorJ - mj) < 2)))
-                        {
-                            hotspotMap.addHotspot(mi, mj,
-                                                  x + (int)(font.getStringWidth(name) * 0.3),
-                                                  y + 16,
-                                                  name );
-                        }
+                        showName(item.name, mi, mj, x, y);
                     }
                 }
             }
@@ -535,7 +537,18 @@ public class IsoDisplay implements PostRenderHook
             drawTile(tex, x -tex.footX, y - tex.image.getHeight() + tex.footY);
         }
     }
-    
+
+    private void showName(String name, int mi, int mj, int x, int y)
+    {
+        if(showItemNames ||
+                        (Math.abs(cursorI - mi) < 2 && Math.abs(cursorJ - mj) < 2))
+        {
+            hotspotMap.addHotspot(mi, mj,
+                    x + (int)(font.getStringWidth(name) * 0.3),
+                    y + 16,
+                    name );
+        }
+    }
 
     private void drawFloorDecoration(int xd, int yd, int i, int j, int x0, int y0)
     {

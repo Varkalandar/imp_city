@@ -16,13 +16,8 @@ public class ClearItems implements LocationCallback
     @Override
     public boolean visit(int x, int y)
     {
-        int n = map.getItem(x, y);
-        
-        if(n > 0 && n < Map.F_DECO)
-        {
-            map.setItem(x, y, 0);
-        }
-        
+        map.setItem(x, y, 0);
+
         return false;
     }
     

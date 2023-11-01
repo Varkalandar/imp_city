@@ -8,6 +8,7 @@ Changes since v0.23
   besides the excavated areas
 - Produce in forges is now deposit near the producing mob
 - Added artifact quests.
+- The engine now supports named items.
 
 Changes since v0.22
 

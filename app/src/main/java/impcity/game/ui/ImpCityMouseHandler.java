@@ -138,7 +138,9 @@ public class ImpCityMouseHandler implements MouseHandler
                 if(buttonReleased == 2)
                 {
                     Map map = gameDisplay.getDisplay().map;
-                    map.setItem(game.mouseI, game.mouseJ, Features.ARTIFACTS_FIRST);
+                    // int item = game.createItem("Dried Frog For Testing", Features.ARTIFACT_DRIED_FROG);
+                    int item = game.createItem("Carved Pumpkin", Features.ARTIFACT_CARVED_PUMPKIN);
+                    map.setItem(game.mouseI, game.mouseJ, item);
                 }
             }
         }

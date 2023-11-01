@@ -3,6 +3,8 @@ package impcity.game.jobs;
 import impcity.game.ImpCity;
 import impcity.game.ai.MobStats;
 import java.awt.Point;
+
+import impcity.game.map.Map;
 import impcity.game.mobs.Mob;
 
 /**
@@ -34,8 +36,19 @@ public class JobFetchItem extends AbstractJob
         if(worker.gameMap.getItem(location.x, location.y) == item)
         {
             worker.stats.setCurrent(MobStats.CARRY, item);
-            worker.visuals.setBubble(item);
             worker.gameMap.setItem(location.x, location.y, 0);
+
+            // if this was a real item, the bubble must be set to the item
+            // texture instead of the key
+
+            int bubble = item;
+            if((item & Map.F_ITEM) != 0)
+            {
+                // real item
+                bubble = game.world.items.get(item & Map.F_ITEM_MASK).texId;
+            }
+
+            worker.visuals.setBubble(bubble);
         }
         else
         {

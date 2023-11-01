@@ -27016,17 +27016,17 @@
       <Description>
         <version>4</version>
         <id>1209</id>
-        <width>1</width>
-        <height>1</height>
+        <width>51</width>
+        <height>48</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>25</footX>
+        <footY>35</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>artifact_dried_frog</string>
+        <string>rgba</string>
         <string></string>
         <string></string>
       </Metadata>
@@ -27035,17 +27035,17 @@
       <Description>
         <version>4</version>
         <id>1210</id>
-        <width>1</width>
-        <height>1</height>
+        <width>51</width>
+        <height>48</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>25</footX>
+        <footY>35</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>artifact_carved_pumpkin</string>
+        <string>rgba</string>
         <string></string>
         <string></string>
       </Metadata>
@@ -27054,8 +27054,8 @@
       <Description>
         <version>4</version>
         <id>1211</id>
-        <width>1</width>
-        <height>1</height>
+        <width>51</width>
+        <height>49</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
         <footX>0</footX>
@@ -27063,8 +27063,8 @@
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>artifact_mug</string>
+        <string>rgba</string>
         <string></string>
         <string></string>
       </Metadata>
@@ -27073,8 +27073,8 @@
       <Description>
         <version>4</version>
         <id>1212</id>
-        <width>1</width>
-        <height>1</height>
+        <width>51</width>
+        <height>48</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
         <footX>0</footX>
@@ -27082,8 +27082,8 @@
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>artifact_mummiefied_cat</string>
+        <string>rgba</string>
         <string></string>
         <string></string>
       </Metadata>
@@ -27092,8 +27092,8 @@
       <Description>
         <version>4</version>
         <id>1213</id>
-        <width>1</width>
-        <height>1</height>
+        <width>51</width>
+        <height>49</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
         <footX>0</footX>
@@ -27101,8 +27101,8 @@
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>artifact_urn</string>
+        <string>rgba</string>
         <string></string>
         <string></string>
       </Metadata>
@@ -27111,8 +27111,8 @@
       <Description>
         <version>4</version>
         <id>1214</id>
-        <width>1</width>
-        <height>1</height>
+        <width>51</width>
+        <height>48</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
         <footX>0</footX>
@@ -27120,8 +27120,8 @@
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>artifact_preserved_toe</string>
+        <string>rgba</string>
         <string></string>
         <string></string>
       </Metadata>

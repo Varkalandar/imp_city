@@ -14,7 +14,7 @@ public class FeaturePathDestination implements PathDestination
     public FeaturePathDestination(Map map, int feature)
     {
         this.map = map;
-        this.feature = feature + Map.F_DECO;
+        this.feature = feature;
     }
 
     @Override

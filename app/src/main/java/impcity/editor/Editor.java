@@ -92,7 +92,7 @@ public class Editor implements PostRenderHook, TextureCache.LoaderCallback
         World world = new World();
         
         textureCache = new GlTextureCache();
-        display = new IsoDisplay(world.mobs, textureCache);
+        display = new IsoDisplay(world.mobs, world.items, textureCache);
         
         display.map = makeMap(20, 20, 4);
         
@@ -631,7 +631,7 @@ public class Editor implements PostRenderHook, TextureCache.LoaderCallback
                         }
                         else
                         {
-                            map.setItem(mouseI, mouseJ, Map.F_DECO + texturesInUiOrder[selection].cacheIndex);
+                            map.setItem(mouseI, mouseJ, texturesInUiOrder[selection].cacheIndex);
                         }
                     }   
                     break;

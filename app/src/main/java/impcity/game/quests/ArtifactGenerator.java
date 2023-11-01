@@ -51,7 +51,7 @@ public class ArtifactGenerator
         "beautiful",
         "luck bearing",
         "gorgonic",
-        "myrmidonic",
+        "weatherbeaten",
         "reinforced",
         "twinned",
         "warding",
@@ -61,8 +61,8 @@ public class ArtifactGenerator
         "torn",
         "sunbleached",
         "eternal",
-        "translucent",
-        "pattern",
+        "splendid",
+        "shiny",
     };
 
     

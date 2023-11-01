@@ -60,46 +60,10 @@ public class Map implements Serializable
     // Offset for full tile blocks (earth, rock, resources)
     public static final int O_BLOCK = Map.SUB/2-1;
 
-    public static final int FLOOR_GRASS = 10;
-    public static final int FLOOR_SAND = 7;
-    public static final int FLOOR_DARK_GRASS = 19;
-    
-    
-    public static final int F_DECO = 0x10000;
+    public static final int F_ITEM = 0x10000;
     public static final int F_FLOOR_DECO = 0x20000;
     public static final int F_ITEM_MASK = 0xFFFF;
-    
-    public static final int FEAT_SMALL_GREEN_TREE = 33;
-    public static final int FEAT_MEDIUM_GREEN_TREE = 34;
-    public static final int FEAT_BIG_GREEN_TREE = 35;
-    public static final int FEAT_ORANGE_TREE = 36;
-    public static final int FEAT_ARROW_WEST = 42;
-    public static final int FEAT_ARROW_EAST = 44;
-    public static final int FEAT_STAIRS_UP_NARROW = 62;
-    public static final int FEAT_STAIRS_DOWN_NARROW = 63;
-    public static final int FEAT_SMALL_WELL = 64;
-    public static final int FEAT_DECO_GRASS_1 = 75;
-    public static final int FEAT_DECO_GRASS_2 = 76;
-    public static final int FEAT_SMALL_WEEDS = 98;
-    
-    public static final int FEAT_IMP_LAIR = 392;
-    // public static final int FEAT_IMP_LAIR = 398;
-    
-    public static final int DECO_ARMORY_MERCHANT = F_DECO + 401;
-    public static final int DECO_GENERAL_MERCHANT = F_DECO + 403;
-    public static final int DECO_IMP_MUSHROOM = F_DECO + 68;
-    public static final int DECO_MOSSY_PATCH = F_DECO + 92;
-    public static final int DECO_DARK_SPOTS = F_DECO + 101;
-    public static final int DECO_VERY_DARK_SPOTS = F_DECO + 102;
-    public static final int DECO_SANDY_PATCH = F_DECO + 100;
-    public static final int DECO_WHITE_SPOTS_1 = F_DECO + 82;
-    public static final int DECO_BROWN_DIRT = F_DECO + 90;
-    public static final int DECO_CRACK_LIGHT = F_DECO + 105;
-    public static final int DECO_CRACK_DARK = F_DECO + 106;
-    public static final int DECO_CRACK_VERY_DARK = F_DECO + 107;
-    
-    public static final int N_TEMP = 14;
-    
+
     public final ArrayList <Light> lights;
     private final SparseMapLayer<Drawable> effects;
     public int darkness;

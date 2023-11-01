@@ -145,7 +145,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         world = new World();
 
         textureCache = new GlTextureCache();
-        display = new IsoDisplay(world.mobs, textureCache);
+        display = new IsoDisplay(world.mobs, world.items, textureCache);
         display.create();        
         
         gameDisplay = new GameDisplay(this, display);
@@ -434,42 +434,45 @@ public class ImpCity implements PostRenderHook, GameInterface
                 if(ground >= Features.GROUND_IMPASSABLE && ground < Features.GROUND_IMPASSABLE+3)
                 {
                     double select = Math.random();
-                    /*
-                    if(select > 0.995)
-                    {
-                        // map.setItem(x, y, Map.F_DECO + Features.I_TREASURE_BLOCK + (int)(Math.random() * 3));
-                        map.setItem(x, y, Map.F_DECO + Features.I_GOLD_MOUND);
-                    }
-                    else 
-                    */ 
+
                     if(select > 0.98)
                     {
-                        map.setItem(x, y, Map.F_DECO + Features.I_COPPER_ORE_MOUND);
+                        map.setItem(x, y, Features.I_COPPER_ORE_MOUND);
                     }
                     else if(select > 0.97)
                     {
-                        map.setItem(x, y, Map.F_DECO + Features.I_TIN_ORE_MOUND);
+                        map.setItem(x, y, Features.I_TIN_ORE_MOUND);
                     }
                     else if(select > 0.96)
                     {
-                        map.setItem(x, y, Map.F_DECO + Features.I_MINERAL_BLOCK);
+                        map.setItem(x, y, Features.I_MINERAL_BLOCK);
                     }
                     else if(select > 0.95)
                     {
-                        map.setItem(x, y, Map.F_DECO + Features.I_GRAPHITE_BLOCK);
+                        map.setItem(x, y, Features.I_GRAPHITE_BLOCK);
                     }
                     else if(select > 0.94)
                     {
-                        map.setItem(x, y, Map.F_DECO + Features.I_IRON_ORE_BLOCK);
+                        map.setItem(x, y, Features.I_IRON_ORE_BLOCK);
                     }
                     else
                     {
-                        map.setItem(x, y, Map.F_DECO + Features.I_STEEP_EARTH_BLOCK + (int)(Math.random() * 3));
+                        map.setItem(x, y, Features.I_STEEP_EARTH_BLOCK + (int)(Math.random() * 3));
                     }
                 }
-                if(y==0 || x==0 || x==w-1 || y==h-1)
+                if(y==0 || x==0 || x>=w-Map.SUB || y>=h-Map.SUB)
                 {
-                    map.setItem(x, y, Map.F_DECO + Features.I_PERM_ROCK + (int)(Math.random() * 3));
+                    map.setItem(x, y, Features.I_PERM_ROCK + (int)(Math.random() * 3));
+                }
+
+                // old maps had deco flags that now mess with the item flags
+                for(int yy = 0; yy<Map.SUB; yy++)
+                {
+                    for(int xx= 0; xx<Map.SUB; xx++)
+                    {
+                        int n = map.getItem(x+xx, y+yy) & 0xFF00FFFF;
+                        map.setItem(x+xx, y+yy, n);
+                    }
                 }
             }
         }
@@ -563,14 +566,14 @@ public class ImpCity implements PostRenderHook, GameInterface
                     for(int i=0; i<Map.SUB; i++)
                     {
                         int item = map.getItem(x+i, y+j);
-                        if(item == Map.F_DECO + Features.I_TUNNEL_PORTAL)
+                        if(item == Features.I_TUNNEL_PORTAL)
                         {
                             PortalSquare p = new PortalSquare(this, x, y, Clock.time() + 5000l + (long)(Math.random() * 1000));
                             portals.add(p);
                             logger.log(Level.INFO, "Adding portal at {0}, {1}", new Object[]{x, y});
                         }
                         
-                        if(item == Map.F_DECO + Features.I_WELL)
+                        if(item == Features.I_WELL)
                         {
                             Rectangle r = new Rectangle(x+i-2, y+j-2, 4, 4);
                             map.setAreaMovementBlocked(r, true);
@@ -590,7 +593,7 @@ public class ImpCity implements PostRenderHook, GameInterface
                 if (block >= Features.I_PERM_ROCK && block <= Features.I_STEEP_EARTH_BLOCK + 20)
                 {
                     map.setItem(x, y, 0);
-                    map.setItem(x + Map.O_BLOCK, y + Map.O_BLOCK, block | Map.F_DECO);
+                    map.setItem(x + Map.O_BLOCK, y + Map.O_BLOCK, block);
                 }
             }
         }
@@ -622,48 +625,68 @@ public class ImpCity implements PostRenderHook, GameInterface
                 player.gameMap.save(file);
 
                 FileWriter writer = new FileWriter(folderName + "/test.mob");
-                
-                
-                Registry<Mob> mobs = world.mobs;
-                Set<Cardinal> keys = mobs.keySet();
 
-                writer.write("mobs=" + keys.size() + "\n");
-                
-                for(Cardinal key : keys)
-                {
-                    Mob mob = mobs.get(key.intValue());
-                    writer.write("species=" + mob.getSpecies() + "\n");
-                    mob.write(writer);
-                    
-                    writer.write("AI data start\n");
+                saveMobs(writer);
+                saveItems(writer);
 
-                    Ai ai = mob.getAi();
-                    if(ai==null)
-                    {
-                        writer.write("ai=<null>\n");
-                    }
-                    else
-                    {
-                        writer.write("ai=" + ai.getClass().getName() + "\n");
-                        ai.write(writer);
-                    }
-                    writer.write("AI data end\n");
-                }
-                
                 jobQueue.write(writer);
                 Clock.write(writer);
                 
                 saveQuests(writer);
                 
                 writer.close();
-                
-                // gameDisplay.addMessage(new TimedMessage("Game saved!", 0xFFFFFFFF, 500, 400, Clock.time()));
-                gameDisplay.addMessage(new TimedMessage("Game saved!", 0xFFFFFFFF, display.displayWidth/2, 300, Clock.time()));                
+
+                gameDisplay.addMessage(new TimedMessage("Game saved!", 0xFFFFFFFF, display.displayWidth/2, 300, Clock.time()));
             }
         }
         catch(IOException ioex)
         {
             logger.log(Level.SEVERE, "Exception while saving the game", ioex);
+        }
+    }
+
+    private void saveMobs(FileWriter writer) throws IOException
+    {
+        Registry<Mob> mobs = world.mobs;
+        Set<Cardinal> keys = mobs.keySet();
+
+        writer.write("mobs=" + keys.size() + "\n");
+
+        for(Cardinal key : keys)
+        {
+            Mob mob = mobs.get(key.intValue());
+            writer.write("species=" + mob.getSpecies() + "\n");
+            mob.write(writer);
+
+            writer.write("AI data start\n");
+
+            Ai ai = mob.getAi();
+            if(ai==null)
+            {
+                writer.write("ai=<null>\n");
+            }
+            else
+            {
+                writer.write("ai=" + ai.getClass().getName() + "\n");
+                ai.write(writer);
+            }
+            writer.write("AI data end\n");
+        }
+    }
+
+    private void saveItems(FileWriter writer) throws IOException
+    {
+        Registry<Item> items = world.items;
+        Set<Cardinal> keys = items.keySet();
+
+        writer.write("items=" + keys.size() + "\n");
+
+        for(Cardinal key : keys)
+        {
+            int n = key.intValue();
+            writer.write("key=" + n + "\n");
+            Item item = items.get(n);
+            item.write(writer);
         }
     }
 
@@ -706,92 +729,12 @@ public class ImpCity implements PostRenderHook, GameInterface
             String line;
             
             line = reader.readLine();
-                
             int mobCount = Integer.parseInt(line.substring(5));
-            
-            Registry<Mob> mobs = world.mobs;
-            for(int i=0; i<mobCount; i++)
-            {
-                logger.log(Level.INFO, "loading mob " + (i+1) + " of " + mobCount);
-                
-                line = reader.readLine();
-                int species = Integer.parseInt(line.substring(8));
-                SpeciesDescription desc = Species.speciesTable.get(species);
+            loadMobs(map, reader, mobCount);
 
-                
-                if(desc == null)
-                {
-                    logger.log(Level.INFO, "loading a generator " + line);
-
-                    // Hajo: this is no real player, only a generator
-                    // -> these are re-installed in activateMap, so
-                    // we don't need to do anything here
-                
-                    do
-                    {
-                        line = reader.readLine();
-                        
-                    } while(!"AI data end".equals(line));
-
-                }
-                else
-                {
-                    logger.log(Level.INFO, "loading a " + desc.name);
-
-                    Mob mob;
-                    mob = new Mob(0, 0, species, Features.SHADOW_BASE, desc.sleepImage, map, null, desc.speed, desc.move);
-                    mob.read(reader, null);
-
-                    line = reader.readLine();
-                    if(!"AI data start".equals(line))
-                    {
-                        throw new IOException("Missing: AI data start for mob=" + mob.getKey());
-                    }
-
-                    Ai ai = null;
-                    line = reader.readLine();
-                    if("ai=<null>".equals(line))
-                    {
-                    }
-                    else
-                    {
-                        if(line.contains("ImpAi"))
-                        {
-                            ai = new ImpAi(this);
-                            ai.read(reader);
-                        }
-                        else if(line.contains("CreatureAi"))
-                        {
-                            ai = new CreatureAi(this);
-                            ai.read(reader);
-                        }
-                        else
-                        {
-                            throw new IOException("Unknown AI type mob=" + mob.getKey() + " : " + line.substring(3));
-                        }
-                    }
-                    mob.setAi(ai);
-
-                    mobs.put(mob.getKey(), mob);
-
-                    if(mob.getSpecies() == Species.GLOBOS_BASE)
-                    {
-                        // Player should be the only Globo in the game ...
-                        player = mob;
-                        playerKey = mob.getKey();
-                        player.visuals.setDisplayCode(0);
-
-                        display.centerOn(player);
-                    }
-
-                    line = reader.readLine();
-
-                    if(!"AI data end".equals(line))
-                    {
-                        throw new IOException("Missing: AI data end for mob=" + mob.getKey());
-                    }
-                }
-            }
+            line = reader.readLine();
+            int itemCount = Integer.parseInt(line.substring(6));
+            loadItems(map, reader, itemCount);
 
             jobQueue.read(this, reader);
             Clock.read(reader);
@@ -813,7 +756,113 @@ public class ImpCity implements PostRenderHook, GameInterface
             processorLock = false;
         }
     }
-    
+
+    private void loadMobs(Map map, BufferedReader reader, int count) throws IOException
+    {
+        String line;
+        Registry<Mob> mobs = world.mobs;
+        for(int i = 0; i< count; i++)
+        {
+            logger.log(Level.INFO, "loading mob " + (i+1) + " of " + count);
+
+            line = reader.readLine();
+            int species = Integer.parseInt(line.substring(8));
+            SpeciesDescription desc = Species.speciesTable.get(species);
+
+
+            if(desc == null)
+            {
+                logger.log(Level.INFO, "loading a generator " + line);
+
+                // Hajo: this is no real player, only a generator
+                // -> these are re-installed in activateMap, so
+                // we don't need to do anything here
+
+                do
+                {
+                    line = reader.readLine();
+
+                } while(!"AI data end".equals(line));
+
+            }
+            else
+            {
+                logger.log(Level.INFO, "loading a " + desc.name);
+
+                Mob mob;
+                mob = new Mob(0, 0, species, Features.SHADOW_BASE, desc.sleepImage, map, null, desc.speed, desc.move);
+                mob.read(reader, null);
+
+                line = reader.readLine();
+                if(!"AI data start".equals(line))
+                {
+                    throw new IOException("Missing: AI data start for mob=" + mob.getKey());
+                }
+
+                Ai ai = null;
+                line = reader.readLine();
+                if("ai=<null>".equals(line))
+                {
+                }
+                else
+                {
+                    if(line.contains("ImpAi"))
+                    {
+                        ai = new ImpAi(this);
+                        ai.read(reader);
+                    }
+                    else if(line.contains("CreatureAi"))
+                    {
+                        ai = new CreatureAi(this);
+                        ai.read(reader);
+                    }
+                    else
+                    {
+                        throw new IOException("Unknown AI type mob=" + mob.getKey() + " : " + line.substring(3));
+                    }
+                }
+                mob.setAi(ai);
+
+                mobs.put(mob.getKey(), mob);
+
+                if(mob.getSpecies() == Species.GLOBOS_BASE)
+                {
+                    // Player should be the only Globo in the game ...
+                    player = mob;
+                    playerKey = mob.getKey();
+                    player.visuals.setDisplayCode(0);
+
+                    display.centerOn(player);
+                }
+
+                line = reader.readLine();
+
+                if(!"AI data end".equals(line))
+                {
+                    throw new IOException("Missing: AI data end for mob=" + mob.getKey());
+                }
+            }
+        }
+    }
+
+
+    private void loadItems(Map map, BufferedReader reader, int count) throws IOException
+    {
+        String line;
+        Registry<Item> items = world.items;
+        for (int i = 0; i < count; i++)
+        {
+            logger.log(Level.INFO, "loading item " + (i + 1) + " of " + count);
+            line = reader.readLine();
+            int key = Integer.parseInt(line.substring(4));
+            logger.log(Level.INFO, "Item key is " + key);
+
+            Item item = new Item(reader);
+            items.put(key, item);
+        }
+    }
+
+
     private void loadQuests(BufferedReader reader) throws IOException
     {
         String line;
@@ -893,12 +942,12 @@ public class ImpCity implements PostRenderHook, GameInterface
         resetSquare(map, p.x, p.y);
         map.setFloor(p.x, p.y, Features.GROUND_LIBRARY + (int)(Math.random() * 1));
 
-        map.setItem(p.x, p.y + 4, Map.F_DECO + Features.I_BOOKSHELF_HALF_RIGHT);
+        map.setItem(p.x, p.y + 4, Features.I_BOOKSHELF_HALF_RIGHT);
 
         Rectangle r = new Rectangle(p.x, p.y + 3, 5, 1);
         map.setAreaMovementBlocked(r, true);
 
-        map.setItem(p.x + 6, p.y + 2, Map.F_DECO + Features.I_TORCH_STAND);
+        map.setItem(p.x + 6, p.y + 2, Features.I_TORCH_STAND);
         Light light = new Light(p.x + 6, p.y + 2, 48, 3, 0xFFFFAA55, 0.25);
         map.lights.add(light);
     }
@@ -1414,7 +1463,18 @@ public class ImpCity implements PostRenderHook, GameInterface
         }            
     }
 
-    
+
+    public int createItem(String name, int texId)
+    {
+        Item item = new Item(name, texId);
+
+        int key = world.items.nextFreeKey();
+        world.items.put(key, item);
+
+        return key | Map.F_ITEM;
+    }
+
+
     public void storePartyTreasures(QuestResult questResult)
     {
         if(questResult.success)
@@ -1443,7 +1503,7 @@ public class ImpCity implements PostRenderHook, GameInterface
                     item = Features.I_GOLD_COINS;
                     break;
                 case Quest.TT_ARTIFACT:
-                    item = Features.ARTIFACTS_FIRST;
+                    item = createArtifactForQuest(questResult.quest);
                     count = 1;
                     break;
                 default:
@@ -1457,6 +1517,43 @@ public class ImpCity implements PostRenderHook, GameInterface
         }
     }
 
+    
+    private int createArtifactForQuest(Quest quest)
+    {
+        int img;
+        
+        if(quest.treasureName.contains("frog"))
+        {
+            img = Features.ARTIFACT_DRIED_FROG;
+        }
+        else if(quest.treasureName.contains("pumpkin"))
+        {
+            img = Features.ARTIFACT_CARVED_PUMPKIN;
+        }
+        else if(quest.treasureName.contains("mug"))
+        {
+            img = Features.ARTIFACT_MUG;
+        }
+        else if(quest.treasureName.contains("cat"))
+        {
+            img = Features.ARTIFACT_CAT_MUMMY;
+        }
+        else if(quest.treasureName.contains("urn"))
+        {
+            img = Features.ARTIFACT_URN;
+        }
+        else if(quest.treasureName.contains("toe"))
+        {
+            img = Features.ARTIFACT_PRESERVED_TOE;
+        }
+        else
+        {
+            img = Features.ARTIFACTS_FIRST;
+        }
+        
+        return createItem(quest.treasureName, img);
+    }
+    
     
     private void revealArea(Map map, Point p) 
     {

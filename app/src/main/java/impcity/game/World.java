@@ -28,10 +28,13 @@ public class World
     private static final MapTransitions mapTransitions = new MapTransitions();
 
     public final Registry<Mob> mobs;
-    
+    public final Registry<Item> items;
+
+
     public World()
     {
         mobs = new ArrayRegistry<Mob> (1 << 12);
+        items = new ArrayRegistry<Item> (1 << 10);
     }
 
 
@@ -110,32 +113,6 @@ public class World
     }
 
 
-    private void clearFeatureAreas(Map map)
-    {
-        RectArea rectArea = new RectArea(0, 0, 1, 1);
-        
-        int w = map.getWidth();
-        int h = map.getHeight();
-        
-        for(int j=0; j<h; j++)
-        {
-            for(int i=0; i<w; i++)
-            {
-                int n = map.getItem(i, j);
-                
-                if((n & Map.F_DECO) != 0)
-                {
-                    rectArea.area.x = i;
-                    rectArea.area.y = j;
-                    rectArea.spirallyTraverse(new ClearItems(map), 6);
-                    
-                    map.setItem(i, j, n);
-                }
-            }
-        }
-    }
-
-
     private void setRightWall(Map map, int i, int j, int wallType, double lightChance)
     {
         map.setRightWall(i, j, wallType);
@@ -144,7 +121,7 @@ public class World
             Light light = new Light(i, j + Map.SUB/2 - 1, 60, 3, 0xDDFFCC99, 0.7);
             map.lights.add(light);
             
-            map.setItem(i, j + Map.SUB/2, Map.F_DECO + 5);
+            map.setItem(i, j + Map.SUB/2, 5);
         }
     }
 
@@ -156,7 +133,7 @@ public class World
             Light light = new Light(i + Map.SUB/2 - 1, j, 60, 3, 0xDDFFCC99, 0.7);
             map.lights.add(light);
 
-            map.setItem(i + Map.SUB/2, j, Map.F_DECO + 4);
+            map.setItem(i + Map.SUB/2, j, 4);
         }
     }
     
@@ -184,7 +161,7 @@ public class World
                         n1 = map.getLeftWall(i + Map.SUB, j - Map.SUB);
                         if(n1 == 0)
                         {
-                            map.setItem(i + Map.SUB-1, j, Map.F_DECO + wallSet + 5);
+                            map.setItem(i + Map.SUB-1, j, wallSet + 5);
                         }
                     }
                     
@@ -196,7 +173,7 @@ public class World
                         if(n1 == 0)
                         {
                             // no wall, must be end
-                            map.setItem(i, j, Map.F_DECO + wallSet + 7);
+                            map.setItem(i, j, wallSet + 7);
                         }
                     }
                 }
@@ -212,7 +189,7 @@ public class World
                         n1 = map.getLeftWall(i - Map.SUB, j + Map.SUB);
                         if(n1 == 0)
                         {
-                            map.setItem(i, j + Map.SUB-1, Map.F_DECO + wallSet + 6);
+                            map.setItem(i, j + Map.SUB-1, wallSet + 6);
                         }
                     }
                     n1 = map.getRightWall(i, j-Map.SUB);
@@ -223,11 +200,25 @@ public class World
                         if(n1 == 0)
                         {
                             // no wall, must be end
-                            map.setItem(i, j, Map.F_DECO + wallSet + 4);
+                            map.setItem(i, j, wallSet + 4);
                         }
                     }
                 }
             }
         }
     }
+
+    public boolean isArtifact(int key)
+    {
+        boolean yesno = false;
+
+        if((key & Map.F_ITEM) != 0)
+        {
+            Item item = items.get(key & Map.F_ITEM_MASK);
+            yesno = (item.texId >= Features.ARTIFACTS_FIRST && item.texId <= Features.ARTIFACTS_LAST);
+        }
+
+        return yesno;
+    }
 }
+

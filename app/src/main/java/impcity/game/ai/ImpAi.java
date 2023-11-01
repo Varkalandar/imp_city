@@ -396,7 +396,7 @@ public class ImpAi extends AiBase
         {
             Path path = new Path();
             
-            int itemSize = Features.isArtifact(mob.stats.getCurrent(MobStats.CARRY)) ? 2 : 0; 
+            int itemSize = game.world.isArtifact(mob.stats.getCurrent(MobStats.CARRY)) ? 2 : 0;
             
             boolean ok = 
             path.findPath(new ImpPathSource(mob, desc.size), 
@@ -628,7 +628,7 @@ public class ImpAi extends AiBase
             {
                 newGoal = Goal.ITEM_TO_LAB;
             }
-            else if(Features.isCoins(cargo) || Features.isArtifact(cargo))
+            else if(Features.isCoins(cargo) || game.world.isArtifact(cargo))
             {
                 newGoal = Goal.GOLD_TO_TREASURY;
             }

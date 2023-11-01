@@ -130,7 +130,7 @@ public class DungeonSweepingThread extends Thread
 
     private void processItem(Map map, int i, int j, int item) 
     {
-        if(Features.isCoins(item) || Features.isArtifact(item))
+        if(Features.isCoins(item) || game.world.isArtifact(item))
         {
             if(!game.getTreasuries().isEmpty())
             {

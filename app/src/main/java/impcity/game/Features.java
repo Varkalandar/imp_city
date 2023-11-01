@@ -122,7 +122,15 @@ public class Features
     public static final int PLANTS_STRIDE = 9;  // Beware, only 7 plant types, 2 unused!
 
     public static final int ARTIFACTS_FIRST = 1208;
-    public static final int ARTIFACTS_LAST = 1208;
+
+    public static final int ARTIFACT_DRIED_FROG = 1209;
+    public static final int ARTIFACT_CARVED_PUMPKIN = 1210;
+    public static final int ARTIFACT_MUG = 1211;
+    public static final int ARTIFACT_CAT_MUMMY = 1212;
+    public static final int ARTIFACT_URN = 1213;
+    public static final int ARTIFACT_PRESERVED_TOE = 1214;
+
+    public static final int ARTIFACTS_LAST = 1209;
 
 
     public static final int GLYPHS_FIRST = 1975;
@@ -180,11 +188,5 @@ public class Features
         return (block >= Features.I_STEEP_EARTH_BLOCK && block < Features.I_STEEP_EARTH_BLOCK + 3) &&
                ((ground >= Features.GROUND_LIGHT_SOIL && ground <= Features.GROUND_LIGHT_SOIL+3) ||
                 (ground >= Features.GROUND_IMPASSABLE && ground < Features.GROUND_IMPASSABLE + 3));
-    }
-
-    
-    public static boolean isArtifact(int item) 
-    {
-        return item >= ARTIFACTS_FIRST && item <= ARTIFACTS_LAST;
     }
 }

@@ -29,7 +29,7 @@ public class JobMining extends AbstractJob
         int rasterJ = location.y/Map.SUB*Map.SUB;
      
         Map map = worker.gameMap;
-        int block = map.getItem(rasterI + Map.O_BLOCK, rasterJ + Map.O_BLOCK) - Map.F_DECO;
+        int block = map.getItem(rasterI + Map.O_BLOCK, rasterJ + Map.O_BLOCK);
         int ground = map.getFloor(rasterI, rasterJ);
         
         return Features.canBeMined(ground, block);
@@ -50,7 +50,7 @@ public class JobMining extends AbstractJob
             worker.stats.setCurrent(MobStats.CARRY, 0);
             
             // Hajo: what did we mine actually?
-            int block = map.getItem(rasterI + Map.O_BLOCK, rasterJ + Map.O_BLOCK) - Map.F_DECO;
+            int block = map.getItem(rasterI + Map.O_BLOCK, rasterJ + Map.O_BLOCK);
             if(block >=  Features.I_GOLD_MOUND && block <  + Features.I_GOLD_MOUND + 3)
             {
                 // worker.stats.setCurrent(MobStats.GOLD, 100);                
