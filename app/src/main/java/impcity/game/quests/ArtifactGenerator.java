@@ -108,7 +108,7 @@ public class ArtifactGenerator
         switch(artifact.of)
         {
             case LOCATION:
-                of = " of " + NameGenerator.makeLocationName(2, 4);
+                of = " of " + NameGenerator.makeLocationName(2, 3);
                 break;
             case PERSON:
                 of = " of " + NameGenerator.makeRandomName(2 + (int)(Math.random()*3));

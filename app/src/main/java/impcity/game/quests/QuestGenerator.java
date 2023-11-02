@@ -6,6 +6,12 @@ package impcity.game.quests;
  */
 public class QuestGenerator
 {
+    private static final NonRepetitiveRng locationOutdoorRng = 
+            new NonRepetitiveRng(5, System.currentTimeMillis());
+    
+    private static final NonRepetitiveRng locationBuildingRng = 
+            new NonRepetitiveRng(5, System.currentTimeMillis());
+    
     
     private static final String [] mapQualities = 
     {
@@ -247,7 +253,7 @@ public class QuestGenerator
         // make a location or a building quest?
         if(Math.random() < 0.5)
         {
-            n = (int)(areaLocations.length * Math.random());
+            n = locationOutdoorRng.random(areaLocations.length);
             locationName.append(areaLocations[n]);
             quest.locationIsBuilding = false;
         }
@@ -261,7 +267,7 @@ public class QuestGenerator
             locationName.append(buildingMods[n]);
             locationName.append(' ');
 
-            n = (int)(buildingTypes.length * Math.random());
+            n = locationBuildingRng.random(buildingTypes.length);
             locationName.append(buildingTypes[n]);
             
             quest.locationIsBuilding = true;
@@ -272,7 +278,7 @@ public class QuestGenerator
         {
             locationName.replace(p, p+3, "the");
             locationName.append(" of ");
-            locationName.append(NameGenerator.makeLocationName(2, 5));
+            locationName.append(NameGenerator.makeLocationName(2, 3));
         }
         else
         {
@@ -344,7 +350,7 @@ public class QuestGenerator
         // make a location or a building quest?
         if(Math.random() < 0.2)
         {
-            n = (int)(areaLocations.length * Math.random());
+            n = locationOutdoorRng.random(areaLocations.length);
             locationName.append(areaLocations[n]);
             quest.locationIsBuilding = false;
         }
@@ -358,7 +364,7 @@ public class QuestGenerator
             locationName.append(buildingMods[n]);
             locationName.append(' ');
 
-            n = (int)(buildingTypes.length * Math.random());
+            n = locationBuildingRng.random(buildingTypes.length);
             locationName.append(buildingTypes[n]);
             
             quest.locationIsBuilding = true;
@@ -369,7 +375,7 @@ public class QuestGenerator
         {
             locationName.replace(p, p+3, "the");
             locationName.append(" of ");
-            locationName.append(NameGenerator.makeLocationName(2, 5));
+            locationName.append(NameGenerator.makeLocationName(2, 3));
         }
         else
         {
@@ -407,7 +413,7 @@ public class QuestGenerator
     
     public static Quest makeTechnologyQuest()
     {
-        String [] intros =
+        String [] techIntros =
         {
             "Your creatures suggest",
             "Hard working creatures of yours propose",
@@ -421,13 +427,13 @@ public class QuestGenerator
         StringBuilder text = new StringBuilder();
         int n;
 
-        n = (int)(intros.length * Math.random());
-        text.append(intros[n]);
+        n = (int)(techIntros.length * Math.random());
+        text.append(techIntros[n]);
 
         text.append(" to research metallurgy. They ask you ");
         text.append(" to assemble a party and spy on the smiths of ");
 
-        String locationName = NameGenerator.makeLocationName(2, 5);
+        String locationName = NameGenerator.makeLocationName(2, 3);
         quest.locationName = locationName;
 
         text.append(locationName);

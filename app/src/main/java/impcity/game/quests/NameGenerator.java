@@ -7,7 +7,7 @@ package impcity.game.quests;
 public class NameGenerator
 {
     /** list of human name syllables */
-    private static String [] syllables =
+    private static String [] nameSyllables =
     {
         "el", "ha", "pa", "ul", "ns", "geo", "rge", "jo", "na", "tan", "pe", "ter",
         "cha", "erl", "ie", "au", "fr", "ed", "je", "eff", "rey", "li", "sa", "an", "ni",
@@ -45,13 +45,50 @@ public class NameGenerator
             
     private static final String [] locationSyllables =
     {
-        "er", "dro", "za", "en", "in", "un", "ko", "k'la", "me",
-        "fra", "cur", "uz", "mon", "gor", "keif", "zir", "con",
-        "mac", "ume", "lon", "jar", "def", "car", "bal", "war",
-        "taz", "zee", "plu", "vol", "l'th", "cth", "a'k", "r't"
+        "er", "dro", "za", "en", "in", "an", "un", "ko", "k'la", "me",
+        "fi", "for", "fra", "cur", "uz", "mon", "gor", "keif", "zir", "con",
+        "mac", "ume", "lon", "jar", "def", "car", "bal", "war", "ever",
+        "taz", "zee", "plu", "vol", "l'th", "cth", "a'k", "r't", "dan",
+        "per", "of", "to", "der", "bout", "sun", "ol", "gin",
+    };
+
+    private static final String [] commonSyllables =
+    {    
+        "ing", "er", "a", "ly", "ed", "i", "es", "re", "tion", "in", "e",
+        "con", "y", "ter", "ex", "al", "de", "com", "o", 
+        "di", "en", "an", "ty", "ry", "u", "ti", "ri", "be", "per", "to", 
+        "pro", "ac", "ad", "ar", "ers", "ment", "or", "tions", "ble",
+        "der", "ma", "na", "si", "un", "at", "dis", "ca", "cal", "man", "ap",
+        "po", "sion", "vi", "el", "est", "la", "lar", "pa", "ture", "for",
+        "is", "mer", "pe", "ra", "so", "ta", "as", "col", "fi", "ful", "ger",
+        "low", "ni", "par", "son", "tle", "day", "ny", "pen", "pre", "tive",
+        "car", "ci", "mo", "on", "ous", "pi", "se", "ten", "tor", "ver", "ber",
+        "can", "dy", "et", "it", "mu", "no", "ple", "cu", "fac", "fer", "gen",
+        "ic", "land", "light", "ob", "of", "pos", "tain", "den", "ings", "mag",
+        "ments", "set", "some", "sub", "sur", "ters", "tu", "af", "au", "cy",
+        "fa", "im", "li", "lo", "men", "min", "mon", "op", "out", "rec", "ro",
+        "sen", "side", "tal", "tic", "ties", "ward", "age", "ba", "but", "cit",
+        "cle", "co", "cov", "da", "dif", "ence", "ern", "eve", "hap", "ies",
+        "ket", "lec", "main", "mar", "mis", "my", "nal", "ness", "ning", "n't",
+        "nu", "oc", "pres", "sup", "te", "ted", "tem", "tin", "tri", "tro", "up",
+        "va", "ven", "vis", "am", "bor", "by", "cat", "cent", "ev", "gan", "gle",
+        "head", "high", "il", "lu", "me", "nore", "part", "por", "read", "rep",
+        "su", "tend", "ther", "ton", "try", "um", "uer", "way", "ate", "bet",
+        "bles", "bod", "cap", "cial", "cir", "cor", "coun", "cus", "dan", "dle",
+        "ef", "end", "ent", "ered", "fin", "form", "go", "har", "ish", "lands",
+        "let", "long", "mat", "meas", "mem", "mul", "ner", "play", "ples", "ply",
+        "port", "press", "sat", "sec", "ser", "south", "sun", "the", "ting", "tra",
+        "tures", "val", "var", "vid", "wil", "win", "won", "work", "act", "ag",
+        "air", "als", "bat", "bi", "cate", "cen", "char", "come", "cul", "ders",
+        "east", "fect", "fish", "fix", "gi", "grand", "great", "heav", "ho", 
+        "hunt", "ion", "its", "jo", "lat", "lead", "lect", "lent", "less", "lin",
+        "mal", "mi", "mil", "moth", "near", "nel", "net", "new", "one", "point",
+        "prac", "ral", "rect", "ried", "round", "row", "sa", "sand", "self",
+        "sent", "ship", "sim", "sions", "sis", "sons", "stand", "sug", "tel",
+        "tom", "tors", "tract", "tray", "us", "vel", "west", "where", "writ",
     };
     
-
+    
     public static String makeName(int syllableCount, String [] syllableTable)
     {
         StringBuilder buf = new StringBuilder();
@@ -100,8 +137,9 @@ public class NameGenerator
 
     public static String makeGenericName(int syllableCount)
     {
-        return makeName(syllableCount, syllables);
+        return makeName(syllableCount, nameSyllables);
     }
+    
     
     public static String makeAztekName(int syllableCount)
     {
@@ -172,6 +210,7 @@ public class NameGenerator
         
         return buf.toString();
     }
+    
 
     public static String makeRandomName(int syllableCount)
     {
@@ -203,13 +242,25 @@ public class NameGenerator
      */
     public static String makeLocationName(int min, int additional)
     {
+        String [] syllables;
+        
+        if(Math.random() < 0.5)
+        {
+            syllables = locationSyllables;
+        }
+        else
+        {
+            syllables = commonSyllables;
+        }
+        
+        
         int n = min + (int)(Math.random() * additional);
         
         StringBuilder builder = new StringBuilder();
         
         for(int i=0; i<n; i++)
         {
-            builder.append(locationSyllables[(int)(Math.random() * locationSyllables.length)]);
+            builder.append(syllables[(int)(Math.random() * syllables.length)]);
         }
         
         char first = builder.charAt(0);
