@@ -95,6 +95,10 @@ public class ImpCityKeyHandler implements KeyHandler
                 {
                     // collectString(null);
                 }
+                else if(Keyboard.getEventKey() == Keyboard.KEY_TAB)
+                {
+                    display.setShowItemNames(!display.getShowItemNames());
+                }
                 else if(Keyboard.getEventKey() == Keyboard.KEY_F1)
                 {
                     GameDisplay.debugShowMapInfo = !GameDisplay.debugShowMapInfo;

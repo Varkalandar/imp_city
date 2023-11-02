@@ -9,6 +9,7 @@ Changes since v0.23
 - Produce in forges is now deposit near the producing mob
 - Added artifact quests.
 - The engine now supports named items.
+- Owning 4 artifacts now lifts the barrier around the starter dungeon.
 
 Changes since v0.22
 

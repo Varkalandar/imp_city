@@ -12,10 +12,12 @@ import java.util.logging.Logger;
 
 import impcity.game.map.Map;
 import impcity.game.mobs.Mob;
+import impcity.game.quests.ArtifactGenerator;
 import impcity.oal.SoundPlayer;
 import impcity.ogl.IsoDisplay;
 import impcity.ui.MouseHandler;
 import impcity.ui.MousePointerBitmap;
+import impcity.uikit.StringUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -138,8 +140,8 @@ public class ImpCityMouseHandler implements MouseHandler
                 if(buttonReleased == 2)
                 {
                     Map map = gameDisplay.getDisplay().map;
-                    // int item = game.createItem("Dried Frog For Testing", Features.ARTIFACT_DRIED_FROG);
-                    int item = game.createItem("Carved Pumpkin", Features.ARTIFACT_CARVED_PUMPKIN);
+                    String name = StringUtils.upperCaseFirst(ArtifactGenerator.makeArtifactName(0));
+                    int item = game.createArtifactForTreasure(name);
                     map.setItem(game.mouseI, game.mouseJ, item);
                 }
             }

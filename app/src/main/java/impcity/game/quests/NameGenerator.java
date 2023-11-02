@@ -27,9 +27,9 @@ public class NameGenerator
         "Fer", "Mi", "Do", "Pa", "Ki", "Li", "So", "Per", "Mut", "Bu",
         "Fu", "Klen", "Gram", "Fort", "Zing", "Lemo", "Orka", "Dera", "Aray", "Kan",
         "Malo", "Ter", "Walt", "Kass", "Dron", "Tefer", "Erret", "Tandu", "Emmo",
-            "Krati", "Bul", "Baro", "Arbo", "Irwen", "Nitak", "Strel", "Baku", "Nami",
-            "Lade", "Kab", "Chew", "Falg", "Ran", "Gelo", "Gruwin", "Fradon", "Eskrem",
-            "Karduf", "Smoka", "Teraf", "Actel", "Zepnik", "Pellin", "Ahrer", "Ermut"
+        "Krati", "Bul", "Baro", "Arbo", "Irwen", "Nitak", "Strel", "Baku", "Nami",
+        "Lade", "Kab", "Chew", "Falg", "Ran", "Gelo", "Gruwin", "Fradon", "Eskrem",
+        "Karduf", "Smoka", "Teraf", "Actel", "Zepnik", "Pellin", "Ahrer", "Ermut"
     };
     
     private static final String [] nordicFirstSyllables =
@@ -40,7 +40,7 @@ public class NameGenerator
             
     private static final String [] nordicLastSyllables =
     {
-        "mut", "run", "rich", "bar", "bert", "wig", "gard" 
+        "mut", "run", "rich", "bar", "bert", "wig", "gard", "nir"
     };
             
     private static final String [] locationSyllables =

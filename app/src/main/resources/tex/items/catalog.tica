@@ -25633,7 +25633,7 @@ v.5
 1211
 51 49
 0 0
-0 0
+25 35
 End Of Header
 Item
 v.1
@@ -25651,7 +25651,7 @@ v.5
 1212
 51 48
 0 0
-0 0
+25 35
 End Of Header
 Item
 v.1
@@ -25669,7 +25669,7 @@ v.5
 1213
 51 49
 0 0
-0 0
+25 35
 End Of Header
 Item
 v.1
@@ -25687,7 +25687,7 @@ v.5
 1214
 51 48
 0 0
-0 0
+25 35
 End Of Header
 Item
 v.1
@@ -25703,16 +25703,16 @@ rgba
 Tile Description
 v.5
 1215
-1 1
+51 49
 0 0
-0 0
+25 35
 End Of Header
 Item
 v.1
 data
 4
-
-
+artifact_giant_egg
+rgba
 
 
 1
@@ -25721,16 +25721,16 @@ data
 Tile Description
 v.5
 1216
-1 1
+51 48
 0 0
-0 0
+25 35
 End Of Header
 Item
 v.1
 data
 4
-
-
+artifact_rabbit_paw
+rgba
 
 
 1
@@ -25739,16 +25739,16 @@ data
 Tile Description
 v.5
 1217
-1 1
+51 48
 0 0
-0 0
+25 35
 End Of Header
 Item
 v.1
 data
 4
-
-
+artifact_shoes
+rgba
 
 
 1
@@ -25757,16 +25757,16 @@ data
 Tile Description
 v.5
 1218
-1 1
+51 48
 0 0
-0 0
+25 35
 End Of Header
 Item
 v.1
 data
 4
-
-
+artifact_goat_skin
+rgba
 
 
 1
@@ -25775,16 +25775,16 @@ data
 Tile Description
 v.5
 1219
-1 1
+51 48
 0 0
-0 0
+25 35
 End Of Header
 Item
 v.1
 data
 4
-
-
+artifact_bones
+rgba
 
 
 1
@@ -25793,16 +25793,16 @@ data
 Tile Description
 v.5
 1220
-1 1
+51 48
 0 0
-0 0
+25 35
 End Of Header
 Item
 v.1
 data
 4
-
-
+artifact_linen_cloth
+rgba
 
 
 1

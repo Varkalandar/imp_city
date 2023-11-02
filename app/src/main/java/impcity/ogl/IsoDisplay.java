@@ -110,6 +110,7 @@ public class IsoDisplay implements PostRenderHook
         centerY = 300;
 
         hotspotMap = new HotspotMap();
+        hotspotMap.setFactor(0.5);
     }
 
     public void create() throws LWJGLException, IOException
@@ -544,7 +545,7 @@ public class IsoDisplay implements PostRenderHook
                         (Math.abs(cursorI - mi) < 2 && Math.abs(cursorJ - mj) < 2))
         {
             hotspotMap.addHotspot(mi, mj,
-                    x + (int)(font.getStringWidth(name) * 0.3),
+                    x + (int)(font.getStringWidth(name) * 0.25),
                     y + 16,
                     name );
         }

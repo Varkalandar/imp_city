@@ -27058,8 +27058,8 @@
         <height>49</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>25</footX>
+        <footY>35</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -27077,8 +27077,8 @@
         <height>48</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>25</footX>
+        <footY>35</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -27096,8 +27096,8 @@
         <height>49</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>25</footX>
+        <footY>35</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -27115,8 +27115,8 @@
         <height>48</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>25</footX>
+        <footY>35</footY>
       </Description>
       <Metadata>
         <int>0</int>
@@ -27130,17 +27130,17 @@
       <Description>
         <version>4</version>
         <id>1215</id>
-        <width>1</width>
-        <height>1</height>
+        <width>51</width>
+        <height>49</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>25</footX>
+        <footY>35</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>artifact_giant_egg</string>
+        <string>rgba</string>
         <string></string>
         <string></string>
       </Metadata>
@@ -27149,17 +27149,17 @@
       <Description>
         <version>4</version>
         <id>1216</id>
-        <width>1</width>
-        <height>1</height>
+        <width>51</width>
+        <height>48</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>25</footX>
+        <footY>35</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>artifact_rabbit_paw</string>
+        <string>rgba</string>
         <string></string>
         <string></string>
       </Metadata>
@@ -27168,17 +27168,17 @@
       <Description>
         <version>4</version>
         <id>1217</id>
-        <width>1</width>
-        <height>1</height>
+        <width>51</width>
+        <height>48</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>25</footX>
+        <footY>35</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>artifact_shoes</string>
+        <string>rgba</string>
         <string></string>
         <string></string>
       </Metadata>
@@ -27187,17 +27187,17 @@
       <Description>
         <version>4</version>
         <id>1218</id>
-        <width>1</width>
-        <height>1</height>
+        <width>51</width>
+        <height>48</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>25</footX>
+        <footY>35</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>artifact_goat_skin</string>
+        <string>rgba</string>
         <string></string>
         <string></string>
       </Metadata>
@@ -27206,17 +27206,17 @@
       <Description>
         <version>4</version>
         <id>1219</id>
-        <width>1</width>
-        <height>1</height>
+        <width>51</width>
+        <height>48</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>25</footX>
+        <footY>35</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>artifact_bones</string>
+        <string>rgba</string>
         <string></string>
         <string></string>
       </Metadata>
@@ -27225,17 +27225,17 @@
       <Description>
         <version>4</version>
         <id>1220</id>
-        <width>1</width>
-        <height>1</height>
+        <width>51</width>
+        <height>48</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>25</footX>
+        <footY>35</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>artifact_linen_cloth</string>
+        <string>rgba</string>
         <string></string>
         <string></string>
       </Metadata>

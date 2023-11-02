@@ -129,8 +129,14 @@ public class Features
     public static final int ARTIFACT_CAT_MUMMY = 1212;
     public static final int ARTIFACT_URN = 1213;
     public static final int ARTIFACT_PRESERVED_TOE = 1214;
+    public static final int ARTIFACT_GIANT_EGG = 1215;
+    public static final int ARTIFACT_RABBIT_PAW = 1216;
+    public static final int ARTIFACT_SHOES = 1217;
+    public static final int ARTIFACT_GOAT_SKIN = 1218;
+    public static final int ARTIFACT_PETRIFIED_BONES= 1219;
+    public static final int ARTIFACT_LINEN_CLOTH = 1220;
 
-    public static final int ARTIFACTS_LAST = 1209;
+    public static final int ARTIFACTS_LAST = 1220;
 
 
     public static final int GLYPHS_FIRST = 1975;

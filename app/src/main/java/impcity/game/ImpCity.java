@@ -1464,9 +1464,9 @@ public class ImpCity implements PostRenderHook, GameInterface
     }
 
 
-    public int createItem(String name, int texId)
+    public int createItem(String name, int texId, int type)
     {
-        Item item = new Item(name, texId);
+        Item item = new Item(name, texId, type);
 
         int key = world.items.nextFreeKey();
         world.items.put(key, item);
@@ -1503,7 +1503,8 @@ public class ImpCity implements PostRenderHook, GameInterface
                     item = Features.I_GOLD_COINS;
                     break;
                 case Quest.TT_ARTIFACT:
-                    item = createArtifactForQuest(questResult.quest);
+                    item = createArtifactForTreasure(questResult.quest.treasureName);
+                    handleArtifactReward(map);
                     count = 1;
                     break;
                 default:
@@ -1517,41 +1518,87 @@ public class ImpCity implements PostRenderHook, GameInterface
         }
     }
 
-    
-    private int createArtifactForQuest(Quest quest)
+    private void handleArtifactReward(Map map)
+    {
+        int count = 0;
+
+        for(Cardinal key : world.items.keySet())
+        {
+            Item item = world.items.get(key.intValue());
+            if(item.type == Item.ARTIFACT_T1)
+            {
+                count ++;
+            }
+        }
+
+        // let's hope the count never shrinks and this method is only called
+        // after an increase in count ...
+
+        if(count == 4)
+        {
+            placeEnclosure(map, 12, Features.GROUND_IMPASSABLE, Features.I_STEEP_EARTH_BLOCK);
+        }
+    }
+
+
+    public int createArtifactForTreasure(String treasureName)
     {
         int img;
         
-        if(quest.treasureName.contains("frog"))
+        if(treasureName.contains("dried frog"))
         {
             img = Features.ARTIFACT_DRIED_FROG;
         }
-        else if(quest.treasureName.contains("pumpkin"))
+        else if(treasureName.contains("carved pumpkin"))
         {
             img = Features.ARTIFACT_CARVED_PUMPKIN;
         }
-        else if(quest.treasureName.contains("mug"))
-        {
-            img = Features.ARTIFACT_MUG;
-        }
-        else if(quest.treasureName.contains("cat"))
+        else if(treasureName.contains("mummified cat"))
         {
             img = Features.ARTIFACT_CAT_MUMMY;
         }
-        else if(quest.treasureName.contains("urn"))
-        {
-            img = Features.ARTIFACT_URN;
-        }
-        else if(quest.treasureName.contains("toe"))
+        else if(treasureName.contains("preserved toe"))
         {
             img = Features.ARTIFACT_PRESERVED_TOE;
+        }
+        else if(treasureName.contains("giant egg"))
+        {
+            img = Features.ARTIFACT_GIANT_EGG;
+        }
+        else if(treasureName.contains("linen cloth"))
+        {
+            img = Features.ARTIFACT_LINEN_CLOTH;
+        }
+        else if(treasureName.contains("petrified bones"))
+        {
+            img = Features.ARTIFACT_PETRIFIED_BONES;
+        }
+        else if(treasureName.contains("goat skin"))
+        {
+            img = Features.ARTIFACT_GOAT_SKIN;
+        }
+        else if(treasureName.contains("rabbit's paw"))
+        {
+            img = Features.ARTIFACT_RABBIT_PAW;
+        }
+        else if(treasureName.contains("shoes"))
+        {
+            img = Features.ARTIFACT_SHOES;
+        }
+        else if(treasureName.contains("mug"))
+        {
+            img = Features.ARTIFACT_MUG;
+        }
+        else if(treasureName.contains("urn"))
+        {
+            img = Features.ARTIFACT_URN;
         }
         else
         {
             img = Features.ARTIFACTS_FIRST;
         }
         
-        return createItem(quest.treasureName, img);
+        return createItem(treasureName, img, Item.ARTIFACT_T1);
     }
     
     

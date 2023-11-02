@@ -18,6 +18,7 @@ public class HotspotMap
     private int maxIndex;
     
     private final ArrayList <ArrayList <Hotspot> > rows;
+    private double factor;
     
     
     public HotspotMap()
@@ -34,6 +35,12 @@ public class HotspotMap
             ArrayList <Hotspot> row = new ArrayList<Hotspot>();
             rows.add(row);
         }
+    }
+    
+    
+    public void setFactor(double factor)
+    {
+        this.factor = factor;
     }
     
     public void clear()
@@ -61,7 +68,7 @@ public class HotspotMap
             // Hajo: center on item position
             for(int i=0; i<maxIndex; i++)
             {
-                int width = 10 + (int)(font.getStringWidth(hotspots[i].label) * 0.6);
+                int width = 10 + (int)(font.getStringWidth(hotspots[i].label) * factor);
                 int height = 20;
 
                 hotspots[i].screenX -= width/2;
@@ -155,7 +162,7 @@ public class HotspotMap
             int height = hotspots[i].screenH;
 
             IsoDisplay.fillRect(x, y+11, width, height, 0x80000000);
-            font.drawStringScaled(name, 0xFFFFFFFF, x+5, y+12, 0.6);
+            font.drawStringScaled(name, 0xFFFFFFFF, x+5, y+13, factor);
         }
     }
     

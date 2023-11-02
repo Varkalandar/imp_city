@@ -27,6 +27,7 @@ public class ArtifactGenerator
         }
     };
 
+    private static final NonRepetitiveRng rng;
     
     private static final String [] attribute = 
     {
@@ -45,7 +46,7 @@ public class ArtifactGenerator
         "haunted",
         "demonic",
         "angelic",
-        "everdark",
+        "lightless",
         "timeless",
         "hexed",
         "beautiful",
@@ -53,8 +54,8 @@ public class ArtifactGenerator
         "gorgonic",
         "weatherbeaten",
         "reinforced",
-        "twinned",
-        "warding",
+        "inspiring",
+        "protective",
         "colorful",
         "striped",
         "massive",
@@ -72,6 +73,8 @@ public class ArtifactGenerator
     
     static
     {
+        rng = new NonRepetitiveRng(5, System.currentTimeMillis());
+        
         tier1.add(new Artifact("dried frog", Of.LOCATION));
         tier1.add(new Artifact("mummified cat", Of.LOCATION));
         tier1.add(new Artifact("linen cloth", Of.LOCATION));
@@ -81,7 +84,7 @@ public class ArtifactGenerator
         tier1.add(new Artifact("petrified bones", Of.PERSON));
         tier1.add(new Artifact("carved pumpkin", Of.PERSON));
         tier1.add(new Artifact("mug", Of.PERSON));
-        tier1.add(new Artifact("jar", Of.PERSON));
+        tier1.add(new Artifact("giant egg", Of.LOCATION));
         tier1.add(new Artifact("urn", Of.PERSON));
         tier1.add(new Artifact("shoes", Of.PERSON));
 
@@ -89,6 +92,7 @@ public class ArtifactGenerator
         tier2.add(new Artifact("skull", Of.PERSON));
         tier2.add(new Artifact("preserved eye", Of.PERSON));
         tier2.add(new Artifact("hair", Of.PERSON));
+        tier2.add(new Artifact("silver chalice", Of.PERSON));
     }
     
     
@@ -97,7 +101,7 @@ public class ArtifactGenerator
     {
         String att = attribute[(int)(Math.random() * attribute.length)];
         
-        Artifact artifact = tier1.get((int)(Math.random() * tier1.size())); 
+        Artifact artifact = tier1.get(rng.random(tier1.size())); 
         
         String of = "";
         
