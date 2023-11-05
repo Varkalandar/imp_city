@@ -45,6 +45,8 @@ import impcity.ui.PostRenderHook;
 import impcity.ui.TimedMessage;
 import java.lang.reflect.Field;
 import java.util.Arrays;
+
+import impcity.uikit.StringUtils;
 import org.lwjgl.LWJGLException;
 import rlgamekit.objects.Cardinal;
 import rlgamekit.objects.Registry;
@@ -1466,7 +1468,7 @@ public class ImpCity implements PostRenderHook, GameInterface
 
     public int createItem(String name, int texId, int type)
     {
-        Item item = new Item(name, texId, type);
+        Item item = new Item(StringUtils.upperCaseFirst(name), texId, type);
 
         int key = world.items.nextFreeKey();
         world.items.put(key, item);
@@ -1480,7 +1482,8 @@ public class ImpCity implements PostRenderHook, GameInterface
         if(questResult.success)
         {
             int count = questResult.quest.party.carry;
-            if(questResult.quest.treasureSize < count)
+            if(questResult.quest.treasureSize <= count ||
+                    questResult.quest.treasureType == Quest.TT_ARTIFACT)
             {
                 questResult.quest.status |= Quest.SF_PLUNDERED;
                 count = questResult.quest.treasureSize;
@@ -1537,6 +1540,23 @@ public class ImpCity implements PostRenderHook, GameInterface
         if(count == 4)
         {
             placeEnclosure(map, 12, Features.GROUND_IMPASSABLE, Features.I_STEEP_EARTH_BLOCK);
+
+            GenericMessage message =
+                    new GenericMessage(
+                            gameDisplay,
+                            600, 400,
+                            "Breakthrough!",
+                            "With the power of four collected artifacts, you could lift the" +
+                                    " enclosure around your dungeon and now can expand into" +
+                                    " new territories.",
+                            "[ Acknowledged ]", null);
+
+            MessageHook hookedMessage =
+                    new MessageHook(Features.MESSAGE_IDEA_GREEN,
+                            message);
+
+            gameDisplay.addHookedMessage(hookedMessage);
+
         }
     }
 

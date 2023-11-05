@@ -52,11 +52,24 @@ public class QuestResult
         {
             if(locationEvent.found)
             {
-                sb.append("We found the location and we are coming back with ")
-                        .append(quest.party.carry)
-                        .append(' ')
-                        .append(quest.treasureName)
-                        .append("!\n");
+                if((quest.treasureType & Quest.TT_ARTIFACT) != 0)
+                {
+                    // artifact found
+
+                    sb.append("We found the location and we are coming back with ")
+                            .append(quest.treasureName)
+                            .append("!\n");
+                }
+                else
+                {
+                    // treasures found
+
+                    sb.append("We found the location and we are coming back with ")
+                            .append(quest.party.carry)
+                            .append(' ')
+                            .append(quest.treasureName)
+                            .append("!\n");
+                }
             }
             else
             {

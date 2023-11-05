@@ -12,6 +12,7 @@ import impcity.ogl.IsoDisplay;
 
 import java.util.List;
 
+
 /**
  *
  * @author hjm
@@ -22,6 +23,8 @@ public class ExpeditionBook extends UiDialog
     private final ImpCity game;
     private final IsoDisplay display;
     private int selection = 0;
+
+    private Quest selectedQuest = null;
     private int currentPage = 0;
     private int maxPages = 0;
 
@@ -80,6 +83,8 @@ public class ExpeditionBook extends UiDialog
                 
                 if(i == selection)
                 {
+                    selectedQuest = quest;
+
                     // hack: find height without actually showing the text - draw invisible
                     lines = gameDisplay.drawBoxedShadowText(headline, 0, leftX + textLeft, textTop, boxWidth, linespace *4, 0.25);
 
@@ -96,7 +101,7 @@ public class ExpeditionBook extends UiDialog
 
                 if(timeMin > 0)
                 {
-                    gameDisplay.drawShadowText("Expected return: Between " + timeMin + " and " +
+                    gameDisplay.drawShadowText("Expected return: In " + timeMin + " to " +
                             (timeMin + 6) + " days.", silver, leftX + textLeft, textTop, 0.20);
                 }
                 else
@@ -198,6 +203,12 @@ public class ExpeditionBook extends UiDialog
             else if(game.quests.size() > selection && mouseX > display.displayWidth / 2)
             {
             }
+        }
+
+        // hack to test quests quickly
+        if(buttonReleased == 2)
+        {
+            selectedQuest.eta = Clock.days();
         }
     }
 }

@@ -147,7 +147,7 @@ public class PartySelector extends UiDialog
         gameDisplay.drawShadowText("" + party.speed, silver, x+xoff + col2, y+yoff, 0.25);
         yoff -= yspace * 1.5;
 
-        gameDisplay.drawShadowText("Estimated time", gold, x+xoff, y+yoff, 0.3);
+        gameDisplay.drawShadowText("Estimated travel time:", gold, x+xoff, y+yoff, 0.3);
         yoff -= 44;
 
         if(party.speed > 0)

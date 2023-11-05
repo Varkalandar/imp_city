@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import java.util.List;
 
+
 /**
  *
  * @author hjm
@@ -106,6 +107,12 @@ public class QuestBook extends UiDialog
             gameDisplay.drawShadowText("Found: " +  ((quest.status & Quest.SF_FOUND) != 0 ? "Yes" : "Not yet"), 
                                  silver, leftX + textLeft + 150, textTop - linespace*2, 0.20);
 
+            if((quest.status & Quest.SF_PLUNDERED) != 0)
+            {
+                gameDisplay.drawShadowText("PLUNDERED", Colors.DARK_RED_INK, 
+                                           leftX + textLeft - 6, textTop - linespace, 0.60);
+            }
+
             textTop -= 100;
         }
     }
@@ -180,10 +187,13 @@ public class QuestBook extends UiDialog
                 // start quest clicked?
                 Quest quest = game.quests.get(selection);
 
-                PartySelector partySelector = new PartySelector(game, gameDisplay, display);
-                partySelector.setQuest(quest);
-                gameDisplay.showDialog(partySelector);
-                playClickSound();
+                if ((quest.status & Quest.SF_PLUNDERED) == 0)
+                {
+                    PartySelector partySelector = new PartySelector(game, gameDisplay, display);
+                    partySelector.setQuest(quest);
+                    gameDisplay.showDialog(partySelector);
+                    playClickSound();
+                }
             }
         }
     }
