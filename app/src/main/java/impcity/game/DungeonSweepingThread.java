@@ -82,8 +82,6 @@ public class DungeonSweepingThread extends Thread
                 player.stats.setCurrent(KeeperStats.COINS, silver);
                 player.stats.setMin(KeeperStats.COINS, bronze);
 
-                System.err.println("========> " + player.stats.getMax(KeeperStats.COINS) );
-                
                 for(Quest quest : game.quests)
                 {                    
                     if(quest.party != null && quest.eta <= Clock.days())
