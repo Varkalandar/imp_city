@@ -957,7 +957,7 @@ public class CreatureAi extends AiBase
         
         if(Clock.time() > questTime)
         {
-            if(Math.random() < 0.25)
+            if(Math.random() < 0.40)
             {
                 game.makeArtifactQuest();
             }
