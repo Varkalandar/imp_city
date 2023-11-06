@@ -65,7 +65,7 @@ public class QuestResult
                     // treasures found
 
                     sb.append("We found the location and we are coming back with ")
-                            .append(quest.party.carry)
+                            .append(Math.min(quest.party.carry, quest.treasureSize))
                             .append(' ')
                             .append(quest.treasureName)
                             .append("!\n");
