@@ -46,14 +46,16 @@ public class DungeonSweepingThread extends Thread
     
     @Override
     public void run()
-    {
-        Mob player = game.world.mobs.get(game.getPlayerKey());
-        Map map = player.gameMap;
-        
+    {        
         while(true)
         {
             try
             {
+                // We need to rfresh the player reference after each loop
+                // because a new game could have been loaded.
+                Mob player = game.world.mobs.get(game.getPlayerKey());
+                Map map = player.gameMap;
+
                 gold = 0;
                 silver = 0;
                 bronze = 0;
@@ -80,6 +82,8 @@ public class DungeonSweepingThread extends Thread
                 player.stats.setCurrent(KeeperStats.COINS, silver);
                 player.stats.setMin(KeeperStats.COINS, bronze);
 
+                System.err.println("========> " + player.stats.getMax(KeeperStats.COINS) );
+                
                 for(Quest quest : game.quests)
                 {                    
                     if(quest.party != null && quest.eta <= Clock.days())
@@ -147,9 +151,14 @@ public class DungeonSweepingThread extends Thread
             }
             
             // bookkeeping
-            if(item == Features.I_GOLD_COINS) gold ++;
-            if(item == Features.I_SILVER_COINS) silver ++;
-            if(item == Features.I_BRONZE_COINS) bronze ++;
+            if(item == Features.I_GOLD_COINS)
+                gold ++;
+            
+            if(item == Features.I_SILVER_COINS) 
+                silver ++;
+            
+            if(item == Features.I_BRONZE_COINS) 
+                bronze ++;
         }
     }
 }
