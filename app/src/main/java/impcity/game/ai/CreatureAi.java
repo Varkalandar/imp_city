@@ -931,7 +931,7 @@ public class CreatureAi extends AiBase
                                n == Features.I_TIN_ORE)
                             {
                                 // todo: produce correct product
-                                // mob.gameMap.setItem(p.x + i, p.y + j, Features.I_BRONZE_COINS);
+                                mob.gameMap.setItem(p.x + i, p.y + j, 0);
                                 mob.gameMap.dropItem(mob.location.x, mob.location.y, Features.I_BRONZE_COINS);
                                 return;
                             }
