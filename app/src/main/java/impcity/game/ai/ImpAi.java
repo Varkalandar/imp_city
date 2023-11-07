@@ -585,14 +585,18 @@ public class ImpAi extends AiBase
             mob.stats.setCurrent(MobStats.CARRY, 0);
         }
     }
+    
 
     private void completeMiningJob(Mob mob) 
     {
-        // Hajo: show some sparks from mining
+        // Hajo: show some animation for mining
         if(workStep < 30)
         {
-            splashMiningSparks(mob);
-
+            if((workStep & 3) == 1)
+            {
+                splashMiningSparks(mob);
+            }
+            
             // spin some
             int dir = mob.visuals.getDisplayCode() - mob.getSpecies();
             dir = (dir + 1) & 7;
@@ -617,6 +621,7 @@ public class ImpAi extends AiBase
             pathTime = Clock.time() + 5 * thinkCooldown;
         }
     }
+    
 
     private Goal calculateGoalForCargo(Mob mob)
     {
@@ -660,21 +665,23 @@ public class ImpAi extends AiBase
         }
     }
 
+    
     private void splashMiningSparks(Mob mob)
     {
         for(int i = 0; i<25; i++)
         {
-            double speed = 0.1 + Math.random() * 1;
+            double speed = 0.15 + Math.random() * 3.0;
+            
             mob.visuals.backParticles.addParticle(0, 12, 
                                                   speed * Math.random() * 2.0 - speed, 
                                                   speed * Math.random(),
-                                                  30, 
+                                                  20, 
                                                   Features.P_BROWN_SHARD_1 + (int)(Math.random() * 4),
                                                   0xFFFFFFFF);
             mob.visuals.frontParticles.addParticle(0, 12, 
                                                   speed * Math.random() * 2.0 - speed, 
                                                   - speed * Math.random(),
-                                                  30, 
+                                                  20, 
                                                   Features.P_BROWN_SHARD_1 + (int)(Math.random() * 4),
                                                   0xFFFFFFFF);
         }
