@@ -1,3 +1,7 @@
+Changes since v0.24
+
+- New room furnishing code to reduce creature path finding problems
+
 Changes since v0.23
 
 - Creatures gain experience now and can level up.

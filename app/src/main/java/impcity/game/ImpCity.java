@@ -89,7 +89,9 @@ public class ImpCity implements PostRenderHook, GameInterface
     private final List <Point> hospitals = Collections.synchronizedList(new ArrayList<Point>());
     private final List <Point> claimed = Collections.synchronizedList(new ArrayList<Point>());
     
-    public final List <Room> forgeRooms = new ArrayList<Room>();
+    public final List <Room> forgeRooms = new ArrayList<>();
+    public final List <Room> libraryRooms = new ArrayList<>();
+    
     public final List <Mob> generators = Collections.synchronizedList(new ArrayList<Mob>());
     public final List <Quest> quests = Collections.synchronizedList(new ArrayList<Quest>());
 
@@ -490,8 +492,11 @@ public class ImpCity implements PostRenderHook, GameInterface
         lairs.clear();
         forges.clear();
         claimed.clear();
-        forgeRooms.clear();
         hospitals.clear();
+
+        forgeRooms.clear();
+        libraryRooms.clear();
+
         generators.clear();
         
         int w = map.getWidth();
@@ -933,24 +938,34 @@ public class ImpCity implements PostRenderHook, GameInterface
         {
             // logger.log(Level.INFO, "Adding library square {0}, {1}", new Object[]{p.x, p.y});
             libraries.add(p);
-            furnishLibrary(map, p);
+
+            resetSquare(map, p.x, p.y);
+            map.setFloor(p.x, p.y, Features.GROUND_LIBRARY + (int)(Math.random() * 1));
+
+            Room room = addNewSquareToRooms(p, libraryRooms);
+            
+            room.calculateBorderDistances(map, Features.GROUND_LIBRARY);
+
+            room.forAllInnerPoints((x, y) -> {furnishLibrary(map, x, y); return true;});
         }                
         refreshPillars(rasterI, rasterJ);
     }
 
     
-    private void furnishLibrary(Map map, Point p) 
+    private void furnishLibrary(Map map, int x, int y) 
     {
-        resetSquare(map, p.x, p.y);
-        map.setFloor(p.x, p.y, Features.GROUND_LIBRARY + (int)(Math.random() * 1));
+        x -= Map.SUB/2;
+        y -= Map.SUB/2;
 
-        map.setItem(p.x, p.y + 4, Features.I_BOOKSHELF_HALF_RIGHT);
+        clearItems(map, x, y, Map.SUB);
 
-        Rectangle r = new Rectangle(p.x, p.y + 3, 5, 1);
+        map.setItem(x, y + 4, Features.I_BOOKSHELF_HALF_RIGHT);
+
+        Rectangle r = new Rectangle(x, y + 3, 5, 1);
         map.setAreaMovementBlocked(r, true);
 
-        map.setItem(p.x + 6, p.y + 2, Features.I_TORCH_STAND);
-        Light light = new Light(p.x + 6, p.y + 2, 48, 3, 0xFFFFAA55, 0.25);
+        map.setItem(x + 6, y + 2, Features.I_TORCH_STAND);
+        Light light = new Light(x + 6, y + 2, 48, 3, 0xFFFFAA55, 0.25);
         map.lights.add(light);
     }
 
@@ -966,6 +981,7 @@ public class ImpCity implements PostRenderHook, GameInterface
 
         refreshPillars(rasterI, rasterJ);
     }
+
 
     private void furnishLab(Map map, Point p)
     {
@@ -1003,40 +1019,8 @@ public class ImpCity implements PostRenderHook, GameInterface
         {
             map.setFloor(rasterI, rasterJ, Features.GROUND_FORGE + (int)(Math.random() * 3));
             
-            // Hajo: see if this is a new room or if it is
-            // an extension of a room
-
-            int dmax = 999;
-            Room bestRoom = null;
-            for(Room room : forgeRooms)
-            {
-                for(Point rp : room.squares)
-                {
-                    int d = Math.abs(rp.x - p.x) + Math.abs(rp.y - p.y);
-                    
-                    if(d < dmax) 
-                    {
-                        dmax = d;
-                        bestRoom = room;
-                    }
-                }
-            }
             
-            if(dmax > Map.SUB)
-            {
-                // Hajo: this is a new room
-                Room room = new Room();
-                room.squares.add(p);
-                forgeRooms.add(room);
-            }
-            else if(bestRoom != null)
-            {
-                bestRoom.squares.add(p);
-            }
-            else
-            {
-                logger.log(Level.SEVERE, "Algorithm error!");
-            }
+            Room room = addNewSquareToRooms(p, forgeRooms);
             
             forges.add(p);
             
@@ -1181,6 +1165,53 @@ public class ImpCity implements PostRenderHook, GameInterface
         return claimed;
     }
     
+    
+    // Hajo: see if this is a new room or if it is
+    // an extension of a room
+    private Room addNewSquareToRooms(Point p, List <Room> rooms)
+    {
+        int dmax = 999;
+        Room bestRoom = null;
+        for(Room room : rooms)
+        {
+            for(Point rp : room.squares)
+            {
+                int d = Math.abs(rp.x - p.x) + Math.abs(rp.y - p.y);
+
+                if(d < dmax) 
+                {
+                    dmax = d;
+                    bestRoom = room;
+                }
+            }
+        }
+
+        
+        Room result;
+        
+        if(dmax > Map.SUB)
+        {
+            // Hajo: this is a new room
+            Room room = new Room();
+            room.squares.add(p);
+            rooms.add(room);
+            result = room;
+        }
+        else if(bestRoom != null)
+        {
+            bestRoom.squares.add(p);
+            result = bestRoom;
+        }
+        else
+        {
+            logger.log(Level.SEVERE, "Algorithm error!");
+            result = null;
+        }
+        
+        return result;
+    }
+
+    
     void spawnImp() 
     {
         int x = display.cursorI;
@@ -1242,7 +1273,26 @@ public class ImpCity implements PostRenderHook, GameInterface
         }
     }
 
-    
+    public void clearItems(Map map, int x, int y, int range)
+    {
+        for(int j=0; j<range; j++)
+        {
+            for(int i=0; i<range; i++)
+            {
+                int ii = x + i;
+                int jj = y + j;
+
+                map.setItem(ii, jj, 0);
+                map.setMovementBlocked(ii, jj, false);
+                map.setPlacementBlocked(ii, jj, false);
+                map.removeLight(ii, jj);
+
+                removeGeneratorFrom(ii, jj);
+            }
+        }
+    }
+
+
     public void refreshPillars(int rasterI, int rasterJ)
     {
         for(int x=-Map.SUB; x<=Map.SUB; x+=Map.SUB)

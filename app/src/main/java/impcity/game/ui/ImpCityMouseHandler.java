@@ -294,7 +294,7 @@ public class ImpCityMouseHandler implements MouseHandler
 
     private void spawnImp(Map map, int rasterI, int rasterJ) 
     {
-        WayPathSource wps = new WayPathSource(map, Species.speciesTable.get(Species.IMPS_BASE).size);
+        WayPathSource wps = new WayPathSource(map, Species.speciesTable.get(Species.IMPS_BASE).size, false);
         
         int n = map.getFloor(rasterI, rasterJ);
         if(n >= Features.GROUND_POLY_TILES && n < Features.GROUND_POLY_TILES + 3 &&

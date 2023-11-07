@@ -334,7 +334,8 @@ public class CreatureAi extends AiBase
         else if(goal == Goal.GO_RANDOM)
         {
             Area area = new Area();
-            area.findArea(new WayPathSource(mob.gameMap, desc.size), mob.location.x, mob.location.y);
+            area.findArea(new WayPathSource(mob.gameMap, desc.size, false),
+                          mob.location.x, mob.location.y);
             
             ArrayList <Point> locations = area.getArea();
 
@@ -351,7 +352,7 @@ public class CreatureAi extends AiBase
 
                 Path path = new Path();
 
-                path.findPath(new WayPathSource(mob.gameMap, desc.size),
+                path.findPath(new WayPathSource(mob.gameMap, desc.size, false),
                         new LocationPathDestination(mob.gameMap, p.x, p.y, 0),
                         mob.location.x, mob.location.y);
 
@@ -375,7 +376,7 @@ public class CreatureAi extends AiBase
             Path path = new Path();
             
             boolean ok = 
-            path.findPath(new WayPathSource(mob.gameMap, desc.size), 
+            path.findPath(new WayPathSource(mob.gameMap, desc.size, false),
                           new FeaturePathDestination(mob.gameMap, plants, 0, Features.GROUND_GRASS_DARK, 0),
                           mob.location.x, mob.location.y);
 
@@ -406,7 +407,7 @@ public class CreatureAi extends AiBase
                     int y = farm.y + Map.SUB / 4 + (int)(Math.random() * Map.SUB/2);
                     
                     ok = 
-                    path.findPath(new WayPathSource(mob.gameMap, desc.size),
+                    path.findPath(new WayPathSource(mob.gameMap, desc.size, false),
                                   new LocationPathDestination(mob.gameMap, x, y, 0),
                                   mob.location.x, mob.location.y);
 
@@ -429,111 +430,13 @@ public class CreatureAi extends AiBase
         }
         else if(goal == Goal.FIND_WORKPLACE)
         {
-            List <Point> workplaces = null;
-        
-            switch(desc.jobPreference)
-            {
-                case FARM: 
-                    workplaces = game.getFarmlandLocations();
-                    break;
-                case LIBRARY: 
-                    workplaces = game.getLibraries();
-                    break;
-                case FORGE: 
-                    workplaces = game.getForges();
-                    break;
-                case LABORATORY: 
-                    workplaces = game.getLaboratories();
-                    break;
-            }
-            
-            if(workplaces == null || workplaces.isEmpty())
-            {
-                logger.log(Level.INFO, "Mob {0} could not find a workplace", 
-                        Species.speciesTable.get(mob.getSpecies()).name);                    
-                // Hajo: no suitable workplaces ...
-                mob.visuals.setBubble(0);
-                goal = Goal.GO_RANDOM;
-                addReputation(-10);
-            }
-            else
-            {
-                // Some creatures are actually happy to have a workplace
-                addReputation(+10);
-
-                Point wp = workplaces.get((int)(Math.random() * workplaces.size()));
-                int px = wp.x;
-                int py = wp.y;
-                wp = null;
-                
-                // Hajo: adjust location to match the workplace layout
-                // todo: better code
-                switch(desc.jobPreference)
-                {
-                    case LIBRARY:
-                    case FORGE:
-                        px += 4 + (int)(Math.random() * 3);
-                        py += Map.SUB / 4 + (int)(Math.random() * Map.SUB/2);
-                        break;
-                    case LABORATORY:                        
-                        // sit in a circle around the lab table
-                        
-                        int tries = 0;
-                        
-                        while(tries < 16)
-                        {
-                            double angle = Math.random() * Math.PI * 2.0;
-                            int cr = 5;                        
-                            int cx = Map.SUB / 2 + px + (int)(Math.cos(angle) * cr);
-                            int cy = Map.SUB / 2 + py + (int)(Math.sin(angle) * cr);
-
-                            px = cx;
-                            py = cy;
-                            
-                            if(mob.gameMap.isMovementBlockedRadius(cx, cy, desc.size))
-                            {
-                                tries ++;
-                            }
-                            else
-                            {
-                                // seems we can go there ...
-                                break;
-                            }
-                        }
-                        break;
-                        
-                    default:
-                        // around the middle ...
-                        px += Map.SUB / 4 + (int)(Math.random() * Map.SUB/2);
-                        py += Map.SUB / 4 + (int)(Math.random() * Map.SUB/2);
-                }
-
-                Path path = new Path();
-
-                boolean ok = 
-                path.findPath(new WayPathSource(mob.gameMap, desc.size),
-                              new LocationPathDestination(mob.gameMap, px, py, 0),
-                              mob.location.x, mob.location.y);
-
-                if(ok && path.length() > 0)
-                {
-                    mob.setPath(path);
-                    goal = Goal.GO_WORK;
-                }
-                else
-                {
-                    mob.visuals.setBubble(0);
-                    goal = Goal.GO_RANDOM;
-                    logger.log(Level.INFO, "Mob {0}, a {1} could not find a path to {2}, {3} (workplace)", 
-                            new Object[]{mob.getKey(), Species.speciesTable.get(mob.getSpecies()).name, px, py});
-                }
-            }
+            findPathToWorkplace(mob, desc);
         }
         else if(goal == Goal.GO_SLEEP)
         {
             Path path = new Path();
             
-            path.findPath(new WayPathSource(mob.gameMap, desc.size), 
+            path.findPath(new WayPathSource(mob.gameMap, desc.size, false),
                           new LocationPathDestination(mob.gameMap, home.x, home.y, 0), 
                           mob.location.x, mob.location.y);
             
@@ -558,10 +461,158 @@ public class CreatureAi extends AiBase
         }
     }
 
+    /**
+     * This is a complicated case, because some workplaces
+     * are only a specific ground (farmland) while others
+     * require the creature to show up in a certain position
+     * relative to an item (bookshelf, forge, distill ...)
+     */
+    private void findPathToWorkplace(Mob mob, SpeciesDescription desc)
+    {
+        List <Point> workplaces = null;
+
+        switch(desc.jobPreference)
+        {
+            case FARM:
+                workplaces = game.getFarmlandLocations();
+                break;
+            case LIBRARY:
+                workplaces = game.getLibraries();
+                break;
+            case FORGE:
+                workplaces = game.getForges();
+                break;
+            case LABORATORY:
+                workplaces = game.getLaboratories();
+                break;
+        }
+
+        if(workplaces == null || workplaces.isEmpty())
+        {
+            logger.log(Level.INFO, "Mob {0} could not find a workplace",
+                    Species.speciesTable.get(mob.getSpecies()).name);
+            // Hajo: no suitable workplaces ...
+            mob.visuals.setBubble(0);
+            goal = Goal.GO_RANDOM;
+            addReputation(-10);
+        }
+        else
+        {
+            // Some creatures are actually happy to have a workplace
+            addReputation(+10);
+
+            Point p = findWorkingSpot(mob, desc);
+
+            Path path = new Path();
+
+            boolean ok =
+            path.findPath(new WayPathSource(mob.gameMap, desc.size, false),
+                          new LocationPathDestination(mob.gameMap, p.x, p.y, 0),
+                          mob.location.x, mob.location.y);
+
+            if(ok && path.length() > 0)
+            {
+                mob.setPath(path);
+                goal = Goal.GO_WORK;
+            }
+            else
+            {
+                addReputation(-10);
+                mob.visuals.setBubble(0);
+                goal = Goal.GO_RANDOM;
+                logger.log(Level.INFO, "Mob {0}, a {1} could not find a path to {2}, {3} (workplace)",
+                        new Object[]{mob.getKey(), Species.speciesTable.get(mob.getSpecies()).name, p.x, p.y});
+            }
+        }
+    }
+
+    private Point findWorkingSpot(Mob mob, SpeciesDescription desc)
+    {
+        Map map = mob.gameMap;
+        Point p = null;
+
+        switch(desc.jobPreference)
+        {
+            case LIBRARY:
+                p = findNearestFeatureOnGround(map, mob, Features.I_BOOKSHELF_HALF_RIGHT, Features.GROUND_LIBRARY);
+                p.x += 4;
+                p.y += (int)(Math.random() * 4);
+                break;
+            case FORGE:
+                p = findNearestFeatureOnGround(map, mob, Features.I_ANVIL, Features.GROUND_FORGE);
+                p.x += 4;
+                break;
+            case LABORATORY:
+                p = findNearestFeatureOnGround(map, mob, Features.I_LAB_TABLE, Features.GROUND_LABORATORY);
+
+                // sit in a circle around the lab table
+
+                int tries = 0;
+
+                while(tries < 16)
+                {
+                    double angle = Math.random() * Math.PI * 2.0;
+                    int cr = 5;
+                    int cx = Map.SUB / 2 + p.x + (int)(Math.cos(angle) * cr);
+                    int cy = Map.SUB / 2 + p.y + (int)(Math.sin(angle) * cr);
+
+                    p.x = cx;
+                    p.y = cy;
+
+                    if(mob.gameMap.isMovementBlockedRadius(cx, cy, desc.size))
+                    {
+                        tries ++;
+                    }
+                    else
+                    {
+                        // seems we can go there ...
+                        break;
+                    }
+                }
+                break;
+
+            default:
+                List <FarmSquare> farmland = game.getFarmland();
+
+                if(farmland.isEmpty())
+                {
+                    // Hajo: no farms ...
+                    goal = Goal.GO_RANDOM;
+                    addReputation(-10);
+                }
+                else
+                {
+                    FarmSquare farm = farmland.get((int) (Math.random() * farmland.size()));
+                    // around the middle ...
+                    p = new Point();
+                    p.x = farm.x + Map.SUB / 4 + (int) (Math.random() * Map.SUB / 2);
+                    p.y = farm.y + Map.SUB / 4 + (int) (Math.random() * Map.SUB / 2);
+                }
+
+        }
+        return p;
+    }
+
+
+    private static Point findNearestFeatureOnGround(Map map, Mob mob, int feature, int ground)
+    {
+        Path nearestWorkspot = new Path();
+
+        nearestWorkspot.findPath(new WayPathSource(map, 0, true),
+                                 new FeaturePathDestination(map, feature, 0, ground, 0),
+                                 mob.location.x, mob.location.y);
+
+        int length = nearestWorkspot.length();
+        Path.Node node = nearestWorkspot.getStep(length - 1);
+
+        return new Point(node.x, node.y);
+    }
+
+
     public boolean findLair(Map map, SpeciesDescription desc, Path path, Point location) 
     {
         boolean ok = 
-            path.findPath(new WayPathSource(map, desc.size), 
+            path.findPath(new WayPathSource(map, desc.size, false),
                           new LairPathDestination(map, desc, Features.GROUND_LAIR),
                           location.x, location.y);
         return ok;

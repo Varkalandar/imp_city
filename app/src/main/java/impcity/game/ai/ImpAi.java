@@ -270,7 +270,7 @@ public class ImpAi extends AiBase
             Path path = new Path();
             
             boolean ok = 
-            path.findPath(new WayPathSource(mob.gameMap, desc.size), 
+            path.findPath(new WayPathSource(mob.gameMap, desc.size, false),
                           new LairPathDestination(mob.gameMap, desc, Features.GROUND_LAIR),
                           mob.location.x, mob.location.y);
 

@@ -12,18 +12,21 @@ public class WayPathSource implements PathSource
 {
     private final Map map;
     private final int size;
-    
+    private final boolean allowBlockedAreas;
+
     /**
      * Search a path, wide enough for a creature.
      * 
      * @param map The map to use.
      * @param size Creature size (radius).
      */
-    public WayPathSource(Map map, int size)
+    public WayPathSource(Map map, int size, boolean allowBlockedAreas)
     {
         this.map = map;
         this.size = size;
+        this.allowBlockedAreas = allowBlockedAreas;
     }
+
 
     @Override
     public boolean isMoveAllowed(int sx, int sy, int dx, int dy) 
@@ -35,8 +38,8 @@ public class WayPathSource implements PathSource
                 int ground = map.getFloor(x - (x % Map.SUB), y - (y % Map.SUB));
                 
                 if((ground >= Features.GROUND_IMPASSABLE && ground < Features.GROUND_IMPASSABLE+3) ||
-                   (ground >= Features.GROUND_LIGHT_SOIL && ground < Features.GROUND_LIGHT_SOIL+3) ||     
-                    map.isMovementBlocked(x, y))
+                   (ground >= Features.GROUND_LIGHT_SOIL && ground < Features.GROUND_LIGHT_SOIL+3) ||
+                        (map.isMovementBlocked(x, y) && !allowBlockedAreas))
                 {
                     return false;
                 }
