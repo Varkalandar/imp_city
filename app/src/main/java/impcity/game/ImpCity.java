@@ -943,16 +943,14 @@ public class ImpCity implements PostRenderHook, GameInterface
             map.setFloor(p.x, p.y, Features.GROUND_LIBRARY + (int)(Math.random() * 1));
 
             Room room = addNewSquareToRooms(p, libraryRooms);
-            
             room.calculateBorderDistances(map, Features.GROUND_LIBRARY);
-
-            room.forAllInnerPoints((x, y) -> {furnishLibrary(map, x, y); return true;});
+            room.forAllInnerPoints((x, y) -> {return furnishLibrary(map, x, y);});
         }                
         refreshPillars(rasterI, rasterJ);
     }
 
     
-    private void furnishLibrary(Map map, int x, int y) 
+    private boolean furnishLibrary(Map map, int x, int y) 
     {
         x -= Map.SUB/2;
         y -= Map.SUB/2;
@@ -967,6 +965,8 @@ public class ImpCity implements PostRenderHook, GameInterface
         map.setItem(x + 6, y + 2, Features.I_TORCH_STAND);
         Light light = new Light(x + 6, y + 2, 48, 3, 0xFFFFAA55, 0.25);
         map.lights.add(light);
+    
+        return true;
     }
 
     
@@ -1012,69 +1012,65 @@ public class ImpCity implements PostRenderHook, GameInterface
         });
     }
 
+    
     public void addForgeSquare(final Map map, int rasterI, int rasterJ) 
     {
         Point p = new Point(rasterI, rasterJ);
         if(!forges.contains(p))
         {
             map.setFloor(rasterI, rasterJ, Features.GROUND_FORGE + (int)(Math.random() * 3));
-            
-            
-            Room room = addNewSquareToRooms(p, forgeRooms);
-            
             forges.add(p);
             
-            // Hajo: todo: there should be real room furnishing code here ...
+            Room room = addNewSquareToRooms(p, forgeRooms);
+            room.calculateBorderDistances(map, Features.GROUND_FORGE);
+            room.forAllInnerPoints((x, y) -> {return furnishForge(map, x, y);});
             
-            int volx = p.x + Map.SUB/4;
-            int voly = p.y + Map.SUB/4;
-            map.setItem(volx, voly, Features.I_SMALL_VOLCANO);
-
-            Light light = new Light(volx, voly, 30, 3, 0xFF302010, 0.5);
-            map.lights.add(light);
-            
-            RectArea area = new RectArea(volx - 2, voly - 2, 3, 3);
-
-            area.traverseWithoutCorners(new LocationCallback() 
-            {
-                @Override
-                public boolean visit(int x, int y)
-                {
-                    map.setMovementBlocked(x, y, true);
-                    return false;
-                }
-            });
-            
-            area = new RectArea(volx - 2, voly - 2, 5, 5);
-
-            area.traverseWithoutCorners(new LocationCallback() 
-            {
-                @Override
-                public boolean visit(int x, int y)
-                {
-                    map.setPlacementBlocked(x, y, true);
-                    return false;
-                }
-            });
-
-            addParticleGenerator(map, volx, voly, 21, MobStats.G_VOLCANO);
-            
-            // Place anvil and placement block anvil area.
-            map.setItem(volx+3, voly+1, Features.I_ANVIL);
-            area = new RectArea(volx + 2, voly - 1, 3, 4);
-
-            area.traverseWithoutCorners(new LocationCallback() 
-            {
-                @Override
-                public boolean visit(int x, int y)
-                {
-                    map.setPlacementBlocked(x, y, true);
-                    return false;
-                }
-            });
         }                
         refreshPillars(rasterI, rasterJ);
     }
+
+
+    private boolean furnishForge(Map map, int x, int y)
+    {
+        x -= Map.SUB/2;
+        y -= Map.SUB/2;
+        
+        int volx = x + Map.SUB/4;
+        int voly = y + Map.SUB/4;
+        map.setItem(volx, voly, Features.I_SMALL_VOLCANO);
+
+        Light light = new Light(volx, voly, 30, 3, 0xFF302010, 0.5);
+        map.lights.add(light);
+
+        RectArea area = new RectArea(volx - 2, voly - 2, 3, 3);
+
+        area.traverseWithoutCorners((int px, int py) -> {
+            map.setMovementBlocked(px, py, true);
+            return false;
+        });
+
+        area = new RectArea(volx - 2, voly - 2, 5, 5);
+
+        area.traverseWithoutCorners((int px, int py) -> {
+            map.setPlacementBlocked(px, py, true);
+            return false;
+        });
+
+        addParticleGenerator(map, volx, voly, 21, MobStats.G_VOLCANO);
+
+        // Place anvil and placement block anvil area.
+        map.setItem(volx+3, voly+1, Features.I_ANVIL);
+        area = new RectArea(volx + 2, voly - 1, 3, 4);
+
+        area.traverseWithoutCorners((int px, int py) -> {
+            map.setPlacementBlocked(px, py, true);
+            return false;
+        });        
+    
+        return true;
+    }
+    
+    
     
     public void addHospitalSquare(final Map map, int rasterI, int rasterJ) 
     {

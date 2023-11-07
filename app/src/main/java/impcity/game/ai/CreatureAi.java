@@ -536,11 +536,12 @@ public class CreatureAi extends AiBase
             case LIBRARY:
                 p = findNearestFeatureOnGround(map, mob, Features.I_BOOKSHELF_HALF_RIGHT, Features.GROUND_LIBRARY);
                 p.x += 4;
-                p.y += (int)(Math.random() * 4);
+                p.y += (int)(Math.random() * 6) - 1;
                 break;
             case FORGE:
                 p = findNearestFeatureOnGround(map, mob, Features.I_ANVIL, Features.GROUND_FORGE);
-                p.x += 4;
+                p.x += (int)(Math.random() * 3) - 1;
+                p.y += 3 + (int)(Math.random() * 2);
                 break;
             case LABORATORY:
                 p = findNearestFeatureOnGround(map, mob, Features.I_LAB_TABLE, Features.GROUND_LABORATORY);
