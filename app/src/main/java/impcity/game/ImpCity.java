@@ -91,6 +91,7 @@ public class ImpCity implements PostRenderHook, GameInterface
     
     public final List <Room> forgeRooms = new ArrayList<>();
     public final List <Room> libraryRooms = new ArrayList<>();
+    public final List <Room> labRooms = new ArrayList<>();
     
     public final List <Mob> generators = Collections.synchronizedList(new ArrayList<Mob>());
     public final List <Quest> quests = Collections.synchronizedList(new ArrayList<Quest>());
@@ -496,6 +497,7 @@ public class ImpCity implements PostRenderHook, GameInterface
 
         forgeRooms.clear();
         libraryRooms.clear();
+        labRooms.clear();
 
         generators.clear();
         
@@ -896,6 +898,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             logger.log(Level.WARNING, "Savegame has no quest data block, either old or buggy.");
         }
     }
+    
 
     public void addFarmlandSquare(Map map, int rasterI, int rasterJ) 
     {
@@ -909,6 +912,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         refreshPillars(rasterI, rasterJ);
     }
     
+    
     public void addLairSquare(Map map, int rasterI, int rasterJ) 
     {
         Point p = new Point(rasterI, rasterJ);
@@ -919,6 +923,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         }                
         refreshPillars(rasterI, rasterJ);
     }
+    
 
     public void addTreasurySquare(Map map, int rasterI, int rasterJ) 
     {
@@ -931,6 +936,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         refreshPillars(rasterI, rasterJ);
     }
 
+    
     public void addLibrarySquare(Map map, int rasterI, int rasterJ) 
     {
         Point p = new Point(rasterI, rasterJ);
@@ -976,20 +982,21 @@ public class ImpCity implements PostRenderHook, GameInterface
         if(!laboratoriums.contains(p))
         {
             laboratoriums.add(p);
-            furnishLab(map, p);
+
+            resetSquare(map, p.x, p.y);
+            map.setFloor(p.x, p.y, Features.GROUND_LABORATORY + (int)(Math.random() * 3));
+
+            Room room = addNewSquareToRooms(p, labRooms);
+            room.calculateBorderDistances(map, Features.GROUND_LABORATORY);
+            room.forAllInnerPoints((x, y) -> {return furnishLab(map, x, y);});
         }
 
         refreshPillars(rasterI, rasterJ);
     }
 
 
-    private void furnishLab(Map map, Point p)
+    private boolean furnishLab(Map map, int x, int y)
     {
-        resetSquare(map, p.x, p.y);
-        map.setFloor(p.x, p.y, Features.GROUND_LABORATORY + (int)(Math.random() * 3));
-
-        int x = p.x + Map.SUB/2;
-        int y = p.y + Map.SUB/2;
         map.setItem(x, y, Features.I_LAB_TABLE);
         
         addParticleGenerator(map, x, y, 4, MobStats.G_DISTILL);
@@ -1000,16 +1007,13 @@ public class ImpCity implements PostRenderHook, GameInterface
         // lab equipment is not walkable
         RectArea area = new RectArea(x - 1, y - 1, 3, 3);
 
-        area.traverseWithoutCorners(new LocationCallback()
-        {
-            @Override
-            public boolean visit(int x, int y)
-            {
-                map.setMovementBlocked(x, y, true);
-                map.setPlacementBlocked(x, y, true);
-                return false;
-            }
+        area.traverseWithoutCorners((int px, int py) -> {
+            map.setMovementBlocked(px, py, true);
+            map.setPlacementBlocked(px, py, true);
+            return false;
         });
+        
+        return true;
     }
 
     
@@ -1024,8 +1028,8 @@ public class ImpCity implements PostRenderHook, GameInterface
             Room room = addNewSquareToRooms(p, forgeRooms);
             room.calculateBorderDistances(map, Features.GROUND_FORGE);
             room.forAllInnerPoints((x, y) -> {return furnishForge(map, x, y);});
-            
-        }                
+        }
+        
         refreshPillars(rasterI, rasterJ);
     }
 
