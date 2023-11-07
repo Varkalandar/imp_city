@@ -553,12 +553,9 @@ public class CreatureAi extends AiBase
                 while(tries < 16)
                 {
                     double angle = Math.random() * Math.PI * 2.0;
-                    int cr = 5;
-                    int cx = Map.SUB / 2 + p.x + (int)(Math.cos(angle) * cr);
-                    int cy = Map.SUB / 2 + p.y + (int)(Math.sin(angle) * cr);
-
-                    p.x = cx;
-                    p.y = cy;
+                    int cr = 6;
+                    int cx = p.x + (int)(Math.cos(angle) * cr);
+                    int cy = p.y + (int)(Math.sin(angle) * cr);
 
                     if(mob.gameMap.isMovementBlockedRadius(cx, cy, desc.size))
                     {
@@ -566,6 +563,8 @@ public class CreatureAi extends AiBase
                     }
                     else
                     {
+                        p.x = cx;
+                        p.y = cy;
                         // seems we can go there ...
                         break;
                     }
@@ -668,9 +667,11 @@ public class CreatureAi extends AiBase
         }
         else if(mob.getSpecies() == Species.HAT_MAGE_BASE)
         {
-            // face the tile center (distill)
-            int cx = mob.location.x/Map.SUB*Map.SUB + Map.SUB/2;
-            int cy = mob.location.y/Map.SUB*Map.SUB + Map.SUB/2;
+            // face the distill
+            Mob distill = findClosestDistill(mob);
+            
+            int cx = distill.location.x;
+            int cy = distill.location.y;
             
             int direction = Direction.dirFromVector(cx - mob.location.x, cy - mob.location.y);
             mob.visuals.setDisplayCode(Species.HAT_MAGE_BASE + direction);
@@ -762,6 +763,7 @@ public class CreatureAi extends AiBase
                                                   0x80FFFFFF);
         }
     }
+    
 
     private void workingConian(Mob mob)
     {
@@ -788,6 +790,7 @@ public class CreatureAi extends AiBase
                                               Features.P_ORANGE_SPARK_1 + (int)(Math.random() *3),
                                               0xFFFFFFFF);
     }
+    
 
     private void workingHatMage(Mob mob)
     {
@@ -795,38 +798,7 @@ public class CreatureAi extends AiBase
         int z = 20 + (int)(Math.sin(workStep/32.0 * Math.PI) * 16);
         mob.zOff = z << 16;
 
-        /*
-
-        // spark some ideas
-        int speed = (int)(Math.random() * 5.0);
-
-        mob.visuals.backParticles.addParticle(10 - (int)(Math.random() * 20.0), (int)(Math.random() * 20.0),
-                speed * Math.random() * 2.0 - speed, speed * Math.random(),
-                18,
-                Features.P_SILVER_SPARK_1 + (int)(Math.random() *3),
-                0xFFFFFFFF);
-
-        mob.visuals.frontParticles.addParticle(10 - (int)(Math.random() * 20.0), (int)(Math.random() * 20.0),
-                speed * Math.random() * 2.0 - speed, -speed * Math.random(),
-                18,
-                Features.P_SILVER_SPARK_1 + (int)(Math.random() *3),
-                0xFFFFFFFF);
-        */
-        
-        int rasterI = mob.location.x/Map.SUB*Map.SUB;
-        int rasterJ = mob.location.y/Map.SUB*Map.SUB;
-        Point p = new Point(rasterI + Map.SUB/2, rasterJ + Map.SUB/2);
-
-        Mob distillGenerator = null;
-        
-        for(Mob generator : game.generators)
-        {
-            if(p.equals(generator.location)) 
-            {
-                distillGenerator = generator;
-                break;
-            }
-        }
+        Mob distillGenerator = findClosestDistill(mob);
         
         if(distillGenerator != null)
         {
@@ -857,6 +829,32 @@ public class CreatureAi extends AiBase
                         particle,
                         color);
         }
+    }
+    
+
+    private Mob findClosestDistill(Mob mob)
+    {
+        int best = 250;
+        Mob distillGenerator = null;
+        
+        // find closest generator
+        for(Mob generator : game.generators)
+        {
+            if(generator.stats.getCurrent(MobStats.GENERATOR) == MobStats.G_DISTILL)
+            {
+                int dx = generator.location.x - mob.location.x;
+                int dy = generator.location.y - mob.location.y;
+                int d = dx * dx + dy * dy;
+
+                if(d < best) 
+                {
+                    best = d;
+                    distillGenerator = generator;
+                }
+            }
+        }
+        
+        return distillGenerator;
     }
 
     private void produce(Mob mob)
