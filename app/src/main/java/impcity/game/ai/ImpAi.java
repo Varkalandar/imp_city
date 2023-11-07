@@ -346,7 +346,8 @@ public class ImpAi extends AiBase
                     System.err.println("Imp #" + mob.getKey() + " can't find a truncated path to it's job at " + p);
 
                     // Hajo: try the job later again ...
-                    game.jobQueue.add(currentJob, JobQueue.PRI_LOW);
+                    // no, scrap it.
+                    // game.jobQueue.add(currentJob, JobQueue.PRI_LOW);
 
                     currentJob = null;
                     goal = Goal.GO_TO_SLEEP;
@@ -359,7 +360,8 @@ public class ImpAi extends AiBase
                 System.err.println("Imp #" + mob.getKey() + " can't find a path to it's job at " + p);
 
                 // Hajo: try the job later again ...
-                game.jobQueue.add(currentJob, JobQueue.PRI_LOW);
+                // no, scrap it.
+                // game.jobQueue.add(currentJob, JobQueue.PRI_LOW);
 
                 currentJob = null;
                 goal = Goal.GO_TO_SLEEP;
