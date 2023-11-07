@@ -89,7 +89,8 @@ public class ImpCityKeyHandler implements KeyHandler
                 }
                 else if(Keyboard.getEventKey() == Keyboard.KEY_ESCAPE)
                 {
-                    display.quit();
+                    // display.quit();
+                    gameDisplay.showDialog(null);
                 }
                 else if(Keyboard.getEventKey() == Keyboard.KEY_RETURN)
                 {
