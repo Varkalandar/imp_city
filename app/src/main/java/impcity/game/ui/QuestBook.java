@@ -4,7 +4,7 @@ import impcity.game.ImpCity;
 import impcity.game.Texture;
 import impcity.game.quests.Quest;
 import impcity.ogl.IsoDisplay;
-import impcity.uikit.StringUtils;
+import impcity.utils.StringUtils;
 import java.io.IOException;
 
 import java.util.List;

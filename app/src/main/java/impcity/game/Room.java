@@ -5,6 +5,7 @@ import impcity.game.map.Map;
 import java.awt.Point;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -13,6 +14,48 @@ import java.util.Set;
  */
 public class Room
 {
+    /**
+     * Remove a square from a room in the list. This operation can split
+     * the room into several.
+     * @param p The coordinates
+     * @param rooms The list of room to work on
+     * @param action Called for each part of the remaining room
+     */
+    public static void removeSquare(Point p, List<Room> rooms,
+            LocationCallback action) 
+    {
+        Room roomKill = null;
+        
+        for(Room room : rooms)
+        {
+            if(room.squares.contains(p))
+            {
+                room.squares.remove(p);
+                room.distances.remove(p);
+                
+                if(room.squares.isEmpty())
+                {
+                    // totally deleted
+                    roomKill = room;
+                }
+                else
+                {
+                    // Todo: handle room split
+                    // -> each new room must be furnished. Call the action
+                    
+                    Point anchor = room.squares.iterator().next();
+                    action.visit(anchor.x, anchor.y);
+                }
+            }            
+        }
+        
+        if(roomKill != null)
+        {
+            rooms.remove(roomKill);
+        }
+    }
+
+
     public final Set <Point> squares;
     public final HashMap <Point, Integer> distances;
     
@@ -32,7 +75,7 @@ public class Room
      */
     void calculateBorderDistances(Map map, int floor) 
     {
-        // System.err.println("-----");
+        distances.clear();
         int dmax = 1;
         
         for(Point p : squares)
@@ -52,6 +95,15 @@ public class Room
             distances.put(p, open ? 1 : 0);
             
             // System.err.println("" + p + " -> " + distances.get(p));
+        }
+    }
+
+
+    public void forAllPoints(LocationCallback visitor)
+    {
+        for(Point p : squares)
+        {
+            visitor.visit(p.x, p.y);
         }
     }
 

@@ -1,4 +1,4 @@
-package impcity.uikit;
+package impcity.utils;
 
 import java.text.NumberFormat;
 

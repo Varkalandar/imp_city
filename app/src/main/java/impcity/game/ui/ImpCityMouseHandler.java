@@ -17,7 +17,7 @@ import impcity.oal.SoundPlayer;
 import impcity.ogl.IsoDisplay;
 import impcity.ui.MouseHandler;
 import impcity.ui.MousePointerBitmap;
-import impcity.uikit.StringUtils;
+import impcity.utils.StringUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -55,6 +55,7 @@ public class ImpCityMouseHandler implements MouseHandler
         Tools.selected = Tools.MARK_DIG;
         setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
     }
+    
     
     @Override
     public void processMouse()
@@ -164,6 +165,7 @@ public class ImpCityMouseHandler implements MouseHandler
         }
     }
 
+    
     private void makeLair(Map map, int rasterI, int rasterJ) 
     {
         int n = map.getFloor(rasterI, rasterJ);
@@ -174,6 +176,7 @@ public class ImpCityMouseHandler implements MouseHandler
         }
     }
         
+    
     private void makeFarm(Map map, int rasterI, int rasterJ)
     {
         int n = map.getFloor(rasterI, rasterJ);
@@ -184,15 +187,17 @@ public class ImpCityMouseHandler implements MouseHandler
         }
     }
     
+    
     private void makeLibrary(Map map, int rasterI, int rasterJ) 
     {
         int n = map.getFloor(rasterI, rasterJ);
         if(n >= Features.GROUND_POLY_TILES && n < Features.GROUND_POLY_TILES + 3)
         {
-            game.addLibrarySquare(map, rasterI, rasterJ);
+            game.toggleLibrarySquare(map, rasterI, rasterJ);
             game.soundPlayer.play(Sounds.MAKE_LIBRARY, 0.8f, 1.0f);            
         }
     }
+    
     
     private void makeLab(Map map, int rasterI, int rasterJ)
     {
@@ -204,6 +209,7 @@ public class ImpCityMouseHandler implements MouseHandler
         }
     }
 
+    
     private void makeForge(Map map, int rasterI, int rasterJ)
     {
         int n = map.getFloor(rasterI, rasterJ);
@@ -213,6 +219,7 @@ public class ImpCityMouseHandler implements MouseHandler
             game.soundPlayer.play(Sounds.MAKE_FORGE, 0.2f, 1.0f);
         }
     }
+    
     
     private void makeHospital(Map map, int rasterI, int rasterJ)
     {
@@ -225,6 +232,7 @@ public class ImpCityMouseHandler implements MouseHandler
         }
     }
 
+    
     private void makeTreasury(Map map, int rasterI, int rasterJ)
     {
         int n = map.getFloor(rasterI, rasterJ);
@@ -235,6 +243,7 @@ public class ImpCityMouseHandler implements MouseHandler
         }
     }
 
+    
     private void demolishRoom(Map map, int rasterI, int rasterJ)
     {
         Point p = new Point(rasterI, rasterJ);
@@ -247,6 +256,8 @@ public class ImpCityMouseHandler implements MouseHandler
         {
             game.getLibraries().remove(p);
             game.resetSquare(map, rasterI, rasterJ);
+            Room.removeSquare(p, game.libraryRooms, 
+                    (x, y) -> { return game.toggleLibrarySquare(map, x, y); } );
         }
         else if(n >= Features.GROUND_LAIR && n < Features.GROUND_LAIR + 3)
         {
@@ -277,6 +288,8 @@ public class ImpCityMouseHandler implements MouseHandler
         {
             game.getForges().remove(p);
             game.resetSquare(map, rasterI, rasterJ);
+            Room.removeSquare(p, game.forgeRooms, 
+                    (x, y) -> { return game.addForgeSquare(map, x, y); } );
         }
         else if(n >= Features.GROUND_HOSPITAL && n < Features.GROUND_HOSPITAL + 3)
         {
@@ -287,6 +300,8 @@ public class ImpCityMouseHandler implements MouseHandler
         {
             game.getLaboratories().remove(p);
             game.resetSquare(map, rasterI, rasterJ);
+            Room.removeSquare(p, game.labRooms, 
+                    (x, y) -> { return game.addLabSquare(map, x, y); } );
         }
 
         game.refreshPillars(rasterI, rasterJ);

@@ -43,10 +43,11 @@ import impcity.ogl.IsoDisplay;
 import impcity.ogl.Light;
 import impcity.ui.PostRenderHook;
 import impcity.ui.TimedMessage;
+import impcity.utils.Pair;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
-import impcity.uikit.StringUtils;
+import impcity.utils.StringUtils;
 import org.lwjgl.LWJGLException;
 import rlgamekit.objects.Cardinal;
 import rlgamekit.objects.Registry;
@@ -530,7 +531,7 @@ public class ImpCity implements PostRenderHook, GameInterface
                 }
                 else if(ground >= Features.GROUND_LIBRARY && ground < Features.GROUND_LIBRARY + 3)
                 {
-                    addLibrarySquare(map, x, y);
+                    toggleLibrarySquare(map, x, y);
                     addClaimedSquare(map, x, y);
                 }
                 else if(ground >= Features.GROUND_FORGE && ground < Features.GROUND_FORGE + 3)
@@ -937,7 +938,7 @@ public class ImpCity implements PostRenderHook, GameInterface
     }
 
     
-    public void addLibrarySquare(Map map, int rasterI, int rasterJ) 
+    public boolean toggleLibrarySquare(Map map, int rasterI, int rasterJ) 
     {
         Point p = new Point(rasterI, rasterJ);
         if(!libraries.contains(p))
@@ -951,8 +952,20 @@ public class ImpCity implements PostRenderHook, GameInterface
             Room room = addNewSquareToRooms(p, libraryRooms);
             room.calculateBorderDistances(map, Features.GROUND_LIBRARY);
             room.forAllInnerPoints((x, y) -> {return furnishLibrary(map, x, y);});
-        }                
+        }
+        else
+        {
+            // existing room neds to be refurnished
+            
+            Pair <Room, Integer> best = findClosestRoom(p, libraryRooms);
+            Room room = best.v1;
+            room.calculateBorderDistances(map, Features.GROUND_LIBRARY);
+            room.forAllPoints((x, y) -> {return clearItems(map, x, y, Map.SUB);});
+            room.forAllInnerPoints((x, y) -> {return furnishLibrary(map, x, y);});
+        }
+
         refreshPillars(rasterI, rasterJ);
+        return true;
     }
 
     
@@ -976,7 +989,7 @@ public class ImpCity implements PostRenderHook, GameInterface
     }
 
     
-    public void addLabSquare(Map map, int rasterI, int rasterJ)
+    public boolean addLabSquare(Map map, int rasterI, int rasterJ)
     {
         Point p = new Point(rasterI, rasterJ);
         if(!laboratoriums.contains(p))
@@ -990,8 +1003,19 @@ public class ImpCity implements PostRenderHook, GameInterface
             room.calculateBorderDistances(map, Features.GROUND_LABORATORY);
             room.forAllInnerPoints((x, y) -> {return furnishLab(map, x, y);});
         }
+        else
+        {
+            // existing room neds to be refurnished
+            
+            Pair <Room, Integer> best = findClosestRoom(p, labRooms);
+            Room room = best.v1;
+            room.calculateBorderDistances(map, Features.GROUND_LABORATORY);
+            room.forAllPoints((x, y) -> {return clearItems(map, x, y, Map.SUB);});
+            room.forAllInnerPoints((x, y) -> {return furnishLab(map, x, y);});
+        }
 
         refreshPillars(rasterI, rasterJ);
+        return true;
     }
 
 
@@ -1017,7 +1041,7 @@ public class ImpCity implements PostRenderHook, GameInterface
     }
 
     
-    public void addForgeSquare(final Map map, int rasterI, int rasterJ) 
+    public boolean addForgeSquare(final Map map, int rasterI, int rasterJ) 
     {
         Point p = new Point(rasterI, rasterJ);
         if(!forges.contains(p))
@@ -1029,8 +1053,19 @@ public class ImpCity implements PostRenderHook, GameInterface
             room.calculateBorderDistances(map, Features.GROUND_FORGE);
             room.forAllInnerPoints((x, y) -> {return furnishForge(map, x, y);});
         }
+        else
+        {
+            // existing room neds to be refurnished
+            
+            Pair <Room, Integer> best = findClosestRoom(p, forgeRooms);
+            Room room = best.v1;
+            room.calculateBorderDistances(map, Features.GROUND_FORGE);
+            room.forAllPoints((x, y) -> {return clearItems(map, x, y, Map.SUB);});
+            room.forAllInnerPoints((x, y) -> {return furnishForge(map, x, y);});
+        }
         
         refreshPillars(rasterI, rasterJ);
+        return true;
     }
 
 
@@ -1159,16 +1194,15 @@ public class ImpCity implements PostRenderHook, GameInterface
     {
         return hospitals;
     }
+    
 
     public List<Point> getClaimedSquares()
     {
         return claimed;
-    }
-    
-    
-    // Hajo: see if this is a new room or if it is
-    // an extension of a room
-    private Room addNewSquareToRooms(Point p, List <Room> rooms)
+    }    
+
+
+    private Pair <Room, Integer> findClosestRoom(Point p, List <Room> rooms)
     {
         int dmax = 999;
         Room bestRoom = null;
@@ -1185,7 +1219,21 @@ public class ImpCity implements PostRenderHook, GameInterface
                 }
             }
         }
-
+        
+        return new Pair(bestRoom, dmax);
+    }
+    
+    
+    /**
+     * see if this is a new room or if it is
+     * an extension of a room
+     */
+    private Room addNewSquareToRooms(Point p, List <Room> rooms)
+    {
+        Pair <Room, Integer> best = findClosestRoom(p, rooms);
+        
+        Room bestRoom = best.v1;
+        int dmax = best.v2;
         
         Room result;
         
@@ -1219,6 +1267,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         spawnImp(player.gameMap, x, y);
     }
 
+    
     public void spawnImp(Map gameMap, int x, int y) 
     {
         SpeciesDescription desc = Species.speciesTable.get(Species.IMPS_BASE);
@@ -1231,6 +1280,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         
         imp.stats.setCurrent(MobStats.GOLD, 0);
     }
+    
 
     private void cleanDust(Map map, Point location)
     {
@@ -1273,7 +1323,8 @@ public class ImpCity implements PostRenderHook, GameInterface
         }
     }
 
-    public void clearItems(Map map, int x, int y, int range)
+    
+    public boolean clearItems(Map map, int x, int y, int range)
     {
         for(int j=0; j<range; j++)
         {
@@ -1290,6 +1341,8 @@ public class ImpCity implements PostRenderHook, GameInterface
                 removeGeneratorFrom(ii, jj);
             }
         }
+        
+        return true;
     }
 
 
