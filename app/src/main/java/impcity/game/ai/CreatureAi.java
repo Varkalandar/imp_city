@@ -526,16 +526,14 @@ public class CreatureAi extends AiBase
         }
     }
 
+    
     private Point findWorkingSpot(Mob mob, SpeciesDescription desc, List <Point> workplaces)
     {
         Map map = mob.gameMap;
-        Point p = null;
+        Point p;
 
         // First, look for a random workplace square
         Point work = workplaces.get((int) (Math.random() * workplaces.size()));
-        // around the middle ...
-        work.x = work.x + Map.SUB / 4 + (int) (Math.random() * Map.SUB / 2);
-        work.y = work.y + Map.SUB / 4 + (int) (Math.random() * Map.SUB / 2);
 
         switch(desc.jobPreference)
         {
@@ -578,8 +576,12 @@ public class CreatureAi extends AiBase
                 break;
 
             default:
-                p = new Point(work);
+                p = new Point();
+                // around the middle ...
+                p.x = work.x + Map.SUB / 4 + (int) (Math.random() * Map.SUB / 2);
+                p.y = work.y + Map.SUB / 4 + (int) (Math.random() * Map.SUB / 2);
         }
+        
         return p;
     }
 
@@ -595,7 +597,13 @@ public class CreatureAi extends AiBase
         int length = nearestWorkspot.length();
         Path.Node node = nearestWorkspot.getStep(length - 1);
 
-        return new Point(node.x, node.y);
+        Point result = null;
+        if(node != null)
+        {
+            result = new Point(node.x, node.y);
+        }
+
+        return result;
     }
 
 

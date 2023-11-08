@@ -492,6 +492,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         farmland.clear();
         portals.clear();
         lairs.clear();
+        libraries.clear();
         forges.clear();
         claimed.clear();
         hospitals.clear();
@@ -955,7 +956,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         }
         else
         {
-            // existing room neds to be refurnished
+            // existing room needs to be refurnished
             
             Pair <Room, Integer> best = findClosestRoom(p, libraryRooms);
             Room room = best.v1;

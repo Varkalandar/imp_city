@@ -3,6 +3,9 @@ Changes since v0.24
 - New room furnishing code to reduce creature path finding problems
 - ESC now closes the top dialog
 - Imps splash mining sparks less frequently
+- Imps now scrap jobs if they cannot reach the location, except for
+  excavation jobs which will stay queued.
+
  
 Changes since v0.23
 
