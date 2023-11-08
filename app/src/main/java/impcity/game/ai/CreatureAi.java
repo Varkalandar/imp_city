@@ -502,14 +502,17 @@ public class CreatureAi extends AiBase
             addReputation(+10);
 
             Point p = findWorkingSpot(mob, desc, workplaces);
-
+            boolean ok = false;            
             Path path = new Path();
 
-            boolean ok =
-            path.findPath(new WayPathSource(mob.gameMap, desc.size, false),
-                          new LocationPathDestination(mob.gameMap, p.x, p.y, 0),
-                          mob.location.x, mob.location.y);
-
+            if(p != null)
+            {
+                ok =
+                path.findPath(new WayPathSource(mob.gameMap, desc.size, false),
+                              new LocationPathDestination(mob.gameMap, p.x, p.y, 0),
+                              mob.location.x, mob.location.y);
+            }
+            
             if(ok && path.length() > 0)
             {
                 mob.setPath(path);
@@ -520,8 +523,8 @@ public class CreatureAi extends AiBase
                 addReputation(-10);
                 mob.visuals.setBubble(0);
                 goal = Goal.GO_RANDOM;
-                logger.log(Level.INFO, "Mob {0}, a {1} could not find a path to {2}, {3} (workplace)",
-                        new Object[]{mob.getKey(), Species.speciesTable.get(mob.getSpecies()).name, p.x, p.y});
+                logger.log(Level.INFO, "Mob {0}, a {1} could not find a path to a workplace",
+                        new Object[]{mob.getKey(), Species.speciesTable.get(mob.getSpecies()).name});
             }
         }
     }
@@ -539,38 +542,48 @@ public class CreatureAi extends AiBase
         {
             case LIBRARY:
                 p = findNearestFeatureOnGround(map, work, Features.I_BOOKSHELF_HALF_RIGHT, Features.GROUND_LIBRARY);
-                p.x += 4;
-                p.y += (int)(Math.random() * 6) - 1;
+                if(p != null)
+                {
+                    p.x += 4;
+                    p.y += (int)(Math.random() * 6) - 1;
+                }
                 break;
+                
             case FORGE:
                 p = findNearestFeatureOnGround(map, work, Features.I_ANVIL, Features.GROUND_FORGE);
-                p.x += (int)(Math.random() * 3) - 1;
-                p.y += 3 + (int)(Math.random() * 2);
+                if(p != null)
+                {
+                    p.x += (int)(Math.random() * 3) - 1;
+                    p.y += 3 + (int)(Math.random() * 2);
+                }
                 break;
+                
             case LABORATORY:
                 p = findNearestFeatureOnGround(map, work, Features.I_LAB_TABLE, Features.GROUND_LABORATORY);
-
-                // sit in a circle around the lab table
-
-                int tries = 0;
-
-                while(tries < 16)
+                if(p != null)
                 {
-                    double angle = Math.random() * Math.PI * 2.0;
-                    int cr = 6;
-                    int cx = p.x + (int)(Math.cos(angle) * cr);
-                    int cy = p.y + (int)(Math.sin(angle) * cr);
+                    // sit in a circle around the lab table
 
-                    if(mob.gameMap.isMovementBlockedRadius(cx, cy, desc.size))
+                    int tries = 0;
+
+                    while(tries < 16)
                     {
-                        tries ++;
-                    }
-                    else
-                    {
-                        p.x = cx;
-                        p.y = cy;
-                        // seems we can go there ...
-                        break;
+                        double angle = Math.random() * Math.PI * 2.0;
+                        int cr = 6;
+                        int cx = p.x + (int)(Math.cos(angle) * cr);
+                        int cy = p.y + (int)(Math.sin(angle) * cr);
+
+                        if(mob.gameMap.isMovementBlockedRadius(cx, cy, desc.size))
+                        {
+                            tries ++;
+                        }
+                        else
+                        {
+                            p.x = cx;
+                            p.y = cy;
+                            // seems we can go there ...
+                            break;
+                        }
                     }
                 }
                 break;
