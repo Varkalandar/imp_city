@@ -501,7 +501,7 @@ public class CreatureAi extends AiBase
             // Some creatures are actually happy to have a workplace
             addReputation(+10);
 
-            Point p = findWorkingSpot(mob, desc);
+            Point p = findWorkingSpot(mob, desc, workplaces);
 
             Path path = new Path();
 
@@ -526,25 +526,31 @@ public class CreatureAi extends AiBase
         }
     }
 
-    private Point findWorkingSpot(Mob mob, SpeciesDescription desc)
+    private Point findWorkingSpot(Mob mob, SpeciesDescription desc, List <Point> workplaces)
     {
         Map map = mob.gameMap;
         Point p = null;
 
+        // First, look for a random workplace square
+        Point work = workplaces.get((int) (Math.random() * workplaces.size()));
+        // around the middle ...
+        work.x = work.x + Map.SUB / 4 + (int) (Math.random() * Map.SUB / 2);
+        work.y = work.y + Map.SUB / 4 + (int) (Math.random() * Map.SUB / 2);
+
         switch(desc.jobPreference)
         {
             case LIBRARY:
-                p = findNearestFeatureOnGround(map, mob, Features.I_BOOKSHELF_HALF_RIGHT, Features.GROUND_LIBRARY);
+                p = findNearestFeatureOnGround(map, work, Features.I_BOOKSHELF_HALF_RIGHT, Features.GROUND_LIBRARY);
                 p.x += 4;
                 p.y += (int)(Math.random() * 6) - 1;
                 break;
             case FORGE:
-                p = findNearestFeatureOnGround(map, mob, Features.I_ANVIL, Features.GROUND_FORGE);
+                p = findNearestFeatureOnGround(map, work, Features.I_ANVIL, Features.GROUND_FORGE);
                 p.x += (int)(Math.random() * 3) - 1;
                 p.y += 3 + (int)(Math.random() * 2);
                 break;
             case LABORATORY:
-                p = findNearestFeatureOnGround(map, mob, Features.I_LAB_TABLE, Features.GROUND_LABORATORY);
+                p = findNearestFeatureOnGround(map, work, Features.I_LAB_TABLE, Features.GROUND_LABORATORY);
 
                 // sit in a circle around the lab table
 
@@ -572,35 +578,19 @@ public class CreatureAi extends AiBase
                 break;
 
             default:
-                List <FarmSquare> farmland = game.getFarmland();
-
-                if(farmland.isEmpty())
-                {
-                    // Hajo: no farms ...
-                    goal = Goal.GO_RANDOM;
-                    addReputation(-10);
-                }
-                else
-                {
-                    FarmSquare farm = farmland.get((int) (Math.random() * farmland.size()));
-                    // around the middle ...
-                    p = new Point();
-                    p.x = farm.x + Map.SUB / 4 + (int) (Math.random() * Map.SUB / 2);
-                    p.y = farm.y + Map.SUB / 4 + (int) (Math.random() * Map.SUB / 2);
-                }
-
+                p = new Point(work);
         }
         return p;
     }
 
 
-    private static Point findNearestFeatureOnGround(Map map, Mob mob, int feature, int ground)
+    private static Point findNearestFeatureOnGround(Map map, Point start, int feature, int ground)
     {
         Path nearestWorkspot = new Path();
 
         nearestWorkspot.findPath(new WayPathSource(map, 0, true),
                                  new FeaturePathDestination(map, feature, 0, ground, 0),
-                                 mob.location.x, mob.location.y);
+                                 start.x, start.y);
 
         int length = nearestWorkspot.length();
         Path.Node node = nearestWorkspot.getStep(length - 1);
