@@ -21,6 +21,7 @@ import impcity.utils.StringUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+
 /**
  *
  * @author Hj. Malthaner
@@ -41,6 +42,7 @@ public class ImpCityMouseHandler implements MouseHandler
     private int dragStartX, dragStartY;
     private int dragStartMx, dragStartMy;
     private boolean dragging = false;
+    
     
     public ImpCityMouseHandler(ImpCity game, 
                                GameDisplay gameDisplay,
@@ -135,7 +137,7 @@ public class ImpCityMouseHandler implements MouseHandler
                     dragging = false;
                     handleMenuAndTools(rasterI, rasterJ);
                     
-                    if(gameDisplay.debugShowMapInfo && Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) gameDisplay.debugCatchMob();
+                    if(GameDisplay.debugShowMapInfo && Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) gameDisplay.debugCatchMob();
                 }
 
                 if(buttonReleased == 2)
@@ -204,7 +206,7 @@ public class ImpCityMouseHandler implements MouseHandler
         int n = map.getFloor(rasterI, rasterJ);
         if(n >= Features.GROUND_POLY_TILES && n < Features.GROUND_POLY_TILES + 3)
         {
-            game.addLabSquare(map, rasterI, rasterJ);
+            game.toggleLabSquare(map, rasterI, rasterJ);
             game.soundPlayer.play(Sounds.MAKE_FORGE, 0.2f, 1.0f);
         }
     }
@@ -215,7 +217,7 @@ public class ImpCityMouseHandler implements MouseHandler
         int n = map.getFloor(rasterI, rasterJ);
         if(n >= Features.GROUND_POLY_TILES && n < Features.GROUND_POLY_TILES + 3)
         {
-            game.addForgeSquare(map, rasterI, rasterJ);
+            game.toggleForgeSquare(map, rasterI, rasterJ);
             game.soundPlayer.play(Sounds.MAKE_FORGE, 0.2f, 1.0f);
         }
     }
@@ -289,7 +291,7 @@ public class ImpCityMouseHandler implements MouseHandler
             game.getForges().remove(p);
             game.resetSquare(map, rasterI, rasterJ);
             Room.removeSquare(p, game.forgeRooms, 
-                    (x, y) -> { return game.addForgeSquare(map, x, y); } );
+                    (x, y) -> { return game.toggleForgeSquare(map, x, y); } );
         }
         else if(n >= Features.GROUND_HOSPITAL && n < Features.GROUND_HOSPITAL + 3)
         {
@@ -301,7 +303,7 @@ public class ImpCityMouseHandler implements MouseHandler
             game.getLaboratories().remove(p);
             game.resetSquare(map, rasterI, rasterJ);
             Room.removeSquare(p, game.labRooms, 
-                    (x, y) -> { return game.addLabSquare(map, x, y); } );
+                    (x, y) -> { return game.toggleLabSquare(map, x, y); } );
         }
 
         game.refreshPillars(rasterI, rasterJ);

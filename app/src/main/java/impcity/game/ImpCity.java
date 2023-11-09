@@ -537,12 +537,12 @@ public class ImpCity implements PostRenderHook, GameInterface
                 }
                 else if(ground >= Features.GROUND_FORGE && ground < Features.GROUND_FORGE + 3)
                 {
-                    addForgeSquare(map, x, y);
+                    toggleForgeSquare(map, x, y);
                     addClaimedSquare(map, x, y);
                 }
                 else if(ground >= Features.GROUND_LABORATORY && ground < Features.GROUND_LABORATORY + 3)
                 {
-                    addLabSquare(map, x, y);
+                    toggleLabSquare(map, x, y);
                     addClaimedSquare(map, x, y);
                 }
                 else if(ground >= Features.GROUND_TREASURY && ground < Features.GROUND_TREASURY + 3)
@@ -942,7 +942,17 @@ public class ImpCity implements PostRenderHook, GameInterface
     public boolean toggleLibrarySquare(Map map, int rasterI, int rasterJ) 
     {
         Point p = new Point(rasterI, rasterJ);
-        if(!libraries.contains(p))
+        if(libraries.contains(p))
+        {
+            // existing room needs to be refurnished
+            
+            Pair <Room, Integer> best = findClosestRoom(p, libraryRooms);
+            Room room = best.v1;
+            room.calculateBorderDistances(map, Features.GROUND_LIBRARY);
+            room.forAllPoints((x, y) -> {return clearItems(map, x, y, Map.SUB);});
+            room.forAllInnerPoints((x, y) -> {return furnishLibrary(map, x, y);});
+        }
+        else
         {
             // logger.log(Level.INFO, "Adding library square {0}, {1}", new Object[]{p.x, p.y});
             libraries.add(p);
@@ -952,16 +962,6 @@ public class ImpCity implements PostRenderHook, GameInterface
 
             Room room = addNewSquareToRooms(p, libraryRooms);
             room.calculateBorderDistances(map, Features.GROUND_LIBRARY);
-            room.forAllInnerPoints((x, y) -> {return furnishLibrary(map, x, y);});
-        }
-        else
-        {
-            // existing room needs to be refurnished
-            
-            Pair <Room, Integer> best = findClosestRoom(p, libraryRooms);
-            Room room = best.v1;
-            room.calculateBorderDistances(map, Features.GROUND_LIBRARY);
-            room.forAllPoints((x, y) -> {return clearItems(map, x, y, Map.SUB);});
             room.forAllInnerPoints((x, y) -> {return furnishLibrary(map, x, y);});
         }
 
@@ -990,10 +990,20 @@ public class ImpCity implements PostRenderHook, GameInterface
     }
 
     
-    public boolean addLabSquare(Map map, int rasterI, int rasterJ)
+    public boolean toggleLabSquare(Map map, int rasterI, int rasterJ)
     {
         Point p = new Point(rasterI, rasterJ);
-        if(!laboratoriums.contains(p))
+        if(laboratoriums.contains(p))
+        {
+            // existing room needs to be refurnished
+            
+            Pair <Room, Integer> best = findClosestRoom(p, labRooms);
+            Room room = best.v1;
+            room.calculateBorderDistances(map, Features.GROUND_LABORATORY);
+            room.forAllPoints((x, y) -> {return clearItems(map, x, y, Map.SUB);});
+            room.forAllInnerPoints((x, y) -> {return furnishLab(map, x, y);});
+        }
+        else
         {
             laboratoriums.add(p);
 
@@ -1002,16 +1012,6 @@ public class ImpCity implements PostRenderHook, GameInterface
 
             Room room = addNewSquareToRooms(p, labRooms);
             room.calculateBorderDistances(map, Features.GROUND_LABORATORY);
-            room.forAllInnerPoints((x, y) -> {return furnishLab(map, x, y);});
-        }
-        else
-        {
-            // existing room neds to be refurnished
-            
-            Pair <Room, Integer> best = findClosestRoom(p, labRooms);
-            Room room = best.v1;
-            room.calculateBorderDistances(map, Features.GROUND_LABORATORY);
-            room.forAllPoints((x, y) -> {return clearItems(map, x, y, Map.SUB);});
             room.forAllInnerPoints((x, y) -> {return furnishLab(map, x, y);});
         }
 
@@ -1042,26 +1042,28 @@ public class ImpCity implements PostRenderHook, GameInterface
     }
 
     
-    public boolean addForgeSquare(final Map map, int rasterI, int rasterJ) 
+    public boolean toggleForgeSquare(final Map map, int rasterI, int rasterJ) 
     {
         Point p = new Point(rasterI, rasterJ);
-        if(!forges.contains(p))
+        if(forges.contains(p))
         {
-            map.setFloor(rasterI, rasterJ, Features.GROUND_FORGE + (int)(Math.random() * 3));
-            forges.add(p);
-            
-            Room room = addNewSquareToRooms(p, forgeRooms);
-            room.calculateBorderDistances(map, Features.GROUND_FORGE);
-            room.forAllInnerPoints((x, y) -> {return furnishForge(map, x, y);});
-        }
-        else
-        {
-            // existing room neds to be refurnished
+            // existing room needs to be refurnished
             
             Pair <Room, Integer> best = findClosestRoom(p, forgeRooms);
             Room room = best.v1;
             room.calculateBorderDistances(map, Features.GROUND_FORGE);
             room.forAllPoints((x, y) -> {return clearItems(map, x, y, Map.SUB);});
+            room.forAllInnerPoints((x, y) -> {return furnishForge(map, x, y);});
+        }
+        else
+        {
+            // new room to be set up
+
+            map.setFloor(rasterI, rasterJ, Features.GROUND_FORGE + (int)(Math.random() * 3));
+            forges.add(p);
+            
+            Room room = addNewSquareToRooms(p, forgeRooms);
+            room.calculateBorderDistances(map, Features.GROUND_FORGE);
             room.forAllInnerPoints((x, y) -> {return furnishForge(map, x, y);});
         }
         
