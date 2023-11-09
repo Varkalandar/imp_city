@@ -66,7 +66,7 @@ public class Features
     public static final int I_STEAM_CLOUD = 1948;
     public static final int I_STEAM_PUFF = 1949;
 
-    public static final int I_LAB_TABLE = 1467;
+    public static final int I_LAB_TABLE = 1465;
     public static final int I_ANVIL = 1468;
     
     public static final int I_TORCH_STAND = 1448;

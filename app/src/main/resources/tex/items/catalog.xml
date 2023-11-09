@@ -31880,17 +31880,17 @@
       <Description>
         <version>4</version>
         <id>1465</id>
-        <width>104</width>
-        <height>75</height>
+        <width>112</width>
+        <height>80</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>55</footX>
+        <footY>49</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>lab table</string>
+        <string>rgba</string>
         <string></string>
         <string></string>
       </Metadata>

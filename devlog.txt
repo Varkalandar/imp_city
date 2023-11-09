@@ -1,3 +1,10 @@
+Changes since v0.25
+
+- Tried to fix a random crash in the party selector dialog.
+- Made the treasury and lab floors a bit darker.
+- Improved the lab equipment graphics.
+
+
 Changes since v0.24
 
 - New room furnishing code to reduce creature path finding problems
