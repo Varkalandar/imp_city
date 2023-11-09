@@ -75,7 +75,7 @@ public class ImpCityKeyHandler implements KeyHandler
                 {
                     gameDisplay.openExpeditionBook();
                 }
-                else if(Keyboard.getEventKey() == Keyboard.KEY_R)
+                else if(Keyboard.getEventKey() == Keyboard.KEY_Q)
                 {
                     gameDisplay.openQuestBook();
                 }
