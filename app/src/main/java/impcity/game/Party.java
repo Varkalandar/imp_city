@@ -11,6 +11,7 @@ import java.util.Random;
 import impcity.game.mobs.Mob;
 import rlgamekit.objects.Registry;
 
+
 /**
  *
  * @author Hj. Malthaner
@@ -23,7 +24,7 @@ public class Party
     public int stealth;
     public int combat;
     public int carry;
-    public int speed = 1;
+    public int speed;
     public int scouting;
     
     public int kills;
@@ -115,17 +116,17 @@ public class Party
     
     private void count(StringBuilder buffer, int n, String what)
     {
-        if(n == 0)
+        switch (n) 
         {
-            // buffer.append("All party members survived. ");
-        }
-        else if(n == 1)
-        {
-            buffer.append("One party member was ").append(what).append(".");
-        }
-        else
-        {
-            buffer.append(n).append(" party members were ").append(what).append(".");
+            case 0:
+                // buffer.append("All party members survived. ");
+                break;
+            case 1:
+                buffer.append("One party member was ").append(what).append(".");
+                break;
+            default:
+                buffer.append(n).append(" party members were ").append(what).append(".");
+                break;
         }
     }
 

@@ -19,8 +19,10 @@ import java.util.logging.Logger;
 import impcity.game.Texture;
 import impcity.game.mobs.Mob;
 import impcity.ogl.IsoDisplay;
+import java.util.HashSet;
 import rlgamekit.objects.Cardinal;
 import rlgamekit.objects.Registry;
+
 
 /**
  * A selectable list of all creatures of a player.
@@ -53,10 +55,12 @@ public class PartySelector extends UiDialog
         this.creatureDisplayList = new ArrayList<>(64);
     }
     
+    
     public void setQuest(Quest quest)
     {
         this.quest = quest;
     }
+    
     
     @Override
     public void display(int x, int y)
@@ -66,7 +70,6 @@ public class PartySelector extends UiDialog
         int gold = Colors.BRIGHT_GOLD_INK;
         int silver = Colors.BRIGHT_SILVER_INK;
         
-        
         creatureDisplayList.clear();
         
         gameDisplay.drawShadowText("Your Creatures",
@@ -74,14 +77,14 @@ public class PartySelector extends UiDialog
         
         gameDisplay.drawShadowText("Your Party",
                               gold, x+width/2+28, y+height-80, 0.4);
-
-        Registry <Mob> mobs = game.world.mobs;
-        
-        Set <Cardinal> keys = mobs.keySet();
         
         int row = 500;
         int col = 20;
         int count = 0;
+
+        // work on copy, the original set might change during the loop
+        Registry <Mob> mobs = game.world.mobs;
+        Set <Cardinal> keys = new HashSet<>(mobs.keySet());
 
         for(Cardinal key : keys)
         {
@@ -158,11 +161,12 @@ public class PartySelector extends UiDialog
         
         gameDisplay.drawMenuText("< Page " +  (currentPage + 1) + " of " + (maxPages + 1) + " >", gold, x + 28, y + 22, 0.6);
 
-        int color = party.members.size() > 0 ? gold : Colors.DIM_GOLD_INK;
+        int color = party.members.isEmpty() ? Colors.DIM_GOLD_INK : gold;
         gameDisplay.drawMenuText("> Start Expedition", color, x + width/2 + 28, y + 22, 0.6);
 
         gameDisplay.drawMenuText("[X]", gold, x + width/2 + 350, y + 570, 0.6);
-    }    
+    }
+    
 
     private void drawCreatureTile(int x, int y, Mob mob, boolean selected)
     {
@@ -186,6 +190,7 @@ public class PartySelector extends UiDialog
         gameDisplay.drawShadowText(text, 
                               Colors.BRIGHT_SILVER_INK, x + (tw - w) / 2, y + 4, 0.18);
     }
+    
 
     @Override
     public void mouseEvent(int buttonPressed, int buttonReleased, int mouseX, int mouseY) 
@@ -220,7 +225,7 @@ public class PartySelector extends UiDialog
             {
                 if (mouseY < 180)
                 {
-                    if(party.members.size() > 0)
+                    if(!party.members.isEmpty())
                     {
                         playClickSound();
                         sendParty();
@@ -235,6 +240,7 @@ public class PartySelector extends UiDialog
             }
         }
     }
+    
 
     private void updateCreatureSelection(int mouseX, int mouseY)
     {
@@ -245,7 +251,8 @@ public class PartySelector extends UiDialog
             {
                 if (party.members.contains(entry.key))
                 {
-                    party.members.remove((Object) entry.key);
+                    int i = party.members.indexOf(entry.key);
+                    party.members.remove(i);
                 }
                 else
                 {
@@ -256,6 +263,7 @@ public class PartySelector extends UiDialog
             }
         }
     }
+    
 
     private void sendParty()
     {
