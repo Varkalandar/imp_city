@@ -118,4 +118,27 @@ public class Room
             }
         }
     }
+
+    
+    public Point scanForResources(Map map, int resource1, int resource2) 
+    {
+        for(Point p : squares)
+        {
+            for(int j=0; j<Map.SUB; j++)
+            {
+                for(int i=0; i<Map.SUB; i++)
+                {
+                    int n = map.getItem(p.x + i, p.y + j) & Map.F_ITEM_MASK;
+
+                     // todo: check for correct resource
+                    if(n == resource1 || n == resource2)
+                    {
+                        return new Point(p.x + i, p.y + j);
+                    }
+                }
+            }
+        }
+        
+        return null;
+    }
 }

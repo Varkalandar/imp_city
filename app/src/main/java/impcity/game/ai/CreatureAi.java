@@ -36,7 +36,6 @@ public class CreatureAi extends AiBase
     private static final int MAX_HUNGER = 6000000;
     private static final int MAX_SLEEP = 12000000;
 
-
     public enum Goal
     {
         FIND_LAIR, BUILD_LAIR,
@@ -72,6 +71,7 @@ public class CreatureAi extends AiBase
         this.nextSoundTime = Clock.time() + 1000;
         this.questTime = Clock.time() + 360 * 1000 + (int)(Math.random() * 600 * 1000);
     }
+    
 
     public void setHome(Point p)
     {
@@ -79,6 +79,7 @@ public class CreatureAi extends AiBase
         home.y = p.y;
         goal = Goal.GO_SLEEP;
     }
+    
 
     @Override
     public void think(Mob mob) 
@@ -289,6 +290,7 @@ public class CreatureAi extends AiBase
             }
         }
     }
+    
 
     @Override
     public void findNewPath(Mob mob) 
@@ -460,6 +462,7 @@ public class CreatureAi extends AiBase
             }
         }
     }
+    
 
     /**
      * This is a complicated case, because some workplaces
@@ -629,11 +632,13 @@ public class CreatureAi extends AiBase
         return ok;
     }
     
+    
     @Override
     public void thinkAfterStep(Mob mob) 
     {
         think(mob);
     }
+    
     
     @Override
     public void write(Writer writer) throws IOException
@@ -644,6 +649,7 @@ public class CreatureAi extends AiBase
         writer.write("hungry=" + hungry + "\n");
         writer.write("sleepy=" + sleepy + "\n");
     }
+    
     
     @Override
     public void read(BufferedReader reader) throws IOException
@@ -670,33 +676,55 @@ public class CreatureAi extends AiBase
      */
     private void prepareWork(Mob mob) 
     {
-        if(mob.getSpecies() == Species.BOOKWORMS_BASE)
-        {
-            // Turn worm towards the bookshelf
-            int direction = 6 + (int)(Math.random() * 3) & 7;
-            mob.visuals.setDisplayCode(Species.BOOKWORMS_BASE + direction);
-        }
-        else if(mob.getSpecies() == Species.HAT_MAGE_BASE)
-        {
-            // face the distill
-            Mob distill = findClosestDistill(mob);
-            
-            int cx = distill.location.x;
-            int cy = distill.location.y;
-            
-            int direction = Direction.dirFromVector(cx - mob.location.x, cy - mob.location.y);
-            mob.visuals.setDisplayCode(Species.HAT_MAGE_BASE + direction);
-        }        
-
         int rasterI = mob.location.x/Map.SUB*Map.SUB;
         int rasterJ = mob.location.y/Map.SUB*Map.SUB;
-        
+
+        switch (mob.getSpecies()) 
+        {
+            case Species.BOOKWORMS_BASE:
+                {
+                    // Turn worm towards the bookshelf
+                    int direction = 6 + (int)(Math.random() * 3) & 7;
+                    mob.visuals.setDisplayCode(Species.BOOKWORMS_BASE + direction);
+                }
+                break;
+                
+            case Species.HAT_MAGE_BASE:
+                {
+                    // face the distill
+                    Mob distill = findClosestDistill(mob);
+                    int cx = distill.location.x;
+                    int cy = distill.location.y;
+                    int direction = Direction.dirFromVector(cx - mob.location.x, cy - mob.location.y);
+                    mob.visuals.setDisplayCode(Species.HAT_MAGE_BASE + direction);
+                }
+                break;
+                
+            case Species.CONIANS_BASE:
+                Point p = scanForResources(mob.gameMap, rasterI, rasterJ);
+                if(p == null)
+                {
+                    // nothing to do here
+                    goal = Goal.GO_RANDOM;
+                }
+                else
+                {
+                    // Nice! there is stuff to play with
+                    addReputation(5);
+                }   
+                break;
+                
+            default:
+                break;
+        }
+
         int ground = mob.gameMap.getFloor(rasterI, rasterJ);
         if(ground >= Features.GROUND_LIBRARY && ground <= Features.GROUND_LIBRARY + 3)
         {
             researchTime = Clock.time();
         }
     }
+    
 
     private void finishWork(Mob mob) 
     {
@@ -706,6 +734,7 @@ public class CreatureAi extends AiBase
         }
     }
     
+    
     private void work(Mob mob)
     {
         int species = mob.getSpecies();
@@ -714,33 +743,30 @@ public class CreatureAi extends AiBase
         
         // Hajo: todo: there should be a check for type of work
         // here, not species
-        if(species == Species.CONIANS_BASE)
+        switch (species) 
         {
-            workingConian(mob);
+            case Species.CONIANS_BASE:
+                workingConian(mob);
+                break;
+            case Species.BOOKWORMS_BASE:
+                workingBookworm(mob);
+                break;
+            case Species.POWERSNAILS_BASE:
+                workingPowersnail(mob, species);
+                break;
+            case Species.HAT_MAGE_BASE:
+                workingHatMage(mob);
+                break;
+            default:
+                // do something ... spin around thoughtfully
+                
+                if((workStep & 15) == 0)
+                {
+                    int dir = mob.visuals.getDisplayCode() - species;
+                    dir = (dir + 1) & 7;
+                    mob.visuals.setDisplayCode(species + dir);
+                }   break;
         }
-        else if(species == Species.BOOKWORMS_BASE)
-        {
-            workingBookworm(mob);
-        }
-        else if(species == Species.POWERSNAILS_BASE)
-        {
-            workingPowersnail(mob, species);
-        }
-        else if(species == Species.HAT_MAGE_BASE)
-        {
-            workingHatMage(mob);
-        }
-        else
-        {
-            // do something ... spin around thoughtfully
-
-            if((workStep & 15) == 0)
-            {
-                int dir = mob.visuals.getDisplayCode() - species;
-                dir = (dir + 1) & 7;
-                mob.visuals.setDisplayCode(species + dir);
-            }
-        }        
 
         if(workStep > 63)
         {
@@ -763,6 +789,7 @@ public class CreatureAi extends AiBase
         }
     }
 
+    
     private void workingBookworm(Mob mob)
     {
         if((workStep & 15) == 0)
@@ -867,6 +894,7 @@ public class CreatureAi extends AiBase
         
         return distillGenerator;
     }
+    
 
     private void produce(Mob mob)
     {
@@ -889,6 +917,7 @@ public class CreatureAi extends AiBase
         // Mobs gain experience while working
         mob.addExperience(1);
     }
+    
 
     private void spreadSeedlings(Mob mob) 
     {
@@ -959,6 +988,7 @@ public class CreatureAi extends AiBase
                                                   0xFFFFFFFF);
         }    
     }
+    
 
     private void addReputation(int amount)
     {
@@ -970,37 +1000,34 @@ public class CreatureAi extends AiBase
 
     private void produceInForge(Mob mob, int rasterI, int rasterJ) 
     {
+        Map map = mob.gameMap;
+        Point p = scanForResources(map, rasterI, rasterJ);
+        
+        if(p != null)
+        {
+            // todo: produce correct product
+            map.setItem(p.x, p.y, 0);
+            map.dropItem(mob.location.x, mob.location.y, Features.I_BRONZE_COINS);
+        }
+    }
+    
+    
+    private Point scanForResources(Map map, int rasterI, int rasterJ)
+    {
         Point rasterP = new Point(rasterI, rasterJ);
+        Point p = null;
 
-        // scan for resources
+        // scan forge rooms
         for(Room room : game.forgeRooms)
         {
             if(room.squares.contains(rasterP))
             {
-                // this is the room we are in
-
-                for(Point p : room.squares)
-                {
-                    for(int j=0; j<Map.SUB; j++)
-                    {
-                        for(int i=0; i<Map.SUB; i++)
-                        {
-                            int n = mob.gameMap.getItem(p.x + i, p.y + j) & 0xFFFF;
-
-                             // todo: check for correct resource
-                            if(n == Features.I_COPPER_ORE ||
-                               n == Features.I_TIN_ORE)
-                            {
-                                // todo: produce correct product
-                                mob.gameMap.setItem(p.x + i, p.y + j, 0);
-                                mob.gameMap.dropItem(mob.location.x, mob.location.y, Features.I_BRONZE_COINS);
-                                return;
-                            }
-                        }
-                    }
-                }
+                // this is the room we are in -> scan it
+                p = room.scanForResources(map, Features.I_COPPER_ORE, Features.I_TIN_ORE);
             }
         }
+
+        return p;
     }
 
     
