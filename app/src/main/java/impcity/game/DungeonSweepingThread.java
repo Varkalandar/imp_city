@@ -2,6 +2,7 @@ package impcity.game;
 
 import impcity.game.ui.GameDisplay;
 import impcity.game.jobs.Job;
+import impcity.game.jobs.JobClaimGround;
 import impcity.game.jobs.JobQueue;
 import impcity.game.jobs.JobFetchItem;
 import impcity.game.quests.Quest;
@@ -16,6 +17,7 @@ import impcity.game.map.Map;
 import impcity.game.mobs.Mob;
 import impcity.game.ui.MessageHook;
 import impcity.ogl.IsoDisplay;
+
 
 /**
  * Background thread for collecting items that lay around
@@ -34,6 +36,7 @@ public class DungeonSweepingThread extends Thread
     // count the treasures
     private int gold, silver, bronze;
 
+    
     public DungeonSweepingThread(ImpCity game, GameDisplay gameDisplay, IsoDisplay display)
     {
         setDaemon(true);
@@ -44,6 +47,7 @@ public class DungeonSweepingThread extends Thread
         setName("DungeonSweepingThread");        
     }
     
+    
     @Override
     public void run()
     {        
@@ -51,7 +55,7 @@ public class DungeonSweepingThread extends Thread
         {
             try
             {
-                // We need to rfresh the player reference after each loop
+                // We need to refresh the player reference after each loop
                 // because a new game could have been loaded.
                 Mob player = game.world.mobs.get(game.getPlayerKey());
                 Map map = player.gameMap;
@@ -60,9 +64,25 @@ public class DungeonSweepingThread extends Thread
                 silver = 0;
                 bronze = 0;
 
+                
+                // look for squares to claim
+                for(int j=0; j<map.getHeight(); j+=Map.SUB)
+                {
+                    for(int i=0; i<map.getHeight(); i+=Map.SUB)
+                    {
+                        int floor = map.getFloor(i, j);
+                        if(floor >= Features.GROUND_LIGHT_SOIL && floor < Features.GROUND_LIGHT_SOIL+3)
+                        {
+                            game.jobQueue.add(new JobClaimGround(game, i+Map.SUB/2, j+Map.SUB/2), JobQueue.PRI_LOW);                            
+                        }
+                    }
+                
+                    safeSleep(40);
+                    // logger.log(Level.INFO, "Dungeon sweeping thread completes floor row {0}", j);
+                }
+
                 for(int j=0; j<map.getHeight(); j++)
                 {
-                    map = player.gameMap;
                     for(int i=0; i<map.getHeight(); i++)
                     {
                         int item = map.getItem(i, j);
@@ -72,7 +92,7 @@ public class DungeonSweepingThread extends Thread
                         }
                     }
                 
-                    safeSleep(50);
+                    safeSleep(40);
                     // logger.log(Level.INFO, "Dungeon sweeping thread completes row {0}", j);
                 }
 
@@ -96,6 +116,7 @@ public class DungeonSweepingThread extends Thread
             }
         }
     }
+    
 
     private void createQuestResult(Quest quest)
     {
@@ -118,6 +139,7 @@ public class DungeonSweepingThread extends Thread
         gameDisplay.addHookedMessage(hookedMessage); 
     }
     
+    
     private void safeSleep(int millis)
     {
         try
@@ -129,6 +151,7 @@ public class DungeonSweepingThread extends Thread
             logger.log(Level.SEVERE, null, ex);
         }
     }
+    
 
     private void processItem(Map map, int i, int j, int item) 
     {

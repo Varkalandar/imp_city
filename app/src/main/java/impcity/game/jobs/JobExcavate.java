@@ -46,7 +46,7 @@ public class JobExcavate extends AbstractJob
         // Hajo: see if the square is still marked for digging
         if(mark == Features.MINING_MARK)
         {
-            map.setItem(rasterI+Map.SUB/2-1, rasterJ+Map.SUB/2-1, 0);      // remove wall block
+            map.setItem(rasterI+Map.O_BLOCK, rasterJ+Map.O_BLOCK, 0);      // remove wall block
             map.setItem(rasterI+Map.SUB/2, rasterJ+Map.SUB/2, 0);  // remove mining symbol
 
             game.jobQueue.add(new JobClaimGround(game, location.x, location.y), JobQueue.PRI_NORM);

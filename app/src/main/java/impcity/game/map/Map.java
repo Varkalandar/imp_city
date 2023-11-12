@@ -67,7 +67,8 @@ public class Map implements Serializable
     public final ArrayList <Light> lights;
     private final SparseMapLayer<Drawable> effects;
     public int darkness;
-    
+
+
     public Map(int width, int height)
     {
         this.lights = new ArrayList <Light> ();
@@ -75,73 +76,87 @@ public class Map implements Serializable
         newMap(width, height);
     }
 
+
     public int getFloor(int w, int h)
     {
         return map.get(LAYER_GROUNDS, w, h);
     }
-    
+
+
     public void setFloor(int w, int h, int floor)
     {
         map.set(LAYER_GROUNDS, w, h, floor);
     }
-    
+
+
     public int getWay(int w, int h)
     {
         return map.get(LAYER_GROUNDS, w+2, h+2);
     }
-    
+
+
     public void setWay(int w, int h, int floor)
     {
         map.set(LAYER_GROUNDS, w+2, h+2, floor);
     }
 
+
     public int getWayLikeItem(int w, int h)
     {
         return map.get(LAYER_GROUNDS, w+1, h+2);
     }
-    
+
+
     public void setWayLikeItem(int w, int h, int floor)
     {
         map.set(LAYER_GROUNDS, w+1, h+2, floor);
     }
+
 
     public int getLeftWall(int w, int h)
     {
         return map.get(LAYER_GROUNDS, w, h+1);
     }
 
+
     public void setLeftWall(int w, int h, int wall)
     {
         map.set(LAYER_GROUNDS, w, h+1, wall);
     }
 
+
     public int getRightWall(int w, int h)
     {
         return map.get(LAYER_GROUNDS, w+1, h);
     }
-    
+
+
     public void setRightWall(int w, int h, int wall)
     {
         map.set(LAYER_GROUNDS, w+1, h, wall);
     }
 
+
     public int getColor(int w, int h)
     {
         return map.get(LAYER_GROUNDS, w+3, h+3);
     }
-    
+
+
     public void setColor(int w, int h, int argb)
     {
         map.set(LAYER_GROUNDS, w+3, h+3, argb);
     }
+
 
     public int getItem(int x, int y)
     {
         return map.get(LAYER_ITEMS, x, y) & MASK_ITEM;
     }
 
+
     /**
-     * Setting an itgem clear all special flags (e.g. movement) for the spot
+     * Setting an item keeps all special flags (e.g. movement) for the spot
      * @param x item x locations
      * @param y item y location
      * @param item item number (key id)
@@ -153,11 +168,13 @@ public class Map implements Serializable
         map.set(LAYER_ITEMS, x, y, v);
     }
 
+
     public boolean isMovementBlocked(int x, int y)
     {
         return (map.get(LAYER_ITEMS, x, y) & FLAG_MOVEMENT_BLOCKED) != 0;
     }
-    
+
+
     public boolean isMovementBlockedRadius(int x, int y, int r)
     {
         RectArea area = new RectArea(x, y, 0, 0);
@@ -175,6 +192,7 @@ public class Map implements Serializable
         return area.spirallyTraverse(callback, r);
     }
 
+
     public void setMovementBlocked(int x, int y, boolean yesno)
     {
         int v = map.get(LAYER_ITEMS, x, y);
@@ -188,7 +206,8 @@ public class Map implements Serializable
         }
         map.set(LAYER_ITEMS, x, y, v);
     }
-    
+
+
     public void setMovementBlockedRadius(int x, int y, int r, final boolean yesno)
     {
         RectArea area = new RectArea(x, y, 0, 0);
@@ -207,11 +226,13 @@ public class Map implements Serializable
         area.spirallyTraverse(callback, r);
     }
 
+
     public boolean isPlacementBlocked(int x, int y)
     {
         return (map.get(LAYER_ITEMS, x, y) & FLAG_PLACEMENT_BLOCKED) != 0;
     }
-    
+
+
     public boolean isPlacementBlockedRadius(int x, int y, int r)
     {
         RectArea area = new RectArea(x, y, 0, 0);
@@ -229,6 +250,7 @@ public class Map implements Serializable
         return area.spirallyTraverse(callback, r);
     }
 
+
     public void setPlacementBlocked(int x, int y, boolean yesno)
     {
         int v = map.get(LAYER_ITEMS, x, y);
@@ -242,6 +264,7 @@ public class Map implements Serializable
         }
         map.set(LAYER_ITEMS, x, y, v);
     }
+
 
     public void setPlacementBlockedRadius(int x, int y, int r, final boolean yesno)
     {
@@ -261,21 +284,25 @@ public class Map implements Serializable
         area.spirallyTraverse(callback, r);
     }
 
+
     public int getMob(int x, int y)
     {
         return map.get(LAYER_MOBS, x, y);
     }
-    
+
+
     public void setMob(int x, int y, int mob)
     {
         map.set(LAYER_MOBS, x, y, mob);
     }
-    
+
+
     public Drawable getEffect(int x, int y)
     {
         return effects.get(x, y);
     }
-    
+
+
     public void setEffect(int x, int y, Drawable effect)
     {
         if(effect == null)
@@ -288,15 +315,18 @@ public class Map implements Serializable
         }
     }
 
+
     public int getWidth() 
     {
         return map.getWidth();
     }
-    
+
+
     public int getHeight() 
     {
         return map.getHeight();
     }
+
 
     public void recalculateBlockedAreas(Texture [] textures)
     {
@@ -324,13 +354,15 @@ public class Map implements Serializable
             }
         }
     }
-    
+
+
     public void save(File file) throws IOException
     {
         FileOutputStream fos = new FileOutputStream(file);
         save(fos);
     }
-        
+
+
     public void save(OutputStream out) throws IOException    
     {
         GZIPOutputStream gos = new GZIPOutputStream(out);
@@ -340,12 +372,14 @@ public class Map implements Serializable
         writer.close();
     }
 
+
     public void load(File file) throws IOException
     {
         FileInputStream fis = new FileInputStream(file);
         load(fis);
     }
-    
+
+
     public void load(InputStream is) throws IOException
     {
         GZIPInputStream gis = new GZIPInputStream(is);
@@ -362,11 +396,13 @@ public class Map implements Serializable
         effects.resize(map.getWidth(), map.getHeight());
     }
 
+
     public void setAreaMovementBlocked(Rectangle area, boolean yesno)
     {
         setAreaMovementBlocked(0, 0, area, yesno);
     }
-    
+
+
     public void setAreaMovementBlocked(int i, int j, Rectangle area, boolean yesno)
     {
         for(int jj=0; jj<area.width; jj++)
@@ -378,11 +414,13 @@ public class Map implements Serializable
         }
     }
 
+
     public void setAreaPlacementBlocked(Rectangle area, boolean yesno)
     {
         setAreaPlacementBlocked(0, 0, area, yesno);
     }
-    
+
+
     public void setAreaPlacementBlocked(int i, int j, Rectangle area, boolean yesno)
     {
         for(int jj=0; jj<area.width; jj++)
@@ -394,11 +432,13 @@ public class Map implements Serializable
         }
     }
 
+
     public void setPlayerSpawnPosition(int i, int j)
     {
         map.setSpawnX(i);
         map.setSpawnY(j);
     }
+
 
     public Point getPlayerSpawnPosition()
     {
@@ -422,6 +462,7 @@ public class Map implements Serializable
             }
         }
     }
+
 
     public boolean dropItem(int x, int y, final int itemKey)
     {
@@ -451,11 +492,13 @@ public class Map implements Serializable
         return area.spirallyTraverse(callback, Map.SUB/2);
     }
 
+
     public int getTemperature(int i, int j)
     {
         return map.get(LAYER_GROUNDS, i+3, j+0);
     }
-    
+
+
     public void setTemperature(int mouseI, int mouseJ, int temp)
     {
         int i, j;
@@ -479,6 +522,7 @@ public class Map implements Serializable
         map.set(LAYER_GROUNDS, i+3, j+0, temp);
     }
 
+
     public void copyFrom(Map other)
     {
         int width = other.map.getWidth();
@@ -491,7 +535,8 @@ public class Map implements Serializable
         lights.clear();
         lights.addAll(other.lights);
     }
-    
+
+
     private static int distance2(int i1, int j1, int i2, int j2)
     {
         int xd = i1 - i2;
@@ -500,22 +545,16 @@ public class Map implements Serializable
         return xd * xd + yd * yd;
     }
 
+
     public void removeLight(int x, int y) 
     {
-        int index = -1;
-        for(int i=0; i<lights.size(); i++)
+        for(int i=lights.size()-1; i>=0; i--)
         {
             Light light = lights.get(i);
             if(light.x == x && light.y == y)
             {
-                index = i;
-                break;
+                lights.remove(i);
             }
-        }
-        
-        if(index > -1)
-        {
-            lights.remove(index);
         }
     }
 }
