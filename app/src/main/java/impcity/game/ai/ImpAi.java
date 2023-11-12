@@ -299,13 +299,13 @@ public class ImpAi extends AiBase
             if(currentJob instanceof JobFetchItem)
             {
                 ok = path.findPath(new ImpPathSource(mob, desc.size), 
-                                  new LocationPathDestination(mob.gameMap, p.x, p.y, desc.size),
+                                   new LocationPathDestination(mob.gameMap, p.x, p.y, desc.size),
                                   mob.location.x, mob.location.y);
             }
             else
             {
                 ok = path.findPath(new MiningPathSource(mob.gameMap, desc.size), 
-                                  new LocationPathDestination(mob.gameMap, p.x, p.y, 0), 
+                                   new LocationPathDestination(mob.gameMap, p.x, p.y, 0), 
                                   mob.location.x, mob.location.y);
             }
             
@@ -360,7 +360,8 @@ public class ImpAi extends AiBase
             }
             else
             {
-                System.err.println("Imp #" + mob.getKey() + " can't find a path to it's job at " + p);
+                System.err.println("Imp #" + mob.getKey() + " can't find a path to it's job " + 
+                                   currentJob + " at " + p);
 
                 // Hajo: try the job later again ...
                 if(currentJob instanceof JobExcavate)
