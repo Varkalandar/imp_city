@@ -814,6 +814,9 @@ public class ImpCity implements PostRenderHook, GameInterface
                 line = reader.readLine();
                 if("ai=<null>".equals(line))
                 {
+                    // on expedition
+                    mob.visuals.setBubble(0);
+                    mob.visuals.setDisplayCode(141);                    
                 }
                 else
                 {
