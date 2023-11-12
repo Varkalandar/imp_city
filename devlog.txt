@@ -3,7 +3,10 @@ Changes since v0.25
 - Tried to fix a random crash in the party selector dialog.
 - Made the treasury and lab floors a bit darker.
 - Improved the lab equipment graphics.
-
+- Conians only work in forges if there are resources available.
+- Creatures on expeditions get their banner again after loading a game.
+- Tried to fix the new room furnishing code to avoid overly bright 
+  lights and missing furniture (plus, restore all the pillars).
 
 Changes since v0.24
 
@@ -12,7 +15,6 @@ Changes since v0.24
 - Imps splash mining sparks less frequently
 - Imps now scrap jobs if they cannot reach the location, except for
   excavation jobs which will stay queued.
-
  
 Changes since v0.23
 
