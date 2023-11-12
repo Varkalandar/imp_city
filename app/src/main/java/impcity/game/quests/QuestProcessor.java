@@ -12,9 +12,11 @@ import java.util.logging.Logger;
 public class QuestProcessor
 {
     private static final Logger logger = Logger.getLogger(QuestProcessor.class.getName());
-    
+
+    /** All party members are dead */
     private final static int WIPED = -999999;
-    
+
+
     private final TravelEvent [] travelEvents = 
     {    
        new TravelEvent("On our way. Clear path, nothing happened.", 0, 0),
@@ -28,6 +30,7 @@ public class QuestProcessor
        new TravelEvent("Crossed a wild river.", 0, 3),
        new TravelEvent("Been ambushed by wild animals!", 1, 5),
     };
+
    
     private final TravelEvent [] combatEvents = 
     {    
@@ -38,6 +41,7 @@ public class QuestProcessor
        new TravelEvent("Met a group of armed upperworlders.", 4, 11),
        new TravelEvent("We've been ambushed by upperworlders!", 5, 17),
     };
+
     
     private final TravelEvent [] hidingEvents =
     {
@@ -47,14 +51,17 @@ public class QuestProcessor
        new TravelEvent("Party dug holes to hide in.", -1, 0),
     };
 
+
     TravelEvent stillHiding = new TravelEvent("Party is still hiding.", -1, 0);
 
     TravelEvent ambushedInHideout = new TravelEvent("We've been assaulted by upperworlders in our hideout!", 5, 24);
-   
+
+
     private final LocationEvent [] locationEvents =
     {
        new LocationEvent("Could not find anything like {0} described on the trasure map.", 0.0),
     };
+
 
     private final LocationEvent [] buildingLocationEvents =
     {
@@ -68,10 +75,13 @@ public class QuestProcessor
        new LocationEvent("Found a signpost, markings and a building which must be be {0} described on the map.", 0.7),
        new LocationEvent("Found a signpost, markings and a building which must be be {0} described on the map. Also interrogated a captured local about the building who supoorted our findings.", 0.8),
     };
-    private Random rng;
 
+
+    /** We need repeatable results, so this must be seeded with the quest seed each time */
+    private Random rng;
    
-    private enum State {TRAVELLING_TO, SEARCHING, RETREIVING, TRAVELLING_BACK};
+    private enum State {TRAVELLING_TO, SEARCHING, RETRIEVING, TRAVELLING_BACK};
+
     private State state;
    
    
@@ -100,7 +110,6 @@ public class QuestProcessor
             quest.duration = 1 + -days + daysBack;
             buffer.append("Day ").append(quest.duration).append(": ");
             buffer.append("Finally. Reached our safe dungeon again. Not going anywhere anymore. No.");
-            
         }
         else
         {
@@ -119,7 +128,6 @@ public class QuestProcessor
 
                 buffer.append('\n');
             }
-
 
             state = State.TRAVELLING_BACK;
             int daysBack = processTravel(world, quest, buffer, 1 + days + locationEvent.searchTime);
@@ -282,11 +290,15 @@ public class QuestProcessor
         return travelTimeDays;
     }
 
+
     private LocationEvent processLocationSearch(Quest quest, 
                                                 StringBuilder buffer, 
                                                 int days)
     {
-        int maxSearchDays = 5;
+        // Search at least 3 days, more if there are more intelligent creatures.
+        int maxSearchDays = Math.min(quest.party.intelligence, 3);
+
+        // accept matches at least this good (dumb creatures are more likely to make mistakes)
         double threshold = Math.min(quest.party.intelligence/8.0, 0.5);
         
         int searchDays = 0;
@@ -295,30 +307,42 @@ public class QuestProcessor
         
         LocationEvent event;
         LocationEvent best = new LocationEvent("dummy", -1.0);
-        
-        
+
         do
         {
+            //
             // Higher intelligence and scouting should increase the 
             // probability of finding something, unless the map was fake.
-            
-            int boost = (quest.party.intelligence + quest.party.scouting) / 2;
+            //
+            // So does the number of past expeditions to this location
+            //
+            int boost =
+                    (quest.party.intelligence +
+                     quest.party.scouting +
+                     quest.expeditions * 3) / 3;
             
             double p = boostedProbability(boost);
-            
-            if(quest.locationIsBuilding)
+
+
+            // find something that matches. Use boosted probability to find better matches
+            do
             {
-                int n = (int)(rng.nextDouble() * buildingLocationEvents.length);
-                event = buildingLocationEvents[n];
+                if(quest.locationIsBuilding)
+                {
+                    int n = (int)(rng.nextDouble() * buildingLocationEvents.length);
+                    event = buildingLocationEvents[n];
+                }
+                else
+                {
+                    int n = (int)(rng.nextDouble() * locationEvents.length);
+                    event = locationEvents[n];
+                }
             }
-            else
-            {
-                int n = (int)(rng.nextDouble() * locationEvents.length);
-                event = locationEvents[n];
-            }
-            
+            while(event.probability < p);
+
             searchDays++;
-            
+
+            // over time accept worse and worse matches ...
             threshold -= 0.1;
 
             if(event.probability > best.probability)
@@ -340,6 +364,7 @@ public class QuestProcessor
         while(event.probability < threshold && searchDays < maxSearchDays);   
         
         searchDays ++;
+
         // check what we found
         if(best.probability == 0.0)
         {
@@ -358,6 +383,7 @@ public class QuestProcessor
         
         return event;
     }
+
 
     private int processRetrieval(Quest quest, StringBuilder buffer, int days)
     {
@@ -393,6 +419,7 @@ public class QuestProcessor
         
         return retDays;
     }
+
 
     private int calculateKills(World world, StringBuilder buffer, Party party, TravelEvent event) 
     {
@@ -446,8 +473,7 @@ public class QuestProcessor
         
         return p;
     }
-    
-    
+
     
     private static class TravelEvent
     {
@@ -462,6 +488,7 @@ public class QuestProcessor
             this.combatLevel = combatLevel;
         }
     }
+
 
     public static class LocationEvent
     {
