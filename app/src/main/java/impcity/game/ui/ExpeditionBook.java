@@ -71,7 +71,6 @@ public class ExpeditionBook extends UiDialog
 
         textTop -= 40;
 
-        
         int i = 0;
         for(Quest quest : game.quests)
         {
@@ -79,8 +78,17 @@ public class ExpeditionBook extends UiDialog
             if(party != null)
             {
                 int lines;
-                String headline = "Find " + quest.locationName.toLowerCase();
-                
+                String headline;
+
+                if(quest.treasureType == Quest.TT_ARTIFACT)
+                {
+                    headline = "Find " + quest.treasureName;
+                }
+                else
+                {
+                    headline = "Explore " + quest.locationName.toLowerCase();
+                }
+
                 if(i == selection)
                 {
                     selectedQuest = quest;
