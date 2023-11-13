@@ -3,5 +3,5 @@ package impcity.game;
 
 public class Version
 {
-    public static String VERSION = "v0.25";
+    public static String VERSION = "v0.26";
 }

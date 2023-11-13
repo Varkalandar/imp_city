@@ -43,6 +43,9 @@ public class JobClaimGround extends AbstractJob
     
     /** 
      * Square must be free of earth or ore blocks
+     * 
+     * @param worker The worker intended to execute this job
+     * @return True if this square can be claimed, false otherwise 
      */
     @Override
     public boolean isValid(Mob worker)
@@ -50,7 +53,10 @@ public class JobClaimGround extends AbstractJob
         int rasterI = location.x/Map.SUB*Map.SUB;
         int rasterJ = location.y/Map.SUB*Map.SUB;
         Map map = worker.gameMap;
-        return map.getItem(rasterI+Map.O_BLOCK, rasterJ+Map.O_BLOCK) == 0;
+        int item = map.getItem(rasterI+Map.O_BLOCK, rasterJ+Map.O_BLOCK); 
+        int floor = map.getFloor(rasterI, rasterJ);
+        
+        return item == 0 && (floor >= Features.GROUND_LIGHT_SOIL && floor < Features.GROUND_LIGHT_SOIL + 3);
     }
 
     
