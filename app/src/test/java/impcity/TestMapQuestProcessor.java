@@ -9,6 +9,7 @@ import impcity.game.quests.QuestProcessor;
 import impcity.game.quests.QuestResult;
 import impcity.game.World;
 import impcity.game.mobs.Mob;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -16,7 +17,18 @@ import impcity.game.mobs.Mob;
  */
 public class TestMapQuestProcessor
 {
-    public static void main(String [] args)
+    @Test
+    public void testMapQuestProcessor()
+    {
+        for(int i=0; i<10; i++)
+        {
+            runOneQuest();
+        }
+    }
+        
+        
+        
+    public void runOneQuest()
     {
         Quest quest = QuestGenerator.makeTreasureQuest();
         System.out.println(quest.story + "\n");
@@ -27,13 +39,15 @@ public class TestMapQuestProcessor
         World world = new World();
         Party party = new Party();
         
-        addPartyMember(world, party, Species.WYVERNS_BASE);
+        addPartyMember(world, party, Species.BOOKWORMS_BASE);
+        addPartyMember(world, party, Species.POWERSNAILS_BASE);
         addPartyMember(world, party, Species.CONIANS_BASE);
-        addPartyMember(world, party, Species.CONIANS_BASE);
-        addPartyMember(world, party, Species.KILLERBEETLES_BASE);
-        addPartyMember(world, party, Species.KILLERBEETLES_BASE);
-        addPartyMember(world, party, Species.KILLERBEETLES_BASE);
-        
+        addPartyMember(world, party, Species.MOSQUITOES_BASE);
+        addPartyMember(world, party, Species.MOSQUITOES_BASE);
+        addPartyMember(world, party, Species.MOSQUITOES_BASE);
+    
+        party.calculateStats(world.mobs);
+
         quest.party = party;
         
         QuestResult result = processor.createLog(world , quest);
@@ -48,6 +62,7 @@ public class TestMapQuestProcessor
         assert(result.summary.equals(result2.summary));
     }
 
+    
     private static void addPartyMember(World world, Party party, int species)
     {
         Mob mob;
@@ -58,6 +73,8 @@ public class TestMapQuestProcessor
 
         // Hajo: they start at full health
         mob.stats.setCurrent(MobStats.INJURIES, 0);
+        mob.stats.setCurrent(MobStats.VITALITY, 20);
+        mob.stats.setCurrent(MobStats.EXPERIENCE, MobStats.BEGINNER_EXPERIENCE);
         
         party.members.add(key);
     }

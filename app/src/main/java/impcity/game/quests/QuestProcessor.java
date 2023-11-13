@@ -11,7 +11,7 @@ import java.util.logging.Logger;
  */
 public class QuestProcessor
 {
-    private static final Logger logger = Logger.getLogger(QuestProcessor.class.getName());
+    private static final Logger LOG = Logger.getLogger(QuestProcessor.class.getName());
 
     /** All party members are dead */
     private final static int WIPED = -999999;
@@ -87,6 +87,8 @@ public class QuestProcessor
    
     public QuestResult createLog(World world, Quest quest)
     {
+        LOG.log(Level.INFO, "Creating quest log.");
+        
         this.rng = new Random(quest.seed);
         
         LocationEvent locationEvent = null;
@@ -145,6 +147,8 @@ public class QuestProcessor
     
     private int processTravel(World world, Quest quest, StringBuilder buffer, int days)
     {
+        LOG.log(Level.INFO, "Processing travel.");
+
         Party party = quest.party;
         buffer.append("Travel Log:\n");
 
@@ -179,7 +183,7 @@ public class QuestProcessor
                     buffer.append("The remaining ").append(party.members.size()).append(" party members decided to reatreat, due to losses.\n");
                     
                     int daysLeft = - (i + 1);
-                    logger.log(Level.INFO, "Too many losses. Party retreats. Days left: " + daysLeft);
+                    LOG.log(Level.INFO, "Too many losses. Party retreats. Days left: " + daysLeft);
                     return daysLeft;
                 }
             }
@@ -295,6 +299,8 @@ public class QuestProcessor
                                                 StringBuilder buffer, 
                                                 int days)
     {
+        LOG.log(Level.INFO, "Processing location search.");
+
         // Search at least 3 days, more if there are more intelligent creatures.
         int maxSearchDays = Math.min(quest.party.intelligence, 3);
 
@@ -305,7 +311,7 @@ public class QuestProcessor
         
         buffer.append("Reached destination:\n");
         
-        LocationEvent event;
+        LocationEvent event = new LocationEvent("dummy", -1.0);
         LocationEvent best = new LocationEvent("dummy", -1.0);
 
         do
@@ -321,24 +327,30 @@ public class QuestProcessor
                      quest.party.scouting +
                      quest.expeditions * 3) / 3;
             
-            double p = boostedProbability(boost);
+            LOG.log(Level.INFO, "Quest event boost is " + boost);
 
 
-            // find something that matches. Use boosted probability to find better matches
-            do
+            // find something that matches. Use boost to find better matches
+            // take best of boost number attempts 
+            for(int i=0; i<boost; i++)
             {
+                LocationEvent e;
                 if(quest.locationIsBuilding)
                 {
                     int n = (int)(rng.nextDouble() * buildingLocationEvents.length);
-                    event = buildingLocationEvents[n];
+                    e = buildingLocationEvents[n];
                 }
                 else
                 {
                     int n = (int)(rng.nextDouble() * locationEvents.length);
-                    event = locationEvents[n];
+                    e = locationEvents[n];
+                }
+                
+                if(e.probability > event.probability)
+                {
+                    event = e;
                 }
             }
-            while(event.probability < p);
 
             searchDays++;
 
@@ -449,7 +461,7 @@ public class QuestProcessor
             kills = stillAlive;
         }
         
-        logger.log(Level.INFO, "Combat. Creatures killed: " + kills);
+        LOG.log(Level.INFO, "Combat. Creatures killed: " + kills);
         
         return kills;
     }
