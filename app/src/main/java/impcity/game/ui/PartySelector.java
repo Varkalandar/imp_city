@@ -1,8 +1,6 @@
 package impcity.game.ui;
 
-import impcity.game.Clock;
-import impcity.game.ImpCity;
-import impcity.game.Party;
+import impcity.game.*;
 import impcity.game.ai.Ai;
 import impcity.game.ai.AiBase;
 import impcity.game.quests.QuestProcessor;
@@ -16,7 +14,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import impcity.game.Texture;
 import impcity.game.mobs.Mob;
 import impcity.ogl.IsoDisplay;
 import java.util.HashSet;
@@ -292,7 +289,7 @@ public class PartySelector extends UiDialog
 
             // show coat of arms as indicator
             mob.visuals.setBubble(0);
-            mob.visuals.setDisplayCode(141);
+            mob.visuals.setDisplayCode(Features.I_EXPEDITION_BANNER);
         }
 
         quest.startTime = Clock.days();

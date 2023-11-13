@@ -272,9 +272,9 @@ public class CreatureAi extends AiBase
             
             if(path == null)
             {
-                prepareWork(mob);
                 goal = Goal.WORKING;
                 mob.visuals.setBubble(0);
+                prepareWork(mob);
             }
         }
         else if(goal == Goal.WORKING)
@@ -775,6 +775,7 @@ public class CreatureAi extends AiBase
         }    
     }
 
+
     private void workingPowersnail(Mob mob, int species)
     {
         // Hajo: powersnails spread plant seeds
@@ -1003,7 +1004,12 @@ public class CreatureAi extends AiBase
         Map map = mob.gameMap;
         Point p = scanForResources(map, rasterI, rasterJ);
         
-        if(p != null)
+        if(p == null)
+        {
+            // No resources -> stop working
+            goal = Goal.GO_RANDOM;
+        }
+        else
         {
             // todo: produce correct product
             map.setItem(p.x, p.y, 0);
