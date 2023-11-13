@@ -299,13 +299,13 @@ public class ImpAi extends AiBase
             if(currentJob instanceof JobFetchItem)
             {
                 ok = path.findPath(new ImpPathSource(mob, desc.size), 
-                                   new LocationPathDestination(mob.gameMap, p.x, p.y, desc.size),
+                                   new LocationPathDestination(p.x, p.y, desc.size),
                                   mob.location.x, mob.location.y);
             }
             else
             {
                 ok = path.findPath(new MiningPathSource(mob.gameMap, desc.size), 
-                                   new LocationPathDestination(mob.gameMap, p.x, p.y, 0), 
+                                   new LocationPathDestination(p.x, p.y, 0), 
                                   mob.location.x, mob.location.y);
             }
             
@@ -326,7 +326,7 @@ public class ImpAi extends AiBase
                     {
                         ok = 
                             path.findPath(new MiningPathSource(mob.gameMap, desc.size), 
-                                  new LocationPathDestination(mob.gameMap, node.x, node.y, 0), 
+                                  new LocationPathDestination(node.x, node.y, 0), 
                                   mob.location.x, mob.location.y);                
 
                         logger.log(Level.INFO, "Imp #{0} tries truncated path, result={1} length={2}", new Object[]{mob.getKey(), ok, path.length()});
@@ -381,7 +381,7 @@ public class ImpAi extends AiBase
             
             boolean ok =
             path.findPath(new ImpPathSource(mob, desc.size), 
-                          new LocationPathDestination(mob.gameMap, home.x, home.y, 0), 
+                          new LocationPathDestination(home.x, home.y, 0), 
                           mob.location.x, mob.location.y);
             
             if(ok)

@@ -355,7 +355,7 @@ public class CreatureAi extends AiBase
                 Path path = new Path();
 
                 path.findPath(new WayPathSource(mob.gameMap, desc.size, false),
-                        new LocationPathDestination(mob.gameMap, p.x, p.y, 0),
+                        new LocationPathDestination(p.x, p.y, 0),
                         mob.location.x, mob.location.y);
 
                 mob.setPath(path);
@@ -410,7 +410,7 @@ public class CreatureAi extends AiBase
                     
                     ok = 
                     path.findPath(new WayPathSource(mob.gameMap, desc.size, false),
-                                  new LocationPathDestination(mob.gameMap, x, y, 0),
+                                  new LocationPathDestination(x, y, 0),
                                   mob.location.x, mob.location.y);
 
                     if(ok && path.length() > 0)
@@ -439,7 +439,7 @@ public class CreatureAi extends AiBase
             Path path = new Path();
             
             path.findPath(new WayPathSource(mob.gameMap, desc.size, false),
-                          new LocationPathDestination(mob.gameMap, home.x, home.y, 0), 
+                          new LocationPathDestination(home.x, home.y, 0), 
                           mob.location.x, mob.location.y);
             
             mob.setPath(path);
@@ -512,7 +512,7 @@ public class CreatureAi extends AiBase
             {
                 ok =
                 path.findPath(new WayPathSource(mob.gameMap, desc.size, false),
-                              new LocationPathDestination(mob.gameMap, p.x, p.y, 0),
+                              new LocationPathDestination(p.x, p.y, 0),
                               mob.location.x, mob.location.y);
             }
             
