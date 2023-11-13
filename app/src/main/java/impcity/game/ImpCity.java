@@ -816,7 +816,7 @@ public class ImpCity implements PostRenderHook, GameInterface
                 {
                     // on expedition
                     mob.visuals.setBubble(0);
-                    mob.visuals.setDisplayCode(141);                    
+                    mob.visuals.setDisplayCode(Features.I_EXPEDITION_BANNER);
                 }
                 else
                 {

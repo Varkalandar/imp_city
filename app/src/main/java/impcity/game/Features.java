@@ -94,6 +94,8 @@ public class Features
     public static final int I_FRAME_BOT = 27;
     public static final int I_FRAME_LEFT = 28;
     public static final int I_FRAME_TOP = 29;
+
+    public static final int I_EXPEDITION_BANNER = 141;
     
     public static final int MESSAGE_IDEA_BLUE = 953;
     public static final int MESSAGE_IDEA_GREEN = 954;
