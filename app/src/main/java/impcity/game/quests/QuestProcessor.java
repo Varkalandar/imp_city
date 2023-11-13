@@ -60,6 +60,10 @@ public class QuestProcessor
     private final LocationEvent [] locationEvents =
     {
        new LocationEvent("Could not find anything like {0} described on the trasure map.", 0.0),
+       new LocationEvent("Found something but uncertain if it's {0} described by the trasure map.", 0.2),
+       new LocationEvent("Found something that reminds of {0} described by the trasure map.", 0.4),
+       new LocationEvent("Found something which might be {0} described by the trasure map.", 0.6),
+       new LocationEvent("Found something very much looking like {0} described by the trasure map.", 0.8),
     };
 
 
@@ -222,11 +226,13 @@ public class QuestProcessor
                     event = travelEvents[n];
                     
                     buffer.append(event.message).append(' ');
+                    
                     int kills = calculateKills(world, buffer, party, event);
                     if(kills > 0)
                     {
-                        String kf = party.decimate(world.mobs, rng, kills);
-                        buffer.append(kf).append(' ');
+                        // TODO: this is not RNG safe/reproducible
+                        // String kf = party.decimate(world.mobs, rng, kills);
+                        // buffer.append(kf).append(' ');
                     }
                     // then, combat notes
                     
@@ -275,8 +281,9 @@ public class QuestProcessor
             int kills = calculateKills(world, buffer, party, event);
             if(kills > 0)
             {
-                String kf = party.decimate(world.mobs, rng, kills);
-                buffer.append(kf).append(' ');
+                // TODO: this is not RNG safe/reproducible
+                // String kf = party.decimate(world.mobs, rng, kills);
+                // buffer.append(kf).append(' ');
             }
             
             currentDangerLevel = escalatedDangerLevel +
@@ -301,62 +308,45 @@ public class QuestProcessor
     {
         LOG.log(Level.INFO, "Processing location search.");
 
-        // Search at least 3 days, more if there are more intelligent creatures.
-        int maxSearchDays = Math.min(quest.party.intelligence, 3);
+        // Search at least 3 days, more if there are better scouts.
+        int maxSearchDays = Math.min(quest.party.scouting, 3);
 
         // accept matches at least this good (dumb creatures are more likely to make mistakes)
-        double threshold = Math.min(quest.party.intelligence/8.0, 0.5);
+        double partyProbabability = 
+                Math.min(quest.party.intelligence/12.0, 0.95);
+        
+        
+        // to get a good distribution we must spread out the difficult some
+        // See TestMapQuestProcessorSuccessRate results.
+        double difficulty = (quest.findingDifficulty + 9) * 0.5;
+        
+        double questRequiredProbability = 
+                Math.min(difficulty/16.0 - quest.expeditions/0.25, 0.95);
         
         int searchDays = 0;
         
         buffer.append("Reached destination:\n");
         
-        LocationEvent event = new LocationEvent("dummy", -1.0);
+        LocationEvent event;
         LocationEvent best = new LocationEvent("dummy", -1.0);
 
         do
         {
-            //
-            // Higher intelligence and scouting should increase the 
-            // probability of finding something, unless the map was fake.
-            //
-            // So does the number of past expeditions to this location
-            //
-            int boost =
-                    (quest.party.intelligence +
-                     quest.party.scouting +
-                     quest.expeditions * 3) / 3;
-            
-            LOG.log(Level.INFO, "Quest event boost is " + boost);
-
-
-            // find something that matches. Use boost to find better matches
-            // take best of boost number attempts 
-            for(int i=0; i<boost; i++)
-            {
-                LocationEvent e;
-                if(quest.locationIsBuilding)
-                {
-                    int n = (int)(rng.nextDouble() * buildingLocationEvents.length);
-                    e = buildingLocationEvents[n];
-                }
-                else
-                {
-                    int n = (int)(rng.nextDouble() * locationEvents.length);
-                    e = locationEvents[n];
-                }
-                
-                if(e.probability > event.probability)
-                {
-                    event = e;
-                }
-            }
-
             searchDays++;
 
-            // over time accept worse and worse matches ...
-            threshold -= 0.1;
+            // what is found today?
+            if(quest.locationIsBuilding)
+            {
+                int n = (int)(rng.nextDouble() * buildingLocationEvents.length);
+                event = buildingLocationEvents[n];
+            }
+            else
+            {
+                int n = (int)(rng.nextDouble() * locationEvents.length);
+                event = locationEvents[n];
+            }
 
+            // is it a better hint than what we found earlier?
             if(event.probability > best.probability)
             {
                 best = event;
@@ -367,18 +357,18 @@ public class QuestProcessor
             {
                 buffer.append("Day ").append(days + searchDays).append(": ");
                 buffer.append("We found nothing ");
-                if(best != null && best.probability > 0.0) buffer.append("better ");
+                if(best.probability > 0.0) buffer.append("better ");
                 buffer.append("yet.");
             }
             
             buffer.append('\n');
         } 
-        while(event.probability < threshold && searchDays < maxSearchDays);   
+        while(event.probability < partyProbabability * 0.15 && searchDays < maxSearchDays);   
         
         searchDays ++;
 
-        // check what we found
-        if(best.probability == 0.0)
+        // check what we found the rigth thing.
+        if((best.probability + partyProbabability) * 0.5 < questRequiredProbability)
         {
             buffer.append("Day ").append(days + searchDays)
                     .append(": We give up searching. The map must be wrong.\n");
@@ -461,7 +451,7 @@ public class QuestProcessor
             kills = stillAlive;
         }
         
-        LOG.log(Level.INFO, "Combat. Creatures killed: " + kills);
+        if(kills > 0) LOG.log(Level.INFO, "Combat. Creatures killed: " + kills);
         
         return kills;
     }

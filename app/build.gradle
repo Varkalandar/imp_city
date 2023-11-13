@@ -42,6 +42,7 @@ sourceSets {
 dependencies {
     // Use JUnit Jupiter for testing.
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+    testImplementation 'org.bitbucket.cowwoc:diff-match-patch:1.2'
 
     implementation files('libs/RoguelikeGameKit.jar', 'libs/lwjgl.jar', 'libs/lwjgl_util.jar')
 }

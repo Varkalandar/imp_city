@@ -9,29 +9,48 @@ import impcity.game.quests.QuestProcessor;
 import impcity.game.quests.QuestResult;
 import impcity.game.World;
 import impcity.game.mobs.Mob;
+import java.util.LinkedList;
+import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch;
 import org.junit.jupiter.api.Test;
 
 /**
- *
+ * Tests the success rate of a standard party vs quest finding difficulty.
+ * 
  * @author Hj. Malthaner
  */
-public class TestMapQuestProcessor
+public class TestMapQuestProcessorSuccessRate
 {
     @Test
     public void testMapQuestProcessor()
     {
-        for(int i=0; i<10; i++)
+        int runs = 20;
+        
+        double [] p = new double [16]; 
+        for(int difficulty=0; difficulty<16; difficulty++)
         {
-            runOneQuest();
+            int count = 0;
+            for(int i=0; i<runs; i++)
+            {
+                boolean success = runOneQuest(difficulty);
+                if(success) count ++;
+            }
+
+            p[difficulty] = (double)count / (double)runs;
         }
-    }
+        
+        for(int difficulty=0; difficulty<16; difficulty++)
+        {
+            System.err.println("Difficulty: " + difficulty + "\t Success rate:" + p[difficulty]);
+        }
+    }        
         
         
-        
-    public void runOneQuest()
+    public boolean runOneQuest(int difficulty)
     {
         Quest quest = QuestGenerator.makeTreasureQuest();
-        System.out.println(quest.story + "\n");
+        quest.findingDifficulty = difficulty;
+        
+        // System.out.println(quest.story + "\n");
 
         QuestProcessor processor = new QuestProcessor();
 
@@ -52,14 +71,31 @@ public class TestMapQuestProcessor
         
         QuestResult result = processor.createLog(world , quest);
         
-        System.out.println(result.story + "\n");
-        System.out.println(result.summary + "\n");
-        
-        
         // Hajo: test if quest is idempotent
         QuestResult result2 = processor.createLog(world , quest);
-        assert(result.story.equals(result2.story));
-        assert(result.summary.equals(result2.summary));
+        
+        if(!result.story.equals(result2.story))
+        {
+            DiffMatchPatch dmp = new DiffMatchPatch();
+            LinkedList<DiffMatchPatch.Diff> diffs = dmp.diffMain(result.story, result2.story, false);            
+            
+            for(DiffMatchPatch.Diff diff : diffs)
+            {
+                System.err.println(diff);
+            }            
+            
+            System.err.println(result.story + "\n");
+            System.err.println(result2.story + "\n");            
+            assert(false);
+        }
+        
+        if(!result.summary.equals(result2.summary))
+        {
+            assert(false);
+        }
+            
+        
+        return (quest.status & Quest.SF_FOUND) != 0;
     }
 
     
