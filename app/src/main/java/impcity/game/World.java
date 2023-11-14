@@ -214,7 +214,7 @@ public class World
 
         if((key & Map.F_ITEM) != 0)
         {
-            Item item = items.get(key & Map.F_ITEM_MASK);
+            Item item = items.get(key & Map.F_IDENT_MASK);
             yesno = (item.texId >= Features.ARTIFACTS_FIRST && item.texId <= Features.ARTIFACTS_LAST);
         }
 

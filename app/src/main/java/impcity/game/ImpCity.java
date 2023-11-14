@@ -48,6 +48,8 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 
 import impcity.utils.StringUtils;
+import java.util.function.IntPredicate;
+import java.util.function.IntUnaryOperator;
 import org.lwjgl.LWJGLException;
 import rlgamekit.objects.Cardinal;
 import rlgamekit.objects.Registry;
@@ -600,7 +602,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         {
             for (int x = w; x >= 0; x -= Map.SUB)
             {
-                int block = map.getItem(x, y) & Map.F_ITEM_MASK;
+                int block = map.getItem(x, y) & Map.F_IDENT_MASK;
                 if (block >= Features.I_PERM_ROCK && block <= Features.I_STEEP_EARTH_BLOCK + 20)
                 {
                     map.setItem(x, y, 0);
@@ -985,14 +987,14 @@ public class ImpCity implements PostRenderHook, GameInterface
         }
         else
         {
-            // new library square was added
+            // new room square was added
             squares.add(p);
             map.setFloor(p.x, p.y, floor + (int)(Math.random() * floorRange));
             room = addNewSquareToRooms(p, rooms);
         }
-
+        
         room.calculateBorderDistances(map, floor);
-        room.forAllPoints((x, y) -> {return clearItems(map, x, y, Map.SUB);});
+        room.forAllPoints((x, y) -> {clearItems(map, x, y, Map.SUB, Features.keepTreasureFilter); return true;});
         room.forAllInnerPoints((x, y) -> {action.furnish(map, x, y); return true;});
         room.forAllPoints((x, y) -> {refreshPillars(x, y); return true;});
 
@@ -1264,21 +1266,7 @@ public class ImpCity implements PostRenderHook, GameInterface
     public void resetSquare(Map map, int rasterI, int rasterJ) 
     {
         map.setWayLikeItem(rasterI, rasterJ, 0);
-        for(int j=0; j<Map.SUB; j++)
-        {
-            for(int i=0; i<Map.SUB; i++)
-            {
-                int ii = rasterI + i;
-                int jj = rasterJ + j;
-                
-                map.setItem(ii, jj, 0);
-                map.setMovementBlocked(ii, jj, false);
-                map.setPlacementBlocked(ii, jj, false);
-                map.removeLight(ii, jj);
-                
-                removeGeneratorFrom(ii, jj);
-            }
-        }
+        clearItems(map, rasterI, rasterJ, Map.SUB, Features.keepTreasureFilter);
         
         int n = map.getFloor(rasterI, rasterJ);
         if(n < Features.GROUND_POLY_TILES || n >= Features.GROUND_POLY_TILES + 3)
@@ -1288,25 +1276,19 @@ public class ImpCity implements PostRenderHook, GameInterface
     }
 
     
-    public boolean clearItems(Map map, int x, int y, int range)
+    public void clearItems(Map map, int x, int y, int range, IntUnaryOperator itemFilter)
     {
-        for(int j=0; j<range; j++)
-        {
-            for(int i=0; i<range; i++)
-            {
-                int ii = x + i;
-                int jj = y + j;
-
-                map.setItem(ii, jj, 0);
+        map.traverseArea(x, y, range, range, 
+            (ii, jj) ->
+            {        
+                map.setItem(ii, jj, itemFilter.applyAsInt(map.getItem(ii, jj)));
                 map.setMovementBlocked(ii, jj, false);
                 map.setPlacementBlocked(ii, jj, false);
                 map.removeLight(ii, jj);
 
                 removeGeneratorFrom(ii, jj);
-            }
-        }
-        
-        return true;
+                return true;
+            });
     }
 
 
@@ -1467,6 +1449,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         gameDisplay.getFontLow().drawStringScaled(msg, 0xFFDDDDDD, 210, 396, 0.3);
         display.update();
     }
+
 
     public void removeGeneratorFrom(int i, int j) 
     {

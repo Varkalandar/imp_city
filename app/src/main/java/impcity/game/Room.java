@@ -149,7 +149,7 @@ public class Room
             {
                 for(int i=0; i<Map.SUB; i++)
                 {
-                    int n = map.getItem(p.x + i, p.y + j) & Map.F_ITEM_MASK;
+                    int n = map.getItem(p.x + i, p.y + j) & Map.F_IDENT_MASK;
 
                      // todo: check for correct resource
                     if(resources.test(n))

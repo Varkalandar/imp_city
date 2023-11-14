@@ -277,7 +277,7 @@ public class IsoDisplay implements PostRenderHook
     
     public void setDecoDisplayName(int deco, String name)
     {
-        decoDisplayNames[deco & Map.F_ITEM_MASK] = name;
+        decoDisplayNames[deco & Map.F_IDENT_MASK] = name;
     }
     
     public void setViewDist(int dist)

@@ -1,6 +1,8 @@
 package impcity.game;
 
+import impcity.game.map.Map;
 import java.util.HashSet;
+import java.util.function.IntUnaryOperator;
 
 /**
  *
@@ -153,15 +155,36 @@ public class Features
     
     public static final HashSet<Integer> DUST_SET;
     
+    
+    /** 
+     * This filter keeps coins, resources and artifacts
+     */
+    static final IntUnaryOperator keepTreasureFilter =
+            (int item) -> 
+            {
+                if(isCoins(item & Map.F_IDENT_MASK) ||
+                   isResource(item & Map.F_IDENT_MASK) ||
+                   (item & Map.F_ITEM) != 0)
+                {
+                    return item;
+                }
+                else
+                {
+                    return 0;
+                }
+            };
+    
+    
     static
     {
-        DUST_SET = new HashSet<Integer>();
+        DUST_SET = new HashSet<>();
 
         for(int dust : DUSTS)
         {
             DUST_SET.add(dust);
         }
     }
+    
     
     public static boolean isCoins(int item)
     {
@@ -171,16 +194,28 @@ public class Features
             item == Features.I_BRONZE_COINS;
     }
 
+    
+    public static boolean isResource(int item)
+    {
+        return 
+            item == Features.I_COPPER_ORE ||
+            item == Features.I_TIN_ORE ||
+            item == Features.I_MINERAL;
+    }
+
+    
     public static boolean isImpassable(int ground) 
     {
         return ground >= GROUND_IMPASSABLE && ground < GROUND_IMPASSABLE + 3;
     }
+
     
     public static boolean isEarth(int item) 
     {
         return item >= I_EARTH_BLOCK && item < I_EARTH_BLOCK + 3;
     }
 
+    
     public static boolean canBeMined(int ground, int block)
     {
         return ((block >=  Features.I_GOLD_MOUND && block < Features.I_GOLD_MOUND + 3) ||
@@ -192,6 +227,7 @@ public class Features
                 (ground >= Features.GROUND_IMPASSABLE && ground < Features.GROUND_IMPASSABLE + 3));
     }
 
+    
     public static boolean canBeDug(int ground, int block) {
         return (block >= Features.I_STEEP_EARTH_BLOCK && block < Features.I_STEEP_EARTH_BLOCK + 3) &&
                ((ground >= Features.GROUND_LIGHT_SOIL && ground <= Features.GROUND_LIGHT_SOIL+3) ||

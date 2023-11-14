@@ -660,11 +660,11 @@ public class Editor implements PostRenderHook, TextureCache.LoaderCallback
                     break;
                 case 5:
                     n = map.getItem(mouseI, mouseJ);
-                    selection = itemToSelection(n & Map.F_ITEM_MASK);
+                    selection = itemToSelection(n & Map.F_IDENT_MASK);
                     break;
                 case 6:
                     n = map.getItem(mouseI, mouseJ);
-                    selection = itemToSelection(n & Map.F_ITEM_MASK);
+                    selection = itemToSelection(n & Map.F_IDENT_MASK);
                     break;
             }
         }

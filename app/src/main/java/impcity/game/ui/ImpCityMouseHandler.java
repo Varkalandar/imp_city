@@ -155,7 +155,7 @@ public class ImpCityMouseHandler implements MouseHandler
     private void markForExcavation(Map map, int rasterI, int rasterJ) 
     {
         int ground = map.getFloor(rasterI, rasterJ);
-        int block = map.getItem(rasterI + Map.O_BLOCK, rasterJ + Map.O_BLOCK) & Map.F_ITEM_MASK;
+        int block = map.getItem(rasterI + Map.O_BLOCK, rasterJ + Map.O_BLOCK) & Map.F_IDENT_MASK;
 
         if(Features.canBeDug(ground, block))
         {

@@ -45,7 +45,7 @@ public class JobFetchItem extends AbstractJob
             if((item & Map.F_ITEM) != 0)
             {
                 // real item
-                bubble = game.world.items.get(item & Map.F_ITEM_MASK).texId;
+                bubble = game.world.items.get(item & Map.F_IDENT_MASK).texId;
             }
 
             worker.visuals.setBubble(bubble);
