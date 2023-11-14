@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.IntPredicate;
 
 /**
  *
@@ -55,6 +56,26 @@ public class Room
         }
     }
 
+
+    public static Point scanRoomsForResources(List<Room> rooms, Map map,
+                                              IntPredicate resources,
+                                              int rasterI, int rasterJ)
+    {
+        Point rasterP = new Point(rasterI, rasterJ);
+        Point p = null;
+
+        // scan forge rooms
+        for(Room room : rooms)
+        {
+            if(room.squares.contains(rasterP))
+            {
+                // this is the room we are in -> scan it
+                p = room.scanForResources(map, resources);
+            }
+        }
+
+        return p;
+    }
 
     public final Set <Point> squares;
     public final HashMap <Point, Integer> distances;
@@ -120,7 +141,7 @@ public class Room
     }
 
     
-    public Point scanForResources(Map map, int resource1, int resource2) 
+    public Point scanForResources(Map map, IntPredicate resources)
     {
         for(Point p : squares)
         {
@@ -131,7 +152,7 @@ public class Room
                     int n = map.getItem(p.x + i, p.y + j) & Map.F_ITEM_MASK;
 
                      // todo: check for correct resource
-                    if(n == resource1 || n == resource2)
+                    if(resources.test(n))
                     {
                         return new Point(p.x + i, p.y + j);
                     }

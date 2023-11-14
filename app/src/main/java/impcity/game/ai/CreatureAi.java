@@ -453,16 +453,20 @@ public class CreatureAi extends AiBase
         
         if(mob.getPath() != null && goal != Goal.BUILD_LAIR)
         {
-            // Hajo: mob found a new path -> play starting sound
-            
-            if(desc.startingSound >= 0) // got a sound ?
-            {
-                Mob player = game.world.mobs.get(game.getPlayerKey());
-                game.soundPlayer.playFromPosition(desc.startingSound, 0.9f, 1.0f, mob.location, game.getViewPosition());
-            }
+            // Hajo: mob found a new path
+            playStartingSound(mob, desc);
         }
     }
-    
+
+
+    private void playStartingSound(Mob mob, SpeciesDescription desc)
+    {
+        if(desc.startingSound >= 0) // got a sound ?
+        {
+            game.soundPlayer.playFromPosition(desc.startingSound, 0.9f, 1.0f, mob.location, game.getViewPosition());
+        }
+    }
+
 
     /**
      * This is a complicated case, because some workplaces
@@ -682,36 +686,15 @@ public class CreatureAi extends AiBase
         switch (mob.getSpecies()) 
         {
             case Species.BOOKWORMS_BASE:
-                {
-                    // Turn worm towards the bookshelf
-                    int direction = 6 + (int)(Math.random() * 3) & 7;
-                    mob.visuals.setDisplayCode(Species.BOOKWORMS_BASE + direction);
-                }
+                prepareLibraryWork(mob);
                 break;
                 
             case Species.HAT_MAGE_BASE:
-                {
-                    // face the distill
-                    Mob distill = findClosestDistill(mob);
-                    int cx = distill.location.x;
-                    int cy = distill.location.y;
-                    int direction = Direction.dirFromVector(cx - mob.location.x, cy - mob.location.y);
-                    mob.visuals.setDisplayCode(Species.HAT_MAGE_BASE + direction);
-                }
+                prepareLaboratoryWork(mob);
                 break;
                 
             case Species.CONIANS_BASE:
-                Point p = scanForResources(mob.gameMap, rasterI, rasterJ);
-                if(p == null)
-                {
-                    // nothing to do here
-                    goal = Goal.GO_RANDOM;
-                }
-                else
-                {
-                    // Nice! there is stuff to play with
-                    addReputation(5);
-                }   
+                prepareForgeWork(mob, rasterI, rasterJ);
                 break;
                 
             default:
@@ -724,7 +707,44 @@ public class CreatureAi extends AiBase
             researchTime = Clock.time();
         }
     }
-    
+
+
+    private void prepareForgeWork(Mob mob, int rasterI, int rasterJ)
+    {
+        Point p = Room.scanRoomsForResources(game.forgeRooms, mob.gameMap,
+                                             (resource) -> {return resource == Features.I_COPPER_ORE || resource == Features.I_TIN_ORE;},
+                                             rasterI, rasterJ);
+        if(p == null)
+        {
+            // nothing to do here, no resources available
+            goal = Goal.GO_RANDOM;
+        }
+        else
+        {
+            // Nice! there is stuff to play with
+            addReputation(5);
+        }
+    }
+
+
+    private void prepareLaboratoryWork(Mob mob)
+    {
+        // face the distill
+        Mob distill = findClosestDistill(mob);
+        int cx = distill.location.x;
+        int cy = distill.location.y;
+        int direction = Direction.dirFromVector(cx - mob.location.x, cy - mob.location.y);
+        mob.visuals.setDisplayCode(Species.HAT_MAGE_BASE + direction);
+    }
+
+
+    private static void prepareLibraryWork(Mob mob)
+    {
+        // Turn worm towards the bookshelf
+        int direction = 6 + (int)(Math.random() * 3) & 7;
+        mob.visuals.setDisplayCode(Species.BOOKWORMS_BASE + direction);
+    }
+
 
     private void finishWork(Mob mob) 
     {
@@ -776,10 +796,9 @@ public class CreatureAi extends AiBase
     }
 
 
+    /** Powersnails spread plant seeds */
     private void workingPowersnail(Mob mob, int species)
     {
-        // Hajo: powersnails spread plant seeds
-
         if((workStep % 12) == 0)
         {
             int dir = mob.visuals.getDisplayCode() - species;
@@ -1002,8 +1021,10 @@ public class CreatureAi extends AiBase
     private void produceInForge(Mob mob, int rasterI, int rasterJ) 
     {
         Map map = mob.gameMap;
-        Point p = scanForResources(map, rasterI, rasterJ);
-        
+        Point p = Room.scanRoomsForResources(game.forgeRooms, map,
+                (resource) -> {return resource == Features.I_COPPER_ORE || resource == Features.I_TIN_ORE;},
+                rasterI, rasterJ);
+
         if(p == null)
         {
             // No resources -> stop working
@@ -1015,25 +1036,6 @@ public class CreatureAi extends AiBase
             map.setItem(p.x, p.y, 0);
             map.dropItem(mob.location.x, mob.location.y, Features.I_BRONZE_COINS);
         }
-    }
-    
-    
-    private Point scanForResources(Map map, int rasterI, int rasterJ)
-    {
-        Point rasterP = new Point(rasterI, rasterJ);
-        Point p = null;
-
-        // scan forge rooms
-        for(Room room : game.forgeRooms)
-        {
-            if(room.squares.contains(rasterP))
-            {
-                // this is the room we are in -> scan it
-                p = room.scanForResources(map, Features.I_COPPER_ORE, Features.I_TIN_ORE);
-            }
-        }
-
-        return p;
     }
 
     
