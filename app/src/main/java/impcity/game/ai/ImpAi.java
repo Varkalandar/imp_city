@@ -534,6 +534,13 @@ public class ImpAi extends AiBase
                 currentJob = new JobMining(game, 0, 0);
                 currentJob.read(reader);
             }
+            else if(line.contains("JobFetchItem"))
+            {
+                // Todo: actual saving and loading code for fetch item jobs
+                JobFetchItem dummy = new JobFetchItem(game, 0, 0, 1);
+                dummy.read(reader);
+                goal = Goal.GO_TO_SLEEP;
+            }
             else
             {
                 currentJob = null;
