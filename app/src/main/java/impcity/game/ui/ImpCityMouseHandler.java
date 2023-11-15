@@ -1,6 +1,7 @@
 package impcity.game.ui;
 
 import impcity.game.*;
+import impcity.game.room.Room;
 import impcity.game.species.Species;
 import impcity.game.ai.WayPathSource;
 import impcity.game.jobs.JobExcavate;
@@ -257,7 +258,7 @@ public class ImpCityMouseHandler implements MouseHandler
         else if(n >= Features.GROUND_LIBRARY && n < Features.GROUND_LIBRARY + 3)
         {
             game.resetSquare(map, rasterI, rasterJ);
-            Room.removeSquare(p, game.libraryRooms, 
+            game.libraryRooms.removeSquare(p,
                     (x, y) -> { game.toggleLibrarySquare(map, x, y); return true; } );
             game.getLibraries().remove(p);
         }
@@ -289,7 +290,7 @@ public class ImpCityMouseHandler implements MouseHandler
         else if(n >= Features.GROUND_FORGE && n < Features.GROUND_FORGE + 3)
         {
             game.resetSquare(map, rasterI, rasterJ);
-            Room.removeSquare(p, game.forgeRooms, 
+            game.forgeRooms.removeSquare(p,
                     (x, y) -> { game.toggleForgeSquare(map, x, y); return true; } );
             game.getForges().remove(p);
         }
@@ -301,13 +302,14 @@ public class ImpCityMouseHandler implements MouseHandler
         else if(n >= Features.GROUND_LABORATORY && n < Features.GROUND_LABORATORY + 3)
         {
             game.resetSquare(map, rasterI, rasterJ);
-            Room.removeSquare(p, game.labRooms, 
+            game.labRooms.removeSquare(p,
                     (x, y) -> { game.toggleLabSquare(map, x, y); return true; } );
             game.getLaboratories().remove(p);
         }
 
         game.refreshPillars(rasterI, rasterJ);
     }
+
 
     private void spawnImp(Map map, int rasterI, int rasterJ) 
     {

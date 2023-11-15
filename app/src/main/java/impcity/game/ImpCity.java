@@ -1,6 +1,8 @@
 package impcity.game;
 
 import impcity.game.quests.QuestResult;
+import impcity.game.room.Room;
+import impcity.game.room.RoomList;
 import impcity.game.ui.*;
 import impcity.game.species.Species;
 import impcity.game.species.SpeciesDescription;
@@ -34,7 +36,6 @@ import java.util.logging.Logger;
 import impcity.ogl.GlTextureCache;
 import impcity.game.mobs.Mob;
 import impcity.game.ai.Ai;
-import impcity.game.map.LocationCallback;
 import impcity.game.map.Map;
 import impcity.game.map.RectArea;
 import impcity.game.mobs.MovementJumping;
@@ -48,7 +49,7 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 
 import impcity.utils.StringUtils;
-import java.util.function.IntPredicate;
+
 import java.util.function.IntUnaryOperator;
 import org.lwjgl.LWJGLException;
 import rlgamekit.objects.Cardinal;
@@ -92,9 +93,9 @@ public class ImpCity implements PostRenderHook, GameInterface
     private final List <Point> hospitals = Collections.synchronizedList(new ArrayList<Point>());
     private final List <Point> claimed = Collections.synchronizedList(new ArrayList<Point>());
     
-    public final List <Room> forgeRooms = new ArrayList<>();
-    public final List <Room> libraryRooms = new ArrayList<>();
-    public final List <Room> labRooms = new ArrayList<>();
+    public final RoomList forgeRooms = new RoomList();
+    public final RoomList libraryRooms = new RoomList();
+    public final RoomList labRooms = new RoomList();
     
     public final List <Mob> generators = Collections.synchronizedList(new ArrayList<Mob>());
     public final List <Quest> quests = Collections.synchronizedList(new ArrayList<Quest>());
@@ -972,17 +973,17 @@ public class ImpCity implements PostRenderHook, GameInterface
 
 
     public boolean toggleRoomSquare(Map map, int rasterI, int rasterJ,
-                                    List<Point> squares, List<Room> rooms,
+                                    List<Point> squares, RoomList rooms,
                                     int floor, int floorRange,
                                     Furnisher action)
     {
         Point p = new Point(rasterI, rasterJ);
         Room room;
 
-        if(libraries.contains(p))
+        if(squares.contains(p))
         {
             // existing room needs to be refurnished
-            Pair <Room, Integer> best = findClosestRoom(p, libraryRooms);
+            Pair <Room, Integer> best = rooms.findClosestRoom(p);
             room = best.v1;
         }
         else
@@ -990,7 +991,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             // new room square was added
             squares.add(p);
             map.setFloor(p.x, p.y, floor + (int)(Math.random() * floorRange));
-            room = addNewSquareToRooms(p, rooms);
+            room = rooms.addNewSquare(p);
         }
         
         room.calculateBorderDistances(map, floor);
@@ -1168,64 +1169,6 @@ public class ImpCity implements PostRenderHook, GameInterface
     }    
 
 
-    private Pair <Room, Integer> findClosestRoom(Point p, List <Room> rooms)
-    {
-        int dmax = 999;
-        Room bestRoom = null;
-        for(Room room : rooms)
-        {
-            for(Point rp : room.squares)
-            {
-                int d = Math.abs(rp.x - p.x) + Math.abs(rp.y - p.y);
-
-                if(d < dmax) 
-                {
-                    dmax = d;
-                    bestRoom = room;
-                }
-            }
-        }
-        
-        return new Pair(bestRoom, dmax);
-    }
-    
-    
-    /**
-     * see if this is a new room or if it is
-     * an extension of a room
-     */
-    private Room addNewSquareToRooms(Point p, List <Room> rooms)
-    {
-        Pair <Room, Integer> best = findClosestRoom(p, rooms);
-        
-        Room bestRoom = best.v1;
-        int dmax = best.v2;
-        
-        Room result;
-        
-        if(dmax > Map.SUB)
-        {
-            // Hajo: this is a new room
-            Room room = new Room();
-            room.squares.add(p);
-            rooms.add(room);
-            result = room;
-        }
-        else if(bestRoom != null)
-        {
-            bestRoom.squares.add(p);
-            result = bestRoom;
-        }
-        else
-        {
-            logger.log(Level.SEVERE, "Algorithm error!");
-            result = null;
-        }
-        
-        return result;
-    }
-
-    
     void spawnImp() 
     {
         int x = display.cursorI;

@@ -3,7 +3,7 @@ package impcity.game.ai;
 import impcity.game.Features;
 import impcity.game.ImpCity;
 import impcity.game.KeeperStats;
-import impcity.game.Room;
+import impcity.game.room.Room;
 import impcity.game.Sounds;
 import impcity.game.species.Species;
 import impcity.game.species.SpeciesDescription;
@@ -711,7 +711,7 @@ public class CreatureAi extends AiBase
 
     private void prepareForgeWork(Mob mob, int rasterI, int rasterJ)
     {
-        Point p = Room.scanRoomsForResources(game.forgeRooms, mob.gameMap,
+        Point p = game.forgeRooms.scanForResources(mob.gameMap,
                                              (resource) -> {return resource == Features.I_COPPER_ORE || resource == Features.I_TIN_ORE;},
                                              rasterI, rasterJ);
         if(p == null)
@@ -1021,7 +1021,7 @@ public class CreatureAi extends AiBase
     private void produceInForge(Mob mob, int rasterI, int rasterJ) 
     {
         Map map = mob.gameMap;
-        Point p = Room.scanRoomsForResources(game.forgeRooms, map,
+        Point p = game.forgeRooms.scanForResources(map,
                 (resource) -> {return resource == Features.I_COPPER_ORE || resource == Features.I_TIN_ORE;},
                 rasterI, rasterJ);
 
