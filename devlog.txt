@@ -1,3 +1,9 @@
+Changes since v0.26
+
+- Fixed several mistakes in the new room management code.
+- Fixed a thread synchronization problem.
+- Saved games with 'JobFetchItem' AI jobs can be loaded now.
+ 
 Changes since v0.25
 
 - Tried to fix a random crash in the party selector dialog.
