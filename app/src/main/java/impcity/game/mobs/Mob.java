@@ -205,7 +205,7 @@ public class Mob
 
                 if(needHop && path != null)
                 {
-                    hop(soundPlayer);
+                    hop();
                     iOff = dx * -(1<<15);
                     jOff = dy * -(1<<15);
                 }
@@ -236,7 +236,7 @@ public class Mob
     /**
      * Take a hop from one square to the next on the path.
      */
-    private void hop(SoundPlayer soundPlayer) 
+    private void hop() 
     {
         Path.Node node = path.currentStep();
         if(node != null)
