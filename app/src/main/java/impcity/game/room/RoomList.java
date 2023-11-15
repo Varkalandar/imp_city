@@ -4,9 +4,8 @@ import impcity.game.map.LocationCallback;
 import impcity.game.map.Map;
 import impcity.utils.Pair;
 
-import java.awt.*;
+import java.awt.Point;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.function.IntPredicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,7 +15,7 @@ public class RoomList
 {
     private static final Logger LOG = Logger.getLogger(RoomList.class.getName());
 
-    private ArrayList<Room> rooms = new ArrayList<>(32);
+    private final ArrayList<Room> rooms = new ArrayList<>(32);
 
 
     public void clear()
@@ -28,6 +27,12 @@ public class RoomList
     public void add(Room room)
     {
         rooms.add(room);
+    }
+    
+    
+    public int size()
+    {
+        return rooms.size();
     }
 
 
@@ -53,37 +58,56 @@ public class RoomList
 
 
     /**
-     * see if this is a new room or if it is
-     * an extension of a room
+     * See if this is a new room or if it is
+     * an extension of a room, make a new room if needed,
+     * then add the square.
+     * 
+     * @param p The square to add.
+     * @return The existing or newly made room with the new square
      */
     public Room addNewSquare(Point p)
     {
-        Pair <Room, Integer> best = findClosestRoom(p);
+        ArrayList <Room> neighbors = new ArrayList<>();
+        
+        for(Room room : rooms)
+        {            
+            for(Point rp : room.squares)
+            {
+                int d = Math.abs(rp.x - p.x) + Math.abs(rp.y - p.y);
 
-        Room bestRoom = best.v1;
-        int dmax = best.v2;
-
-        Room result;
-
-        if(dmax > Map.SUB)
-        {
-            // Hajo: this is a new room
-            Room room = new Room();
-            room.squares.add(p);
-            rooms.add(room);
-            result = room;
+                if(d < 2 * Map.SUB && !neighbors.contains(room)) 
+                {
+                    LOG.log(Level.INFO, "Found a neighboring room");
+                    neighbors.add(room);
+                }
+            }            
         }
-        else if(bestRoom != null)
+        
+        
+        Room result;
+        
+        if(neighbors.isEmpty())
         {
-            bestRoom.squares.add(p);
-            result = bestRoom;
+            LOG.log(Level.INFO, "No neighboring rooms, creating a new one");
+            result = new Room();
+            result.squares.add(p);
+            rooms.add(result);
         }
         else
         {
-            LOG.log(Level.SEVERE, "Algorithm error!");
-            result = null;
+            result = neighbors.get(0);
+            result.squares.add(p);
+            
+            // if there are more neighbors, we need to merge them
+            for(int i=1; i<neighbors.size(); i++)
+            {
+                Room neighbor = neighbors.get(i);
+                LOG.log(Level.INFO, "Merging neighboring room");
+                result.squares.addAll(neighbor.squares);
+                rooms.remove(neighbor);
+            }
         }
-
+        
         return result;
     }
 
