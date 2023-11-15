@@ -62,14 +62,10 @@ import rlgamekit.objects.Registry;
  */
 public class ImpCity implements PostRenderHook, GameInterface
 {
-    private static final String nameVersion = "Imp City " + Version.VERSION;
+    private static final String NAME_VERSION = "Imp City " + Version.VERSION;
     
     private static final Logger logger = Logger.getLogger(ImpCity.class.getName());
-    
-    /** Dungeon processor will suspend while this is true */
-    public volatile boolean processorLock = false;
-    public volatile boolean processorActive = false;
-    
+        
     private final TextureCache textureCache;
     private final IsoDisplay display;
     public final SoundPlayer soundPlayer;
@@ -81,24 +77,26 @@ public class ImpCity implements PostRenderHook, GameInterface
     
     public final World world;
     private Mob player;
+    
     public final JobQueue jobQueue = new JobQueue();
     private final GameDisplay gameDisplay;
-    private final List <FarmSquare> farmland = Collections.synchronizedList(new ArrayList<FarmSquare>());
-    private final List <PortalSquare> portals = Collections.synchronizedList(new ArrayList<PortalSquare>());
-    private final List <Point> lairs = Collections.synchronizedList(new ArrayList<Point>());
-    private final List <Point> treasuries = Collections.synchronizedList(new ArrayList<Point>());
-    private final List <Point> libraries = Collections.synchronizedList(new ArrayList<Point>());
-    private final List <Point> forges = Collections.synchronizedList(new ArrayList<Point>());
-    private final List <Point> laboratoriums = Collections.synchronizedList(new ArrayList<Point>());
-    private final List <Point> hospitals = Collections.synchronizedList(new ArrayList<Point>());
-    private final List <Point> claimed = Collections.synchronizedList(new ArrayList<Point>());
+    
+    private final List <FarmSquare> farmland = Collections.synchronizedList(new ArrayList<>());
+    private final List <PortalSquare> portals = Collections.synchronizedList(new ArrayList<>());
+    private final List <Point> lairs = Collections.synchronizedList(new ArrayList<>());
+    private final List <Point> treasuries = Collections.synchronizedList(new ArrayList<>());
+    private final List <Point> libraries = Collections.synchronizedList(new ArrayList<>());
+    private final List <Point> forges = Collections.synchronizedList(new ArrayList<>());
+    private final List <Point> laboratoriums = Collections.synchronizedList(new ArrayList<>());
+    private final List <Point> hospitals = Collections.synchronizedList(new ArrayList<>());
+    private final List <Point> claimed = Collections.synchronizedList(new ArrayList<>());
     
     public final RoomList forgeRooms = new RoomList();
     public final RoomList libraryRooms = new RoomList();
     public final RoomList labRooms = new RoomList();
     
-    public final List <Mob> generators = Collections.synchronizedList(new ArrayList<Mob>());
-    public final List <Quest> quests = Collections.synchronizedList(new ArrayList<Quest>());
+    public final List <Mob> generators = Collections.synchronizedList(new ArrayList<>());
+    public final List <Quest> quests = Collections.synchronizedList(new ArrayList<>());
 
 
     static
@@ -115,14 +113,14 @@ public class ImpCity implements PostRenderHook, GameInterface
         }
         catch (Exception ex) 
         {
-            Logger.getLogger(ImpCity.class.getName()).log(Level.SEVERE, "Failure in static init", ex);
+            logger.log(Level.SEVERE, "Failure in static init", ex);
         }
     }
 
     
     public static void addLibraryPath(String pathToAdd) throws Exception 
     {
-        Logger.getLogger(ImpCity.class.getName()).log(Level.INFO, "Adding library path: " + pathToAdd);
+        logger.log(Level.INFO, "Adding library path: " + pathToAdd);
 
         Field usrPathsField = ClassLoader.class.getDeclaredField("usr_paths");
         usrPathsField.setAccessible(true);
@@ -169,15 +167,7 @@ public class ImpCity implements PostRenderHook, GameInterface
     {
         final Texture intro = textureCache.loadTexture("/ui/dance_of_rebirth_by_shiroikuro.jpg", false);
         
-        textureCache.initialize(new TextureCache.LoaderCallback() 
-        {
-            @Override
-            public void update(String msg)
-            {
-                splash(intro, msg);
-            }
-        });
-        
+        textureCache.initialize((String msg) -> { splash(intro, msg); });
         
         splash(intro, "Preparing map ...");
         loadMap("/big_60.map");
@@ -188,8 +178,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         
         // display.map.recalculateBlockedAreas();
         display.centerOn(player);
-        display.setTitle(nameVersion);
-        
+        display.setTitle(NAME_VERSION);
         
         soundPlayer.init();
         
@@ -270,11 +259,13 @@ public class ImpCity implements PostRenderHook, GameInterface
         display.run();
     }
     
+    
     public void destroy()
     {
         soundPlayer.destroy();
         display.destroy();
     }
+    
 
     public int countMobs(int type)
     {
@@ -295,6 +286,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         // Todo: better calculation needed? Room types?
         return lairs.size() / 2 + claimed.size() / 4;
     }
+    
 
     public int calcCurrentCreatureCount()
     {
@@ -308,6 +300,7 @@ public class ImpCity implements PostRenderHook, GameInterface
 
         return count;
     }
+    
 
     @Override
     public void displayMore() 
@@ -315,6 +308,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         gameDisplay.displayMore();
         displayMoreUpdate();
     }
+    
 
     private void loadMap(String mapName)
     {
@@ -326,7 +320,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             gameMap.load(in);
             convertMap(gameMap);
         }
-        catch(Exception ex)
+        catch(IOException ex)
         {
             logger.log(Level.SEVERE, mapName, ex);
         }
@@ -341,6 +335,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         makeImps(gameMap);
     }
 
+    
     public static void main(String[] args)
     {
         int result = 0;
@@ -378,6 +373,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         
         System.exit(result);
     }
+    
 
     private void displayMoreUpdate()
     {
@@ -420,6 +416,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             logger.log(Level.INFO, cmex.getMessage());
         }
     }
+    
 
     private void makeImps(Map gameMap)
     {
@@ -427,6 +424,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         spawnImp(gameMap, 40, 350);
         spawnImp(gameMap, 40, 360);
     }
+    
 
     private void convertMap(Map map)
     {
@@ -535,17 +533,17 @@ public class ImpCity implements PostRenderHook, GameInterface
                 }
                 else if(ground >= Features.GROUND_LIBRARY && ground < Features.GROUND_LIBRARY + 3)
                 {
-                    toggleLibrarySquare(map, x, y);
+                    addLibrarySquare(map, x, y);
                     addClaimedSquare(map, x, y);
                 }
                 else if(ground >= Features.GROUND_FORGE && ground < Features.GROUND_FORGE + 3)
                 {
-                    toggleForgeSquare(map, x, y);
+                    addForgeSquare(map, x, y);
                     addClaimedSquare(map, x, y);
                 }
                 else if(ground >= Features.GROUND_LABORATORY && ground < Features.GROUND_LABORATORY + 3)
                 {
-                    toggleLabSquare(map, x, y);
+                    addLabSquare(map, x, y);
                     addClaimedSquare(map, x, y);
                 }
                 else if(ground >= Features.GROUND_TREASURY && ground < Features.GROUND_TREASURY + 3)
@@ -658,6 +656,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             logger.log(Level.SEVERE, "Exception while saving the game", ioex);
         }
     }
+    
 
     private void saveMobs(FileWriter writer) throws IOException
     {
@@ -687,6 +686,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             writer.write("AI data end\n");
         }
     }
+    
 
     private void saveItems(FileWriter writer) throws IOException
     {
@@ -703,6 +703,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             item.write(writer);
         }
     }
+    
 
     private void saveQuests(FileWriter writer) throws IOException
     {
@@ -716,61 +717,53 @@ public class ImpCity implements PostRenderHook, GameInterface
         
         writer.write("Quest list end\n");
     }
+    
 
     public void load() 
     {
         try
         {
-            // Hajo: signal the processor to stop looping
-            processorLock = true;
-            
-            // Hajo: wait till processor has completed the current loop
-            while(processorActive)
+            synchronized(world)
             {
-                safeSleep(100);
+                logger.log(Level.INFO, "Loading saved game.");
+
+                world.mobs.clear();
+
+                File file = new File("./savegame/test.map");
+                player.gameMap.load(file);
+                Map map = player.gameMap;
+
+                BufferedReader reader = new BufferedReader(new FileReader("./savegame/test.mob"));
+
+                String line;
+
+                line = reader.readLine();
+                int mobCount = Integer.parseInt(line.substring(5));
+                loadMobs(map, reader, mobCount);
+
+                line = reader.readLine();
+                int itemCount = Integer.parseInt(line.substring(6));
+                loadItems(map, reader, itemCount);
+
+                jobQueue.read(this, reader);
+                Clock.read(reader);
+
+                loadQuests(reader);
+
+                reader.close();
+                activateMap(map);
+
+                logger.log(Level.INFO, "Game loaded.");
+                gameDisplay.addMessage(new TimedMessage("Game loaded!", 0xFFFFFFFF, display.displayWidth/2, 300, Clock.time()));
             }
-            
-            logger.log(Level.INFO, "Loading saved game.");
-            
-            world.mobs.clear();
-            
-            File file = new File("./savegame/test.map");
-            player.gameMap.load(file);
-            Map map = player.gameMap;
-            
-            BufferedReader reader = new BufferedReader(new FileReader("./savegame/test.mob"));
-            
-            String line;
-            
-            line = reader.readLine();
-            int mobCount = Integer.parseInt(line.substring(5));
-            loadMobs(map, reader, mobCount);
-
-            line = reader.readLine();
-            int itemCount = Integer.parseInt(line.substring(6));
-            loadItems(map, reader, itemCount);
-
-            jobQueue.read(this, reader);
-            Clock.read(reader);
-
-            loadQuests(reader);
-            
-            reader.close();
-            activateMap(map);
-            
-            logger.log(Level.INFO, "Game loaded.");
-            gameDisplay.addMessage(new TimedMessage("Game loaded!", 0xFFFFFFFF, display.displayWidth/2, 300, Clock.time()));
         }
         catch(IOException ioex)
         {
             logger.log(Level.SEVERE, "Exception while loading a game", ioex);
         }
-        finally
-        {
-            processorLock = false;
-        }
     }
 
+    
     private void loadMobs(Map map, BufferedReader reader, int count) throws IOException
     {
         String line;
@@ -945,37 +938,81 @@ public class ImpCity implements PostRenderHook, GameInterface
     }
 
 
-    public void toggleLibrarySquare(Map map, int rasterI, int rasterJ)
+    public void addLibrarySquare(Map map, int rasterI, int rasterJ)
     {
-        toggleRoomSquare(map, rasterI, rasterJ,
+        addRoomSquare(map, rasterI, rasterJ,
                 libraries, libraryRooms,
                 Features.GROUND_LIBRARY, 1,
                 (m, x, y) -> {furnishLibrary(m, x, y);});
     }
 
 
-    public void toggleForgeSquare(final Map map, int rasterI, int rasterJ)
+    public void addForgeSquare(final Map map, int rasterI, int rasterJ)
     {
-        toggleRoomSquare(map, rasterI, rasterJ,
+        addRoomSquare(map, rasterI, rasterJ,
                 forges, forgeRooms,
                 Features.GROUND_FORGE, 3,
                 (m, x, y) -> {furnishForge(m, x, y);});
     }
 
 
-    public void toggleLabSquare(Map map, int rasterI, int rasterJ)
+    public void addLabSquare(Map map, int rasterI, int rasterJ)
     {
-        toggleRoomSquare(map, rasterI, rasterJ,
+        addRoomSquare(map, rasterI, rasterJ,
                 laboratoriums, labRooms,
                 Features.GROUND_LABORATORY, 3,
                 (m, x, y) -> {furnishLab(m, x, y);});
     }
 
 
-    public boolean toggleRoomSquare(Map map, int rasterI, int rasterJ,
+    public void removeLibrarySquare(Map map, int rasterI, int rasterJ)
+    {
+        removeRoomSquare(map, rasterI, rasterJ,
+                libraries, libraryRooms,
+                Features.GROUND_LIBRARY,
+                (m, x, y) -> {furnishLibrary(m, x, y);});
+    }
+
+
+    public void removeForgeSquare(final Map map, int rasterI, int rasterJ)
+    {
+        removeRoomSquare(map, rasterI, rasterJ,
+                forges, forgeRooms,
+                Features.GROUND_FORGE,
+                (m, x, y) -> {furnishForge(m, x, y);});
+    }
+
+
+    public void removeLabSquare(Map map, int rasterI, int rasterJ)
+    {
+        removeRoomSquare(map, rasterI, rasterJ,
+                laboratoriums, labRooms,
+                Features.GROUND_LABORATORY,
+                (m, x, y) -> {furnishLab(m, x, y);});
+    }
+
+
+    private void addRoomSquare(Map map, int rasterI, int rasterJ,
                                     List<Point> squares, RoomList rooms,
                                     int floor, int floorRange,
                                     Furnisher action)
+    {
+        Point p = new Point(rasterI, rasterJ);
+        Room room;
+
+        // new room square was added
+        squares.add(p);
+        map.setFloor(p.x, p.y, floor + (int)(Math.random() * floorRange));
+        room = rooms.addNewSquare(p);
+        logger.log(Level.INFO, "Room list contains " + rooms.size() + " rooms");
+        
+        refurnishRoom(map, room, floor, action);
+    }
+        
+        
+    private void removeRoomSquare(Map map, int rasterI, int rasterJ,
+                                    List<Point> squares, RoomList rooms,
+                                    int floor, Furnisher action)
     {
         Point p = new Point(rasterI, rasterJ);
         Room room;
@@ -985,24 +1022,26 @@ public class ImpCity implements PostRenderHook, GameInterface
             // existing room needs to be refurnished
             Pair <Room, Integer> best = rooms.findClosestRoom(p);
             room = best.v1;
+            room.squares.remove(p);
+            
+            refurnishRoom(map, room, floor, action);
         }
-        else
-        {
-            // new room square was added
-            squares.add(p);
-            map.setFloor(p.x, p.y, floor + (int)(Math.random() * floorRange));
-            room = rooms.addNewSquare(p);
-        }
+
+        logger.log(Level.INFO, "Room list contains " + rooms.size() + " rooms");
+    }
+
+
+    private void refurnishRoom(Map map, Room room, int floor, Furnisher action)
+    {
+        logger.log(Level.INFO, "Room has now " + room.squares.size() + " squares");
         
         room.calculateBorderDistances(map, floor);
         room.forAllPoints((x, y) -> {clearItems(map, x, y, Map.SUB, Features.keepTreasureFilter); return true;});
         room.forAllInnerPoints((x, y) -> {action.furnish(map, x, y); return true;});
         room.forAllPoints((x, y) -> {refreshPillars(x, y); return true;});
-
-        return true;
     }
 
-    
+
     private void furnishLibrary(Map map, int x, int y)
     {
         x -= Map.SUB/2;
@@ -1168,14 +1207,6 @@ public class ImpCity implements PostRenderHook, GameInterface
         return claimed;
     }    
 
-
-    void spawnImp() 
-    {
-        int x = display.cursorI;
-        int y = display.cursorJ;
-        spawnImp(player.gameMap, x, y);
-    }
-
     
     public void spawnImp(Map gameMap, int x, int y) 
     {
@@ -1249,7 +1280,7 @@ public class ImpCity implements PostRenderHook, GameInterface
     
     public List<Point> getFarmlandLocations() 
     {
-        List<Point> result = new ArrayList<Point>(farmland.size());
+        List<Point> result = new ArrayList<>(farmland.size());
         for(FarmSquare farm : farmland)
         {
             result.add(new Point(farm.x, farm.y));
@@ -1370,17 +1401,6 @@ public class ImpCity implements PostRenderHook, GameInterface
         generators.add(generator);
     }
 
-    private void safeSleep(int millis)
-    {
-        try
-        {
-            sleep(millis);
-        } 
-        catch (InterruptedException ex)
-        {
-            logger.log(Level.SEVERE, null, ex);
-        }
-    }
 
     private void splash(Texture intro, String msg)
     {
@@ -1388,7 +1408,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         IsoDisplay.drawTile(intro, 1200 - intro.image.getWidth(), 0);
         // display.font.drawString(nameVersion, 0xFFFFFF, 220, 440);
         // display.font.drawStringScaled(msg, 0xDDDDDD, 220, 400, 0.8);
-        gameDisplay.getFontLow().drawStringScaled(nameVersion, 0xFFFFDDAA, 210, 445, 0.5);
+        gameDisplay.getFontLow().drawStringScaled(NAME_VERSION, 0xFFFFDDAA, 210, 445, 0.5);
         gameDisplay.getFontLow().drawStringScaled(msg, 0xFFDDDDDD, 210, 396, 0.3);
         display.update();
     }
@@ -1396,7 +1416,7 @@ public class ImpCity implements PostRenderHook, GameInterface
 
     public void removeGeneratorFrom(int i, int j) 
     {
-        ArrayList<Mob> killList = new ArrayList<Mob>();
+        ArrayList<Mob> killList = new ArrayList<>();
         
         for(Mob generator : generators)
         {
@@ -1416,7 +1436,6 @@ public class ImpCity implements PostRenderHook, GameInterface
     public void reactivateReturningCreatures(Quest quest)
     {
         Mob keeper = world.mobs.get(getPlayerKey());
-        Map map = keeper.gameMap;
         int count = 0;
         
         for(int key : quest.party.members)
@@ -1513,6 +1532,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             }
         }
     }
+    
 
     private void handleArtifactReward(Map map)
     {
@@ -1647,6 +1667,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             keeper.stats.setCurrent(KeeperStats.REPUTATION, reputation);
         }
     }
+    
 
     private static interface Furnisher
     {

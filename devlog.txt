@@ -2,6 +2,9 @@ Changes since v0.26
 
 - Quest success rate now properly depends on finding difficulty,
   party scouting, intelligence and number of past expeditions.
+- Fixed several mistakes in the new room management code.
+- Fixed a thread synchronization problem.
+- Saved games with 'JobFetchItem' AI jobs can be loaded now.
 
 Changes since v0.25
 

@@ -68,28 +68,34 @@ public class DungeonSweepingThread extends Thread
                 // look for squares to claim
                 for(int j=0; j<map.getHeight(); j+=Map.SUB)
                 {
-                    for(int i=0; i<map.getHeight(); i+=Map.SUB)
+                    synchronized (game.world)
                     {
-                        int floor = map.getFloor(i, j);
-                        if(floor >= Features.GROUND_LIGHT_SOIL && floor < Features.GROUND_LIGHT_SOIL+3)
+                        for(int i=0; i<map.getHeight(); i+=Map.SUB)
                         {
-                            game.jobQueue.add(new JobClaimGround(game, i+Map.SUB/2, j+Map.SUB/2), JobQueue.PRI_LOW);                            
+                            int floor = map.getFloor(i, j);
+                            if(floor >= Features.GROUND_LIGHT_SOIL && floor < Features.GROUND_LIGHT_SOIL+3)
+                            {
+                                game.jobQueue.add(new JobClaimGround(game, i+Map.SUB/2, j+Map.SUB/2), JobQueue.PRI_LOW);                            
+                            }
                         }
                     }
-                
+                    
                     safeSleep(40);
                     // logger.log(Level.INFO, "Dungeon sweeping thread completes floor row {0}", j);
                 }
 
                 for(int j=0; j<map.getHeight(); j++)
                 {
-                    for(int i=0; i<map.getHeight(); i++)
+                    synchronized (game.world)
                     {
-                        int item = map.getItem(i, j);
-                        if(item > 0)
+                        for(int i=0; i<map.getHeight(); i++)
                         {
-                            processItem(map, i, j, item);
-                        }
+                            int item = map.getItem(i, j);
+                            if(item > 0)
+                            {
+                                processItem(map, i, j, item);
+                            }
+                        }                        
                     }
                 
                     safeSleep(40);
@@ -102,11 +108,14 @@ public class DungeonSweepingThread extends Thread
                 player.stats.setCurrent(KeeperStats.COINS, silver);
                 player.stats.setMin(KeeperStats.COINS, bronze);
 
-                for(Quest quest : game.quests)
-                {                    
-                    if(quest.party != null && quest.eta <= Clock.days())
-                    {
-                        createQuestResult(quest);
+                synchronized (game.world)
+                {                
+                    for(Quest quest : game.quests)
+                    {                    
+                        if(quest.party != null && quest.eta <= Clock.days())
+                        {
+                            createQuestResult(quest);
+                        }
                     }
                 }
             }
