@@ -22,7 +22,7 @@ public class DungeonProcessingThread extends Thread
 {
     private static final Logger logger = Logger.getLogger(DungeonProcessingThread.class.getName());
     private int pass;
-    private int passMask = 1023;
+    private final int passMask = 1023;
     
     private final ImpCity game;
     
@@ -45,11 +45,10 @@ public class DungeonProcessingThread extends Thread
         while(true)
         {
             safeSleep(50);
-            game.processorActive = true;
-            
+
             try
             {
-                if(!game.processorLock)
+                synchronized(game.world)
                 {
                     process();
                 }
@@ -58,10 +57,9 @@ public class DungeonProcessingThread extends Thread
             {
                 logger.log(Level.SEVERE, null, ex);
             }
-            
-            game.processorActive = false;
         }
     }
+
     
     private void process() 
     {
@@ -107,6 +105,7 @@ public class DungeonProcessingThread extends Thread
         
         pass = (pass + 1) & passMask;
     }
+    
 
     private void safeSleep(int millis)
     {

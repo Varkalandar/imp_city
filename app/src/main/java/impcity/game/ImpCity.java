@@ -62,11 +62,7 @@ public class ImpCity implements PostRenderHook, GameInterface
     private static final String nameVersion = "Imp City " + Version.VERSION;
     
     private static final Logger logger = Logger.getLogger(ImpCity.class.getName());
-    
-    /** Dungeon processor will suspend while this is true */
-    public volatile boolean processorLock = false;
-    public volatile boolean processorActive = false;
-    
+        
     private final TextureCache textureCache;
     private final IsoDisplay display;
     public final SoundPlayer soundPlayer;
@@ -78,8 +74,10 @@ public class ImpCity implements PostRenderHook, GameInterface
     
     public final World world;
     private Mob player;
+    
     public final JobQueue jobQueue = new JobQueue();
     private final GameDisplay gameDisplay;
+    
     private final List <FarmSquare> farmland = Collections.synchronizedList(new ArrayList<FarmSquare>());
     private final List <PortalSquare> portals = Collections.synchronizedList(new ArrayList<PortalSquare>());
     private final List <Point> lairs = Collections.synchronizedList(new ArrayList<Point>());
@@ -532,17 +530,17 @@ public class ImpCity implements PostRenderHook, GameInterface
                 }
                 else if(ground >= Features.GROUND_LIBRARY && ground < Features.GROUND_LIBRARY + 3)
                 {
-                    toggleLibrarySquare(map, x, y);
+                    addLibrarySquare(map, x, y);
                     addClaimedSquare(map, x, y);
                 }
                 else if(ground >= Features.GROUND_FORGE && ground < Features.GROUND_FORGE + 3)
                 {
-                    toggleForgeSquare(map, x, y);
+                    addForgeSquare(map, x, y);
                     addClaimedSquare(map, x, y);
                 }
                 else if(ground >= Features.GROUND_LABORATORY && ground < Features.GROUND_LABORATORY + 3)
                 {
-                    toggleLabSquare(map, x, y);
+                    addLabSquare(map, x, y);
                     addClaimedSquare(map, x, y);
                 }
                 else if(ground >= Features.GROUND_TREASURY && ground < Features.GROUND_TREASURY + 3)
@@ -655,6 +653,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             logger.log(Level.SEVERE, "Exception while saving the game", ioex);
         }
     }
+    
 
     private void saveMobs(FileWriter writer) throws IOException
     {
@@ -684,6 +683,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             writer.write("AI data end\n");
         }
     }
+    
 
     private void saveItems(FileWriter writer) throws IOException
     {
@@ -700,6 +700,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             item.write(writer);
         }
     }
+    
 
     private void saveQuests(FileWriter writer) throws IOException
     {
@@ -713,61 +714,53 @@ public class ImpCity implements PostRenderHook, GameInterface
         
         writer.write("Quest list end\n");
     }
+    
 
     public void load() 
     {
         try
         {
-            // Hajo: signal the processor to stop looping
-            processorLock = true;
-            
-            // Hajo: wait till processor has completed the current loop
-            while(processorActive)
+            synchronized(world)
             {
-                safeSleep(100);
+                logger.log(Level.INFO, "Loading saved game.");
+
+                world.mobs.clear();
+
+                File file = new File("./savegame/test.map");
+                player.gameMap.load(file);
+                Map map = player.gameMap;
+
+                BufferedReader reader = new BufferedReader(new FileReader("./savegame/test.mob"));
+
+                String line;
+
+                line = reader.readLine();
+                int mobCount = Integer.parseInt(line.substring(5));
+                loadMobs(map, reader, mobCount);
+
+                line = reader.readLine();
+                int itemCount = Integer.parseInt(line.substring(6));
+                loadItems(map, reader, itemCount);
+
+                jobQueue.read(this, reader);
+                Clock.read(reader);
+
+                loadQuests(reader);
+
+                reader.close();
+                activateMap(map);
+
+                logger.log(Level.INFO, "Game loaded.");
+                gameDisplay.addMessage(new TimedMessage("Game loaded!", 0xFFFFFFFF, display.displayWidth/2, 300, Clock.time()));
             }
-            
-            logger.log(Level.INFO, "Loading saved game.");
-            
-            world.mobs.clear();
-            
-            File file = new File("./savegame/test.map");
-            player.gameMap.load(file);
-            Map map = player.gameMap;
-            
-            BufferedReader reader = new BufferedReader(new FileReader("./savegame/test.mob"));
-            
-            String line;
-            
-            line = reader.readLine();
-            int mobCount = Integer.parseInt(line.substring(5));
-            loadMobs(map, reader, mobCount);
-
-            line = reader.readLine();
-            int itemCount = Integer.parseInt(line.substring(6));
-            loadItems(map, reader, itemCount);
-
-            jobQueue.read(this, reader);
-            Clock.read(reader);
-
-            loadQuests(reader);
-            
-            reader.close();
-            activateMap(map);
-            
-            logger.log(Level.INFO, "Game loaded.");
-            gameDisplay.addMessage(new TimedMessage("Game loaded!", 0xFFFFFFFF, display.displayWidth/2, 300, Clock.time()));
         }
         catch(IOException ioex)
         {
             logger.log(Level.SEVERE, "Exception while loading a game", ioex);
         }
-        finally
-        {
-            processorLock = false;
-        }
     }
 
+    
     private void loadMobs(Map map, BufferedReader reader, int count) throws IOException
     {
         String line;
@@ -942,34 +935,61 @@ public class ImpCity implements PostRenderHook, GameInterface
     }
 
 
-    public void toggleLibrarySquare(Map map, int rasterI, int rasterJ)
+    public void addLibrarySquare(Map map, int rasterI, int rasterJ)
     {
-        toggleRoomSquare(map, rasterI, rasterJ,
+        addRoomSquare(map, rasterI, rasterJ,
                 libraries, libraryRooms,
                 Features.GROUND_LIBRARY, 1,
                 (m, x, y) -> {furnishLibrary(m, x, y);});
     }
 
 
-    public void toggleForgeSquare(final Map map, int rasterI, int rasterJ)
+    public void addForgeSquare(final Map map, int rasterI, int rasterJ)
     {
-        toggleRoomSquare(map, rasterI, rasterJ,
+        addRoomSquare(map, rasterI, rasterJ,
                 forges, forgeRooms,
                 Features.GROUND_FORGE, 3,
                 (m, x, y) -> {furnishForge(m, x, y);});
     }
 
 
-    public void toggleLabSquare(Map map, int rasterI, int rasterJ)
+    public void addLabSquare(Map map, int rasterI, int rasterJ)
     {
-        toggleRoomSquare(map, rasterI, rasterJ,
+        addRoomSquare(map, rasterI, rasterJ,
                 laboratoriums, labRooms,
                 Features.GROUND_LABORATORY, 3,
                 (m, x, y) -> {furnishLab(m, x, y);});
     }
 
 
-    public boolean toggleRoomSquare(Map map, int rasterI, int rasterJ,
+    public void removeLibrarySquare(Map map, int rasterI, int rasterJ)
+    {
+        removeRoomSquare(map, rasterI, rasterJ,
+                libraries, libraryRooms,
+                Features.GROUND_LIBRARY, 1,
+                (m, x, y) -> {furnishLibrary(m, x, y);});
+    }
+
+
+    public void removeForgeSquare(final Map map, int rasterI, int rasterJ)
+    {
+        removeRoomSquare(map, rasterI, rasterJ,
+                forges, forgeRooms,
+                Features.GROUND_FORGE, 3,
+                (m, x, y) -> {furnishForge(m, x, y);});
+    }
+
+
+    public void removeLabSquare(Map map, int rasterI, int rasterJ)
+    {
+        removeRoomSquare(map, rasterI, rasterJ,
+                laboratoriums, labRooms,
+                Features.GROUND_LABORATORY, 3,
+                (m, x, y) -> {furnishLab(m, x, y);});
+    }
+
+
+    private void addRoomSquare(Map map, int rasterI, int rasterJ,
                                     List<Point> squares, List<Room> rooms,
                                     int floor, int floorRange,
                                     Furnisher action)
@@ -977,29 +997,48 @@ public class ImpCity implements PostRenderHook, GameInterface
         Point p = new Point(rasterI, rasterJ);
         Room room;
 
-        if(libraries.contains(p))
+        // new room square was added
+        squares.add(p);
+        map.setFloor(p.x, p.y, floor + (int)(Math.random() * floorRange));
+        room = addNewSquareToRooms(p, rooms);
+        logger.log(Level.INFO, "Room list contains " + rooms.size() + " rooms");
+        
+        refurnishRoom(map, room, floor, action);
+    }
+        
+        
+    private void removeRoomSquare(Map map, int rasterI, int rasterJ,
+                                    List<Point> squares, List<Room> rooms,
+                                    int floor, int floorRange,
+                                    Furnisher action)
+    {
+        Point p = new Point(rasterI, rasterJ);
+        Room room;
+
+        if(squares.contains(p))
         {
             // existing room needs to be refurnished
-            Pair <Room, Integer> best = findClosestRoom(p, libraryRooms);
+            Pair <Room, Integer> best = findClosestRoom(p, rooms);
             room = best.v1;
-        }
-        else
-        {
-            // new library square was added
-            squares.add(p);
-            map.setFloor(p.x, p.y, floor + (int)(Math.random() * floorRange));
-            room = addNewSquareToRooms(p, rooms);
+        
+            refurnishRoom(map, room, floor, action);
         }
 
+        logger.log(Level.INFO, "Room list contains " + rooms.size() + " rooms");
+    }
+
+
+    private void refurnishRoom(Map map, Room room, int floor, Furnisher action)
+    {
+        logger.log(Level.INFO, "Room has now " + room.squares.size() + " squares");
+        
         room.calculateBorderDistances(map, floor);
         room.forAllPoints((x, y) -> {return clearItems(map, x, y, Map.SUB);});
         room.forAllInnerPoints((x, y) -> {action.furnish(map, x, y); return true;});
         room.forAllPoints((x, y) -> {refreshPillars(x, y); return true;});
-
-        return true;
     }
 
-    
+
     private void furnishLibrary(Map map, int x, int y)
     {
         x -= Map.SUB/2;
@@ -1194,30 +1233,45 @@ public class ImpCity implements PostRenderHook, GameInterface
      */
     private Room addNewSquareToRooms(Point p, List <Room> rooms)
     {
-        Pair <Room, Integer> best = findClosestRoom(p, rooms);
+        List <Room> neighbors = new ArrayList<>();
         
-        Room bestRoom = best.v1;
-        int dmax = best.v2;
+        for(Room room : rooms)
+        {            
+            for(Point rp : room.squares)
+            {
+                int d = Math.abs(rp.x - p.x) + Math.abs(rp.y - p.y);
+
+                if(d < 2 * Map.SUB && !neighbors.contains(room)) 
+                {
+                    logger.log(Level.INFO, "Found a neighboring room");
+                    neighbors.add(room);
+                }
+            }            
+        }
+        
         
         Room result;
         
-        if(dmax > Map.SUB)
+        if(neighbors.isEmpty())
         {
-            // Hajo: this is a new room
-            Room room = new Room();
-            room.squares.add(p);
-            rooms.add(room);
-            result = room;
-        }
-        else if(bestRoom != null)
-        {
-            bestRoom.squares.add(p);
-            result = bestRoom;
+            logger.log(Level.INFO, "No neighboring rooms, creating a new one");
+            result = new Room();
+            result.squares.add(p);
+            rooms.add(result);
         }
         else
         {
-            logger.log(Level.SEVERE, "Algorithm error!");
-            result = null;
+            result = neighbors.get(0);
+            result.squares.add(p);
+            
+            // if there are more neighbors, we need to merge them
+            for(int i=1; i<neighbors.size(); i++)
+            {
+                Room neighbor = neighbors.get(i);
+                logger.log(Level.INFO, "Merging neighboring room");
+                result.squares.addAll(neighbor.squares);
+                rooms.remove(neighbor);
+            }
         }
         
         return result;
