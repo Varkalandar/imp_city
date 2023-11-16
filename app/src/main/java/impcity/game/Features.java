@@ -159,7 +159,7 @@ public class Features
     /** 
      * This filter keeps coins, resources and artifacts
      */
-    static final IntUnaryOperator keepTreasureFilter =
+    public static final IntUnaryOperator keepTreasureFilter =
             (int item) -> (isCoins(item) || isResource(item) || (item & Map.F_ITEM) != 0) ? item : 0;
     
     

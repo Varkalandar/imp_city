@@ -40,11 +40,10 @@ public class Research
         int limit = stats.getMax(KeeperStats.RESEARCH); 
         int total = research + howmuch;
 
-        logger.log(Level.INFO, "Mob researched " + howmuch + " points, total is now " + total + " limit is " + limit);
+        // logger.log(Level.INFO, "Mob researched " + howmuch + " points, total is now " + total + " limit is " + limit);
         
         stats.setMin(KeeperStats.RESEARCH, total);
-        
-        
+
         if(total > limit)
         {
             // step by step research

@@ -1,13 +1,16 @@
 package impcity.game.room;
 
+import impcity.game.Features;
+import impcity.game.ImpCity;
 import impcity.game.map.LocationCallback;
 import impcity.game.map.Map;
 import java.awt.Point;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.function.IntPredicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -15,6 +18,8 @@ import java.util.function.IntPredicate;
  */
 public class Room
 {
+    private static final Logger LOG = Logger.getLogger(Room.class.getName());
+
     public final Set <Point> squares;
     public final HashMap <Point, Integer> distances;
     
@@ -99,5 +104,16 @@ public class Room
         }
         
         return null;
+    }
+
+
+    public void refurnish(ImpCity game, Map map, int floor, Furnisher action)
+    {
+        LOG.log(Level.INFO, "Room has now " + squares.size() + " squares");
+
+        calculateBorderDistances(map, floor);
+        forAllPoints((x, y) -> {game.clearItems(map, x, y, Map.SUB, Features.keepTreasureFilter); return true;});
+        forAllInnerPoints((x, y) -> {action.furnish(map, x, y); return true;});
+        forAllPoints((x, y) -> {game.refreshPillars(x, y); return true;});
     }
 }

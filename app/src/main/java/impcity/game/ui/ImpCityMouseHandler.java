@@ -258,9 +258,7 @@ public class ImpCityMouseHandler implements MouseHandler
         else if(n >= Features.GROUND_LIBRARY && n < Features.GROUND_LIBRARY + 3)
         {
             game.resetSquare(map, rasterI, rasterJ);
-            game.libraryRooms.removeSquare(p,
-                    (x, y) -> { game.removeLibrarySquare(map, x, y); return true; } );
-            game.getLibraries().remove(p);
+            game.removeLibrarySquare(map, rasterI, rasterJ);
         }
         else if(n >= Features.GROUND_LAIR && n < Features.GROUND_LAIR + 3)
         {
@@ -290,9 +288,7 @@ public class ImpCityMouseHandler implements MouseHandler
         else if(n >= Features.GROUND_FORGE && n < Features.GROUND_FORGE + 3)
         {
             game.resetSquare(map, rasterI, rasterJ);
-            game.forgeRooms.removeSquare(p,
-                    (x, y) -> { game.removeForgeSquare(map, x, y); return true; } );
-            game.getForges().remove(p);
+            game.removeForgeSquare(map, rasterI, rasterJ);
         }
         else if(n >= Features.GROUND_HOSPITAL && n < Features.GROUND_HOSPITAL + 3)
         {
@@ -302,9 +298,7 @@ public class ImpCityMouseHandler implements MouseHandler
         else if(n >= Features.GROUND_LABORATORY && n < Features.GROUND_LABORATORY + 3)
         {
             game.resetSquare(map, rasterI, rasterJ);
-            game.labRooms.removeSquare(p,
-                    (x, y) -> { game.removeLabSquare(map, x, y); return true; } );
-            game.getLaboratories().remove(p);
+            game.removeLabSquare(map, rasterI, rasterJ);
         }
 
         game.refreshPillars(rasterI, rasterJ);

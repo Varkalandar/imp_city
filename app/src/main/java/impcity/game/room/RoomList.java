@@ -1,11 +1,12 @@
 package impcity.game.room;
 
-import impcity.game.map.LocationCallback;
+import impcity.game.ImpCity;
 import impcity.game.map.Map;
 import impcity.utils.Pair;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.IntPredicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -90,14 +91,12 @@ public class RoomList
         {
             LOG.log(Level.INFO, "No neighboring rooms, creating a new one");
             result = new Room();
-            result.squares.add(p);
             rooms.add(result);
         }
         else
         {
             result = neighbors.get(0);
-            result.squares.add(p);
-            
+
             // if there are more neighbors, we need to merge them
             for(int i=1; i<neighbors.size(); i++)
             {
@@ -107,7 +106,9 @@ public class RoomList
                 rooms.remove(neighbor);
             }
         }
-        
+
+        result.squares.add(p);
+
         return result;
     }
 
@@ -118,36 +119,26 @@ public class RoomList
      * @param p The coordinates
      * @param action Called for each part of the remaining room
      */
-    public void removeSquare(Point p, LocationCallback action)
+    public void removeSquareAndRebuild(ImpCity game, Map map, Point p, List<Point> squares, int floor, Furnisher action)
     {
-        Room roomKill = null;
+        // we rebuild the room list by adding square by square
+        rooms.clear();
 
-        for(Room room : rooms)
+        // except this one
+        squares.remove(p);
+
+        // ready to go
+        for(Point square : squares)
         {
-            if(room.squares.contains(p))
-            {
-                room.squares.remove(p);
-                room.distances.remove(p);
-
-                if(room.squares.isEmpty())
-                {
-                    // totally deleted
-                    roomKill = room;
-                }
-                else
-                {
-                    // Todo: handle room split
-                    // -> each new room must be furnished. Call the action
-
-                    Point anchor = room.squares.iterator().next();
-                    action.visit(anchor.x, anchor.y);
-                }
-            }
+            addNewSquare(square);
         }
 
-        if(roomKill != null)
+        LOG.log(Level.INFO, "Rebuild results in " + rooms.size() + " rooms. Now furnishing them.");
+
+        // now we have new rooms. We need to furnish them again
+        for(Room room : rooms)
         {
-            rooms.remove(roomKill);
+            room.refurnish(game, map, floor, action);
         }
     }
 
