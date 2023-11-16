@@ -29,8 +29,8 @@ import rlgamekit.pathfinding.Path;
  */
 public class ImpAi extends AiBase
 {
-    public static final Logger logger = Logger.getLogger(ImpAi.class.getName());
-    private static final int thinkCooldown = 200;
+    private static final Logger LOG = Logger.getLogger(ImpAi.class.getName());
+    private static final int THINK_COOLDOWN = 200;
 
     public enum Goal
     {
@@ -47,6 +47,7 @@ public class ImpAi extends AiBase
     private final ImpCity game;
     private Job currentJob;
 
+    
     public ImpAi(ImpCity game)
     {
         this.game = game;
@@ -54,6 +55,7 @@ public class ImpAi extends AiBase
         this.thinkTime = Clock.time() + (int)(Math.random() * 2000);
         this.pathTime = Clock.time() + (int)(Math.random() * 2000);
     }
+    
 
     @Override
     public void think(Mob mob) 
@@ -71,7 +73,7 @@ public class ImpAi extends AiBase
         else
         {
             // System.err.println("Mob=" + mob.getKey() + " AI thinks.");
-            thinkTime = Clock.time() + thinkCooldown;
+            thinkTime = Clock.time() + THINK_COOLDOWN;
         }
         
         // System.err.println("Mob=" + mob.getKey() + " current goal is: " + goal);
@@ -91,7 +93,7 @@ public class ImpAi extends AiBase
             Point p = mob.location;
             if(mob.gameMap.isMovementBlocked(p.x, p.y))
             {
-                logger.log(Level.WARNING, "Imp #{0} is stuck at {1}, {2} and will be warped home.",
+                LOG.log(Level.WARNING, "Imp #{0} is stuck at {1}, {2} and will be warped home.",
                         new Object[]{mob.getKey(), mob.location.x, mob.location.y});
 
                 teleportMob(mob, home);
@@ -120,9 +122,8 @@ public class ImpAi extends AiBase
                 goal = Goal.FIND_LAIR;
                 mob.setPath(null);
             }
-        }
-        
-        if(goal == Goal.SLEEP)
+        } 
+        else if(goal == Goal.SLEEP)
         {
             if(mob.location.equals(home))
             {
@@ -175,16 +176,18 @@ public class ImpAi extends AiBase
                     currentJob = null;
                     goal = Goal.FIND_JOB;
                     mob.setPath(null);
-                    logger.log(Level.INFO, "Imp #{0} tried to work, but job had become invalid.", mob.getKey());
+                    LOG.log(Level.INFO, "Imp #{0} tried to work, but job had become invalid.", mob.getKey());
                 }
                 else
                 {
                     currentJob.execute(mob);
                     
-                    // Hajo: Mining is a recurring job
+                    // Hajo: Mining is a recurring job and
+                    // sets the carry stat to the right produce
+                    // when executed (i.e. just before this)
                     if(currentJob instanceof JobMining)
                     {
-                        completeMiningJob(mob);
+                        workMiningJob(mob);
                     }
                     else if(currentJob instanceof JobFetchItem)
                     {
@@ -194,18 +197,18 @@ public class ImpAi extends AiBase
                     else
                     {
                         // Hajo: wait a while extra
-                        pathTime = Clock.time() + 10 * thinkCooldown;                        
+                        pathTime = Clock.time() + 10 * THINK_COOLDOWN;                        
                         
                         currentJob = null;
                         goal = Goal.FIND_JOB;
                         mob.setPath(null);
-                        logger.log(Level.INFO, "Imp #{0} completes current job.", mob.getKey());
+                        LOG.log(Level.INFO, "Imp #{0} completes current job.", mob.getKey());
                     }
                 }
             }
             else
             {
-                logger.log(Level.WARNING, "Imp #{0} tried to work, but had no job.", mob.getKey());
+                LOG.log(Level.WARNING, "Imp #{0} tried to work, but had no job.", mob.getKey());
                 goal = Goal.FIND_JOB;
                 mob.setPath(null);
             }
@@ -244,6 +247,7 @@ public class ImpAi extends AiBase
             }
         }
     }
+    
 
     @Override
     public void findNewPath(Mob mob) 
@@ -258,224 +262,239 @@ public class ImpAi extends AiBase
         else
         {
             // System.err.println("Mob=" + mob.getKey() + " is pathfinding.");
-            pathTime = Clock.time() + 3 * thinkCooldown;
+            pathTime = Clock.time() + 3 * THINK_COOLDOWN;
         }
 
         SpeciesDescription desc = Species.speciesTable.get(mob.getSpecies());
 
-        if(goal == Goal.FIND_LAIR)
+        if(goal == null)
         {
-            // Hajo: find an empty dormitory spot
-            
-            Path path = new Path();
-            
-            boolean ok = 
-            path.findPath(new WayPathSource(mob.gameMap, desc.size, false),
-                          new LairPathDestination(mob.gameMap, desc, Features.GROUND_LAIR),
-                          mob.location.x, mob.location.y);
+            // no goals defined. Log it?
+        }
+        else switch (goal) 
+        {
+            case FIND_LAIR:
+                findPathToEmptyDormitoryLocation(mob, desc);
+                break;
+            case FIND_PATH_TO_JOB:
+                findPathToJob(mob, desc);
+                break;
+            case GO_TO_SLEEP:
+                findPathToLair(mob, desc);
+            case GOLD_TO_TREASURY:
+                findPathToTreasury(mob, desc);
+                break;
+            case ITEM_TO_FORGE:
+            case ITEM_TO_LAB:
+                    int requiredGround = (goal == Goal.ITEM_TO_FORGE) ? Features.GROUND_FORGE : Features.GROUND_LABORATORY;
+                    findPathToRoom(mob, desc, requiredGround);
+                    break;
+            default:
+                break;
+        }
+    }
+
+    
+    private void findPathToEmptyDormitoryLocation(Mob mob, SpeciesDescription desc)
+    {
+        Path path = new Path();
+        boolean ok =
+                path.findPath(new WayPathSource(mob.gameMap, desc.size, false),
+                        new LairPathDestination(mob.gameMap, desc, Features.GROUND_LAIR),
+                        mob.location.x, mob.location.y);
+        if(ok)
+        {
+            mob.setPath(path);
+            goal = Goal.BUILD_LAIR;
+
+            Path.Node node = path.getStep(path.length() - 1);
+            home.x = node.x;
+            home.y = node.y;
+        }
+        else
+        {
+            // Hajo: normal condition at start.
+        }       
+    }
+    
+    
+    private void findPathToJob(Mob mob, SpeciesDescription desc)
+    {
+        Point p = currentJob.getLocation();
+        Path path = new Path();
+        boolean ok;
+        if(currentJob instanceof JobFetchItem)
+        {
+            ok = path.findPath(new ImpPathSource(mob, desc.size),
+                    new LocationPathDestination(p.x, p.y, desc.size),
+                    mob.location.x, mob.location.y);
+        }
+        else
+        {
+            ok = path.findPath(new MiningPathSource(mob.gameMap, desc.size),
+                    new LocationPathDestination(p.x, p.y, 0),
+                    mob.location.x, mob.location.y);
+        }       if(ok)
+        {
+            // Hajo: Hack - some jobs require the imp to stop
+            // at the border of the job square, rather than in the center of it
+            // -> we search a new path to the border, now that we know a spot
+            // at the border
+
+            if(currentJob instanceof JobMining ||
+                    currentJob instanceof JobExcavate)
+            {
+                int length = path.length();
+                Path.Node node = path.getStep(length-9);
+
+                if(node != null)
+                {
+                    ok =
+                            path.findPath(new MiningPathSource(mob.gameMap, desc.size),
+                                    new LocationPathDestination(node.x, node.y, 0),
+                                    mob.location.x, mob.location.y);
+
+                    // logger.log(Level.INFO, "Imp #{0} tries truncated path, result={1} length={2}", new Object[]{mob.getKey(), ok, path.length()});
+                }
+            }
 
             if(ok)
             {
                 mob.setPath(path);
-                goal = Goal.BUILD_LAIR;
-                
-                Path.Node node = path.getStep(path.length() - 1);
-                home.x = node.x;
-                home.y = node.y;
+                mob.visuals.setBubble(Features.BUBBLE_WORK);
+                mob.visuals.setSleeping(false);
+                goal = Goal.GO_TO_JOB;
+                // System.err.println("Imp #" + mob.getKey() + " found a path to it's job at " + p);
             }
             else
             {
-                // Hajo: normal condition at start.
-            }
-        }
-        else if(goal == Goal.FIND_PATH_TO_JOB)
-        {
-            Point p = currentJob.getLocation();
-
-            Path path = new Path();
-
-            boolean ok;
-            
-            if(currentJob instanceof JobFetchItem)
-            {
-                ok = path.findPath(new ImpPathSource(mob, desc.size), 
-                                   new LocationPathDestination(p.x, p.y, desc.size),
-                                  mob.location.x, mob.location.y);
-            }
-            else
-            {
-                ok = path.findPath(new MiningPathSource(mob.gameMap, desc.size), 
-                                   new LocationPathDestination(p.x, p.y, 0), 
-                                  mob.location.x, mob.location.y);
-            }
-            
-            if(ok)
-            {
-                // Hajo: Hack - some jobs require the imp to stop
-                // at the border of the job square, rather than in the center of it
-                // -> we search a new path to the border, now that we know a spot
-                // at the border
-
-                if(currentJob instanceof JobMining ||
-                   currentJob instanceof JobExcavate)
-                {
-                    int length = path.length();
-                    Path.Node node = path.getStep(length-9);
-
-                    if(node != null)
-                    {
-                        ok = 
-                            path.findPath(new MiningPathSource(mob.gameMap, desc.size), 
-                                  new LocationPathDestination(node.x, node.y, 0), 
-                                  mob.location.x, mob.location.y);                
-
-                        // logger.log(Level.INFO, "Imp #{0} tries truncated path, result={1} length={2}", new Object[]{mob.getKey(), ok, path.length()});
-                    }
-                }
-
-                if(ok)
-                {
-                    mob.setPath(path);
-                    mob.visuals.setBubble(Features.BUBBLE_WORK);
-                    mob.visuals.setSleeping(false);
-                    goal = Goal.GO_TO_JOB;
-                    // System.err.println("Imp #" + mob.getKey() + " found a path to it's job at " + p);
-                }
-                else
-                {
-                    logger.log(Level.INFO, "Imp #" + mob.getKey() + " can't find a truncated path to it's job at " + p);
-
-                    // Hajo: try the job later again ...
-                    
-                    if(currentJob instanceof JobExcavate)
-                    {
-                        game.jobQueue.add(currentJob, JobQueue.PRI_LOW);
-                    }
-                    
-                    currentJob = null;
-                    goal = Goal.GO_TO_SLEEP;
-                    mob.visuals.setBubble(Features.BUBBLE_GO_SLEEPING);
-                    mob.setPath(null);
-                }
-            }
-            else
-            {
-                logger.log(Level.INFO, "Imp #" + mob.getKey() + " can't find a path to it's job " +
-                                   currentJob + " at " + p);
+                LOG.log(Level.INFO, "Imp #{0} can't find a truncated path to it's job at {1}", new Object[]{mob.getKey(), p});
 
                 // Hajo: try the job later again ...
+
                 if(currentJob instanceof JobExcavate)
                 {
                     game.jobQueue.add(currentJob, JobQueue.PRI_LOW);
                 }
-                
+
                 currentJob = null;
                 goal = Goal.GO_TO_SLEEP;
                 mob.visuals.setBubble(Features.BUBBLE_GO_SLEEPING);
                 mob.setPath(null);
             }
         }
-        else if(goal == Goal.GO_TO_SLEEP)
+        else
         {
-            Path path = new Path();
-            
-            boolean ok =
-            path.findPath(new ImpPathSource(mob, desc.size), 
-                          new LocationPathDestination(home.x, home.y, 0), 
-                          mob.location.x, mob.location.y);
-            
-            if(ok)
-            {
-                mob.setPath(path);
-                goal = Goal.SLEEP;
-                mob.visuals.setBubble(Features.BUBBLE_GO_SLEEPING);
-            }
-            else
-            {
-                // Hajo: this is an emergeny case - the imp can't find
-                // a path to it's lair. As a workaround, we warp the imp home.
-                logger.log(Level.WARNING, "Imp #{0} is stuck at {1}, {2} and will be warped home.",
-                        new Object[]{mob.getKey(), mob.location.x, mob.location.y});
+            LOG.log(Level.INFO, "Imp #{0} can't find a path to it's job {1} at {2}", new Object[]{mob.getKey(), currentJob, p});
 
-                teleportMob(mob, home);
+            // Hajo: try the job later again ...
+            if(currentJob instanceof JobExcavate)
+            {
+                game.jobQueue.add(currentJob, JobQueue.PRI_LOW);
             }
-        }
-        else if(goal == Goal.GOLD_TO_TREASURY)
+
+            currentJob = null;
+            goal = Goal.GO_TO_SLEEP;
+            mob.visuals.setBubble(Features.BUBBLE_GO_SLEEPING);
+            mob.setPath(null);
+        }       
+    }
+    
+    
+    private void findPathToLair(Mob mob, SpeciesDescription desc)
+    {
+        Path path = new Path();
+        boolean ok =
+                path.findPath(new ImpPathSource(mob, desc.size),
+                        new LocationPathDestination(home.x, home.y, 0),
+                        mob.location.x, mob.location.y);
+        if(ok)
         {
-            Path path = new Path();
-            
-            int itemSize = game.world.isArtifact(mob.stats.getCurrent(MobStats.CARRY)) ? 2 : 0;
-            
-            boolean ok = 
-            path.findPath(new ImpPathSource(mob, desc.size), 
-                          new FeaturePathDestination(mob.gameMap, 0, itemSize, Features.GROUND_TREASURY, 3),
-                          mob.location.x, mob.location.y);
-            
-            if(ok)
-            {
-                mob.setPath(path);
-                goal = Goal.DROP_GOLD;
-            }
-            else
-            {
-                // No more mining ...
-                currentJob = null;
-                goal = Goal.FIND_JOB;
-                mob.visuals.setBubble(0);
-                mob.visuals.setSleeping(false);
-                mob.stats.setCurrent(MobStats.GOLD, 0);
-                mob.setPath(null);
-            }
-        }
-        else if(goal == Goal.ITEM_TO_FORGE || goal == Goal.ITEM_TO_LAB)
-        {
-            Path path = new Path();
-
-            int requiredGround = (goal == Goal.ITEM_TO_FORGE) ? Features.GROUND_FORGE : Features.GROUND_LABORATORY;
-
-            boolean ok = 
-            path.findPath(new ImpPathSource(mob, desc.size), 
-                          new FeaturePathDestination(mob.gameMap, 0, 0, requiredGround, 3),
-                          mob.location.x, mob.location.y);
-            
-            if(ok)
-            {
-                mob.setPath(path);
-                mob.visuals.setBubble(mob.stats.getCurrent(MobStats.CARRY));
-                goal = Goal.DROP_ITEM;
-            }
-            else
-            {
-                logger.log(Level.WARNING, "Imp completed mining job but could not find a path for the produce.");
-
-                // No more mining ... clean up
-
-                // clear the mining symbol
-                Point p = currentJob.getLocation();
-                int rasterI = p.x/ Map.SUB*Map.SUB;
-                int rasterJ = p.y/Map.SUB*Map.SUB;
-                mob.gameMap.setItem(rasterI+Map.SUB/2, rasterJ+Map.SUB/2, 0);
-
-                // clear the job
-                currentJob = null;
-                goal = Goal.FIND_JOB;
-                mob.visuals.setBubble(0);
-                mob.visuals.setSleeping(false);
-                mob.stats.setCurrent(MobStats.CARRY, 0);
-                mob.setPath(null);
-            }
+            mob.setPath(path);
+            goal = Goal.SLEEP;
+            mob.visuals.setBubble(Features.BUBBLE_GO_SLEEPING);
         }
         else
         {
-            // no other goals yet
-        }
+            // Hajo: this is an emergeny case - the imp can't find
+            // a path to it's lair. As a workaround, we warp the imp home.
+            LOG.log(Level.WARNING, "Imp #{0} is stuck at {1}, {2} and will be warped home.",
+                    new Object[]{mob.getKey(), mob.location.x, mob.location.y});
+
+            teleportMob(mob, home);
+        }       
     }
+
+    
+    private void findPathToTreasury(Mob mob, SpeciesDescription desc)
+    {
+        Path path = new Path();
+        int itemSize = game.world.isArtifact(mob.stats.getCurrent(MobStats.CARRY)) ? 2 : 0;
+        boolean ok =
+                path.findPath(new ImpPathSource(mob, desc.size),
+                        new FeaturePathDestination(mob.gameMap, 0, itemSize, Features.GROUND_TREASURY, 3),
+                        mob.location.x, mob.location.y);
+        if(ok)
+        {
+            mob.setPath(path);
+            goal = Goal.DROP_GOLD;
+        }
+        else
+        {
+            // No more mining ...
+            currentJob = null;
+            goal = Goal.FIND_JOB;
+            mob.visuals.setBubble(0);
+            mob.visuals.setSleeping(false);
+            mob.stats.setCurrent(MobStats.GOLD, 0);
+            mob.setPath(null);
+        }       
+    }
+            
+    
+    private void findPathToRoom(Mob mob, SpeciesDescription desc, int requiredGround)
+    {
+        Path path = new Path();
+
+        boolean ok =
+                path.findPath(new ImpPathSource(mob, desc.size),
+                        new FeaturePathDestination(mob.gameMap, 0, 0, requiredGround, 3),
+                        mob.location.x, mob.location.y);
+        if(ok)
+        {
+            mob.setPath(path);
+            mob.visuals.setBubble(mob.stats.getCurrent(MobStats.CARRY));
+            goal = Goal.DROP_ITEM;
+        }
+        else
+        {
+            LOG.log(Level.WARNING, "Imp completed mining job but could not find a path for the produce.");
+
+            // No more mining ... clean up
+
+            // clear the mining symbol
+            Point p = currentJob.getLocation();
+            int rasterI = p.x/ Map.SUB*Map.SUB;
+            int rasterJ = p.y/Map.SUB*Map.SUB;
+            mob.gameMap.setItem(rasterI+Map.SUB/2, rasterJ+Map.SUB/2, 0);
+
+            // clear the job
+            currentJob = null;
+            goal = Goal.FIND_JOB;
+            mob.visuals.setBubble(0);
+            mob.visuals.setSleeping(false);
+            mob.stats.setCurrent(MobStats.CARRY, 0);
+            mob.setPath(null);
+        }       
+    }
+
 
     @Override
     public void thinkAfterStep(Mob mob) 
     {
         think(mob);
     }
+    
     
     @Override
     public void write(Writer writer) throws IOException
@@ -496,6 +515,7 @@ public class ImpAi extends AiBase
         }        
     }
     
+    
     @Override
     public void read(BufferedReader reader) throws IOException
     {
@@ -509,8 +529,8 @@ public class ImpAi extends AiBase
         line = reader.readLine();
         home.y = Integer.parseInt(line.substring(6));
 
-        thinkTime = Clock.time() + thinkCooldown;
-        pathTime = Clock.time() + 3 * thinkCooldown;
+        thinkTime = Clock.time() + THINK_COOLDOWN;
+        pathTime = Clock.time() + 3 * THINK_COOLDOWN;
         
         line = reader.readLine();
         if("jobType=<null>".equals(line))
@@ -542,10 +562,11 @@ public class ImpAi extends AiBase
             else
             {
                 currentJob = null;
-                logger.log(Level.SEVERE, "Unknown job type: {0}", line);
+                LOG.log(Level.SEVERE, "Unknown job type: {0}", line);
             }
         }
     }
+    
     
     private void findJob(Mob mob) 
     {
@@ -559,7 +580,7 @@ public class ImpAi extends AiBase
                 mob.visuals.setBubble(0);
                 mob.setPath(null); // trigger path finding
 
-                logger.log(Level.INFO, "Imp #{0} takes job {1}", new Object[]{mob.getKey(), currentJob});
+                LOG.log(Level.INFO, "Imp #{0} takes job {1}", new Object[]{mob.getKey(), currentJob});
                 
             }
             else
@@ -576,6 +597,7 @@ public class ImpAi extends AiBase
             mob.setPath(null); // trigger path finding
         }
     }
+    
     
     private void dropCarryItem(Mob mob) 
     {
@@ -598,20 +620,20 @@ public class ImpAi extends AiBase
     }
     
 
-    private void completeMiningJob(Mob mob) 
+    private void workMiningJob(Mob mob) 
     {
         // Hajo: show some animation for mining
-        if(workStep < 30)
+        if(workStep < 32)
         {
-            if((workStep & 3) == 1)
+            if((workStep & 7) == 1)
             {
                 splashMiningSparks(mob);
             }
             
-            // spin some
-            int dir = mob.visuals.getDisplayCode() - mob.getSpecies();
-            dir = (dir + 1) & 7;
-            mob.visuals.setDisplayCode(mob.getSpecies() + dir);
+            // bounce once, then sit to recover (height 0)
+            double x = (workStep & 7) - 2;
+            double y = 4 - x*x;
+            mob.zOff = Math.max((int)(y * 120000), 0);
 
             if((workStep & 7) == 1)
             {
@@ -623,13 +645,13 @@ public class ImpAi extends AiBase
         }    
         else
         {
-            logger.log(Level.INFO, "Imp #{0} completes mining job.", mob.getKey());
+            LOG.log(Level.INFO, "Imp #{0} completes mining job.", mob.getKey());
             
             goal = calculateGoalForCargo(mob);
             mob.setPath(null);
 
             // Hajo: wait a while extra
-            pathTime = Clock.time() + 5 * thinkCooldown;
+            pathTime = Clock.time() + 5 * THINK_COOLDOWN;
         }
     }
     
@@ -658,10 +680,11 @@ public class ImpAi extends AiBase
 
         return newGoal;
     }
+    
 
     private void completePickupJob(Mob mob)
     {
-        logger.log(Level.INFO, "Imp #{0} completes pick up job.", mob.getKey());
+        LOG.log(Level.INFO, "Imp #{0} completes pick up job.", mob.getKey());
         
         if(mob.stats.getCurrent(MobStats.CARRY) > 0)
         {
@@ -679,9 +702,9 @@ public class ImpAi extends AiBase
     
     private void splashMiningSparks(Mob mob)
     {
-        for(int i = 0; i<25; i++)
+        for(int i = 0; i<50; i++)
         {
-            double speed = 0.15 + Math.random() * 3.0;
+            double speed = 0.15 + Math.random() * 4.0;
             
             mob.visuals.backParticles.addParticle(0, 12, 
                                                   speed * Math.random() * 2.0 - speed, 
@@ -697,6 +720,7 @@ public class ImpAi extends AiBase
                                                   0xFFFFFFFF);
         }
     }
+    
 
     @Override
     public String toString()

@@ -5,6 +5,7 @@ Changes since v0.26
 - Fixed several mistakes in the new room management code.
 - Fixed a thread synchronization problem.
 - Saved games with 'JobFetchItem' AI jobs can be loaded now.
+- Imps bounce when mining instead of spinning and hit the rock harder.
 
 Changes since v0.25
 

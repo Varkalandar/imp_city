@@ -25,7 +25,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import static java.lang.Thread.sleep;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
