@@ -3,6 +3,9 @@ package impcity.game.jobs;
 import impcity.game.ImpCity;
 import impcity.game.ai.MobStats;
 import java.awt.Point;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Writer;
 
 import impcity.game.map.Map;
 import impcity.game.mobs.Mob;
@@ -15,8 +18,9 @@ import impcity.game.mobs.Mob;
 public class JobFetchItem extends AbstractJob
 {
     private final ImpCity game;
-    private final int item;
-    
+    private int item;
+
+
     public JobFetchItem(ImpCity game, int x, int y, int item)
     {
         super(new Point(x, y));
@@ -24,12 +28,14 @@ public class JobFetchItem extends AbstractJob
         this.item = item;
     }
 
+
     @Override
     public boolean isValid(Mob worker)
     {
         return worker.gameMap.getItem(location.x, location.y) == item;
     }
-    
+
+
     @Override
     public void execute(Mob worker)
     {
@@ -56,6 +62,29 @@ public class JobFetchItem extends AbstractJob
             // -> AI must take care of the case.
         }
     }
+
+
+    @Override
+    public void write(Writer writer) throws IOException
+    {
+        writer.write("jobX=" + location.x + "\n");
+        writer.write("jobY=" + location.y + "\n");
+        writer.write("item=" + item + "\n");
+    }
+
+
+    @Override
+    public void read(BufferedReader reader) throws IOException
+    {
+        String line;
+        line = reader.readLine();
+        location.x = Integer.parseInt(line.substring(5));
+        line = reader.readLine();
+        location.y = Integer.parseInt(line.substring(5));
+        line = reader.readLine();
+        item = Integer.parseInt(line.substring(5));
+    }
+
 
     @Override
     public String toString()

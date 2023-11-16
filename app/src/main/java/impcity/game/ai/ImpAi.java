@@ -329,7 +329,7 @@ public class ImpAi extends AiBase
                                   new LocationPathDestination(node.x, node.y, 0), 
                                   mob.location.x, mob.location.y);                
 
-                        logger.log(Level.INFO, "Imp #{0} tries truncated path, result={1} length={2}", new Object[]{mob.getKey(), ok, path.length()});
+                        // logger.log(Level.INFO, "Imp #{0} tries truncated path, result={1} length={2}", new Object[]{mob.getKey(), ok, path.length()});
                     }
                 }
 
@@ -343,7 +343,7 @@ public class ImpAi extends AiBase
                 }
                 else
                 {
-                    System.err.println("Imp #" + mob.getKey() + " can't find a truncated path to it's job at " + p);
+                    logger.log(Level.INFO, "Imp #" + mob.getKey() + " can't find a truncated path to it's job at " + p);
 
                     // Hajo: try the job later again ...
                     
@@ -360,7 +360,7 @@ public class ImpAi extends AiBase
             }
             else
             {
-                System.err.println("Imp #" + mob.getKey() + " can't find a path to it's job " + 
+                logger.log(Level.INFO, "Imp #" + mob.getKey() + " can't find a path to it's job " +
                                    currentJob + " at " + p);
 
                 // Hajo: try the job later again ...
@@ -536,10 +536,8 @@ public class ImpAi extends AiBase
             }
             else if(line.contains("JobFetchItem"))
             {
-                // Todo: actual saving and loading code for fetch item jobs
-                JobFetchItem dummy = new JobFetchItem(game, 0, 0, 1);
-                dummy.read(reader);
-                goal = Goal.GO_TO_SLEEP;
+                currentJob = new JobFetchItem(game, 0, 0, 0);
+                currentJob.read(reader);
             }
             else
             {
