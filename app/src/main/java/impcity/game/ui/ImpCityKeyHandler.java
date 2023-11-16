@@ -69,7 +69,7 @@ public class ImpCityKeyHandler implements KeyHandler
                 }
                 else if(Keyboard.getEventKey() == Keyboard.KEY_H)
                 {
-                    game.makeTechnologyQuest();
+                    // game.makeTechnologyQuest();
                 }
                 else if(Keyboard.getEventKey() == Keyboard.KEY_E)
                 {

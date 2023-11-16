@@ -6821,16 +6821,16 @@ rgba,inv
 Tile Description
 v.5
 200
-1 1
+23 9
 0 0
-0 0
+12 5
 End Of Header
 Item
 v.1
 data
 4
-
-
+copper_coins_big
+rgba
 
 
 1

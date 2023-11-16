@@ -34,7 +34,7 @@ public class DungeonSweepingThread extends Thread
     private final IsoDisplay display;
 
     // count the treasures
-    private int gold, silver, bronze;
+    private int gold, silver, copper;
 
     
     public DungeonSweepingThread(ImpCity game, GameDisplay gameDisplay, IsoDisplay display)
@@ -62,7 +62,7 @@ public class DungeonSweepingThread extends Thread
 
                 gold = 0;
                 silver = 0;
-                bronze = 0;
+                copper = 0;
 
                 
                 // look for squares to claim
@@ -106,7 +106,7 @@ public class DungeonSweepingThread extends Thread
 
                 player.stats.setMax(KeeperStats.COINS, gold);
                 player.stats.setCurrent(KeeperStats.COINS, silver);
-                player.stats.setMin(KeeperStats.COINS, bronze);
+                player.stats.setMin(KeeperStats.COINS, copper);
 
                 synchronized (game.world)
                 {                
@@ -187,8 +187,8 @@ public class DungeonSweepingThread extends Thread
             if(item == Features.I_SILVER_COINS) 
                 silver ++;
             
-            if(item == Features.I_BRONZE_COINS) 
-                bronze ++;
+            if(item == Features.I_COPPER_COINS) 
+                copper ++;
         }
     }
 }

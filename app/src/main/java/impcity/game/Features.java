@@ -55,9 +55,8 @@ public class Features
     public static final int I_SMALL_DEPRESSION = 112;
     public static final int I_WET_AREA = 113;
     
-    // public static final int I_COPPER_COINS_FEW = 198;
-    // public static final int I_COPPER_COINS = 199;
-    public static final int I_BRONZE_COINS = 2131;
+    // public static final int I_BRONZE_COINS = 2131;
+    public static final int I_COPPER_COINS = 200;
     public static final int I_SILVER_COINS = 192;
     public static final int I_GOLD_COINS = 194;
     
@@ -179,7 +178,7 @@ public class Features
         return 
             item == Features.I_GOLD_COINS ||
             item == Features.I_SILVER_COINS ||
-            item == Features.I_BRONZE_COINS;
+            item == Features.I_COPPER_COINS;
     }
 
     

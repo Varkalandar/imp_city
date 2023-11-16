@@ -37,7 +37,7 @@ public class ImpAi extends AiBase
         FIND_LAIR, BUILD_LAIR,
         FIND_JOB, FIND_PATH_TO_JOB, GO_TO_JOB, WORKING,
         GO_TO_SLEEP, SLEEP, 
-        GOLD_TO_TREASURY, DROP_GOLD,
+        GOLD_TO_TREASURY,
         ITEM_TO_FORGE, ITEM_TO_LAB, DROP_ITEM
     }
     
@@ -141,14 +141,14 @@ public class ImpAi extends AiBase
         else if(goal == Goal.FIND_JOB)
         {
             // Hajo: are there jobs?
-            if(!game.jobQueue.isEmpty())
-            {
-                findJob(mob);
-            }
-            else
+            if(game.jobQueue.isEmpty())
             {
                 goal = Goal.GO_TO_SLEEP;
                 mob.setPath(null);
+            }
+            else
+            {
+                findJob(mob);
             }
         }
         else if(goal == Goal.GO_TO_JOB)
@@ -221,7 +221,7 @@ public class ImpAi extends AiBase
                 findJob(mob);
             }
         }
-        else if(goal == Goal.DROP_GOLD)
+        else if(goal == Goal.DROP_ITEM)
         {
             // Hajo: are we there yet?
             if(mob.getPath() == null)
@@ -235,15 +235,6 @@ public class ImpAi extends AiBase
                 {
                     goal = Goal.FIND_PATH_TO_JOB;
                 }
-            }
-        }
-        else if(goal == Goal.DROP_ITEM)
-        {
-            // Hajo: are we there yet?
-            if(mob.getPath() == null)
-            {
-                dropCarryItem(mob);
-                goal = Goal.FIND_PATH_TO_JOB;
             }
         }
     }
@@ -281,14 +272,17 @@ public class ImpAi extends AiBase
                 break;
             case GO_TO_SLEEP:
                 findPathToLair(mob, desc);
+                break;
             case GOLD_TO_TREASURY:
-                findPathToTreasury(mob, desc);
+                findPathToRoom(mob, desc, Features.GROUND_TREASURY);
+                currentJob = null;
                 break;
             case ITEM_TO_FORGE:
+                findPathToRoom(mob, desc, Features.GROUND_FORGE);
+                break;
             case ITEM_TO_LAB:
-                    int requiredGround = (goal == Goal.ITEM_TO_FORGE) ? Features.GROUND_FORGE : Features.GROUND_LABORATORY;
-                    findPathToRoom(mob, desc, requiredGround);
-                    break;
+                findPathToRoom(mob, desc, Features.GROUND_LABORATORY);
+                break;
             default:
                 break;
         }
@@ -426,32 +420,6 @@ public class ImpAi extends AiBase
     }
 
     
-    private void findPathToTreasury(Mob mob, SpeciesDescription desc)
-    {
-        Path path = new Path();
-        int itemSize = game.world.isArtifact(mob.stats.getCurrent(MobStats.CARRY)) ? 2 : 0;
-        boolean ok =
-                path.findPath(new ImpPathSource(mob, desc.size),
-                        new FeaturePathDestination(mob.gameMap, 0, itemSize, Features.GROUND_TREASURY, 3),
-                        mob.location.x, mob.location.y);
-        if(ok)
-        {
-            mob.setPath(path);
-            goal = Goal.DROP_GOLD;
-        }
-        else
-        {
-            // No more mining ...
-            currentJob = null;
-            goal = Goal.FIND_JOB;
-            mob.visuals.setBubble(0);
-            mob.visuals.setSleeping(false);
-            mob.stats.setCurrent(MobStats.GOLD, 0);
-            mob.setPath(null);
-        }       
-    }
-            
-    
     private void findPathToRoom(Mob mob, SpeciesDescription desc, int requiredGround)
     {
         Path path = new Path();
@@ -466,7 +434,7 @@ public class ImpAi extends AiBase
             mob.visuals.setBubble(mob.stats.getCurrent(MobStats.CARRY));
             goal = Goal.DROP_ITEM;
         }
-        else
+        else if(currentJob instanceof JobMining)
         {
             LOG.log(Level.WARNING, "Imp completed mining job but could not find a path for the produce.");
 
@@ -585,13 +553,14 @@ public class ImpAi extends AiBase
             }
             else
             {
-                // Hajo: dump those invalid jobs ...
+                // Hajo: remove those invalid jobs ...
                 currentJob = null;
                 findJob(mob);
             }
         }
         else
         {
+            currentJob = null;
             goal = Goal.GO_TO_SLEEP;
             mob.visuals.setBubble(0);
             mob.setPath(null); // trigger path finding

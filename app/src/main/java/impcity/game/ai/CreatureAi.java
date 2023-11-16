@@ -341,7 +341,7 @@ public class CreatureAi extends AiBase
             
             ArrayList <Point> locations = area.getArea();
 
-            if(locations.size() == 0)
+            if(locations.isEmpty())
             {
                 logger.log(Level.WARNING, "Creature #{0} is stuck at {1}, {2} and will be warped home.",
                         new Object[]{mob.getKey(), mob.location.x, mob.location.y});
@@ -364,7 +364,7 @@ public class CreatureAi extends AiBase
         }
         else if(goal == Goal.FIND_FOOD)
         {
-            HashSet <Integer> plants = new HashSet<Integer>();
+            HashSet <Integer> plants = new HashSet<>();
             
             plants.add(Features.I_MUSHROOM);
             plants.add(Features.PLANTS_FIRST + Features.PLANTS_STRIDE * 3 + 0);
@@ -712,7 +712,8 @@ public class CreatureAi extends AiBase
     private void prepareForgeWork(Mob mob, int rasterI, int rasterJ)
     {
         Point p = game.forgeRooms.scanForResources(mob.gameMap,
-                                             (resource) -> {return resource == Features.I_COPPER_ORE || resource == Features.I_TIN_ORE;},
+//                                             (resource) -> {return resource == Features.I_COPPER_ORE || resource == Features.I_TIN_ORE;},
+                                             (resource) -> {return resource == Features.I_COPPER_ORE;},
                                              rasterI, rasterJ);
         if(p == null)
         {
@@ -1022,7 +1023,8 @@ public class CreatureAi extends AiBase
     {
         Map map = mob.gameMap;
         Point p = game.forgeRooms.scanForResources(map,
-                (resource) -> {return resource == Features.I_COPPER_ORE || resource == Features.I_TIN_ORE;},
+                // (resource) -> {return resource == Features.I_COPPER_ORE || resource == Features.I_TIN_ORE;},
+                (resource) -> {return resource == Features.I_COPPER_ORE;},
                 rasterI, rasterJ);
 
         if(p == null)
@@ -1032,9 +1034,8 @@ public class CreatureAi extends AiBase
         }
         else
         {
-            // todo: produce correct product
             map.setItem(p.x, p.y, 0);
-            map.dropItem(mob.location.x, mob.location.y, Features.I_BRONZE_COINS);
+            map.dropItem(mob.location.x, mob.location.y, Features.I_COPPER_COINS);
         }
     }
 

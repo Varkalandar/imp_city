@@ -249,7 +249,7 @@ public class GameDisplay
         drawMenuText(calcReputationDisplay(keeper), textColor, textLeft + 200, 2, 0.6);
         drawMenuText("" + keeper.stats.getMax(KeeperStats.COINS) + " Gold, " +
                         keeper.stats.getCurrent(KeeperStats.COINS) + " Silver, " +
-                        keeper.stats.getMin(KeeperStats.COINS) + " Bronze",
+                        keeper.stats.getMin(KeeperStats.COINS) + " Copper",
                         textColor, textLeft + 400, 2, 0.6);
         drawMenuText("" + game.calcCurrentCreatureCount() + "/" + game.calcMaxCreatureCount() + " Creatures",
                         textColor, textLeft + 760, 2, 0.6);
