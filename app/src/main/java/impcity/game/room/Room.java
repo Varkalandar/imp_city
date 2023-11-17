@@ -3,6 +3,7 @@ package impcity.game.room;
 import impcity.game.Features;
 import impcity.game.ImpCity;
 import impcity.game.map.LocationCallback;
+import impcity.game.map.LocationVisitor;
 import impcity.game.map.Map;
 import java.awt.Point;
 import java.util.HashMap;
@@ -63,7 +64,7 @@ public class Room
     }
 
 
-    public void forAllPoints(LocationCallback visitor)
+    public void forAllPoints(LocationVisitor visitor)
     {
         for(Point p : squares)
         {
@@ -72,7 +73,7 @@ public class Room
     }
 
 
-    public void forAllInnerPoints(LocationCallback visitor)
+    public void forAllInnerPoints(LocationVisitor visitor)
     {
         for(Point p : squares)
         {
@@ -112,8 +113,8 @@ public class Room
         LOG.log(Level.INFO, "Room has now " + squares.size() + " squares");
 
         calculateBorderDistances(map, floor);
-        forAllPoints((x, y) -> {game.clearItems(map, x, y, Map.SUB, Features.keepTreasureFilter); return true;});
-        forAllInnerPoints((x, y) -> {action.furnish(map, x, y); return true;});
-        forAllPoints((x, y) -> {game.refreshPillars(x, y); return true;});
+        forAllPoints((x, y) -> {game.clearItems(map, x, y, Map.SUB, Features.keepTreasureFilter);});
+        forAllInnerPoints((x, y) -> {action.furnish(map, x, y);});
+        forAllPoints((x, y) -> {game.refreshPillars(x, y);});
     }
 }

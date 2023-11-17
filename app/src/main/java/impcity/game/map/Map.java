@@ -464,7 +464,7 @@ public class Map implements Serializable
     }
 
 
-    public boolean dropItem(int x, int y, final int itemKey)
+    public boolean dropItem(int x, int y, final int itemKey, LocationVisitor visitor)
     {
         RectArea area = new RectArea(x, y, 0, 0);
         
@@ -483,6 +483,7 @@ public class Map implements Serializable
                             !Features.isImpassable(getFloor(rasterI, rasterJ)))
                     {
                         setItem(x, y, itemKey);
+                        visitor.visit(x, y);
                         return true;
                     }
                     return false;
@@ -524,7 +525,7 @@ public class Map implements Serializable
 
 
     public void traverseArea(int x, int y, int w, int h,
-                             LocationCallback visitor)
+                             LocationVisitor visitor)
     {
         for(int j=0; j<h; j++)
         {

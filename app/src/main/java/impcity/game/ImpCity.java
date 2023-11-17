@@ -1238,7 +1238,6 @@ public class ImpCity implements PostRenderHook, GameInterface
                 map.removeLight(ii, jj);
 
                 removeGeneratorFrom(ii, jj);
-                return true;
             });
     }
 
@@ -1505,7 +1504,7 @@ public class ImpCity implements PostRenderHook, GameInterface
 
             for(int i = 0; i < count; i++)
             {
-                map.dropItem(location.x, location.y, item);
+                map.dropItem(location.x, location.y, item, (x, y) -> {});
             }
         }
     }

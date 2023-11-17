@@ -1,13 +1,20 @@
-Changes since v0.26
+Changes since v0.26.1
 
 - Quest success rate now properly depends on finding difficulty,
   party scouting, intelligence and number of past expeditions.
-- Fixed several mistakes in the new room management code.
-- Fixed a thread synchronization problem.
-- Saved games with 'JobFetchItem' AI jobs can be loaded now.
 - Imps bounce when mining instead of spinning and hit the rock harder.
 - Bronze coins are replaced by copper coins as entry level currency and
   only require copper ore to make.
+- Fixed even more mistakes in the new room management code.
+- Produced items now immediately trigger an imp to fetch them.
+- Fixed a mistake where imps were sent to claim squares which were not
+  valid to claim.
+
+Changes since v0.26
+
+- Fixed several mistakes in the new room management code.
+- Fixed a thread synchronization problem.
+- Saved games with 'JobFetchItem' AI jobs can be loaded now.
 
 Changes since v0.25
 

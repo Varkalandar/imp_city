@@ -3,6 +3,8 @@ package impcity.game.ai;
 import impcity.game.Features;
 import impcity.game.ImpCity;
 import impcity.game.KeeperStats;
+import impcity.game.jobs.JobFetchItem;
+import impcity.game.jobs.JobQueue;
 import impcity.game.room.Room;
 import impcity.game.Sounds;
 import impcity.game.species.Species;
@@ -1035,7 +1037,13 @@ public class CreatureAi extends AiBase
         else
         {
             map.setItem(p.x, p.y, 0);
-            map.dropItem(mob.location.x, mob.location.y, Features.I_COPPER_COINS);
+            map.dropItem(mob.location.x,
+                         mob.location.y,
+                         Features.I_COPPER_COINS,
+                         (int x, int y) -> {
+                            JobFetchItem job = new JobFetchItem(game, x, y, Features.I_COPPER_COINS);
+                            game.jobQueue.add(job, JobQueue.PRI_LOW);
+                         });
         }
     }
 

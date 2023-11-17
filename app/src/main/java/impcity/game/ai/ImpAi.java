@@ -583,7 +583,7 @@ public class ImpAi extends AiBase
             }
             
             mob.visuals.setBubble(0);
-            mob.gameMap.dropItem(mob.location.x, mob.location.y, item);
+            mob.gameMap.dropItem(mob.location.x, mob.location.y, item, (x, y) -> {});
             mob.stats.setCurrent(MobStats.CARRY, 0);
         }
     }
