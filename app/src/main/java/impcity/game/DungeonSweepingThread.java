@@ -73,7 +73,10 @@ public class DungeonSweepingThread extends Thread
                         for(int i=0; i<map.getHeight(); i+=Map.SUB)
                         {
                             int floor = map.getFloor(i, j);
-                            if(floor >= Features.GROUND_LIGHT_SOIL && floor < Features.GROUND_LIGHT_SOIL+3)
+                            int item = map.getItem(i + Map.O_BLOCK, j + Map.O_BLOCK);
+
+                            if(item == 0 &&
+                               floor >= Features.GROUND_LIGHT_SOIL && floor < Features.GROUND_LIGHT_SOIL+3)
                             {
                                 game.jobQueue.add(new JobClaimGround(game, i+Map.SUB/2, j+Map.SUB/2), JobQueue.PRI_LOW);                            
                             }
