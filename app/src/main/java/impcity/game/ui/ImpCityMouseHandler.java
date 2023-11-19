@@ -1,7 +1,6 @@
 package impcity.game.ui;
 
 import impcity.game.*;
-import impcity.game.room.Room;
 import impcity.game.species.Species;
 import impcity.game.ai.WayPathSource;
 import impcity.game.jobs.JobExcavate;
@@ -9,16 +8,15 @@ import impcity.game.jobs.JobMining;
 import impcity.game.jobs.JobQueue;
 import impcity.game.processables.FarmSquare;
 import java.awt.Point;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import impcity.game.map.Map;
 import impcity.game.mobs.Mob;
-import impcity.game.quests.ArtifactGenerator;
 import impcity.oal.SoundPlayer;
 import impcity.ogl.IsoDisplay;
 import impcity.ui.MouseHandler;
 import impcity.ui.MousePointerBitmap;
-import impcity.utils.StringUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -29,7 +27,7 @@ import org.lwjgl.input.Mouse;
  */
 public class ImpCityMouseHandler implements MouseHandler
 {
-    public static final Logger logger = Logger.getLogger(ImpCityMouseHandler.class.getName());
+    public static final Logger LOG = Logger.getLogger(ImpCityMouseHandler.class.getName());
     
     private boolean lastButtonState = false;
     private final ImpCity game;
@@ -144,14 +142,12 @@ public class ImpCityMouseHandler implements MouseHandler
                 if(buttonReleased == 2)
                 {
                     Map map = gameDisplay.getDisplay().map;
-                    String name = StringUtils.upperCaseFirst(ArtifactGenerator.makeArtifactName(0));
-                    int item = game.createArtifactForTreasure(name);
-                    map.setItem(game.mouseI, game.mouseJ, item);
+                    DebugCentral.debugMakeArtifact(game, map);
                 }
             }
         }
     }
-    
+
 
     private void markForExcavation(Map map, int rasterI, int rasterJ) 
     {
@@ -207,8 +203,18 @@ public class ImpCityMouseHandler implements MouseHandler
         int n = map.getFloor(rasterI, rasterJ);
         if(n >= Features.GROUND_POLY_TILES && n < Features.GROUND_POLY_TILES + 3)
         {
-            game.addLabSquare(map, rasterI, rasterJ);
-            game.soundPlayer.play(Sounds.MAKE_FORGE, 0.2f, 1.0f);
+            boolean ok = game.payCoins(map, Features.I_COPPER_COINS, 1);
+
+            if(ok)
+            {
+                game.addLabSquare(map, rasterI, rasterJ);
+                game.soundPlayer.play(Sounds.MAKE_FORGE, 0.2f, 1.0f);
+            }
+            else
+            {
+                // Todo: need to tell the player somehow ...
+                LOG.log(Level.INFO, "Not enough coins.");
+            }
         }
     }
 
@@ -230,8 +236,18 @@ public class ImpCityMouseHandler implements MouseHandler
         if((n >= Features.GROUND_POLY_TILES && n < Features.GROUND_POLY_TILES + 3) ||
            (n >= Features.GROUND_HOSPITAL && n < Features.GROUND_HOSPITAL + 3))
         {
-            game.addHospitalSquare(map, rasterI, rasterJ);
-            game.soundPlayer.play(Sounds.MAKE_FORGE, 0.2f, 1.0f);
+            boolean ok = game.payCoins(map, Features.I_COPPER_COINS, 5);
+
+            if(ok)
+            {
+                game.addHospitalSquare(map, rasterI, rasterJ);
+                game.soundPlayer.play(Sounds.MAKE_FORGE, 0.2f, 1.0f);
+            }
+            else
+            {
+                // Todo: need to tell the player somehow ...
+                LOG.log(Level.INFO, "Not enough coins.");
+            }
         }
     }
 
@@ -313,8 +329,18 @@ public class ImpCityMouseHandler implements MouseHandler
         if(n >= Features.GROUND_POLY_TILES && n < Features.GROUND_POLY_TILES + 3 &&
            wps.isMoveAllowed(game.mouseI, game.mouseJ, game.mouseI, game.mouseJ))
         {
-            game.spawnImp(map, game.mouseI, game.mouseJ);
-            game.soundPlayer.play(Sounds.CLAIM_SQUARE, 1.0f, 1.0f);
+            boolean ok = game.payCoins(map, Features.I_COPPER_COINS, 1);
+
+            if(ok)
+            {
+                game.spawnImp(map, game.mouseI, game.mouseJ);
+                game.soundPlayer.play(Sounds.CLAIM_SQUARE, 1.0f, 1.0f);
+            }
+            else
+            {
+                // Todo: need to tell the player somehow ...
+                LOG.log(Level.INFO, "Not enough coins.");
+            }
         }
     }
     

@@ -9,6 +9,7 @@ Changes since v0.26.1
 - Produced items now immediately trigger an imp to fetch them.
 - Fixed a mistake where imps were sent to claim squares which were not
   valid to claim.
+- Laboratories, healing wells and new imps all cost copper coins now.
 
 Changes since v0.26
 

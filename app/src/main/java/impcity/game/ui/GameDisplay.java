@@ -400,7 +400,8 @@ public class GameDisplay
         }
         else if(n == 5)
         {
-            drawMenuText("Build a laboratory", toolTipColor, 420, tipY, 0.6);
+            drawMenuText("Build a laboratory", toolTipColor, 440, tipY, 0.6);
+            drawMenuText("Cost: 1 Copper", Colors.BRIGHT_GOLD_INK, 440+30, tipY-18, 0.4);
         }
         else if(n == 6)
         {
@@ -409,6 +410,7 @@ public class GameDisplay
         else if(n == 7)
         {
             drawMenuText("Place a healing well", toolTipColor, 560, tipY, 0.6);
+            drawMenuText("Cost: 5 Copper", Colors.BRIGHT_GOLD_INK, 560+40, tipY-18, 0.4);
         }
         else if(n == 8)
         {
@@ -428,7 +430,8 @@ public class GameDisplay
 
         if(n == 0)
         {
-            drawMenuText("Spawn a new imp", toolTipColor, 70, tipY, 0.6);
+            drawMenuText("Spawn a new imp", toolTipColor, 90, tipY, 0.6);
+            drawMenuText("Cost: 1 Copper", Colors.BRIGHT_GOLD_INK, 90+30, tipY-18, 0.4);
         }
     }
 

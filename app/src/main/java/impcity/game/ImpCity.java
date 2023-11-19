@@ -1305,6 +1305,62 @@ public class ImpCity implements PostRenderHook, GameInterface
     }
 
 
+    public Point locateCoin(Map map, int type)
+    {
+        for(Point p : treasuries)
+        {
+            for(int y=0; y<Map.SUB; y++)
+            {
+                for(int x=0; x<Map.SUB; x++)
+                {
+                    int item = map.getItem(p.x + x, p.y + y);
+                    if(item == type)
+                    {
+                        return new Point(p.x + x, p.y + y);
+                    }
+                }
+
+            }
+        }
+
+        return null;
+    }
+
+
+    public boolean payCoins(Map map, int type, int count)
+    {
+        Point [] where = new Point[count];
+        boolean success = true;
+
+        for(int i=0; i<count; i++)
+        {
+            Point p = locateCoin(map, type);
+            if(p == null)
+            {
+                success = false;
+            }
+            else
+            {
+                where[i] = p;
+                map.setItem(p.x, p.y, 0);
+            }
+        }
+
+        if(success == false)
+        {
+            // not enough coins. restore the ones we took
+            for(int i=0; i<count; i++)
+            {
+                if(where[i] != null)
+                {
+                    map.setItem(where[i].x, where[i].y, type);
+                }
+            }
+        }
+
+        return success;
+    }
+
     public void makeTreasureQuest()
     {
         // debug quest book, add some extra quests
