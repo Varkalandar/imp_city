@@ -17,6 +17,7 @@ import impcity.oal.SoundPlayer;
 import impcity.ogl.IsoDisplay;
 import impcity.ui.MouseHandler;
 import impcity.ui.MousePointerBitmap;
+import impcity.ui.TimedMessage;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -212,8 +213,11 @@ public class ImpCityMouseHandler implements MouseHandler
             }
             else
             {
-                // Todo: need to tell the player somehow ...
-                LOG.log(Level.INFO, "Not enough coins.");
+                TimedMessage tm = new TimedMessage("Not enough copper!",
+                                                   Colors.BRIGHT_GOLD_INK,
+                                                   Mouse.getX(), Mouse.getY() + 20,
+                                                   Clock.time(), 0.3);
+                gameDisplay.addMessage(tm);
             }
         }
     }
@@ -245,8 +249,11 @@ public class ImpCityMouseHandler implements MouseHandler
             }
             else
             {
-                // Todo: need to tell the player somehow ...
-                LOG.log(Level.INFO, "Not enough coins.");
+                TimedMessage tm = new TimedMessage("Not enough copper!",
+                                                   Colors.BRIGHT_GOLD_INK,
+                                                   Mouse.getX(), Mouse.getY() + 20,
+                                                   Clock.time(), 0.3);
+                gameDisplay.addMessage(tm);
             }
         }
     }
@@ -338,8 +345,12 @@ public class ImpCityMouseHandler implements MouseHandler
             }
             else
             {
-                // Todo: need to tell the player somehow ...
-                LOG.log(Level.INFO, "Not enough coins.");
+                LOG.log(Level.INFO, "Not enough copper coins.");
+                TimedMessage tm = new TimedMessage("Not enough copper!",
+                                                   Colors.BRIGHT_GOLD_INK,
+                                                   Mouse.getX(), Mouse.getY() + 20,
+                                                   Clock.time(), 0.3);
+                gameDisplay.addMessage(tm);
             }
         }
     }
@@ -604,7 +615,7 @@ public class ImpCityMouseHandler implements MouseHandler
         
         if(mouseX > display.displayWidth - 69)
         {
-            handleMessageStack(mouseX, mouseY);
+            handleMessageStack(mouseY);
         }
         else if(mouseY < 100)
         {
@@ -652,7 +663,7 @@ public class ImpCityMouseHandler implements MouseHandler
     }
     
 
-    private void handleMessageStack(int mouseX, int mouseY) 
+    private void handleMessageStack(int mouseY) 
     {
         int n = (mouseY - 24) / 64;
         gameDisplay.activateHookedMessage(n);

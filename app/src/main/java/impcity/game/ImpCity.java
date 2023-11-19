@@ -648,7 +648,7 @@ public class ImpCity implements PostRenderHook, GameInterface
                 
                 writer.close();
 
-                gameDisplay.addMessage(new TimedMessage("Game saved!", 0xFFFFFFFF, display.displayWidth/2, 300, Clock.time()));
+                gameDisplay.addMessage(new TimedMessage("Game saved!", 0xFFFFFFFF, display.displayWidth/2, 300, Clock.time(), 1.0));
             }
         }
         catch(IOException ioex)
@@ -754,7 +754,7 @@ public class ImpCity implements PostRenderHook, GameInterface
                 activateMap(map);
 
                 LOG.log(Level.INFO, "Game loaded.");
-                gameDisplay.addMessage(new TimedMessage("Game loaded!", 0xFFFFFFFF, display.displayWidth/2, 300, Clock.time()));
+                gameDisplay.addMessage(new TimedMessage("Game loaded!", 0xFFFFFFFF, display.displayWidth/2, 300, Clock.time(), 1.0));
             }
         }
         catch(IOException ioex)

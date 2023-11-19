@@ -31,7 +31,7 @@ public class MobVisuals implements Drawable
     private int tempOverlaySize;
     private long showOverlayUntil;
 
-    private final TimedMessage timedMessage = new TimedMessage("", 0,0,0,0);
+    private final TimedMessage timedMessage = new TimedMessage("", 0,0,0,0, 1.0);
     
     public int color = 0xFFFFFFFF;
 

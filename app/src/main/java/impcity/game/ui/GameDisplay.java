@@ -195,7 +195,7 @@ public class GameDisplay
         for(TimedMessage message : messages)
         {
             yoff = 8 + (((int)(Clock.time() - message.time)) >> 4);
-            double factor = 0.5 + yoff/120.0;
+            double factor = (0.5 + yoff/120.0) * message.factor;
 
             int width = (int)(fontLow.getStringWidth(message.message) * factor + 0.5);
             drawShadowText(message.message, message.color,
