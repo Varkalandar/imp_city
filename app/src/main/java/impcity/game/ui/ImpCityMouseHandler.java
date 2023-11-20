@@ -336,7 +336,10 @@ public class ImpCityMouseHandler implements MouseHandler
         if(n >= Features.GROUND_POLY_TILES && n < Features.GROUND_POLY_TILES + 3 &&
            wps.isMoveAllowed(game.mouseI, game.mouseJ, game.mouseI, game.mouseJ))
         {
-            boolean ok = game.payCoins(map, Features.I_COPPER_COINS, 1);
+            int imps = game.countMobs(Species.IMPS_BASE);
+            int cost = Math.max(1, imps - 3);
+
+            boolean ok = game.payCoins(map, Features.I_COPPER_COINS, cost);
 
             if(ok)
             {

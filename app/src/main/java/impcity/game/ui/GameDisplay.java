@@ -12,6 +12,7 @@ import impcity.game.TextureCache;
 import impcity.game.jobs.Job;
 import impcity.game.map.Map;
 import impcity.game.mobs.Mob;
+import impcity.game.species.Species;
 import impcity.ogl.IsoDisplay;
 import impcity.ui.PixFont;
 import impcity.ui.TimedMessage;
@@ -430,11 +431,12 @@ public class GameDisplay
 
         if(n == 0)
         {
+            int imps = game.countMobs(Species.IMPS_BASE);
+            int cost = Math.max(1, imps - 3);
             drawMenuText("Spawn a new imp", toolTipColor, 90, tipY, 0.6);
-            drawMenuText("Cost: 1 Copper", Colors.BRIGHT_GOLD_INK, 90+30, tipY-18, 0.4);
+            drawMenuText("Cost: " + cost + " Copper", Colors.BRIGHT_GOLD_INK, 90+30, tipY-18, 0.4);
         }
     }
-
 
     private void displayBooksTab(int left, int top)
     {
