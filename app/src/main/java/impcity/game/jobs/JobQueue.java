@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
 /**
  * Simple priority queue for jobs
  * 
@@ -23,20 +24,23 @@ public class JobQueue
     public static final int PRI_NORM = 1; 
     public static final int PRI_LOW = 2; 
 
-    private final ArrayList<List<Job>>  queues = new ArrayList<List<Job>>();
+    private final ArrayList<List<Job>>  queues = new ArrayList<>();
+    
     
     public JobQueue()
     {
         for(int i=0; i<3; i++)
         {
-            queues.add(new ArrayList<Job>(64));
+            queues.add(new ArrayList<>(64));
         }
     }
+    
     
     public synchronized void add(Job job, int priority)
     {
         queues.get(priority).add(job);
     }
+    
     
     public synchronized Job nextJob()
     {
@@ -51,6 +55,7 @@ public class JobQueue
         return null;
     }
     
+    
     public synchronized List<Job> getAllJobs()
     {
         ArrayList<Job> all = new ArrayList<>(queues.get(PRI_HIGH));
@@ -59,6 +64,7 @@ public class JobQueue
         
         return all;
     }
+    
 
     public synchronized boolean isEmpty()
     {
@@ -74,6 +80,7 @@ public class JobQueue
         
         return empty;
     }
+    
 
     public synchronized boolean remove(Class jc, int x, int y)
     {
@@ -91,7 +98,7 @@ public class JobQueue
                     if(job.getLocation().equals(p))
                     {
                         ok |= (queue.remove(i) != null);
-                        logger.log(Level.INFO, "Removing job of " + jc + " at " + p);
+                        logger.log(Level.INFO, "Removing job of {0} at {1}", new Object[]{jc, p});
                     }
                 }
             }
@@ -99,6 +106,7 @@ public class JobQueue
 
         return ok;
     }
+    
     
     public void read(ImpCity game, BufferedReader reader) throws IOException 
     {
@@ -126,19 +134,30 @@ public class JobQueue
                     job = new JobClaimGround(game, 0, 0);
                     job.read(reader);
                 }
+                else if(line.contains("JobMining"))
+                {
+                    job = new JobMining(game, 0, 0);
+                    job.read(reader);
+                }
+                else if(line.contains("JobFetchItem"))
+                {
+                    job = new JobFetchItem(game, 0, 0, 0);
+                    job.read(reader);
+                }
                 else
                 {
                     job = null;
                     logger.log(Level.SEVERE, "Unknown job type: {0}", line);
                 }
+                
                 if(job != null)
                 {
                     queue.add(job);
                 }
             }
-        
         }
     }
+    
 
     public void write(Writer writer) throws IOException 
     {

@@ -10,6 +10,8 @@ Changes since v0.26.1
 - Fixed a mistake where imps were sent to claim squares which were not
   valid to claim.
 - Laboratories, healing wells and new imps all cost copper coins now.
+- Saved games with 'JobFetchItem' or 'JobMining' in the saved job queue
+  can be loaded now.
 
 Changes since v0.26
 
