@@ -1,3 +1,6 @@
+.idea
+app/savegame
+
 # Ignore Gradle project-specific cache directory
 .gradle
 gradle
