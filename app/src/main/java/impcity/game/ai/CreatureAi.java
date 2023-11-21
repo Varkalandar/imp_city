@@ -671,6 +671,7 @@ public class CreatureAi extends AiBase
         sleepy = Integer.parseInt(line.substring(7));
         
         this.lastThinkTime = Clock.time();
+        this.researchTime = Clock.time();
     }
 
 
