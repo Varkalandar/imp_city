@@ -8,6 +8,8 @@ import impcity.utils.StringUtils;
 import java.io.IOException;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -16,6 +18,8 @@ import java.util.List;
  */
 public class QuestBook extends UiDialog
 {
+    public static final Logger LOG = Logger.getLogger(QuestBook.class.getName());
+    
     private final GameDisplay gameDisplay;
     private final ImpCity game;
     private final IsoDisplay display;
@@ -35,14 +39,16 @@ public class QuestBook extends UiDialog
 
         if(castle == null)
         {
-            try {
+            try 
+            {
                 castle = display.textureCache.loadTexture("/ui/castle.png", true);
                 riverscape = display.textureCache.loadTexture("/ui/river_house.png", true);
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-        }
-        
+            catch (IOException e) 
+            {
+                LOG.log(Level.SEVERE, "IOException while loading textures.", e);
+            }
+        }        
     }
     
 
@@ -114,6 +120,8 @@ public class QuestBook extends UiDialog
             }
 
             textTop -= 100;
+            
+            
         }
     }
 
@@ -141,10 +149,9 @@ public class QuestBook extends UiDialog
             
             textTop -= 220;
 
-            int lines =
-                    gameDisplay.drawBoxedShadowText(quest.story, silver,
-                            rightX + textLeft, textTop + 10, boxWidth,
-                            linespace * 5, 0.20);
+            gameDisplay.drawBoxedShadowText(quest.story, silver,
+                    rightX + textLeft, textTop + 10, boxWidth,
+                    linespace * 5, 0.20);
         }
     }
 
@@ -157,7 +164,7 @@ public class QuestBook extends UiDialog
             if(mouseX < display.displayWidth / 2 && mouseY > display.displayHeight / 2 - 230)
             {
                 // selection
-                int n = mouseY - (display.displayHeight / 2) + 100;
+                int n = mouseY - (display.displayHeight / 2) + 165;
                 n = n / 140;  // 140 = Quest box
                 n = 2 - n;  // count upside down
 
