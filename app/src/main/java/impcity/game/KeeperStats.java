@@ -24,6 +24,7 @@ public class KeeperStats
 
     // Bitfield, see RESEARCH_XXX values
     public static final int RESEARCH = 6;
+    public static final int RESEARCH_QUEST = 7;
 
     public static final int RESEARCH_FORGES = 1;
     public static final int RESEARCH_LABS = 2;

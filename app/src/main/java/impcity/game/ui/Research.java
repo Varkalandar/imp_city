@@ -1,6 +1,8 @@
 package impcity.game.ui;
 
+import impcity.game.Clock;
 import impcity.game.Features;
+import impcity.game.ImpCity;
 import impcity.game.KeeperStats;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,13 +26,18 @@ public class Research
     
     public void initialize(Stats stats)
     {
+        stats.setMin(KeeperStats.COINS, 0);
         stats.setCurrent(KeeperStats.COINS, 0);
-        stats.setCurrent(KeeperStats.RESEARCH, 0);
-
-        // stats.setCurrent(KeeperStats.RESEARCH, KeeperStats.RESEARCH_LABS | KeeperStats.RESEARCH_FORGES);
+        stats.setMax(KeeperStats.COINS, 0);
 
         stats.setMin(KeeperStats.RESEARCH, 0);
-        stats.setMax(KeeperStats.RESEARCH, 10000); // research needed for next discovery        
+        stats.setCurrent(KeeperStats.RESEARCH, 0);
+        stats.setMax(KeeperStats.RESEARCH, 10000); // research needed for next discovery
+        // stats.setCurrent(KeeperStats.RESEARCH, KeeperStats.RESEARCH_LABS | KeeperStats.RESEARCH_FORGES);
+
+        stats.setMin(KeeperStats.RESEARCH_QUEST, 0);
+        stats.setCurrent(KeeperStats.RESEARCH_QUEST, 0);
+        stats.setMax(KeeperStats.RESEARCH_QUEST, 15000); // research needed for next quest
     }
     
     
@@ -74,6 +81,33 @@ public class Research
                 stats.setMax(KeeperStats.RESEARCH, limit * 2);
             }
         }        
+    }
+
+
+    public void addQuestResearch(ImpCity game, Stats stats, int howmuch)
+    {
+        int research = stats.getMin(KeeperStats.RESEARCH_QUEST);
+        int limit = stats.getMax(KeeperStats.RESEARCH_QUEST);
+        int total = research + howmuch;
+
+        // logger.log(Level.INFO, "Mob researched " + howmuch + " points, total is now " + total + " limit is " + limit);
+
+        stats.setMin(KeeperStats.RESEARCH_QUEST, total);
+
+        if(total > limit)
+        {
+            if(Math.random() < 0.40)
+            {
+                game.makeArtifactQuest();
+            }
+            else
+            {
+                game.makeTreasureQuest();
+            }
+
+            limit += 5000 + (int)(Math.random() * 10000);
+            stats.setMax(KeeperStats.RESEARCH_QUEST, limit);
+        }
     }
 
 

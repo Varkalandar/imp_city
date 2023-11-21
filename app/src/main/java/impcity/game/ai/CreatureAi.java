@@ -53,7 +53,6 @@ public class CreatureAi extends AiBase
     private long pathTime;
     private long researchTime;
     private long nextSoundTime;
-    private long questTime;
     private final ImpCity game;
     
     private int hungry;
@@ -71,7 +70,6 @@ public class CreatureAi extends AiBase
         this.sleepy = 0;
         this.lastThinkTime = Clock.time();
         this.nextSoundTime = Clock.time() + 1000;
-        this.questTime = Clock.time() + 360 * 1000 + (int)(Math.random() * 600 * 1000);
     }
     
 
@@ -1056,22 +1054,7 @@ public class CreatureAi extends AiBase
         int research = (int)(Clock.time() - researchTime) >> 3;        
 
         game.research.addRoomResearch(keeper.stats, research);
+        game.research.addQuestResearch(game, keeper.stats, research);
         researchTime = Clock.time();
-        
-        // logger.log(Level.INFO, "Next quest in " + (questTime - Clock.time())  / 1000 + " seconds.");        
-        
-        if(Clock.time() > questTime)
-        {
-            if(Math.random() < 0.40)
-            {
-                game.makeArtifactQuest();
-            }
-            else
-            {
-                game.makeTreasureQuest();
-            }
-
-            questTime = Clock.time() + 360 * 1000 + (int)(Math.random() * 600 * 1000);
-        }
     }
 }
