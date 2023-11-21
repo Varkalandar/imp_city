@@ -8,7 +8,8 @@ Changes since v0.27
   the block will be marked for excavation.
 - Selection area for mouse clicks in quest book fits better to the quest
   text now.
-- Fixed a research calculation mistake after loading a game.
+- Fixed a research calculation mistake after loading a game. (Sadly,
+  this broke save game compatibility with 0.27).
 
 Changes since v0.26.1
 

@@ -646,11 +646,12 @@ public class ImpCity implements PostRenderHook, GameInterface
 
                 FileWriter writer = new FileWriter(folderName + "/test.mob");
 
+                Clock.write(writer);
+
                 saveMobs(writer);
                 saveItems(writer);
 
                 jobQueue.write(writer);
-                Clock.write(writer);
                 
                 saveQuests(writer);
                 
