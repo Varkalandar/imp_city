@@ -174,6 +174,10 @@ public class ImpCityMouseHandler implements MouseHandler
             game.addLairSquare(map, rasterI, rasterJ);
             game.soundPlayer.play(Sounds.MAKE_LAIR, 0.2f, 2.0f);            
         }
+        else
+        {
+            markForExcavation(map, rasterI, rasterJ);
+        }
     }
         
     
@@ -185,6 +189,10 @@ public class ImpCityMouseHandler implements MouseHandler
             game.soundPlayer.play(Sounds.MAKE_FARMLAND, 0.5f, 0.5f, 0.55f);            
             game.addFarmlandSquare(map, rasterI, rasterJ);
         }
+        else
+        {
+            markForExcavation(map, rasterI, rasterJ);
+        }
     }
     
     
@@ -195,6 +203,10 @@ public class ImpCityMouseHandler implements MouseHandler
         {
             game.addLibrarySquare(map, rasterI, rasterJ);
             game.soundPlayer.play(Sounds.MAKE_LIBRARY, 0.8f, 1.0f);            
+        }
+        else
+        {
+            markForExcavation(map, rasterI, rasterJ);
         }
     }
     
@@ -220,6 +232,10 @@ public class ImpCityMouseHandler implements MouseHandler
                 gameDisplay.addMessage(tm);
             }
         }
+        else
+        {
+            markForExcavation(map, rasterI, rasterJ);
+        }
     }
 
     
@@ -230,6 +246,10 @@ public class ImpCityMouseHandler implements MouseHandler
         {
             game.addForgeSquare(map, rasterI, rasterJ);
             game.soundPlayer.play(Sounds.MAKE_FORGE, 0.2f, 1.0f);
+        }
+        else
+        {
+            markForExcavation(map, rasterI, rasterJ);
         }
     }
     
@@ -256,6 +276,10 @@ public class ImpCityMouseHandler implements MouseHandler
                 gameDisplay.addMessage(tm);
             }
         }
+        else
+        {
+            markForExcavation(map, rasterI, rasterJ);
+        }
     }
 
     
@@ -266,6 +290,10 @@ public class ImpCityMouseHandler implements MouseHandler
         {
             game.soundPlayer.play(Sounds.MAKE_TREASURY, 0.4f, 1.0f);            
             game.addTreasurySquare(map, rasterI, rasterJ);
+        }
+        else
+        {
+            markForExcavation(map, rasterI, rasterJ);
         }
     }
 
