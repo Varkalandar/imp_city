@@ -54,6 +54,8 @@ import java.util.function.IntUnaryOperator;
 import org.lwjgl.LWJGLException;
 import rlgamekit.objects.Cardinal;
 import rlgamekit.objects.Registry;
+import rlgamekit.stats.Stats;
+
 
 /**
  * Imp city main class.
@@ -101,8 +103,7 @@ public class ImpCity implements PostRenderHook, GameInterface
 
     static
     {
-        Logger.getLogger(ImpCity.class.getName()).log(Level.INFO,
-                "App directory: " + (new File("./")).getAbsolutePath());
+        LOG.log(Level.INFO, "App directory: {0}", (new File("./")).getAbsolutePath());
         
         try 
         {
@@ -120,7 +121,7 @@ public class ImpCity implements PostRenderHook, GameInterface
     
     public static void addLibraryPath(String pathToAdd) throws Exception 
     {
-        LOG.log(Level.INFO, "Adding library path: " + pathToAdd);
+        LOG.log(Level.INFO, "Adding library path: {0}", pathToAdd);
 
         Field usrPathsField = ClassLoader.class.getDeclaredField("usr_paths");
         usrPathsField.setAccessible(true);
@@ -611,6 +612,13 @@ public class ImpCity implements PostRenderHook, GameInterface
         }
 
         placeEnclosure(map, 12, Features.GROUND_IMPASSABLE, Features.I_PERM_ROCK);
+        
+        // old games were saved without quest research
+        // so we must set some sensible values here
+        Stats stats = world.mobs.get(getPlayerKey()).stats;
+        stats.setMin(KeeperStats.RESEARCH_QUEST, 0);
+        stats.setCurrent(KeeperStats.RESEARCH_QUEST, 0);
+        stats.setMax(KeeperStats.RESEARCH_QUEST, 15000); // research needed for next quest        
     }
 
     
@@ -734,19 +742,19 @@ public class ImpCity implements PostRenderHook, GameInterface
                 Map map = player.gameMap;
 
                 BufferedReader reader = new BufferedReader(new FileReader("./savegame/test.mob"));
-
+                
+                Clock.read(reader);
+                
                 String line;
-
                 line = reader.readLine();
                 int mobCount = Integer.parseInt(line.substring(5));
                 loadMobs(map, reader, mobCount);
 
                 line = reader.readLine();
                 int itemCount = Integer.parseInt(line.substring(6));
-                loadItems(map, reader, itemCount);
+                loadItems(reader, itemCount);
 
                 jobQueue.read(this, reader);
-                Clock.read(reader);
 
                 loadQuests(reader);
 
@@ -770,7 +778,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         Registry<Mob> mobs = world.mobs;
         for(int i = 0; i< count; i++)
         {
-            LOG.log(Level.INFO, "loading mob " + (i+1) + " of " + count);
+            LOG.log(Level.INFO, "loading mob {0}{1} of {2}", new Object[]{i, 1, count});
 
             line = reader.readLine();
             int species = Integer.parseInt(line.substring(8));
@@ -779,7 +787,7 @@ public class ImpCity implements PostRenderHook, GameInterface
 
             if(desc == null)
             {
-                LOG.log(Level.INFO, "loading a generator " + line);
+                LOG.log(Level.INFO, "loading a generator {0}", line);
 
                 // Hajo: this is no real player, only a generator
                 // -> these are re-installed in activateMap, so
@@ -794,7 +802,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             }
             else
             {
-                LOG.log(Level.INFO, "loading a " + desc.name);
+                LOG.log(Level.INFO, "loading a {0}", desc.name);
 
                 Mob mob;
                 mob = new Mob(0, 0, species, Features.SHADOW_BASE, desc.sleepImage, map, null, desc.speed, desc.move);
@@ -856,16 +864,16 @@ public class ImpCity implements PostRenderHook, GameInterface
     }
 
 
-    private void loadItems(Map map, BufferedReader reader, int count) throws IOException
+    private void loadItems(BufferedReader reader, int count) throws IOException
     {
         String line;
         Registry<Item> items = world.items;
         for (int i = 0; i < count; i++)
         {
-            LOG.log(Level.INFO, "loading item " + (i + 1) + " of " + count);
+            LOG.log(Level.INFO, "loading item {0}{1} of {2}", new Object[]{i, 1, count});
             line = reader.readLine();
             int key = Integer.parseInt(line.substring(4));
-            LOG.log(Level.INFO, "Item key is " + key);
+            LOG.log(Level.INFO, "Item key is {0}", key);
 
             Item item = new Item(reader);
             items.put(key, item);
@@ -977,7 +985,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         squares.add(p);
         map.setFloor(p.x, p.y, floor + (int)(Math.random() * floorRange));
         room = rooms.addNewSquare(p);
-        LOG.log(Level.INFO, "Room list contains " + rooms.size() + " rooms");
+        LOG.log(Level.INFO, "Room list contains {0} rooms", rooms.size());
         
         room.refurnish(this, map, floor, action);
     }
@@ -1127,7 +1135,7 @@ public class ImpCity implements PostRenderHook, GameInterface
     {
         Point p = new Point(rasterI, rasterJ);
         
-        LOG.log(Level.INFO, "Claiming square " + rasterI + ", " + rasterJ);
+        LOG.log(Level.INFO, "Claiming square {0}, {1}", new Object[]{rasterI, rasterJ});
         
         if(!claimed.contains(p))
         {
@@ -1484,7 +1492,7 @@ public class ImpCity implements PostRenderHook, GameInterface
                 LOG.log(Level.SEVERE, "AI must be null");
             }
 
-            LOG.log(Level.INFO, "Setting returned creature "  + key + " home to " + mob.location.x + ", " + mob.location.y);
+            LOG.log(Level.INFO, "Setting returned creature {0} home to {1}, {2}", new Object[]{key, mob.location.x, mob.location.y});
 
             CreatureAi ai = new CreatureAi(this);
             ai.setHome(mob.location);
@@ -1504,7 +1512,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             mob.location.x = p.x;
             mob.location.y = p.y + count * 2 - quest.party.members.size();
 
-            LOG.log(Level.INFO, "Setting returned creature "  + key + " location to " + mob.location.x + ", " + mob.location.y);
+            LOG.log(Level.INFO, "Setting returned creature {0} location to {1}, {2}", new Object[]{key, mob.location.x, mob.location.y});
             
             count ++;
         }            

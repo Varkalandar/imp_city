@@ -1,6 +1,5 @@
 package impcity.game.ui;
 
-import impcity.game.Clock;
 import impcity.game.Features;
 import impcity.game.ImpCity;
 import impcity.game.KeeperStats;
@@ -8,13 +7,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import rlgamekit.stats.Stats;
 
+
 /**
  *
  * @author hjm
  */
 public class Research 
 {
-    private static final Logger logger = Logger.getLogger(Research.class.getName());
+    private static final Logger LOG = Logger.getLogger(Research.class.getName());
     private final GameDisplay gameDisplay;
     
     
@@ -90,7 +90,7 @@ public class Research
         int limit = stats.getMax(KeeperStats.RESEARCH_QUEST);
         int total = research + howmuch;
 
-        // logger.log(Level.INFO, "Mob researched " + howmuch + " points, total is now " + total + " limit is " + limit);
+        // LOG.log(Level.INFO, "Mob researched quests: " + howmuch + " points, total is now " + total + " limit is " + limit);
 
         stats.setMin(KeeperStats.RESEARCH_QUEST, total);
 

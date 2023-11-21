@@ -65,7 +65,7 @@ public class CreatureAi extends AiBase
         this.goal = Goal.FIND_LAIR;
         this.thinkTime = Clock.time() + (int)(Math.random() * 4000);
         this.pathTime = Clock.time() + (int)(Math.random() * 4000);
-        this.researchTime = 0;
+        this.researchTime = Clock.time();
         this.hungry = 0;
         this.sleepy = 0;
         this.lastThinkTime = Clock.time();
@@ -670,8 +670,8 @@ public class CreatureAi extends AiBase
         line = reader.readLine();
         sleepy = Integer.parseInt(line.substring(7));
         
-        this.lastThinkTime = Clock.time();
         this.researchTime = Clock.time();
+        this.lastThinkTime = Clock.time();
     }
 
 
@@ -1052,7 +1052,8 @@ public class CreatureAi extends AiBase
         Mob keeper = game.world.mobs.get(game.getPlayerKey());
 
         // first, accumulate wisdom
-        int research = (int)(Clock.time() - researchTime) >> 3;        
+        long now = Clock.time();
+        int research = (int)((now - researchTime) >> 3);        
 
         game.research.addRoomResearch(keeper.stats, research);
         game.research.addQuestResearch(game, keeper.stats, research);
