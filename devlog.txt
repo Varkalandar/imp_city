@@ -1,3 +1,10 @@
+Changes since v0.27
+
+- New sound for farmland creation.
+- Quest research now is handled like room research, so that quests
+  don't happen quite as randomly anymore (particularly after loading a
+  saved game).
+
 Changes since v0.26.1
 
 - Quest success rate now properly depends on finding difficulty,
