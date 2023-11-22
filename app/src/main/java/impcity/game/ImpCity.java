@@ -54,7 +54,6 @@ import java.util.function.IntUnaryOperator;
 import org.lwjgl.LWJGLException;
 import rlgamekit.objects.Cardinal;
 import rlgamekit.objects.Registry;
-import rlgamekit.stats.Stats;
 
 
 /**
@@ -637,18 +636,17 @@ public class ImpCity implements PostRenderHook, GameInterface
                 File file = new File(folderName, "test.map");
                 player.gameMap.save(file);
 
-                FileWriter writer = new FileWriter(folderName + "/test.mob");
-
-                Clock.write(writer);
-
-                saveMobs(writer);
-                saveItems(writer);
-
-                jobQueue.write(writer);
-                
-                saveQuests(writer);
-                
-                writer.close();
+                try (FileWriter writer = new FileWriter(folderName + "/test.mob")) 
+                {
+                    Clock.write(writer);
+                    
+                    saveMobs(writer);
+                    saveItems(writer);
+                    
+                    jobQueue.write(writer);
+                    
+                    saveQuests(writer);
+                }
 
                 gameDisplay.addMessage(new TimedMessage("Game saved!", 0xFFFFFFFF, display.displayWidth/2, 300, Clock.time(), 1.0));
             }
@@ -735,24 +733,24 @@ public class ImpCity implements PostRenderHook, GameInterface
                 player.gameMap.load(file);
                 Map map = player.gameMap;
 
-                BufferedReader reader = new BufferedReader(new FileReader("./savegame/test.mob"));
+                try (BufferedReader reader = new BufferedReader(new FileReader("./savegame/test.mob"))) 
+                {
+                    Clock.read(reader);
+                    
+                    String line;
+                    line = reader.readLine();
+                    int mobCount = Integer.parseInt(line.substring(5));
+                    loadMobs(map, reader, mobCount);
+                    
+                    line = reader.readLine();
+                    int itemCount = Integer.parseInt(line.substring(6));
+                    loadItems(reader, itemCount);
+                    
+                    jobQueue.read(this, reader);
+                    
+                    loadQuests(reader);
+                }
                 
-                Clock.read(reader);
-                
-                String line;
-                line = reader.readLine();
-                int mobCount = Integer.parseInt(line.substring(5));
-                loadMobs(map, reader, mobCount);
-
-                line = reader.readLine();
-                int itemCount = Integer.parseInt(line.substring(6));
-                loadItems(reader, itemCount);
-
-                jobQueue.read(this, reader);
-
-                loadQuests(reader);
-
-                reader.close();
                 activateMap(map);
 
                 LOG.log(Level.INFO, "Game loaded.");
@@ -1270,6 +1268,11 @@ public class ImpCity implements PostRenderHook, GameInterface
     /**
      * The player starts with a restricted area. This method is used to set these walls
      * and later to remover them again
+     * 
+     * @param map The map to work on
+     * @param distance The distance of the enclosure from the portal square
+     * @param ground The ground type to place under the enclosure
+     * @param block The block type to place as enclosure
      */
     public void placeEnclosure(Map map, int distance, int ground, int block)
     {
