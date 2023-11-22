@@ -612,13 +612,6 @@ public class ImpCity implements PostRenderHook, GameInterface
         }
 
         placeEnclosure(map, 12, Features.GROUND_IMPASSABLE, Features.I_PERM_ROCK);
-        
-        // old games were saved without quest research
-        // so we must set some sensible values here
-        Stats stats = world.mobs.get(getPlayerKey()).stats;
-        stats.setMin(KeeperStats.RESEARCH_QUEST, 0);
-        stats.setCurrent(KeeperStats.RESEARCH_QUEST, 0);
-        stats.setMax(KeeperStats.RESEARCH_QUEST, 15000); // research needed for next quest        
     }
 
     
