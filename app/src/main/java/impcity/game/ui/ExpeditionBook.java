@@ -10,8 +10,6 @@ import impcity.game.species.Species;
 import impcity.game.species.SpeciesDescription;
 import impcity.ogl.IsoDisplay;
 
-import java.util.List;
-
 
 /**
  *
@@ -56,15 +54,13 @@ public class ExpeditionBook extends UiDialog
         
         super.displayDoublePage(x, y);
 
-        displayLeftPage(gold, silver, x, rightX, textTop, textLeft, boxWidth, linespace);
-        displayRightPage(gold, silver, x, rightX, textTop, textLeft, boxWidth, linespace);
+        displayLeftPage(gold, silver, x, textTop, textLeft, boxWidth, linespace);
+        displayRightPage(gold, silver, rightX, textTop, textLeft);
     }
 
 
-    private void displayLeftPage(int gold, int silver, int leftX, int rightX, int textTop, int textLeft, int boxWidth, int linespace)
+    private void displayLeftPage(int gold, int silver, int leftX, int textTop, int textLeft, int boxWidth, int linespace)
     {
-        List <Quest> quests = game.quests;
-
         // headline
         gameDisplay.drawShadowText("Ongoing Expeditions", gold, leftX + textLeft-10, textTop, 0.40);
         gameDisplay.drawMenuText("< Page " +  (currentPage + 1) + " of " + (maxPages + 1) + " >", gold, leftX + textLeft, textTop - 500, 0.6);
@@ -135,7 +131,7 @@ public class ExpeditionBook extends UiDialog
     }
 
 
-    private void displayRightPage(int gold, int silver, int leftX, int rightX, int textTop, int textLeft, int boxWidth, int linespace)
+    private void displayRightPage(int gold, int silver, int rightX, int textTop, int textLeft)
     {
         gameDisplay.drawMenuText("[X]", gold, rightX + 350, textTop + 36, 0.6);
 
@@ -161,7 +157,8 @@ public class ExpeditionBook extends UiDialog
                         Texture tex = display.textureCache.species[desc.baseImage+1];
                         IsoDisplay.drawTileStanding(tex, rightX + textLeft + 20, textTop + 4);
 
-                        gameDisplay.drawShadowText(desc.name, silver, rightX + textLeft + 50, textTop, 0.20);
+                        String text = "Level " + mob.getLevel() + " " + desc.name;
+                        gameDisplay.drawShadowText(text, silver, rightX + textLeft + 50, textTop, 0.20);
                         
                         // debug - show vitality
                         // gameDisplay.drawShadowText(desc.name + " " + mob.stats.getCurrent(MobStats.VITALITY), silver, rightX + textLeft + 50, textTop, 0.20);
