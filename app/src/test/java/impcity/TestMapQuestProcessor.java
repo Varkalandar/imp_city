@@ -20,18 +20,20 @@ public class TestMapQuestProcessor
     @Test
     public void testMapQuestProcessor()
     {
-        for(int i=0; i<10; i++)
+        for(int i=0; i<16; i++)
         {
-            runOneQuest();
+            runOneQuest(i);
         }
     }
         
         
         
-    public void runOneQuest()
+    public void runOneQuest(int difficulty)
     {
         Quest quest = QuestGenerator.makeTreasureQuest();
-        System.out.println(quest.story + "\n");
+        quest.findingDifficulty = difficulty;
+
+        // System.out.println(quest.story + "\n");
 
         QuestProcessor processor = new QuestProcessor();
 

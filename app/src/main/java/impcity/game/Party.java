@@ -9,6 +9,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import impcity.game.mobs.Mob;
+import java.util.HashSet;
+import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import rlgamekit.objects.Registry;
 
 
@@ -18,6 +22,8 @@ import rlgamekit.objects.Registry;
  */
 public class Party
 {
+    private static final Logger LOG = Logger.getLogger(Party.class.getName());    
+    
     public final ArrayList <Integer> members = new ArrayList<>();
     
     public int intelligence;
@@ -43,16 +49,21 @@ public class Party
         for(int key : members)
         {
             Mob mob = mobs.get(key);
-            int species = mob.getSpecies();
-            double factor = 1 + mob.getLevel() * 0.3;
-
-            SpeciesDescription desc = Species.speciesTable.get(species);
             
-            intelligence = Math.max(intelligence, (int)(desc.intelligence * factor));
-            combat += (int)(desc.combat * factor);
-            stealth = Math.min(stealth, desc.stealth);
-            speed = Math.min(speed, (int)(desc.speed * factor));
-            scouting = Math.max(scouting, (int)((desc.speed + desc.intelligence) * 0.5 * factor));
+            // Only those still alive can contribute
+            if(mob.stats.getCurrent(MobStats.VITALITY) > 0)
+            {
+                int species = mob.getSpecies();
+                double factor = 1 + mob.getLevel() * 0.3;
+
+                SpeciesDescription desc = Species.speciesTable.get(species);
+
+                intelligence = Math.max(intelligence, (int)(desc.intelligence * factor));
+                combat += (int)(desc.combat * factor);
+                stealth = Math.min(stealth, desc.stealth);
+                speed = Math.min(speed, (int)(desc.speed * factor));
+                scouting = Math.max(scouting, (int)((desc.speed + desc.intelligence) * 0.5 * factor));
+            }
         }
         
         if(members.isEmpty())
@@ -63,12 +74,16 @@ public class Party
     }
     
     
-    public String decimate(Registry <Mob> mobs, Random rng, int kills)
+    public String decimate(Registry <Mob> mobs, Random rng, int hits)
     {
+        // int injuriesOld = countMatches(mobs, (mob) -> {return mob.stats.getCurrent(MobStats.INJURIES) > 0});
+        
         int injuries = 0;
         int fatalities = 0;
         
-        for(int i=0; i<kills; i++)
+        HashSet <Mob> newInjuries = new HashSet<>();
+        
+        for(int i=0; i<hits; i++)
         {
             int n = (int)(rng.nextDouble() * members.size());
             
@@ -78,30 +93,29 @@ public class Party
 
             if(health == 0)
             {
-                // no injuries yet
-                // Hajo: check for crictical hits
-                if(rng.nextDouble() < 0.95)
+                mob.stats.setCurrent(MobStats.INJURIES, 1);
+                
+                if(!newInjuries.contains(mob))
                 {
-                    mob.stats.setCurrent(MobStats.INJURIES, 1);
-                    injuries++;
-                }
-                else
-                {
-                    // critical hit -> dead
-                    mob.stats.setCurrent(MobStats.VITALITY, 0);
-                    fatalities++;
+                    injuries ++;
+                    newInjuries.add(mob);
                 }
             }
-            else
+            else if(health == 1)
             {
                 // injured again -> dead
+                mob.stats.setCurrent(MobStats.INJURIES, 2);
                 mob.stats.setCurrent(MobStats.VITALITY, 0);
-                fatalities++;
+                fatalities ++;
             }
         }
+
+        // count kills
+        kills += fatalities;
         
-        this.kills += fatalities;
+        LOG.log(Level.INFO, "{0} injured, {1} killed, total kills: {2}", new Object[]{injuries, fatalities, kills});
         
+        // write it down
         StringBuilder sb = new StringBuilder();
         count(sb, injuries, "injured");
         
@@ -109,7 +123,9 @@ public class Party
         
         count(sb, fatalities, "killed");
         
+        // party might be weaker now
         calculateStats(mobs);
+        
         return sb.toString();
     }
 
@@ -170,7 +186,7 @@ public class Party
     }
 
     
-    public int calculateStillAlive(Registry <Mob> mobs) 
+    public int countMatches(Registry <Mob> mobs, Predicate<Mob> check) 
     {
         int count = 0;
         
@@ -178,7 +194,7 @@ public class Party
         {
             Mob mob = mobs.get(key);
             
-            if(mob.stats.getCurrent(MobStats.VITALITY) > 0)
+            if(check.test(mob))
             {
                 count ++;
             }

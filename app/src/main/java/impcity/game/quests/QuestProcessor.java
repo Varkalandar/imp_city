@@ -187,7 +187,7 @@ public class QuestProcessor
                     buffer.append("The remaining ").append(party.members.size()).append(" party members decided to reatreat, due to losses.\n");
                     
                     int daysLeft = - (i + 1);
-                    LOG.log(Level.INFO, "Too many losses. Party retreats. Days left: " + daysLeft);
+                    LOG.log(Level.INFO, "Too many losses. Party retreats. Days left: {0}", daysLeft);
                     return daysLeft;
                 }
             }
@@ -227,12 +227,12 @@ public class QuestProcessor
                     
                     buffer.append(event.message).append(' ');
                     
-                    int kills = calculateKills(world, buffer, party, event);
-                    if(kills > 0)
+                    int hits = calculateHits(party, event);
+                    if(hits > 0)
                     {
                         // TODO: this is not RNG safe/reproducible
-                        // String kf = party.decimate(world.mobs, rng, kills);
-                        // buffer.append(kf).append(' ');
+                        String kf = party.decimate(world.mobs, rng, hits);
+                        buffer.append(kf).append(' ');
                     }
                     // then, combat notes
                     
@@ -278,12 +278,12 @@ public class QuestProcessor
             
             buffer.append(event.message).append(' ');
 
-            int kills = calculateKills(world, buffer, party, event);
-            if(kills > 0)
+            int hits = calculateHits(party, event);
+            if(hits > 0)
             {
                 // TODO: this is not RNG safe/reproducible
-                // String kf = party.decimate(world.mobs, rng, kills);
-                // buffer.append(kf).append(' ');
+                String kf = party.decimate(world.mobs, rng, hits);
+                buffer.append(kf).append(' ');
             }
             
             currentDangerLevel = escalatedDangerLevel +
@@ -423,37 +423,27 @@ public class QuestProcessor
     }
 
 
-    private int calculateKills(World world, StringBuilder buffer, Party party, TravelEvent event) 
+    private int calculateHits(Party party, TravelEvent event) 
     {
-        int kills = 0;
+        int hits = 0;
         
         if(event.combatLevel > 0)
         {
             // todo: party vs. enemies
-            kills = (int)(rng.nextDouble() * (1 + event.combatLevel - party.combat));
-            if(kills < 0) kills = 0; // don't magically add new members from the dead realms ...
-        }
-        
-        // Hajo: we need one to return and tell ... at least most of the time
-        int stillAlive = party.calculateStillAlive(world.mobs);
-        if(kills >= stillAlive)
-        {
-            if(rng.nextDouble() < 0.95)
+            hits = (int)(rng.nextDouble() * (1 + event.combatLevel - party.combat));
+            
+            if(hits < 0) 
             {
-                // spare one
-                kills = stillAlive - 1;
+                hits = 0;
             }
         }
         
-        // never kill more than there are ...
-        if(kills > stillAlive) 
+        if(hits > 0) 
         {
-            kills = stillAlive;
+            LOG.log(Level.INFO, "Combat. Hits taken: {0}", hits);
         }
         
-        if(kills > 0) LOG.log(Level.INFO, "Combat. Creatures killed: " + kills);
-        
-        return kills;
+        return hits;
     }
 
     

@@ -56,20 +56,13 @@ public class TestMapQuestProcessorSuccessRate
 
         
         World world = new World();
-        Party party = new Party();
-        
-        addPartyMember(world, party, Species.BOOKWORMS_BASE);
-        addPartyMember(world, party, Species.POWERSNAILS_BASE);
-        addPartyMember(world, party, Species.CONIANS_BASE);
-        addPartyMember(world, party, Species.MOSQUITOES_BASE);
-        addPartyMember(world, party, Species.MOSQUITOES_BASE);
-        addPartyMember(world, party, Species.MOSQUITOES_BASE);
-    
-        party.calculateStats(world.mobs);
-
-        quest.party = party;
+        quest.party = assembleParty(world);
         
         QuestResult result = processor.createLog(world , quest);
+        
+        
+        // renew party - first run might have killed or injured some
+        quest.party = assembleParty(world);
         
         // Hajo: test if quest is idempotent
         QuestResult result2 = processor.createLog(world , quest);
@@ -98,6 +91,22 @@ public class TestMapQuestProcessorSuccessRate
         return (quest.status & Quest.SF_FOUND) != 0;
     }
 
+
+    private Party assembleParty(World world)
+    {
+        Party party = new Party();
+        
+        addPartyMember(world, party, Species.BOOKWORMS_BASE);
+        addPartyMember(world, party, Species.POWERSNAILS_BASE);
+        addPartyMember(world, party, Species.CONIANS_BASE);
+        addPartyMember(world, party, Species.MOSQUITOES_BASE);
+        addPartyMember(world, party, Species.MOSQUITOES_BASE);
+        addPartyMember(world, party, Species.MOSQUITOES_BASE);
+    
+        party.calculateStats(world.mobs);
+        
+        return party;
+    }
     
     private static void addPartyMember(World world, Party party, int species)
     {
