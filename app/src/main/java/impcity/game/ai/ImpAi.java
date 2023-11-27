@@ -15,6 +15,7 @@ import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import impcity.game.Clock;
@@ -31,6 +32,19 @@ public class ImpAi extends AiBase
 {
     private static final Logger LOG = Logger.getLogger(ImpAi.class.getName());
     private static final int THINK_COOLDOWN = 200;
+
+    public static final HashMap <ImpAi, Mob> idleImpLocations = new HashMap<>();
+
+    private static void registerIdleAt(ImpAi imp, Mob mob)
+    {
+        if(!idleImpLocations.containsKey(imp))
+        {
+            Point location = mob.location;
+            LOG.log(Level.INFO, "Imp {0} registers idle at {1}", new Object[]{imp, location});
+            idleImpLocations.put(imp, mob);
+        }
+    }
+
 
     public enum Goal
     {
@@ -131,7 +145,9 @@ public class ImpAi extends AiBase
                 mob.visuals.setSleeping(true);
                 mob.zOff = 0;
             }
-            
+
+            registerIdleAt(this, mob);
+
             // Hajo: are there jobs?
             if(!game.jobQueue.isEmpty())
             {
@@ -140,6 +156,8 @@ public class ImpAi extends AiBase
         }
         else if(goal == Goal.FIND_JOB)
         {
+            registerIdleAt(this, mob);
+
             // Hajo: are there jobs?
             if(game.jobQueue.isEmpty())
             {
@@ -215,6 +233,8 @@ public class ImpAi extends AiBase
         }
         else if(goal == Goal.GO_TO_SLEEP)
         {
+            registerIdleAt(this, mob);
+
             // Hajo: are there jobs?
             if(!game.jobQueue.isEmpty())
             {
@@ -536,25 +556,50 @@ public class ImpAi extends AiBase
     }
     
     
-    private void findJob(Mob mob) 
+    private void findJob(Mob mob)
     {
         // Hajo: are there jobs?
         if(!game.jobQueue.isEmpty())
         {
-            currentJob = game.jobQueue.nextJob();
-            if(currentJob.isValid(mob))
-            {
-                goal = Goal.FIND_PATH_TO_JOB;
-                mob.visuals.setBubble(0);
-                mob.setPath(null); // trigger path finding
+            Job next = game.jobQueue.nextJob();
 
-                LOG.log(Level.INFO, "Imp #{0} takes job {1}", new Object[]{mob.getKey(), currentJob});
-                
+            // find the imp that is closest to the job
+            int best = 999999;
+            
+            // if there is no best choive found, take this imp
+            // it's definitely idle at this point
+            ImpAi bestImp = this;
+            Mob bestWorker = mob;
+           
+            for(ImpAi imp : idleImpLocations.keySet())
+            {
+                Mob worker = idleImpLocations.get(imp);
+                Point jobLocation = next.getLocation();
+                int d2 = Map.distance2(worker.location.x, worker.location.y, jobLocation.x, jobLocation.y);
+                if(d2 < best)
+                {
+                    bestImp = imp;
+                    bestWorker = worker;
+                    best = d2;
+                }
+            }
+
+            if(next.isValid(bestWorker))
+            {
+                bestImp.goal = Goal.FIND_PATH_TO_JOB;
+                bestWorker.visuals.setBubble(0);
+                bestWorker.setPath(null); // trigger path finding
+                bestImp.currentJob = next;
+
+                LOG.log(Level.INFO, "Imp #{0} takes job {1}",
+                        new Object[]{bestWorker.getKey(), next});
+
+                // no more idle
+                idleImpLocations.remove(bestImp);
             }
             else
             {
-                // Hajo: remove those invalid jobs ...
-                currentJob = null;
+                // Hajo: skips those invalid jobs and try again ...
                 findJob(mob);
             }
         }

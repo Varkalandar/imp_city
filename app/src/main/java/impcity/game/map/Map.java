@@ -551,7 +551,7 @@ public class Map implements Serializable
     }
 
 
-    private static int distance2(int i1, int j1, int i2, int j2)
+    public static int distance2(int i1, int j1, int i2, int j2)
     {
         int xd = i1 - i2;
         int yd = j1 - j2;

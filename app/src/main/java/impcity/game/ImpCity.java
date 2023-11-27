@@ -728,6 +728,7 @@ public class ImpCity implements PostRenderHook, GameInterface
                 LOG.log(Level.INFO, "Loading saved game.");
 
                 world.mobs.clear();
+                ImpAi.idleImpLocations.clear();
 
                 File file = new File("./savegame/test.map");
                 player.gameMap.load(file);
