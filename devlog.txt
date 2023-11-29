@@ -13,6 +13,7 @@ Changes since v0.27
 - Expedition book now lists creature levels too.
 - Imps cooperate now and hand jobs to the idle imp who is closest to
   the job location (Issue #10)
+- Creatures can get killed during expeditions.
 
 Changes since v0.26.1
 

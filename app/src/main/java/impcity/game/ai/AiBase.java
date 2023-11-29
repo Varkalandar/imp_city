@@ -3,7 +3,6 @@ package impcity.game.ai;
 import impcity.game.Features;
 import impcity.game.species.Species;
 import impcity.game.species.SpeciesDescription;
-import impcity.game.map.LocationCallback;
 import impcity.game.map.RectArea;
 import impcity.game.mobs.Mob;
 
@@ -25,7 +24,9 @@ public abstract class AiBase implements Ai
     protected final Point home = new Point(-1, -1);
 
     protected int workStep;
+
     
+    @Override
     public boolean isLair(Mob mob, int x, int y)
     {
         int species = mob.getSpecies();
@@ -34,6 +35,7 @@ public abstract class AiBase implements Ai
         int n = mob.gameMap.getItem(x, y);
         return n == desc.lair;
     }
+    
     
     public void placeLair(final Mob mob, int x, int y)
     {
@@ -45,20 +47,30 @@ public abstract class AiBase implements Ai
         
         RectArea area = new RectArea(x - desc.lairSize, y - desc.lairSize, desc.lairSize*2, desc.lairSize*2);
         
-        area.traverseWithoutCorners(new LocationCallback() {
-
-            @Override
-            public boolean visit(int x, int y)
-            {
-                mob.gameMap.setPlacementBlocked(x, y, true);
-                // mob.gameMap.setItem(x, y, 9);
-                
-                return false;
-            }
-        });
-        
+        area.traverseWithoutCorners((int x1, int y1) -> {
+            mob.gameMap.setPlacementBlocked(x1, y1, true);
+            // mob.gameMap.setItem(x, y, 9);
+            return false;
+        });        
     }
     
+    
+    public static void removeLair(final Mob mob, int x, int y)
+    {
+        int species = mob.getSpecies();
+        SpeciesDescription desc = Species.speciesTable.get(species);
+        mob.gameMap.setItem(x, y, 0);
+        
+        RectArea area = new RectArea(x - desc.lairSize, y - desc.lairSize, desc.lairSize*2, desc.lairSize*2);
+        
+        area.traverseWithoutCorners((int x1, int y1) -> {
+            mob.gameMap.setPlacementBlocked(x1, y1, false);
+            // mob.gameMap.setItem(x, y, 9);
+            return false;
+        });        
+    }
+
+
     public boolean checkLairSpace(Mob mob, int x, int y)
     {
         SpeciesDescription desc = Species.speciesTable.get(mob.getSpecies());
@@ -79,12 +91,16 @@ public abstract class AiBase implements Ai
         
         return ok;
     }
+    
 
+    @Override
     public Point getHome()
     {
         return home;
     }
+    
 
+    @Override
     public void teleportMob(Mob mob, Point destination)
     {
         logger.log(Level.INFO, "Creature #{0} at {1}, {2} will be teleported to {3}, {4}.",

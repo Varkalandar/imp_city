@@ -515,12 +515,14 @@ public class IsoDisplay implements PostRenderHook
             {
                 Mob mob = mobs.get(dl.id);
 
-                int xoff = (mob.iOff * xd / Map.SUB - mob.jOff * xd / Map.SUB) >> 16;
-                int yoff = (mob.iOff * yd / Map.SUB + mob.jOff * yd / Map.SUB) >> 16;
+                if(mob != null)
+                {
+                    int xoff = (mob.iOff * xd / Map.SUB - mob.jOff * xd / Map.SUB) >> 16;
+                    int yoff = (mob.iOff * yd / Map.SUB + mob.jOff * yd / Map.SUB) >> 16;
 
-                // yoff += mob.zOff >> 16;
-
-                mob.visuals.display(this, x + xoff, y + yoff, mob.zOff >> 16);
+                    mob.visuals.display(this, x + xoff, y + yoff, mob.zOff >> 16);
+                }
+                
                 dl = dl.next;
             }
         }

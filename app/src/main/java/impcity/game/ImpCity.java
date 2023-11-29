@@ -36,6 +36,7 @@ import java.util.logging.Logger;
 import impcity.ogl.GlTextureCache;
 import impcity.game.mobs.Mob;
 import impcity.game.ai.Ai;
+import impcity.game.ai.AiBase;
 import impcity.game.map.Map;
 import impcity.game.map.RectArea;
 import impcity.game.mobs.MovementJumping;
@@ -1255,6 +1256,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         }
     }
     
+    
     public List<Point> getFarmlandLocations() 
     {
         List<Point> result = new ArrayList<>(farmland.size());
@@ -1265,6 +1267,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         
         return result;
     }
+    
 
     /**
      * The player starts with a restricted area. This method is used to set these walls
@@ -1425,6 +1428,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         gameDisplay.addHookedMessage(hookedMessage);
     }
     
+    
     private void addParticleGenerator(Map map, int x, int y, int z, int type)
     {
         // Hajo: Hack: Generators must be mobs, due to display
@@ -1471,6 +1475,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             world.mobs.remove(generator.getKey());
         }
     }
+    
 
     public void reactivateReturningCreatures(Quest quest)
     {
@@ -1492,30 +1497,57 @@ public class ImpCity implements PostRenderHook, GameInterface
 
             LOG.log(Level.INFO, "Setting returned creature {0} home to {1}, {2}", new Object[]{key, mob.location.x, mob.location.y});
 
-            CreatureAi ai = new CreatureAi(this);
-            ai.setHome(mob.location);
-            mob.setAi(ai);
-
-            if (!ai.isLair(mob, mob.location.x, mob.location.y))
+            // check if they are still alive
+            if(mob.stats.getCurrent(MobStats.VITALITY) == 0)
             {
-                LOG.log(Level.SEVERE, "Mob location must be their lair.");
+                // dead - remove creature
+                removeCreature(key);
             }
+            else
+            {
+                // alive - reactivate
+                CreatureAi ai = new CreatureAi(this);
+                ai.setHome(mob.location);
+                mob.setAi(ai);
 
-            // give them some experience
-            mob.addExperience(200);
+                if (!ai.isLair(mob, mob.location.x, mob.location.y))
+                {
+                    LOG.log(Level.SEVERE, "Mob location must be their lair.");
+                }
 
-            // now line them up 
-            Point p = keeper.location;
-            
-            mob.location.x = p.x;
-            mob.location.y = p.y + count * 2 - quest.party.members.size();
+                // give them some experience
+                mob.addExperience(200);
 
-            LOG.log(Level.INFO, "Setting returned creature {0} location to {1}, {2}", new Object[]{key, mob.location.x, mob.location.y});
-            
-            count ++;
+                // now line them up 
+                Point p = keeper.location;
+
+                mob.location.x = p.x;
+                mob.location.y = p.y + count * 2 - quest.party.members.size();
+
+                LOG.log(Level.INFO, "Setting returned creature {0} location to {1}, {2}", new Object[]{key, mob.location.x, mob.location.y});
+                
+                // todo: heal them, until healing wells actually work
+                mob.stats.setCurrent(MobStats.VITALITY, 20);
+                mob.stats.setCurrent(MobStats.INJURIES, 0);
+                
+                count ++;
+            }            
         }            
     }
 
+    
+    public void removeCreature(int key)
+    {
+        LOG.log(Level.INFO, "Removing creature {0} from the world.", key);
+        
+        // clear the lair
+        Mob mob = world.mobs.get(key);
+        AiBase.removeLair(mob, mob.location.x, mob.location.y);
+        
+        // unregister the mob
+        world.mobs.remove(key);
+    }
+    
 
     public int createItem(String name, int texId, int type)
     {
