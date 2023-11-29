@@ -104,10 +104,13 @@ public class PortalSquare implements Processable
                             Features.SHADOW_BASE, desc.sleepImage,
                             map, monsterAi, desc.speed, desc.move);
                     
-                    int key = game.world.mobs.nextFreeKey();
-                    game.world.mobs.put(key, mob);
-                    mob.setKey(key);
-
+                    synchronized(game.world.mobs)
+                    {
+                        int key = game.world.mobs.nextFreeKey();
+                        game.world.mobs.put(key, mob);
+                        mob.setKey(key);
+                    }
+                    
                     // Hajo: make creature look south-east
                     mob.visuals.setDisplayCode(species+3);
                     

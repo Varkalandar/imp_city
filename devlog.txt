@@ -14,6 +14,8 @@ Changes since v0.27
 - Imps cooperate now and hand jobs to the idle imp who is closest to
   the job location (Issue #10)
 - Creatures can get killed during expeditions.
+- Tried to fix a synchronization problem in new creatures arriving while
+  other creatures were being updated.
 
 Changes since v0.26.1
 
