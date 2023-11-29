@@ -1,3 +1,8 @@
+Changes since v0.28
+
+- Tried to fix a synchronization problem in removing a creature while 
+  other creatures were being updated.
+
 Changes since v0.27
 
 - New sound for farmland creation.

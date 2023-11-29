@@ -1545,7 +1545,10 @@ public class ImpCity implements PostRenderHook, GameInterface
         AiBase.removeLair(mob, mob.location.x, mob.location.y);
         
         // unregister the mob
-        world.mobs.remove(key);
+        synchronized(world.mobs)
+        {
+            world.mobs.remove(key);
+        }
     }
     
 
