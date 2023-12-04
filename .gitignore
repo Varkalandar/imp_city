@@ -3,7 +3,7 @@ app/savegame
 
 # Ignore Gradle project-specific cache directory
 .gradle
-gradle
+# gradle
 working
 
 # Ignore Gradle build output directory
