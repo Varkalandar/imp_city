@@ -34,3 +34,12 @@ jobs:
      
     - name: Execute Gradle build
       run: ./gradlew jar
+
+    - name: Update binaries of Nightly Release
+      uses: svenstaro/upload-release-action@v1-release
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: app/build/libs/app.jar
+        asset_name: app.jar
+        tag: Nightly
+        overwrite: true      
