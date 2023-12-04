@@ -55,7 +55,7 @@ jobs:
         cp -v devlog.txt imp_city_v0.28-windows
         cp -v credits.txt imp_city_v0.28-windows
         mv imp_city_v0.28-windows imp_city_windows-linux
-        7z a imp_city_windows-linux.7z imp_city_windows-linux
+        7z a imp_city_windows-linux.7z imp_city_nightly-windows
         
     - name: Update Linux binaries of Nightly Release
       uses: svenstaro/upload-release-action@v2
