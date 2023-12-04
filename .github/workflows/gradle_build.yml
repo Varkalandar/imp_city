@@ -12,7 +12,7 @@ on:
 #    branches: [ $default-branch ]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -34,3 +34,43 @@ jobs:
      
     - name: Execute Gradle build
       run: ./gradlew jar
+
+    - name: Build Linux release package
+      run: |
+        wget -nv https://github.com/Varkalandar/imp_city/releases/download/v0.28/imp_city_v0.28-linux.7z
+        7z x imp_city_v0.28-linux.7z
+        ls -l
+        cp -v app/build/libs/app.jar imp_city_v0.28-linux/app/lib/
+        cp -v devlog.txt imp_city_v0.28-linux
+        cp -v credits.txt imp_city_v0.28-linux
+        mv imp_city_v0.28-linux imp_city_nightly-linux
+        7z a imp_city_nightly-linux.7z imp_city_nightly-linux
+
+    - name: Build Windows release package
+      run: |
+        wget -nv https://github.com/Varkalandar/imp_city/releases/download/v0.28/imp_city_v0.28-windows.7z
+        7z x imp_city_v0.28-windows.7z
+        ls -l
+        cp -v app/build/libs/app.jar imp_city_v0.28-windows/app/lib/
+        cp -v devlog.txt imp_city_v0.28-windows
+        cp -v credits.txt imp_city_v0.28-windows
+        mv imp_city_v0.28-windows imp_city_nightly-windows
+        7z a imp_city_nightly-windows.7z imp_city_nightly-windows
+        
+    - name: Update Linux binaries of Nightly Release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: imp_city_nightly-linux.7z
+        asset_name: imp_city_nightly-linux.7z
+        tag: Nightly
+        overwrite: true      
+
+    - name: Update Windows binaries of Nightly Release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: imp_city_nightly-windows.7z
+        asset_name: imp_city_nightly-windows.7z
+        tag: Nightly
+        overwrite: true      
