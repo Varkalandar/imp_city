@@ -41,15 +41,19 @@ jobs:
         7z x imp_city_v0.28-linux.7z
         ls -l
         cp -v app/build/libs/app.jar imp_city_v0.28-linux/app/lib/
+        cp -v devlog.txt imp_city_v0.28-linux
+        cp -v credits.txt imp_city_v0.28-linux
         mv imp_city_v0.28-linux imp_city_nightly-linux
         7z a imp_city_nightly-linux.7z imp_city_nightly-linux
 
     - name: Build Windows release package
       run: |
-        wget https://github.com/Varkalandar/imp_city/releases/download/v0.28/imp_city_v0.28-linux.7z
+        wget https://github.com/Varkalandar/imp_city/releases/download/v0.28/imp_city_v0.28-windows.7z
         7z x imp_city_v0.28-windows.7z
         ls -l
         cp -v app/build/libs/app.jar imp_city_v0.28-windows/app/lib/
+        cp -v devlog.txt imp_city_v0.28-windows
+        cp -v credits.txt imp_city_v0.28-windows
         mv imp_city_v0.28-windows imp_city_windows-linux
         7z a imp_city_windows-linux.7z imp_city_windows-linux
         
