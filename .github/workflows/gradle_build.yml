@@ -37,7 +37,7 @@ jobs:
 
     - name: Build Linux release package
       run: |
-        wget https://github.com/Varkalandar/imp_city/releases/download/v0.28/imp_city_v0.28-linux.7z
+        wget -nv https://github.com/Varkalandar/imp_city/releases/download/v0.28/imp_city_v0.28-linux.7z
         7z x imp_city_v0.28-linux.7z
         ls -l
         cp -v app/build/libs/app.jar imp_city_v0.28-linux/app/lib/
@@ -48,7 +48,7 @@ jobs:
 
     - name: Build Windows release package
       run: |
-        wget https://github.com/Varkalandar/imp_city/releases/download/v0.28/imp_city_v0.28-windows.7z
+        wget -nv https://github.com/Varkalandar/imp_city/releases/download/v0.28/imp_city_v0.28-windows.7z
         7z x imp_city_v0.28-windows.7z
         ls -l
         cp -v app/build/libs/app.jar imp_city_v0.28-windows/app/lib/
