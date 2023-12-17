@@ -113,7 +113,7 @@ public class PartySelector extends UiDialog
         }
 
         // We list 10 creatures per page
-        maxPages = creatureDisplayList.size() / 10;
+        maxPages = (creatureDisplayList.size()  + 9) / 10;
 
         int xoff = width/2 + 28;
         int yoff = 460;
