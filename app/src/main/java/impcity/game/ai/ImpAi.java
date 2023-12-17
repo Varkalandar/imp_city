@@ -1,7 +1,6 @@
 package impcity.game.ai;
 
-import impcity.game.Features;
-import impcity.game.ImpCity;
+import impcity.game.*;
 import impcity.game.map.Map;
 import impcity.game.species.Species;
 import impcity.game.species.SpeciesDescription;
@@ -18,8 +17,7 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import impcity.game.Clock;
-import impcity.game.Sounds;
+
 import impcity.game.mobs.Mob;
 import impcity.game.map.LocationPathDestination;
 import rlgamekit.pathfinding.Path;
@@ -451,7 +449,21 @@ public class ImpAi extends AiBase
         if(ok)
         {
             mob.setPath(path);
-            mob.visuals.setBubble(mob.stats.getCurrent(MobStats.CARRY));
+
+            int carry = mob.stats.getCurrent(MobStats.CARRY);
+
+            if((carry & Map.F_ITEM) != 0)
+            {
+                // a registered item, we need to find the actual graphics id
+                Item item = game.world.items.get(carry & Map.F_IDENT_MASK);
+                mob.visuals.setBubble(item.texId);
+            }
+            else
+            {
+                // unregistered item identified by their number -> carry can be used directly
+                mob.visuals.setBubble(carry);
+            }
+
             goal = Goal.DROP_ITEM;
         }
         else if(currentJob instanceof JobMining)

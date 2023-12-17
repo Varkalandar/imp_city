@@ -109,7 +109,7 @@ public class QuestGenerator
       
     private static final String [] buildingHidingModes = 
     {
-        "stashed", "hidden", "cashed", "placed", "stored"
+        "stashed", "hidden", "kept", "placed", "stored"
     };
     
     private static final String [] buildingMods = 
