@@ -612,9 +612,51 @@ public class ImpCity implements PostRenderHook, GameInterface
         }
 
         placeEnclosure(map, 12, Features.GROUND_IMPASSABLE, Features.I_PERM_ROCK);
+
+        countCoinsInTreasury(map);
+
     }
 
-    
+    private void countCoinsInTreasury(Map map)
+    {
+        int gold = 0;
+        int silver = 0;
+        int copper = 0;
+
+        List<Point> squares = getTreasuries();
+
+        for(Point p : squares)
+        {
+            for(int y = p.y; y < p.y + Map.SUB; y++)
+            {
+                for(int x = p.x; x < p.x + Map.SUB; x++)
+                {
+                    int item = map.getItem(x, y);
+
+                    if(item > 0 && (item & Map.F_ITEM) == 0)
+                    {
+                        // an item that is not registered might actually be a coin.
+                        if(item == Features.I_GOLD_COINS)
+                            gold ++;
+
+                        if(item == Features.I_SILVER_COINS)
+                            silver ++;
+
+                        if(item == Features.I_COPPER_COINS)
+                            copper ++;
+                    }
+                }
+            }
+        }
+
+        // now record the coins
+
+        player.stats.setMax(KeeperStats.COINS, gold);
+        player.stats.setCurrent(KeeperStats.COINS, silver);
+        player.stats.setMin(KeeperStats.COINS, copper);
+    }
+
+
     public void save() 
     {
         try

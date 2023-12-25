@@ -15,6 +15,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -630,21 +631,61 @@ public class ImpAi extends AiBase
         if(mob.stats.getCurrent(MobStats.CARRY) > 0)
         {
             // Hajo: imp carries an item -> drop this item
-            int item = mob.stats.getCurrent(MobStats.CARRY); 
+            int item = mob.stats.getCurrent(MobStats.CARRY);
 
-            // make some noise?
-            if(Features.isCoins(item))
-            {
-                game.soundPlayer.playFromPosition(Sounds.COINS_DROP, 0.4f, 1.0f,
-                        mob.location, game.getViewPosition());
-            }
-            
             mob.visuals.setBubble(0);
             mob.gameMap.dropItem(mob.location.x, mob.location.y, item, (x, y) -> {});
             mob.stats.setCurrent(MobStats.CARRY, 0);
+
+            if(Features.isCoins(item))
+            {
+                // make some noise?
+                game.soundPlayer.playFromPosition(Sounds.COINS_DROP, 0.4f, 1.0f,
+                        mob.location, game.getViewPosition());
+
+                mob.gameMap.dropItem(mob.location.x, mob.location.y, item, (x, y) -> {recordCoin(mob.gameMap, x, y, item);});
+            }
+            else
+            {
+                mob.gameMap.dropItem(mob.location.x, mob.location.y, item, (x, y) -> {});
+            }
         }
     }
-    
+
+    private void recordCoin(Map map, int x, int y, int item)
+    {
+        int rasterI = x - (x % Map.SUB);
+        int rasterJ = y - (y % Map.SUB);
+
+        int ground = map.getFloor(rasterI, rasterJ);
+
+        if(ground >= Features.GROUND_TREASURY && ground < Features.GROUND_TREASURY + 3)
+        {
+            Mob player = game.world.mobs.get(game.getPlayerKey());
+
+            int gold = player.stats.getMax(KeeperStats.COINS);
+            int silver = player.stats.getCurrent(KeeperStats.COINS);
+            int copper = player.stats.getMin(KeeperStats.COINS);
+
+            switch(item)
+            {
+                case Features.I_GOLD_COINS:
+                    gold++;
+                    break;
+                case Features.I_SILVER_COINS:
+                    silver++;
+                    break;
+                case Features.I_COPPER_COINS:
+                    copper++;
+                    break;
+            }
+
+            player.stats.setMax(KeeperStats.COINS, gold);
+            player.stats.setCurrent(KeeperStats.COINS, silver);
+            player.stats.setMin(KeeperStats.COINS, copper);
+        }
+    }
+
 
     private void workMiningJob(Mob mob) 
     {

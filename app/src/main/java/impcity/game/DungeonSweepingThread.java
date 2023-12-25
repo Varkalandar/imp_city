@@ -60,11 +60,6 @@ public class DungeonSweepingThread extends Thread
                 Mob player = game.world.mobs.get(game.getPlayerKey());
                 Map map = player.gameMap;
 
-                gold = 0;
-                silver = 0;
-                copper = 0;
-
-                
                 // look for squares to claim
                 for(int j=0; j<map.getHeight(); j+=Map.SUB)
                 {
@@ -104,12 +99,6 @@ public class DungeonSweepingThread extends Thread
                     safeSleep(40);
                     // logger.log(Level.INFO, "Dungeon sweeping thread completes row {0}", j);
                 }
-
-                // record treasures
-
-                player.stats.setMax(KeeperStats.COINS, gold);
-                player.stats.setCurrent(KeeperStats.COINS, silver);
-                player.stats.setMin(KeeperStats.COINS, copper);
 
                 synchronized (game.world)
                 {                
@@ -175,23 +164,13 @@ public class DungeonSweepingThread extends Thread
                 int rasterJ = j/Map.SUB*Map.SUB;
                 int ground = map.getFloor(rasterI, rasterJ);
 
-                // Hajo: outside a treasurey?
+                // Hajo: outside a treasury?
                 if(ground < Features.GROUND_TREASURY || ground >= Features.GROUND_TREASURY + 3)
                 {
                     Job job = new JobFetchItem(game, i, j, item);
                     game.jobQueue.add(job, JobQueue.PRI_LOW);
                 }
             }
-            
-            // bookkeeping
-            if(item == Features.I_GOLD_COINS)
-                gold ++;
-            
-            if(item == Features.I_SILVER_COINS) 
-                silver ++;
-            
-            if(item == Features.I_COPPER_COINS) 
-                copper ++;
         }
     }
 }

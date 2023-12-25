@@ -1,7 +1,13 @@
+Changes since v0.28.1
+
+- Coins are only counted when kept in a treasury. Stray coins on
+  dungeon floor do not add to the count.
+
 Changes since v0.28
 
 - Tried to fix a synchronization problem in removing a creature while 
   other creatures were being updated.
+- Fixed a crash if an imp tried to pick up an artifact.
 
 Changes since v0.27
 
