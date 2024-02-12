@@ -29,6 +29,7 @@ public class KeeperStats
     public static final int RESEARCH_FORGES = 1;
     public static final int RESEARCH_LABS = 2;
     public static final int RESEARCH_HEALING = 4;
+    public static final int RESEARCH_GHOSTYARDS = 8;
 
     /**
      * The metallurgy level indicates the ability of creatures

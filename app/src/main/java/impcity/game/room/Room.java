@@ -108,13 +108,20 @@ public class Room
     }
 
 
-    public void refurnish(ImpCity game, Map map, int floor, Furnisher action)
+    public void refurnish(ImpCity game, Map map, int floor, Furnisher action, boolean allPoints)
     {
-        LOG.log(Level.INFO, "Room has now " + squares.size() + " squares");
+        LOG.log(Level.INFO, "Room has now " + squares.size() + " squares, furnishing all points=" + allPoints);
 
         calculateBorderDistances(map, floor);
         forAllPoints((x, y) -> {game.clearItems(map, x, y, Map.SUB, Features.keepTreasureFilter);});
-        forAllInnerPoints((x, y) -> {action.furnish(map, x, y);});
+        if(allPoints)
+        {
+        	forAllPoints((x, y) -> {action.furnish(map, x, y);});
+        }
+        else
+        {
+        	forAllInnerPoints((x, y) -> {action.furnish(map, x, y);});
+        }
         forAllPoints((x, y) -> {game.refreshPillars(x, y);});
     }
 }

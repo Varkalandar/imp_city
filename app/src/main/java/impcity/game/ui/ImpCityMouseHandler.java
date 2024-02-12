@@ -298,6 +298,21 @@ public class ImpCityMouseHandler implements MouseHandler
     }
 
     
+    private void makeGhostyard(Map map, int rasterI, int rasterJ)
+    {
+        int n = map.getFloor(rasterI, rasterJ);
+        if(n >= Features.GROUND_POLY_TILES && n < Features.GROUND_POLY_TILES + 3)
+        {
+            game.addGhostyardSquare(map, rasterI, rasterJ);
+            game.soundPlayer.play(Sounds.MAKE_FARMLAND, 0.2f, 1.0f);
+        }
+        else
+        {
+            markForExcavation(map, rasterI, rasterJ);
+        }
+    }
+
+    
     private void demolishRoom(Map map, int rasterI, int rasterJ)
     {
         Point p = new Point(rasterI, rasterJ);
@@ -350,6 +365,11 @@ public class ImpCityMouseHandler implements MouseHandler
         {
             game.resetSquare(map, rasterI, rasterJ);
             game.removeLabSquare(map, rasterI, rasterJ);
+        }
+        else if(n >= Features.GROUND_GHOSTYARD && n < Features.GROUND_GHOSTYARD + 3)
+        {
+            game.resetSquare(map, rasterI, rasterJ);
+            game.removeGhostyardSquare(map, rasterI, rasterJ);
         }
 
         game.refreshPillars(rasterI, rasterJ);
@@ -452,7 +472,13 @@ public class ImpCityMouseHandler implements MouseHandler
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
-        else if(n == 8)
+        else if(n == 8 && (research & KeeperStats.RESEARCH_GHOSTYARDS) != 0)
+        {
+            Tools.selected = Tools.MAKE_GHOSTYARD;
+            setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
+            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
+        }
+        else if(n == 9)
         {
             Tools.selected = Tools.DEMOLISH;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
@@ -682,6 +708,9 @@ public class ImpCityMouseHandler implements MouseHandler
                     break;
                 case MAKE_HOSPITAL:
                     makeHospital(map, rasterI, rasterJ);
+                    break;
+                case MAKE_GHOSTYARD:
+                    makeGhostyard(map, rasterI, rasterJ);
                     break;
                 case DEMOLISH:
                     demolishRoom(map, rasterI, rasterJ);

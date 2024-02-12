@@ -1263,7 +1263,7 @@ data
 Tile Description
 v.5
 79
-1 1
+216 216
 0 0
 0 0
 End Of Header
@@ -1271,15 +1271,15 @@ Item
 v.1
 data
 2
-
-
+path_n_grass_1
+rgb
 1
 0
 0
 Tile Description
 v.5
 80
-1 1
+216 216
 0 0
 0 0
 End Of Header
@@ -1287,8 +1287,8 @@ Item
 v.1
 data
 2
-
-
+path_n_grass_2
+rgb
 1
 0
 0

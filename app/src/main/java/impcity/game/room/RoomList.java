@@ -119,7 +119,7 @@ public class RoomList
      * @param p The coordinates
      * @param action Called for each part of the remaining room
      */
-    public void removeSquareAndRebuild(ImpCity game, Map map, Point p, List<Point> squares, int floor, Furnisher action)
+    public void removeSquareAndRebuild(ImpCity game, Map map, Point p, List<Point> squares, int floor, Furnisher action, boolean allPoints)
     {
         // we rebuild the room list by adding square by square
         rooms.clear();
@@ -138,7 +138,7 @@ public class RoomList
         // now we have new rooms. We need to furnish them again
         for(Room room : rooms)
         {
-            room.refurnish(game, map, floor, action);
+            room.refurnish(game, map, floor, action, allPoints);
         }
     }
 

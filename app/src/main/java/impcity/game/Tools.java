@@ -14,6 +14,7 @@ public enum Tools
     MAKE_LAB,
     MAKE_HOSPITAL,
     MAKE_TREASURY,
+    MAKE_GHOSTYARD,
     DEMOLISH,
     
     SPELL_IMP,

@@ -15,7 +15,7 @@ public class Features
     public static final int GROUND_POLY_TILES_DARK = 13;
     public static final int GROUND_POLY_TILES = 16;
     public static final int GROUND_QUAD_TILES = 64;
-    public static final int GROUND_GRASS_DARK = 19;
+    public static final int GROUND_GRASS_DARK = 19;   // farmland
 
     /**
      * Initially all floors under earth or deposits are GROUND_IMPASSABLE. After
@@ -31,6 +31,7 @@ public class Features
     public static final int GROUND_LIBRARY = 49;
     public static final int GROUND_HOSPITAL = 52;
     public static final int GROUND_LABORATORY = 58;
+    public static final int GROUND_GHOSTYARD = 79;
     
     public static final int SOCKET = 7;
     public static final int SHADOW_BASE = 15;
@@ -67,6 +68,7 @@ public class Features
     public static final int I_STEAM_CLOUD = 1948;
     public static final int I_STEAM_PUFF = 1949;
 
+    public static final int I_GRAVE = 1464;
     public static final int I_LAB_TABLE = 1465;
     public static final int I_ANVIL = 1468;
     

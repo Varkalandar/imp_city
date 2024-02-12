@@ -31861,17 +31861,17 @@
       <Description>
         <version>4</version>
         <id>1464</id>
-        <width>1</width>
-        <height>1</height>
+        <width>72</width>
+        <height>67</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>52</footX>
+        <footY>42</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>grave</string>
+        <string>rgba</string>
         <string></string>
         <string></string>
       </Metadata>

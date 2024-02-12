@@ -91,11 +91,13 @@ public class ImpCity implements PostRenderHook, GameInterface
     private final List <Point> forges = Collections.synchronizedList(new ArrayList<>());
     private final List <Point> labs = Collections.synchronizedList(new ArrayList<>());
     private final List <Point> hospitals = Collections.synchronizedList(new ArrayList<>());
+    private final List <Point> ghostyards = Collections.synchronizedList(new ArrayList<>());
     private final List <Point> claimed = Collections.synchronizedList(new ArrayList<>());
     
     public final RoomList forgeRooms = new RoomList();
     public final RoomList libraryRooms = new RoomList();
     public final RoomList labRooms = new RoomList();
+    public final RoomList ghostyardRooms = new RoomList();
     
     public final List <Mob> generators = Collections.synchronizedList(new ArrayList<>());
     public final List <Quest> quests = Collections.synchronizedList(new ArrayList<>());
@@ -561,6 +563,11 @@ public class ImpCity implements PostRenderHook, GameInterface
                     addHospitalSquare(map, x, y);
                     addClaimedSquare(map, x, y);
                 }
+                else if(ground >= Features.GROUND_GHOSTYARD && ground < Features.GROUND_GHOSTYARD + 3)
+                {
+                    addGhostyardSquare(map, x, y);
+                    addClaimedSquare(map, x, y);
+                }
                 else if(ground >= Features.GROUND_IMPASSABLE && ground < Features.GROUND_IMPASSABLE + 3)
                 {
                     // Nothing to do ...
@@ -987,7 +994,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         addRoomSquare(map, rasterI, rasterJ,
                 libraries, libraryRooms,
                 Features.GROUND_LIBRARY, 1,
-                (m, x, y) -> {furnishLibrary(m, x, y);});
+                (m, x, y) -> {furnishLibrary(m, x, y);}, false);
     }
 
 
@@ -996,7 +1003,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         addRoomSquare(map, rasterI, rasterJ,
                 forges, forgeRooms,
                 Features.GROUND_FORGE, 3,
-                (m, x, y) -> {furnishForge(m, x, y);});
+                (m, x, y) -> {furnishForge(m, x, y);}, false);
     }
 
 
@@ -1005,14 +1012,23 @@ public class ImpCity implements PostRenderHook, GameInterface
         addRoomSquare(map, rasterI, rasterJ,
                 labs, labRooms,
                 Features.GROUND_LABORATORY, 3,
-                (m, x, y) -> {furnishLab(m, x, y);});
+                (m, x, y) -> {furnishLab(m, x, y);}, false);
     }
 
 
+    public void addGhostyardSquare(final Map map, int rasterI, int rasterJ)
+    {
+        addRoomSquare(map, rasterI, rasterJ,
+                ghostyards, ghostyardRooms,
+                Features.GROUND_GHOSTYARD, 2,
+                (m, x, y) -> {furnishGhostyard(m, x, y);}, true);
+    }
+
+    
     private void addRoomSquare(Map map, int rasterI, int rasterJ,
                                     List<Point> squares, RoomList rooms,
                                     int floor, int floorRange,
-                                    Furnisher action)
+                                    Furnisher action, boolean allPoints)
     {
         Point p = new Point(rasterI, rasterJ);
         Room room;
@@ -1023,7 +1039,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         room = rooms.addNewSquare(p);
         LOG.log(Level.INFO, "Room list contains {0} rooms", rooms.size());
         
-        room.refurnish(this, map, floor, action);
+        room.refurnish(this, map, floor, action, allPoints);
     }
 
 
@@ -1035,7 +1051,7 @@ public class ImpCity implements PostRenderHook, GameInterface
                                             p,
                                             libraries,
                                             Features.GROUND_LIBRARY,
-                                            (m, x, y) -> {furnishLibrary(m, x, y);});
+                                            (m, x, y) -> {furnishLibrary(m, x, y);}, false);
     }
 
 
@@ -1047,7 +1063,7 @@ public class ImpCity implements PostRenderHook, GameInterface
                 p,
                 forges,
                 Features.GROUND_FORGE,
-                (m, x, y) -> {furnishForge(m, x, y);});
+                (m, x, y) -> {furnishForge(m, x, y);}, false);
     }
 
 
@@ -1059,7 +1075,19 @@ public class ImpCity implements PostRenderHook, GameInterface
                 p,
                 labs,
                 Features.GROUND_LABORATORY,
-                (m, x, y) -> {furnishLab(m, x, y);});
+                (m, x, y) -> {furnishLab(m, x, y);}, false);
+    }
+
+
+    public void removeGhostyardSquare(Map map, int rasterI, int rasterJ)
+    {
+        Point p = new Point(rasterI, rasterJ);
+        ghostyardRooms.removeSquareAndRebuild(this,
+                map,
+                p,
+                ghostyards,
+                Features.GROUND_GHOSTYARD,
+                (m, x, y) -> {furnishGhostyard(m, x, y);}, true);
     }
 
 
@@ -1135,6 +1163,31 @@ public class ImpCity implements PostRenderHook, GameInterface
             map.setPlacementBlocked(px, py, true);
             return false;
         });        
+    }
+
+    
+    private void furnishGhostyard(Map map, int x, int y)
+    {
+        LOG.log(Level.INFO, "Furnish ghostyard {0}, {1}", new Object[]{x, y});
+
+        int gx = x + Map.SUB/3;
+        int gy = y + Map.SUB/2;
+        
+        // Light light = new Light(x, y, 30, 2, 0xFF556677, 0.7);
+        // map.lights.add(light);
+
+        map.setItem(gx, gy, Features.I_GRAVE);
+    	
+        // grave is not walkable
+    	/*
+        RectArea area = new RectArea(x - 1, y - 1, 3, 3);
+
+        area.traverseWithoutCorners((int px, int py) -> {
+            map.setMovementBlocked(px, py, true);
+            map.setPlacementBlocked(px, py, true);
+            return false;
+        });
+        */
     }
 
     

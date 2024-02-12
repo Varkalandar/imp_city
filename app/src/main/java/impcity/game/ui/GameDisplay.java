@@ -373,8 +373,9 @@ public class GameDisplay
         IsoDisplay.drawTile(buttonLab, left + 350, top, 60, 60, calculateButtonColor(Tools.MAKE_LAB));
         IsoDisplay.drawTile(buttonForge, left + 420, top, 60, 60, calculateButtonColor(Tools.MAKE_FORGE));
         IsoDisplay.drawTile(buttonHeal, left + 490, top, 60, 60, calculateButtonColor(Tools.MAKE_HOSPITAL));
+        IsoDisplay.drawTile(buttonHeal, left + 560, top, 60, 60, calculateButtonColor(Tools.MAKE_HOSPITAL));
 
-        IsoDisplay.drawTile(buttonDemolish, left + 570, top, 60, 60, calculateButtonColor(Tools.DEMOLISH));
+        IsoDisplay.drawTile(buttonDemolish, left + 640, top, 60, 60, calculateButtonColor(Tools.DEMOLISH));
         
         int tipY = 108;
         int n = calculateTabButtonNumber(Mouse.getX(), Mouse.getY());
@@ -415,7 +416,11 @@ public class GameDisplay
         }
         else if(n == 8)
         {
-            drawMenuText("Revert a room to empty space", toolTipColor, 640, tipY, 0.6);
+            drawMenuText("Dig a ghostyard", toolTipColor, 640, tipY, 0.6);
+        }
+        else if(n == 9)
+        {
+            drawMenuText("Revert a room to empty space", toolTipColor, 720, tipY, 0.6);
         }
     }
     

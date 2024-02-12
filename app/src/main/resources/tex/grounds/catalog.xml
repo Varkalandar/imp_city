@@ -1341,8 +1341,8 @@
       <Description>
         <version>4</version>
         <id>79</id>
-        <width>1</width>
-        <height>1</height>
+        <width>216</width>
+        <height>216</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
         <footX>0</footX>
@@ -1350,16 +1350,16 @@
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>path_n_grass_1</string>
+        <string>rgb</string>
       </Metadata>
     </Tile>
     <Tile>
       <Description>
         <version>4</version>
         <id>80</id>
-        <width>1</width>
-        <height>1</height>
+        <width>216</width>
+        <height>216</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
         <footX>0</footX>
@@ -1367,8 +1367,8 @@
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>path_n_grass_2</string>
+        <string>rgb</string>
       </Metadata>
     </Tile>
     <Tile>

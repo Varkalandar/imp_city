@@ -33,7 +33,9 @@ public class Research
         stats.setMin(KeeperStats.RESEARCH, 0);
         stats.setCurrent(KeeperStats.RESEARCH, 0);
         stats.setMax(KeeperStats.RESEARCH, 10000); // research needed for next discovery
+        
         // stats.setCurrent(KeeperStats.RESEARCH, KeeperStats.RESEARCH_LABS | KeeperStats.RESEARCH_FORGES);
+        stats.setCurrent(KeeperStats.RESEARCH, KeeperStats.RESEARCH_GHOSTYARDS);
 
         stats.setMin(KeeperStats.RESEARCH_QUEST, 0);
         stats.setCurrent(KeeperStats.RESEARCH_QUEST, 0);
