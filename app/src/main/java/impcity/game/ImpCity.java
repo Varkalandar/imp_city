@@ -97,7 +97,6 @@ public class ImpCity implements PostRenderHook, GameInterface
     public final RoomList forgeRooms = new RoomList();
     public final RoomList libraryRooms = new RoomList();
     public final RoomList labRooms = new RoomList();
-    public final RoomList ghostyardRooms = new RoomList();
     
     public final List <Mob> generators = Collections.synchronizedList(new ArrayList<>());
     public final List <Quest> quests = Collections.synchronizedList(new ArrayList<>());
@@ -1018,10 +1017,9 @@ public class ImpCity implements PostRenderHook, GameInterface
 
     public void addGhostyardSquare(final Map map, int rasterI, int rasterJ)
     {
-        addRoomSquare(map, rasterI, rasterJ,
-                ghostyards, ghostyardRooms,
-                Features.GROUND_GHOSTYARD, 2,
-                (m, x, y) -> {furnishGhostyard(m, x, y);}, true);
+        Point p = new Point(rasterI, rasterJ);
+        ghostyards.add(p);
+        map.setFloor(p.x, p.y, Features.GROUND_GHOSTYARD + (int)(Math.random() * 2));
     }
 
     
@@ -1076,18 +1074,6 @@ public class ImpCity implements PostRenderHook, GameInterface
                 labs,
                 Features.GROUND_LABORATORY,
                 (m, x, y) -> {furnishLab(m, x, y);}, false);
-    }
-
-
-    public void removeGhostyardSquare(Map map, int rasterI, int rasterJ)
-    {
-        Point p = new Point(rasterI, rasterJ);
-        ghostyardRooms.removeSquareAndRebuild(this,
-                map,
-                p,
-                ghostyards,
-                Features.GROUND_GHOSTYARD,
-                (m, x, y) -> {furnishGhostyard(m, x, y);}, true);
     }
 
 
@@ -1173,21 +1159,22 @@ public class ImpCity implements PostRenderHook, GameInterface
         int gx = x + Map.SUB/3;
         int gy = y + Map.SUB/2;
         
-        // Light light = new Light(x, y, 30, 2, 0xFF556677, 0.7);
-        // map.lights.add(light);
+        /*
+        Light light = new Light(gx, gy, 30, 2, 0xFF776655, 0.7);
+        map.lights.add(light);
 
         map.setItem(gx, gy, Features.I_GRAVE);
-    	
+    	*/
+        
         // grave is not walkable
-    	/*
-        RectArea area = new RectArea(x - 1, y - 1, 3, 3);
+    	
+        RectArea area = new RectArea(gx - 1, gy - 1, 3, 3);
 
         area.traverseWithoutCorners((int px, int py) -> {
             map.setMovementBlocked(px, py, true);
             map.setPlacementBlocked(px, py, true);
             return false;
-        });
-        */
+        });        
     }
 
     
@@ -1275,6 +1262,11 @@ public class ImpCity implements PostRenderHook, GameInterface
         return hospitals;
     }
     
+    public List<Point> getGhostyards()
+    {
+        return ghostyards;
+    }
+
 
     public List<Point> getClaimedSquares()
     {
@@ -1352,6 +1344,43 @@ public class ImpCity implements PostRenderHook, GameInterface
     }
     
     
+    public void allocateGrave(Map map, int x, int y)
+    {
+        int gx = x + Map.SUB/3;
+        int gy = y + Map.SUB/2;
+
+        map.setItem(gx, gy, Features.I_GRAVE);
+        
+        // reets
+        map.setItem(gx, gy-2, 38);
+
+        // plant
+        map.setItem(gx+1, gy, 186);
+    }
+
+    
+    public boolean isGrave(Map map, int x, int y)
+    {
+        int gx = x + Map.SUB/3;
+        int gy = y + Map.SUB/2;
+        
+        return map.getItem(gx, gy) == Features.I_GRAVE;    	
+    }
+    
+
+    public void turnGraveIntoLair(Map map, int x, int y)
+    {
+        int gx = x + Map.SUB/3;
+        int gy = y + Map.SUB/2;
+        
+        Light light = new Light(gx+4, gy+2, 36, 2, 0xFF886655, 0.6);
+        map.lights.add(light);
+
+        // flower
+        map.setItem(gx+1, gy, 2016);
+    }
+    
+
     public List<Point> getFarmlandLocations() 
     {
         List<Point> result = new ArrayList<>(farmland.size());

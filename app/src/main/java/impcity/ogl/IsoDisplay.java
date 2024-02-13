@@ -348,8 +348,9 @@ public class IsoDisplay implements PostRenderHook
             }
         }
         
-        glBlendFunc(GL_SRC_ALPHA, GL_DST_ALPHA);
-
+        // glBlendFunc(GL_SRC_ALPHA, GL_DST_ALPHA);
+        glBlendFunc(GL_ONE, GL_ONE);
+        
         for(Light light : map.lights)
         {
             int x0 = centerX + light.x*xd/Map.SUB - light.y*xd/Map.SUB;

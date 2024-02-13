@@ -306,6 +306,17 @@ public class ImpCityMouseHandler implements MouseHandler
             game.addGhostyardSquare(map, rasterI, rasterJ);
             game.soundPlayer.play(Sounds.MAKE_FARMLAND, 0.2f, 1.0f);
         }
+        else if(n >= Features.GROUND_GHOSTYARD && n < Features.GROUND_GHOSTYARD + 3)
+        {
+        	if(game.isGrave(map, rasterI, rasterJ))
+        	{
+                game.turnGraveIntoLair(map, rasterI, rasterJ);
+        	}
+        	else
+        	{
+                game.allocateGrave(map, rasterI, rasterJ);
+        	}
+        }        
         else
         {
             markForExcavation(map, rasterI, rasterJ);
@@ -368,8 +379,8 @@ public class ImpCityMouseHandler implements MouseHandler
         }
         else if(n >= Features.GROUND_GHOSTYARD && n < Features.GROUND_GHOSTYARD + 3)
         {
+            game.getGhostyards().remove(p);
             game.resetSquare(map, rasterI, rasterJ);
-            game.removeGhostyardSquare(map, rasterI, rasterJ);
         }
 
         game.refreshPillars(rasterI, rasterJ);
