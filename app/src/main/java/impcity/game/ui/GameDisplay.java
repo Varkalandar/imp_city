@@ -55,6 +55,7 @@ public class GameDisplay
     private final Texture buttonMap;
     private final Texture buttonLab;
     private final Texture buttonHeal;
+    private final Texture buttonGhost;
     private final Texture buttonDemolish;
     private final Texture buttonImp;
     
@@ -91,6 +92,7 @@ public class GameDisplay
         buttonForge = textureCache.loadTexture("/ui/button_forge.png", true);
         buttonLab = textureCache.loadTexture("/ui/button_alchemy.png", true);
         buttonHeal = textureCache.loadTexture("/ui/button_healing.png", true);
+        buttonGhost = textureCache.loadTexture("/ui/button_ghostyard.png", true);
         buttonDemolish = textureCache.loadTexture("/ui/button_demolish.png", true);
 
         buttonImp = textureCache.loadTexture("/ui/button_imp.png", true);
@@ -373,7 +375,7 @@ public class GameDisplay
         IsoDisplay.drawTile(buttonLab, left + 350, top, 60, 60, calculateButtonColor(Tools.MAKE_LAB));
         IsoDisplay.drawTile(buttonForge, left + 420, top, 60, 60, calculateButtonColor(Tools.MAKE_FORGE));
         IsoDisplay.drawTile(buttonHeal, left + 490, top, 60, 60, calculateButtonColor(Tools.MAKE_HOSPITAL));
-        IsoDisplay.drawTile(buttonHeal, left + 560, top, 60, 60, calculateButtonColor(Tools.MAKE_HOSPITAL));
+        IsoDisplay.drawTile(buttonGhost, left + 560, top, 60, 60, calculateButtonColor(Tools.MAKE_GHOSTYARD));
 
         IsoDisplay.drawTile(buttonDemolish, left + 640, top, 60, 60, calculateButtonColor(Tools.DEMOLISH));
         
