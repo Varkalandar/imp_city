@@ -68,9 +68,10 @@ public class ImpCity implements PostRenderHook, GameInterface
     
     private static final Logger LOG = Logger.getLogger(ImpCity.class.getName());
         
-    private final TextureCache textureCache;
-    private final IsoDisplay display;
-    public final SoundPlayer soundPlayer;
+    private TextureCache textureCache;
+    private IsoDisplay display;
+    private GameDisplay gameDisplay;
+    public SoundPlayer soundPlayer;
     public final Research research;
     
     public int mouseI, mouseJ;
@@ -81,7 +82,6 @@ public class ImpCity implements PostRenderHook, GameInterface
     private Mob player;
     
     public final JobQueue jobQueue = new JobQueue();
-    private final GameDisplay gameDisplay;
     
     private final List <FarmSquare> farmland = Collections.synchronizedList(new ArrayList<>());
     private final List <PortalSquare> portals = Collections.synchronizedList(new ArrayList<>());
@@ -152,16 +152,20 @@ public class ImpCity implements PostRenderHook, GameInterface
         mouseJ = -1;
 
         world = new World();
-
+        
+        research = new Research();
+    }
+    
+    public void initGameDisplay() throws IOException, LWJGLException
+    {
         textureCache = new GlTextureCache();
         display = new IsoDisplay(world.mobs, world.items, textureCache);
         display.create();        
         
         gameDisplay = new GameDisplay(this, display);
+        research.setGameDisplay(gameDisplay);
         
-        soundPlayer = new SoundPlayer();
-        
-        research = new Research(gameDisplay);
+        soundPlayer = new SoundPlayer();    	
     }
     
     
@@ -346,6 +350,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         try
         {
             game = new ImpCity();
+            game.initGameDisplay();
             game.initialize();
             game.run();
         } 

@@ -15,12 +15,17 @@ import rlgamekit.stats.Stats;
 public class Research 
 {
     private static final Logger LOG = Logger.getLogger(Research.class.getName());
-    private final GameDisplay gameDisplay;
+    private GameDisplay gameDisplay;
     
     
-    public Research(GameDisplay gameDisplay)
+    public Research()
     {
-        this.gameDisplay = gameDisplay;
+    }
+    
+    
+    public void setGameDisplay(GameDisplay gameDisplay)
+    {
+    	this.gameDisplay = gameDisplay;
     }
     
     

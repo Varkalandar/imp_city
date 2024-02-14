@@ -68,7 +68,9 @@ test {
     {
         showStandardStreams = true
     }
-}
+
+	jvmArgs +=
+            "-Djava.library.path=lwjgl-2.9.3\\native\\windows" + File.pathSeparator + "lwjgl-2.9.3/native/linux"}
 
 
 task runEditor(type: Exec) {
