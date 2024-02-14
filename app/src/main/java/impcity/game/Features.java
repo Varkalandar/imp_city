@@ -93,6 +93,9 @@ public class Features
     public static final int I_GRAPHITE_BLOCK = 1510;
     public static final int I_IRON_ORE_BLOCK = 1513;
 
+    public static final int I_GRAVE_PLANT = 186;
+    public static final int I_GRAVE_FLOWERS = 2016;
+
     public static final int I_FRAME_RIGHT = 26;
     public static final int I_FRAME_BOT = 27;
     public static final int I_FRAME_LEFT = 28;

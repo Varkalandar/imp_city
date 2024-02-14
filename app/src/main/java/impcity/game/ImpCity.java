@@ -268,8 +268,8 @@ public class ImpCity implements PostRenderHook, GameInterface
     
     public void destroy()
     {
-        soundPlayer.destroy();
-        display.destroy();
+        if(soundPlayer != null) soundPlayer.destroy();
+        if(display != null) display.destroy();
     }
     
 
@@ -1349,7 +1349,30 @@ public class ImpCity implements PostRenderHook, GameInterface
     }
     
     
-    public void allocateGrave(Map map, int x, int y)
+    public Point allocateRandomGrave(Map map)
+    {
+    	ArrayList <Point> available = new ArrayList<Point>(ghostyards.size());
+    	// find all free grave places
+    	for(Point p : ghostyards)
+    	{
+    		if(isGrave(map, p.x, p.y) == false)
+			{
+    			available.add(p);
+			}
+    	}
+    
+    	Point pos = null;	
+    	if(available.size() > 0)
+    	{
+    		int choice = (int)(Math.random() * available.size());
+    		pos = available.get(choice);
+    	}
+    	
+    	return pos;
+    }	
+    	
+    	
+	public void allocateGrave(Map map, int x, int y)
     {
         int gx = x + Map.SUB/3;
         int gy = y + Map.SUB/2;
@@ -1360,7 +1383,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         map.setItem(gx, gy-2, 38);
 
         // plant
-        map.setItem(gx+1, gy, 186);
+        map.setItem(gx+1, gy, Features.I_GRAVE_PLANT);
     }
 
     
@@ -1373,16 +1396,20 @@ public class ImpCity implements PostRenderHook, GameInterface
     }
     
 
-    public void turnGraveIntoLair(Map map, int x, int y)
+    public void populateGrave(Map map, Mob mob, int x, int y)
     {
         int gx = x + Map.SUB/3;
         int gy = y + Map.SUB/2;
+        Point gp = new Point(gx+1, gy);
         
-        Light light = new Light(gx+4, gy+2, 36, 2, 0xFF886655, 0.6);
-        map.lights.add(light);
-
-        // flower
-        map.setItem(gx+1, gy, 2016);
+        // Light light = new Light(gx + 4, gy + 2, 36, 2, 0xFF886655, 0.6);
+        // map.lights.add(light);
+        
+        map.setItem(gp.x, gp.y, Features.I_GRAVE_FLOWERS);
+        
+        mob.teleportTo(gp);
+        mob.visuals.setBubble(0);
+        mob.visuals.setDisplayCode(0);
     }
     
 
@@ -1629,8 +1656,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             // check if they are still alive
             if(mob.stats.getCurrent(MobStats.VITALITY) == 0)
             {
-                // dead - remove creature
-                removeCreature(key);
+                sendDeadCreatureToGhostyard(mob);
             }
             else
             {
@@ -1665,7 +1691,22 @@ public class ImpCity implements PostRenderHook, GameInterface
     }
 
     
-    public void removeCreature(int key)
+    private void sendDeadCreatureToGhostyard(Mob mob) 
+    {
+        Point p = allocateRandomGrave(mob.gameMap);
+        if(p != null)
+        {
+        	populateGrave(mob.gameMap, mob, p.x, p.y);
+        }
+        else
+        {
+            LOG.log(Level.INFO, "No grave available for creature #" + mob.getKey());
+            removeCreature(mob.getKey());
+        }
+	}
+
+
+	public void removeCreature(int key)
     {
         LOG.log(Level.INFO, "Removing creature {0} from the world.", key);
         

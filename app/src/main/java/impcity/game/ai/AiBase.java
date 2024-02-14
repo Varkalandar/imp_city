@@ -97,17 +97,5 @@ public abstract class AiBase implements Ai
     public Point getHome()
     {
         return home;
-    }
-    
-
-    @Override
-    public void teleportMob(Mob mob, Point destination)
-    {
-        logger.log(Level.INFO, "Creature #{0} at {1}, {2} will be teleported to {3}, {4}.",
-                new Object[]{mob.getKey(), mob.location.x, mob.location.y, destination.x, destination.y});
-        mob.gameMap.setMob(mob.location.x, mob.location.y, 0);
-        mob.location.x = destination.x;
-        mob.location.y = destination.y;
-        mob.gameMap.setMob(mob.location.x, mob.location.y, mob.getKey());
-    }
+    }    
 }

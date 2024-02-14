@@ -346,7 +346,7 @@ public class CreatureAi extends AiBase
                 logger.log(Level.WARNING, "Creature #{0} is stuck at {1}, {2} and will be warped home.",
                         new Object[]{mob.getKey(), mob.location.x, mob.location.y});
 
-                teleportMob(mob, home);
+                mob.teleportTo(home);
             }
             else
             {

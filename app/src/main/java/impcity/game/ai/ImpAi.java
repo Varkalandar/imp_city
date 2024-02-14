@@ -109,7 +109,7 @@ public class ImpAi extends AiBase
                 LOG.log(Level.WARNING, "Imp #{0} is stuck at {1}, {2} and will be warped home.",
                         new Object[]{mob.getKey(), mob.location.x, mob.location.y});
 
-                teleportMob(mob, home);
+                mob.teleportTo(home);
             }
         }
         
@@ -434,7 +434,7 @@ public class ImpAi extends AiBase
             LOG.log(Level.WARNING, "Imp #{0} is stuck at {1}, {2} and will be warped home.",
                     new Object[]{mob.getKey(), mob.location.x, mob.location.y});
 
-            teleportMob(mob, home);
+            mob.teleportTo(home);
         }       
     }
 

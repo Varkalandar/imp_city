@@ -272,7 +272,7 @@ public class PartySelector extends UiDialog
             Mob mob = game.world.mobs.get(mobId);
             Ai ai = mob.getAi();
             Point p = ai.getHome();
-            ai.teleportMob(mob, p);
+            mob.teleportTo(p);
 
             if (!mob.location.equals(p))
             {

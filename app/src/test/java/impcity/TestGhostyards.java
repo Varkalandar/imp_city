@@ -10,6 +10,7 @@ import org.lwjgl.LWJGLException;
 
 import impcity.game.ImpCity;
 import impcity.game.map.Map;
+import impcity.game.mobs.Mob;
 
 public class TestGhostyards 
 {
@@ -30,7 +31,9 @@ public class TestGhostyards
 		ok = game.isGrave(map, 0, 0);		
 		assertTrue(ok, "Location 0, 0 must be grave now");
 
-		game.turnGraveIntoLair(map, 0, 0);
+		Mob mob = new Mob(0, 0, 0, 0, 0, map, null, 0, null);
+		
+		game.populateGrave(map, mob, 0, 0);
 	
 		ok = game.isGrave(map, 0, 0);		
 		assertTrue(ok, "Location 0, 0 must be grave now");

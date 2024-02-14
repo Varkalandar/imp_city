@@ -583,4 +583,15 @@ public class Mob
     public int calculateTotalAttackRating() {
         return 0;
     }
+
+    public void teleportTo(Point destination)
+    {
+        logger.log(Level.INFO, "Creature #{0} at {1}, {2} will be teleported to {3}, {4}.",
+                new Object[]{getKey(), location.x, location.y, destination.x, destination.y});
+        gameMap.setMob(location.x, location.y, 0);
+        location.x = destination.x;
+        location.y = destination.y;
+        gameMap.setMob(location.x, location.y, getKey());
+    }
+
 }
