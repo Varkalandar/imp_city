@@ -1,3 +1,8 @@
+Changes since v0.28.2
+
+- Ghostyard rooms, where dead creatures can be buried with a chance
+  to return as a ghost.
+
 Changes since v0.28.1
 
 - Coins are only counted when kept in a treasury. Stray coins on
