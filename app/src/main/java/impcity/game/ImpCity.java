@@ -1401,15 +1401,52 @@ public class ImpCity implements PostRenderHook, GameInterface
         int gx = x + Map.SUB/3;
         int gy = y + Map.SUB/2;
         Point gp = new Point(gx+1, gy);
-        
-        // Light light = new Light(gx + 4, gy + 2, 36, 2, 0xFF886655, 0.6);
-        // map.lights.add(light);
-        
-        map.setItem(gp.x, gp.y, Features.I_GRAVE_FLOWERS);
-        
+                
         mob.teleportTo(gp);
         mob.visuals.setBubble(0);
         mob.visuals.setDisplayCode(0);
+        
+        mob.stats.setCurrent(MobStats.GHOST_STEPS, 10);
+    }
+
+    
+    public void turnGraveIntoLair(Map map, Mob mob)
+    {
+        int gx = mob.location.x;
+        int gy = mob.location.y;
+        Point gp = new Point(gx, gy);
+        
+        Light light = new Light(gx + 4, gy + 2, 36, 2, 0xFF886655, 0.6);
+        map.lights.add(light);
+        
+        map.setItem(gp.x, gp.y, Features.I_GRAVE_FLOWERS);
+        
+        // turn into a ghost
+        CreatureAi ai = new CreatureAi(this);
+        ai.setHome(mob.location);
+        mob.setAi(ai);
+
+        // give them some experience
+        mob.addExperience(200);
+        
+        // heal them
+        mob.stats.setCurrent(MobStats.VITALITY, 20);
+        mob.stats.setCurrent(MobStats.INJURIES, 0);        
+        mob.stats.setMax(MobStats.GHOST_STEPS, 1);
+        
+        // Hajo: make creature look south-east
+        int species = mob.getSpecies();
+        mob.visuals.setDisplayCode(species+3);
+        mob.visuals.setBubble(0);
+        
+        // ghosts are translucent
+        mob.visuals.color = (0x70000000) | (mob.visuals.color & 0xFFFFFF);
+        
+        // sanity check
+        if (!ai.isLair(mob, mob.location.x, mob.location.y))
+        {
+            LOG.log(Level.SEVERE, "Mob location must be their lair.");
+        }        
     }
     
 
@@ -1899,6 +1936,37 @@ public class ImpCity implements PostRenderHook, GameInterface
         @Override
         public void newDay(int days)
         {
+        	ArrayList <Cardinal> killList = new ArrayList<Cardinal>();
+        	
+        	// each midnight, dead creatures get a chance to return as ghost
+        	
+        	Set <Cardinal>keys = world.mobs.keySet();
+        	for(Cardinal key : keys)
+        	{
+        		Mob mob = world.mobs.get(key.intValue());
+        		int chances = mob.stats.getCurrent(MobStats.GHOST_STEPS);
+        		if(chances > 0)
+        		{
+        			if(Math.random() < 0.5)
+        			{
+        				turnGraveIntoLair(mob.gameMap, mob);
+        			}
+        			else
+        			{
+        				mob.stats.setCurrent(MobStats.GHOST_STEPS, chances - 1);
+        			}
+        		}
+        		else
+        		{
+        			// dead for real
+        			killList.add(key);
+        		}
+        	}
+        	
+        	for(Cardinal key : killList)
+        	{
+        		removeCreature(key.intValue());
+        	}
         }
 
         @Override

@@ -13,6 +13,7 @@ public class MobStats
     public final static int INJURIES = 3;
     public final static int VITALITY = 4;
     public final static int EXPERIENCE = 5;
+    public final static int GHOST_STEPS = 6;
 
     public final static int GENERATOR = 9;
     

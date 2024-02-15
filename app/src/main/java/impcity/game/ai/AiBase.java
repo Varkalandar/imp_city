@@ -29,11 +29,24 @@ public abstract class AiBase implements Ai
     @Override
     public boolean isLair(Mob mob, int x, int y)
     {
-        int species = mob.getSpecies();
-        SpeciesDescription desc = Species.speciesTable.get(species);
-        
+    	int lair = -1;
+    	
+    	// ghosts have special lairs, so we must test two cases
+    	if(mob.stats.getMax(MobStats.GHOST_STEPS) > 0)
+    	{
+    		// this is a ghost - it should have a grave with flowers
+    		lair = Features.I_GRAVE_FLOWERS;
+    	}
+    	else
+    	{
+    		// this is a normal mob
+            int species = mob.getSpecies();
+            SpeciesDescription desc = Species.speciesTable.get(species);
+            lair = desc.lair;
+    	}
+    
         int n = mob.gameMap.getItem(x, y);
-        return n == desc.lair;
+        return n == lair;
     }
     
     

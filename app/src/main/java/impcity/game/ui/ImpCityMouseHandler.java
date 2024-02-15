@@ -310,15 +310,21 @@ public class ImpCityMouseHandler implements MouseHandler
         {
         	if(game.isGrave(map, rasterI, rasterJ))
         	{
-        		// kill one mob for testing the grave
-        		Mob mob = game.world.mobs.get(game.world.mobs.nextFreeKey() - 1);
-        		mob.setPath(null);
-        		mob.setAi(null);
-                game.populateGrave(map, mob, rasterI, rasterJ);
+                int gx = rasterI + Map.SUB/3;
+                int gy = rasterJ + Map.SUB/2;
+
+                int key = map.getMob(gx+1, gy);        		
+                game.turnGraveIntoLair(map, game.world.mobs.get(key));
         	}
         	else
         	{
                 game.allocateGrave(map, rasterI, rasterJ);
+
+                // kill one mob for testing the grave
+        		Mob mob = game.world.mobs.get(game.world.mobs.nextFreeKey() - 1);
+        		mob.setPath(null);
+        		mob.setAi(null);
+                game.populateGrave(map, mob, rasterI, rasterJ);
         	}
         }        
         else

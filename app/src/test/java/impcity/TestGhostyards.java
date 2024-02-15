@@ -1,5 +1,6 @@
 package impcity;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.lwjgl.LWJGLException;
 
 import impcity.game.ImpCity;
+import impcity.game.ai.MobStats;
 import impcity.game.map.Map;
 import impcity.game.mobs.Mob;
 
@@ -37,5 +39,13 @@ public class TestGhostyards
 	
 		ok = game.isGrave(map, 0, 0);		
 		assertTrue(ok, "Location 0, 0 must be grave now");
+		
+        int count = mob.stats.getCurrent(MobStats.GHOST_STEPS);
+        assertEquals(10, count, "Mob should have ten attempts left to become a ghost");
+        
+    	game.turnGraveIntoLair(map, mob);
+
+        int isGhost = mob.stats.getMax(MobStats.GHOST_STEPS);        
+        assertEquals(1, isGhost, "Mob should be a ghost now");
 	}
 }
