@@ -33,7 +33,8 @@ public class GameDisplay
     private static int debugMobKey;
     
     private final static int defaultButtonColor = 0xFFCCCCCC;
-    private final static int selectedButtonColor = 0xFFFFDD99;
+    // private final static int selectedButtonColor = 0xFFFFDD99;
+    private final static int selectedButtonColor = 0xFFB0F030;
     private final static int disabledButtonColor = 0x70CCCCCC;
     private final static int toolTipColor = Colors.BRIGHT_SILVER_INK;
 
@@ -365,7 +366,7 @@ public class GameDisplay
     
     private void displayRooms1Tab(int left, int top)
     {
-        IsoDisplay.fillRect(122, 26, 650, 70, 0x77000000);
+        IsoDisplay.fillRect(122, 26, 720, 70, 0x77000000);
         
         IsoDisplay.drawTile(buttonDig, left + 0, top, 60, 60, calculateButtonColor(Tools.MARK_DIG));
         IsoDisplay.drawTile(buttonLair, left + 70, top, 60, 60, calculateButtonColor(Tools.MAKE_LAIR));
