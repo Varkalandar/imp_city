@@ -1960,6 +1960,14 @@ public class ImpCity implements PostRenderHook, GameInterface
         		{
         			// dead for real
         			killList.add(key);
+
+        			// revert grave to unallocated ghostyard
+        			int rasterI = (mob.location.x / Map.SUB) * Map.SUB;
+        			int rasterJ = (mob.location.y / Map.SUB) * Map.SUB;
+        			Map map = mob.gameMap;
+        			
+                    resetSquare(map, rasterI, rasterJ);
+                    map.setFloor(rasterI, rasterJ, Features.GROUND_GHOSTYARD + (int)(Math.random() * 1));
         		}
         	}
         	
