@@ -45,7 +45,7 @@ public class TestGhostyards
         
     	game.turnGraveIntoLair(map, mob);
 
-        int isGhost = mob.stats.getMax(MobStats.GHOST_STEPS);        
-        assertEquals(1, isGhost, "Mob should be a ghost now");
+        boolean isGhost = mob.isGhost();        
+        assertEquals(true, isGhost, "Mob should be a ghost now");
 	}
 }

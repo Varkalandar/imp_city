@@ -32,7 +32,7 @@ public abstract class AiBase implements Ai
     	int lair = -1;
     	
     	// ghosts have special lairs, so we must test two cases
-    	if(mob.stats.getMax(MobStats.GHOST_STEPS) > 0)
+    	if(mob.isGhost())
     	{
     		// this is a ghost - it should have a grave with flowers
     		lair = Features.I_GRAVE_FLOWERS;

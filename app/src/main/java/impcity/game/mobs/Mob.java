@@ -594,4 +594,9 @@ public class Mob
         gameMap.setMob(location.x, location.y, getKey());
     }
 
+	public boolean isGhost() 
+	{
+		return stats.getMax(MobStats.GHOST_STEPS) > 0;
+	}
+
 }

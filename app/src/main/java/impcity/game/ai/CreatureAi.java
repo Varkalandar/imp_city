@@ -494,6 +494,12 @@ public class CreatureAi extends AiBase
                 break;
         }
 
+        // override - ghosts can only do library research
+        if(mob.isGhost())
+        {
+            workplaces = game.getLibraries();
+        }
+        
         if(workplaces == null || workplaces.isEmpty())
         {
             logger.log(Level.INFO, "Mob {0} could not find a workplace",
