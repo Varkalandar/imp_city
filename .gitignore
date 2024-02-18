@@ -1,4 +1,7 @@
 .idea
+.project
+.settings
+app/.classpath
 app/savegame
 
 # Ignore Gradle project-specific cache directory
