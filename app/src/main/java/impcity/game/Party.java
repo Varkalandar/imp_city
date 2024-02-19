@@ -63,6 +63,14 @@ public class Party
                 stealth = Math.min(stealth, desc.stealth);
                 speed = Math.min(speed, (int)(desc.speed * factor));
                 scouting = Math.max(scouting, (int)((desc.speed + desc.intelligence) * 0.5 * factor));
+            
+                // Ghost adjustments
+                if(mob.isGhost())
+                {
+                	scouting += 1;
+                	stealth += 2;                
+                	carry = Math.max(0, carry - 1);
+                }
             }
         }
         

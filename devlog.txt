@@ -2,6 +2,8 @@ Changes since v0.28.2
 
 - Ghostyard rooms, where dead creatures can be buried with a chance
   to return as a ghost.
+- Ghosts get +2 stealth, +1 scouting bonus, but have a carry capacity
+  of zero.
 
 Changes since v0.28.1
 
