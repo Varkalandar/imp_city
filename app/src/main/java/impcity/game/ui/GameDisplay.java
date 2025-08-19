@@ -35,6 +35,7 @@ public class GameDisplay
     private final static int defaultButtonColor = 0xFFCCCCCC;
     // private final static int selectedButtonColor = 0xFFFFDD99;
     private final static int selectedButtonColor = 0xFFB0F030;
+    private final static int lackingManaButtonColor = 0xFFF0B030;
     private final static int disabledButtonColor = 0x70CCCCCC;
     private final static int toolTipColor = Colors.BRIGHT_SILVER_INK;
 
@@ -320,6 +321,7 @@ public class GameDisplay
         Mob keeper = game.world.mobs.get(game.getPlayerKey());
         int research = keeper.stats.getCurrent(KeeperStats.RESEARCH);
 
+        boolean costCovered = true;
         boolean enabled = true;
         int color;
 
@@ -334,14 +336,23 @@ public class GameDisplay
             case MAKE_HOSPITAL:
                 enabled = (research & KeeperStats.RESEARCH_HEALING) != 0;
                 break;
+            case MARK_DIG:
+                enabled = true;
+                costCovered = keeper.stats.getCurrent(KeeperStats.MANA) >= KeeperStats.MANA_DIG_BLOCK_COST;
         }
 
         if(enabled) {
             if (Tools.selected == tool) {
-                color = selectedButtonColor;
+                if (costCovered) {
+                    color = selectedButtonColor;
+                }
+                else {
+                    color = lackingManaButtonColor;
+                }
             } else {
                 color = defaultButtonColor;
             }
+            
         }
         else
         {
