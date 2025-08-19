@@ -332,6 +332,8 @@ public class ImpCity implements PostRenderHook, GameInterface
         }
 
         player = new Mob(30, 350, Species.GLOBOS_BASE, 0, 0, gameMap, null, 45, new MovementJumping());
+        player.stats.setCurrent(MobStats.VITALITY, 1);
+        
         playerKey = world.mobs.nextFreeKey();
         world.mobs.put(playerKey, player);
         player.setKey(playerKey);
@@ -1285,6 +1287,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         
         ImpAi impAi = new ImpAi(this);
         Mob imp = new Mob(x, y, Species.IMPS_BASE, Features.SHADOW_BASE, desc.sleepImage, gameMap, impAi, desc.speed, desc.move);
+        imp.stats.setCurrent(MobStats.VITALITY, 1);
         int impKey = world.mobs.nextFreeKey();
         world.mobs.put(impKey, imp);
         imp.setKey(impKey);
@@ -1564,6 +1567,21 @@ public class ImpCity implements PostRenderHook, GameInterface
     }
 
 
+    public boolean payMana(int howmuch)
+    {
+            Mob keeper = world.mobs.get(getPlayerKey());
+        int mana = keeper.stats.getCurrent(KeeperStats.MANA);
+
+        if(mana >= howmuch) 
+        {
+            keeper.stats.setCurrent(KeeperStats.MANA, mana - howmuch);
+            return true;
+        }
+        
+        return false;
+    }
+    
+    
     public void makeTreasureQuest()
     {
         // debug quest book, add some extra quests
@@ -1740,10 +1758,10 @@ public class ImpCity implements PostRenderHook, GameInterface
             LOG.log(Level.INFO, "No grave available for creature #" + mob.getKey());
             removeCreature(mob.getKey());
         }
-	}
+    }
 
 
-	public void removeCreature(int key)
+    public void removeCreature(int key)
     {
         LOG.log(Level.INFO, "Removing creature {0} from the world.", key);
         
@@ -1936,45 +1954,48 @@ public class ImpCity implements PostRenderHook, GameInterface
         @Override
         public void newDay(int days)
         {
-        	ArrayList <Cardinal> killList = new ArrayList<Cardinal>();
-        	
-        	// each midnight, dead creatures get a chance to return as ghost
-        	
-        	Set <Cardinal>keys = world.mobs.keySet();
-        	for(Cardinal key : keys)
-        	{
-        		Mob mob = world.mobs.get(key.intValue());
-        		int chances = mob.stats.getCurrent(MobStats.GHOST_STEPS);
-        		if(chances > 0)
-        		{
-        			if(Math.random() < 0.5)
-        			{
-        				turnGraveIntoLair(mob.gameMap, mob);
-        			}
-        			else
-        			{
-        				mob.stats.setCurrent(MobStats.GHOST_STEPS, chances - 1);
-        			}
-        		}
-        		else
-        		{
-        			// dead for real
-        			killList.add(key);
+            ArrayList <Cardinal> killList = new ArrayList<Cardinal>();
 
-        			// revert grave to unallocated ghostyard
-        			int rasterI = (mob.location.x / Map.SUB) * Map.SUB;
-        			int rasterJ = (mob.location.y / Map.SUB) * Map.SUB;
-        			Map map = mob.gameMap;
-        			
-                    resetSquare(map, rasterI, rasterJ);
-                    map.setFloor(rasterI, rasterJ, Features.GROUND_GHOSTYARD + (int)(Math.random() * 1));
-        		}
-        	}
-        	
-        	for(Cardinal key : killList)
-        	{
-        		removeCreature(key.intValue());
-        	}
+            // each midnight, dead creatures get a chance to return as ghost
+
+            Set <Cardinal>keys = world.mobs.keySet();
+            for(Cardinal key : keys)
+            {
+                Mob mob = world.mobs.get(key.intValue());
+                
+                if(mob.stats.getCurrent(MobStats.VITALITY) == 0) {
+                    int chances = mob.stats.getCurrent(MobStats.GHOST_STEPS);
+                    if(chances > 0)
+                    {
+                        if(Math.random() < 0.5)
+                        {
+                            turnGraveIntoLair(mob.gameMap, mob);
+                        }
+                        else
+                        {
+                            mob.stats.setCurrent(MobStats.GHOST_STEPS, chances - 1);
+                        }
+                    }
+                    else
+                    {
+                        // dead for real
+                        killList.add(key);
+
+                        // revert grave to unallocated ghostyard
+                        int rasterI = (mob.location.x / Map.SUB) * Map.SUB;
+                        int rasterJ = (mob.location.y / Map.SUB) * Map.SUB;
+                        Map map = mob.gameMap;
+
+                        resetSquare(map, rasterI, rasterJ);
+                        map.setFloor(rasterI, rasterJ, Features.GROUND_GHOSTYARD + (int)(Math.random() * 1));
+                    }
+                }
+            }
+            
+            for(Cardinal key : killList)
+            {
+                removeCreature(key.intValue());
+            }
         }
 
         @Override
@@ -1985,6 +2006,37 @@ public class ImpCity implements PostRenderHook, GameInterface
             
             reputation = reputation - reputation / 16;
             keeper.stats.setCurrent(KeeperStats.REPUTATION, reputation);
+            
+            processManaEconomy();
+        }
+        
+        private void processManaEconomy()
+        {
+            Mob keeper = world.mobs.get(getPlayerKey());
+            int mana = keeper.stats.getCurrent(KeeperStats.MANA);
+            
+            mana += KeeperStats.MANA_BASE_GROWTH;
+            mana += calcCurrentCreatureCount() * KeeperStats.MANA_CREATURE_GROWTH;
+            
+            // TODO: creatures on expeditions should not grant mana
+            
+            // rooms upkeep
+                        
+            mana -= farmland.size() * KeeperStats.MANA_FARMLAND_COST;
+            mana -= portals.size() * KeeperStats.MANA_PORTAL_COST;
+            mana -= lairs.size() * KeeperStats.MANA_LAIR_COST;
+            mana -= treasuries.size() * KeeperStats.MANA_TREASURY_COST;
+            mana -= libraries.size() * KeeperStats.MANA_LIBRARY_COST;
+            mana -= forges.size() * KeeperStats.MANA_FORGE_COST;
+            mana -= labs.size() * KeeperStats.MANA_LABORATORY_COST;
+            mana -= hospitals.size() * KeeperStats.MANA_HOSPITAL_COST;
+            mana -= ghostyards.size() * KeeperStats.MANA_GHOSTYARD_COST;
+            mana -= claimed.size() * KeeperStats.MANA_CLAIMED_SQUARE_COST;
+            
+            if(mana < keeper.stats.getMax(KeeperStats.MANA)) 
+            {
+                keeper.stats.setCurrent(KeeperStats.MANA, mana);
+            }
         }
     }
 }

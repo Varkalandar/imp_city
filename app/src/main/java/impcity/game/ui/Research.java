@@ -35,6 +35,10 @@ public class Research
         stats.setCurrent(KeeperStats.COINS, 0);
         stats.setMax(KeeperStats.COINS, 0);
 
+        stats.setMin(KeeperStats.MANA, 0);
+        stats.setCurrent(KeeperStats.MANA, KeeperStats.MANA_START);
+        stats.setMax(KeeperStats.MANA, KeeperStats.MANA_BASE_MAX);
+
         stats.setMin(KeeperStats.RESEARCH, 0);
         stats.setCurrent(KeeperStats.RESEARCH, 0);
         stats.setMax(KeeperStats.RESEARCH, 10000); // research needed for next discovery

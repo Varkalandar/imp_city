@@ -158,6 +158,7 @@ public class ImpCityMouseHandler implements MouseHandler
         if(Features.canBeDug(ground, block))
         {
             createExcavationJob(map, rasterI, rasterJ);
+            game.payMana(KeeperStats.MANA_DIG_BLOCK_COST);
         }
         else if(Features.canBeMined(ground, block))
         {

@@ -44,4 +44,30 @@ public class KeeperStats
      * 6 = adamantite working (highly magic metal)
      */
     public static final int METALLURGY = 7;
+    
+    public static final int MANA = 8;
+    
+    
+    // Mana constants
+    public static final int MANA_START = 400;
+    public static final int MANA_BASE_MAX = 1000;
+    public static final int MANA_BASE_GROWTH = 60;
+    public static final int MANA_CREATURE_GROWTH = 3;
+    
+    // Room upkeept costs
+    public static final int MANA_FARMLAND_COST = 1;
+    public static final int MANA_PORTAL_COST = 10;
+    public static final int MANA_LAIR_COST = 1;
+    public static final int MANA_TREASURY_COST = 2;
+    public static final int MANA_LIBRARY_COST = 2;
+    public static final int MANA_FORGE_COST = 3;
+    public static final int MANA_LABORATORY_COST = 4;
+    public static final int MANA_HOSPITAL_COST = 5;
+    public static final int MANA_GHOSTYARD_COST = 6;
+    public static final int MANA_CLAIMED_SQUARE_COST = 1;
+
+
+    // actions
+    public static final int MANA_DIG_BLOCK_COST = 50;
+
 }

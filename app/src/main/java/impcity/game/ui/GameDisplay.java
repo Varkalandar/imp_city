@@ -249,14 +249,16 @@ public class GameDisplay
 
         IsoDisplay.fillRect(0, 0, display.displayWidth, 24, 0x77000000);
 
-        drawMenuText("Rookie", textColor, textLeft, 2, 0.6);
-        drawMenuText(calcReputationDisplay(keeper), textColor, textLeft + 200, 2, 0.6);
+        drawMenuText("Mana " + keeper.stats.getCurrent(KeeperStats.MANA) + "/" + keeper.stats.getMax(KeeperStats.MANA), 
+        		     textColor, textLeft, 2, 0.6);
+        
+        drawMenuText(calcReputationDisplay(keeper), textColor, textLeft + 250, 2, 0.6);
         drawMenuText("" + keeper.stats.getMax(KeeperStats.COINS) + " Gold, " +
                         keeper.stats.getCurrent(KeeperStats.COINS) + " Silver, " +
                         keeper.stats.getMin(KeeperStats.COINS) + " Copper",
-                        textColor, textLeft + 400, 2, 0.6);
+                        textColor, textLeft + 450, 2, 0.6);
         drawMenuText("" + game.calcCurrentCreatureCount() + "/" + game.calcMaxCreatureCount() + " Creatures",
-                        textColor, textLeft + 760, 2, 0.6);
+                        textColor, textLeft + 810, 2, 0.6);
     }
 
 
@@ -380,46 +382,53 @@ public class GameDisplay
 
         IsoDisplay.drawTile(buttonDemolish, left + 640, top, 60, 60, calculateButtonColor(Tools.DEMOLISH));
         
-        int tipY = 108;
+        int tipY = 112;
         int n = calculateTabButtonNumber(Mouse.getX(), Mouse.getY());
 
         if(n == 0)
         {
             drawMenuText("Mark a block for digging", toolTipColor, 70, tipY, 0.6);
+            drawMenuText("Cost: " + KeeperStats.MANA_DIG_BLOCK_COST + " mana", toolTipColor, 70, tipY-18, 0.5);
         }
         else if(n == 1)
         {
             drawMenuText("Build lair space for your creatures", toolTipColor, 140, tipY, 0.6);
+            drawMenuText("Upkeep: " + KeeperStats.MANA_LAIR_COST + " mana/hour", toolTipColor, 140, tipY-18, 0.5);
         }
         else if(n == 2)
         {
             drawMenuText("Convert floor to farmland", toolTipColor, 210, tipY, 0.6);
+            drawMenuText("Upkeep: " + KeeperStats.MANA_FARMLAND_COST + " mana/hour", toolTipColor, 210, tipY-18, 0.5);
         }
         else if(n == 3)
         {
             drawMenuText("Set up a library", toolTipColor, 280, tipY, 0.6);
+            drawMenuText("Upkeep: " + KeeperStats.MANA_LIBRARY_COST + " mana/hour", toolTipColor, 280, tipY-18, 0.5);
         }
         else if(n == 4)
         {
             drawMenuText("Make a treasury", toolTipColor, 350, tipY, 0.6);
+            drawMenuText("Upkeep: " + KeeperStats.MANA_TREASURY_COST + " mana/hour", toolTipColor, 350, tipY-18, 0.5);
         }
         else if(n == 5)
         {
             drawMenuText("Build a laboratory", toolTipColor, 440, tipY, 0.6);
-            drawMenuText("Cost: 1 Copper", Colors.BRIGHT_GOLD_INK, 440+30, tipY-18, 0.4);
+            drawMenuText("Cost: 1 Copper Upkeep: " + KeeperStats.MANA_LABORATORY_COST + " mana/hour", toolTipColor, 440, tipY-18, 0.5);
         }
         else if(n == 6)
         {
             drawMenuText("Create a forge", toolTipColor, 490, tipY, 0.6);
+            drawMenuText("Upkeep: " + KeeperStats.MANA_FORGE_COST + " mana/hour", toolTipColor, 490, tipY-18, 0.5);
         }
         else if(n == 7)
         {
             drawMenuText("Place a healing well", toolTipColor, 560, tipY, 0.6);
-            drawMenuText("Cost: 5 Copper", Colors.BRIGHT_GOLD_INK, 560+40, tipY-18, 0.4);
+            drawMenuText("Cost: 5 Copper Upkeep: " + KeeperStats.MANA_LABORATORY_COST + " mana/hour", toolTipColor, 560, tipY-18, 0.5);
         }
         else if(n == 8)
         {
             drawMenuText("Dig a ghostyard", toolTipColor, 640, tipY, 0.6);
+            drawMenuText("Cost: n/a Upkeep: " + KeeperStats.MANA_GHOSTYARD_COST + " mana/hour", toolTipColor, 640, tipY-18, 0.5);
         }
         else if(n == 9)
         {
