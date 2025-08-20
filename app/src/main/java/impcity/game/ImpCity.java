@@ -1981,7 +1981,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         {
             for(int j=-d; j<=d; j++)
             {
-                map.setColor(p.x + i * Map.SUB, p.y + j * Map.SUB, 0xFFA0A0A0);
+                map.setColor(p.x + i * Map.SUB, p.y + j * Map.SUB, 0xFF909090);
             }            
         }
     }
