@@ -14,13 +14,13 @@ plugins {
     // id 'java-library'
 }
 
-
+/*
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(11)
     }
 }
-
+*/
 
 def version = "v0.00"
 def distributionDir = ""
