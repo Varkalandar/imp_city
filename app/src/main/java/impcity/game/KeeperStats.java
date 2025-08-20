@@ -69,5 +69,6 @@ public class KeeperStats
 
     // actions
     public static final int MANA_DIG_BLOCK_COST = 50;
+    public static final int MANA_SPAWN_IMP_COST = 50;
 
 }

@@ -1958,43 +1958,46 @@ public class ImpCity implements PostRenderHook, GameInterface
 
             // each midnight, dead creatures get a chance to return as ghost
 
-            Set <Cardinal>keys = world.mobs.keySet();
-            for(Cardinal key : keys)
+            synchronized(world.mobs) 
             {
-                Mob mob = world.mobs.get(key.intValue());
-                
-                if(mob.stats.getCurrent(MobStats.VITALITY) == 0) {
-                    int chances = mob.stats.getCurrent(MobStats.GHOST_STEPS);
-                    if(chances > 0)
-                    {
-                        if(Math.random() < 0.5)
+                Set <Cardinal>keys = world.mobs.keySet();
+                for(Cardinal key : keys)
+                {
+                    Mob mob = world.mobs.get(key.intValue());
+
+                    if(mob.stats.getCurrent(MobStats.VITALITY) == 0) {
+                        int chances = mob.stats.getCurrent(MobStats.GHOST_STEPS);
+                        if(chances > 0)
                         {
-                            turnGraveIntoLair(mob.gameMap, mob);
+                            if(Math.random() < 0.5)
+                            {
+                                turnGraveIntoLair(mob.gameMap, mob);
+                            }
+                            else
+                            {
+                                mob.stats.setCurrent(MobStats.GHOST_STEPS, chances - 1);
+                            }
                         }
                         else
                         {
-                            mob.stats.setCurrent(MobStats.GHOST_STEPS, chances - 1);
+                            // dead for real
+                            killList.add(key);
+
+                            // revert grave to unallocated ghostyard
+                            int rasterI = (mob.location.x / Map.SUB) * Map.SUB;
+                            int rasterJ = (mob.location.y / Map.SUB) * Map.SUB;
+                            Map map = mob.gameMap;
+
+                            resetSquare(map, rasterI, rasterJ);
+                            map.setFloor(rasterI, rasterJ, Features.GROUND_GHOSTYARD + (int)(Math.random() * 1));
                         }
                     }
-                    else
-                    {
-                        // dead for real
-                        killList.add(key);
-
-                        // revert grave to unallocated ghostyard
-                        int rasterI = (mob.location.x / Map.SUB) * Map.SUB;
-                        int rasterJ = (mob.location.y / Map.SUB) * Map.SUB;
-                        Map map = mob.gameMap;
-
-                        resetSquare(map, rasterI, rasterJ);
-                        map.setFloor(rasterI, rasterJ, Features.GROUND_GHOSTYARD + (int)(Math.random() * 1));
-                    }
                 }
-            }
-            
-            for(Cardinal key : killList)
-            {
-                removeCreature(key.intValue());
+
+                for(Cardinal key : killList)
+                {
+                    removeCreature(key.intValue());
+                }
             }
         }
 

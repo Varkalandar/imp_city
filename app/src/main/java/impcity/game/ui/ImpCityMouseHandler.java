@@ -155,18 +155,25 @@ public class ImpCityMouseHandler implements MouseHandler
         int ground = map.getFloor(rasterI, rasterJ);
         int block = map.getItem(rasterI + Map.O_BLOCK, rasterJ + Map.O_BLOCK) & Map.F_IDENT_MASK;
 
-        if(Features.canBeDug(ground, block))
+        if (game.payMana(KeeperStats.MANA_DIG_BLOCK_COST))
         {
-            Mob keeper = game.world.mobs.get(game.getPlayerKey());
-            if (keeper.stats.getCurrent(KeeperStats.MANA) >= KeeperStats.MANA_DIG_BLOCK_COST)
+            if(Features.canBeDug(ground, block))
             {
                 createExcavationJob(map, rasterI, rasterJ);
                 game.payMana(KeeperStats.MANA_DIG_BLOCK_COST);
             }
+            else if(Features.canBeMined(ground, block))
+            {
+                createMiningJob(map, rasterI, rasterJ);
+            }
         }
-        else if(Features.canBeMined(ground, block))
+        else 
         {
-            createMiningJob(map, rasterI, rasterJ);
+            TimedMessage tm = new TimedMessage("Not enough mana!",
+                                   Colors.BRIGHT_GOLD_INK,
+                                   Mouse.getX(), Mouse.getY() + 20,
+                                   Clock.time(), 0.3);
+            gameDisplay.addMessage(tm);
         }
     }
 
@@ -405,15 +412,15 @@ public class ImpCityMouseHandler implements MouseHandler
     private void spawnImp(Map map, int rasterI, int rasterJ) 
     {
         WayPathSource wps = new WayPathSource(map, Species.speciesTable.get(Species.IMPS_BASE).size, false);
-        
+
         int n = map.getFloor(rasterI, rasterJ);
         if(n >= Features.GROUND_POLY_TILES && n < Features.GROUND_POLY_TILES + 3 &&
            wps.isMoveAllowed(game.mouseI, game.mouseJ, game.mouseI, game.mouseJ))
         {
             int imps = game.countMobs(Species.IMPS_BASE);
-            int cost = Math.max(1, imps - 3);
+            int cost = Math.max(1, imps - 3) * KeeperStats.MANA_SPAWN_IMP_COST;
 
-            boolean ok = game.payCoins(map, Features.I_COPPER_COINS, cost);
+            boolean ok = game.payMana(cost);
 
             if(ok)
             {
@@ -422,8 +429,8 @@ public class ImpCityMouseHandler implements MouseHandler
             }
             else
             {
-                LOG.log(Level.INFO, "Not enough copper coins.");
-                TimedMessage tm = new TimedMessage("Not enough copper!",
+                LOG.log(Level.INFO, "Not enough mana.");
+                TimedMessage tm = new TimedMessage("Not enough mana!",
                                                    Colors.BRIGHT_GOLD_INK,
                                                    Mouse.getX(), Mouse.getY() + 20,
                                                    Clock.time(), 0.3);

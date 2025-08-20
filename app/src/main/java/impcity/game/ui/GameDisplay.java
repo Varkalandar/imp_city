@@ -339,6 +339,13 @@ public class GameDisplay
             case MARK_DIG:
                 enabled = true;
                 costCovered = keeper.stats.getCurrent(KeeperStats.MANA) >= KeeperStats.MANA_DIG_BLOCK_COST;
+                break;
+            case SPELL_IMP:
+                enabled = true;
+                int imps = game.countMobs(Species.IMPS_BASE);
+                int cost = Math.max(1, imps - 3) * KeeperStats.MANA_SPAWN_IMP_COST;
+                costCovered = keeper.stats.getCurrent(KeeperStats.MANA) >= cost;
+                break;
         }
 
         if(enabled) {
@@ -460,9 +467,9 @@ public class GameDisplay
         if(n == 0)
         {
             int imps = game.countMobs(Species.IMPS_BASE);
-            int cost = Math.max(1, imps - 3);
+            int cost = Math.max(1, imps - 3) * KeeperStats.MANA_SPAWN_IMP_COST;
             drawMenuText("Spawn a new imp", toolTipColor, 90, tipY, 0.6);
-            drawMenuText("Cost: " + cost + " Copper", Colors.BRIGHT_GOLD_INK, 90+30, tipY-18, 0.4);
+            drawMenuText("Cost: " + cost + " mana", toolTipColor, 90, tipY-18, 0.4);
         }
     }
 
