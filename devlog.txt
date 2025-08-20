@@ -4,6 +4,9 @@ Changes since v0.28.2
   to return as a ghost.
 - Ghosts get +2 stealth, +1 scouting bonus, but have a carry capacity
   of zero.
+- Dungeon keeper gains mana over time, rooms cost upkeep in mana.
+- Spells have a mana cost now.
+- Powersnails try harder to find good locations for planting crops.
 
 Changes since v0.28.1
 

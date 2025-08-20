@@ -1465,6 +1465,45 @@ public class ImpCity implements PostRenderHook, GameInterface
     }
     
 
+    private boolean checkIsFarmland(List<FarmSquare> locations, int x, int y)
+    {        
+        for(FarmSquare farm : farmland)
+        {
+            if (farm.x == x && farm.y == y)
+            {            
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Farmland locations which are surrounded by farmland.
+     * These are the best locations for farming and first choice in
+     * job location search
+     * @return A list of suitable locations
+     */
+    public List<Point> getInnerFarmlandLocations() 
+    {
+        List<Point> result = new ArrayList<>(32);
+            
+        for(FarmSquare farm : farmland)
+        {
+            if ( checkIsFarmland(farmland, farm.x + Map.SUB, farm.y) &&
+                 checkIsFarmland(farmland, farm.x - Map.SUB, farm.y) &&
+                 checkIsFarmland(farmland, farm.x, farm.y + Map.SUB) &&
+                 checkIsFarmland(farmland, farm.x, farm.y - Map.SUB) )
+            {
+                Point p = new Point(farm.x, farm.y);
+                result.add(p);
+            }
+        }
+        
+        return result;
+    }
+
+
     /**
      * The player starts with a restricted area. This method is used to set these walls
      * and later to remover them again

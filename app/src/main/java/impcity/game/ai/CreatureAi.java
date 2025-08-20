@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import impcity.game.Clock;
 import impcity.game.Direction;
+import static impcity.game.ai.JobPreference.LABORATORY;
 import impcity.game.mobs.Mob;
 import impcity.game.map.LocationPathDestination;
 import impcity.game.map.Map;
@@ -481,7 +482,10 @@ public class CreatureAi extends AiBase
         switch(desc.jobPreference)
         {
             case FARM:
-                workplaces = game.getFarmlandLocations();
+                workplaces = game.getInnerFarmlandLocations();
+                if (workplaces.isEmpty()) {
+                    workplaces = game.getFarmlandLocations();
+                }
                 break;
             case LIBRARY:
                 workplaces = game.getLibraries();
@@ -601,6 +605,11 @@ public class CreatureAi extends AiBase
                 }
                 break;
 
+            case FARM:
+                p = new Point();
+                p.x = work.x + (int) (Math.random() * Map.SUB);
+                p.y = work.y + (int) (Math.random() * Map.SUB);
+                break;
             default:
                 p = new Point();
                 // around the middle ...
@@ -950,7 +959,7 @@ public class CreatureAi extends AiBase
     private void spreadSeedlings(Mob mob) 
     {
         Map map = mob.gameMap;
-        int radius = Map.SUB + 8;
+        int radius = Map.SUB + 10;
         int xr = (int)(Math.random() * radius) - radius / 2;
         int yr = (int)(Math.random() * radius) - radius / 2;
 
@@ -958,7 +967,7 @@ public class CreatureAi extends AiBase
         int dist2 = xr*xr + yr*yr;
 
         // must be inside circle
-        ok &= dist2 < (Map.SUB+1) * (Map.SUB+1) / 4;
+        ok &= dist2 < radius * radius / 4;
                 
         xr += mob.location.x;
         yr += mob.location.y;
