@@ -21743,7 +21743,7 @@ null
 Tile Description
 v.5
 995
-1 1
+20 16
 0 0
 0 0
 End Of Header
@@ -21751,8 +21751,8 @@ Item
 v.1
 data
 4
-
-
+bubble_fight
+rgba
 
 null
 1

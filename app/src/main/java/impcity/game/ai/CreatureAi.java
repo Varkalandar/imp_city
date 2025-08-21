@@ -5,7 +5,6 @@ import impcity.game.ImpCity;
 import impcity.game.KeeperStats;
 import impcity.game.jobs.JobFetchItem;
 import impcity.game.jobs.JobQueue;
-import impcity.game.room.Room;
 import impcity.game.Sounds;
 import impcity.game.species.Species;
 import impcity.game.species.SpeciesDescription;
@@ -46,6 +45,7 @@ public class CreatureAi extends AiBase
         GO_RANDOM, GOING,
         FIND_FOOD, FEEDING,
         FIND_WORKPLACE, GO_WORK, WORKING,
+        GO_FIGHT, FIGHT,
     }
     
     private Goal goal;
@@ -87,7 +87,7 @@ public class CreatureAi extends AiBase
     {
         // Overrun? restore
         mob.gameMap.setMob(mob.location.x, mob.location.y, mob.getKey());
-
+      
         // Hajo: animated goals must be processed every step
         if(goal == Goal.WORKING)
         {
@@ -128,6 +128,41 @@ public class CreatureAi extends AiBase
             if(goal != Goal.BUILD_LAIR)
             {
                 goal = Goal.FIND_LAIR;
+            }
+        }
+        else
+        {
+            // once we have a lair, alarms have top priority
+            
+            if (alarmLocation == null && goal == Goal.GO_FIGHT)
+            {
+                // alarm is done, go random
+                goal = Goal.GO_RANDOM;
+                mob.setPath(null);
+                mob.visuals.setBubble(0);                
+            }
+            
+            if (alarmLocation != null && goal != Goal.GO_FIGHT)
+            {
+                // called to fight, find path
+                logger.info("Creature " + mob.name + " (" + mob.getKey() + ") was alarmed goes to fight at " + alarmLocation);
+                goal = Goal.GO_FIGHT;
+                mob.setPath(null);
+                mob.visuals.setBubble(Features.BUBBLE_FIGHT);                
+            }
+
+            if (alarmLocation != null && goal == Goal.GO_FIGHT)
+            {               
+                // we are in fight mode, burt sometimes someone else killed the intruder
+                // before we arrived. We eed to clear the alarm if there is no danger anymore
+                
+                if (mob.location.equals(alarmLocation)) {
+                    logger.info("Creature " + mob.name + " (" + mob.getKey() + ") clears the alarm");
+                    alarm(null);
+                    goal = Goal.GO_RANDOM;
+                    mob.setPath(null);
+                    mob.visuals.setBubble(0);
+                }
             }
         }
         
@@ -446,6 +481,18 @@ public class CreatureAi extends AiBase
             mob.setPath(path);
             goal = Goal.SLEEP;
             mob.visuals.setBubble(Features.BUBBLE_GO_SLEEPING);
+        }
+        else if(goal == Goal.GO_FIGHT) {
+            logger.info("Creature " + mob.name + " (" + mob.getKey() + ") is alarmed and tries to find a path to " + alarmLocation);
+            Path path = new Path();
+            
+            path.findPath(new WayPathSource(mob.gameMap, desc.size, false),
+                          new LocationPathDestination(alarmLocation.x, alarmLocation.y, 0), 
+                          mob.location.x, mob.location.y);
+            
+            mob.setPath(path);
+            // goal = Goal.FIGHT;
+            mob.visuals.setBubble(Features.BUBBLE_FIGHT);
         }
         else
         {

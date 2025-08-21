@@ -7,6 +7,8 @@ Changes since v0.28.2
 - Dungeon keeper gains mana over time, rooms cost upkeep in mana.
 - Spells have a mana cost now.
 - Powersnails try harder to find good locations for planting crops.
+- Evil black imps intrude the dungeon randomly. Creatures go to fight
+  the evil imps.
 
 Changes since v0.28.1
 

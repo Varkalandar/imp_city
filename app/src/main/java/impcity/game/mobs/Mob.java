@@ -9,8 +9,12 @@ import impcity.game.ai.Ai;
 import impcity.game.ai.MobStats;
 import impcity.game.map.Map;
 import impcity.oal.SoundPlayer;
+import java.util.HashSet;
+import java.util.Set;
 import rlgamekit.item.ItemCatalog;
 import rlgamekit.map.data.LayeredMap;
+import rlgamekit.objects.Cardinal;
+import rlgamekit.objects.Registry;
 import rlgamekit.pathfinding.Path;
 import rlgamekit.stats.Stats;
 
@@ -278,25 +282,56 @@ public class Mob
     /**
      * Called every frame in between display
      */
-    public void update()
+    public void update(Registry<Mob> mobs)
     {
         // drive particles in sync with display     
             
         visuals.frontParticles.driveParticles();
         visuals.backParticles.driveParticles();    
               
+        // is there an intruder nearby?
+        Set <Cardinal> keys = new HashSet<>(mobs.keySet());
+        boolean intruderFound = false;
+        for(Cardinal key : keys)
+        {
+            Mob other = mobs.get(key.intValue());
+            // intruders should have a better identification
+            // -> Only denizens attack intruders
+            if (ai != null && 
+                visuals.color != 0xFF555555 && other.visuals.color == 0xFF555555 &&
+                other.stats.getCurrent(MobStats.VITALITY) > 0) 
+            {
+                intruderFound = true;
+                
+                // close enough for kill strike?
+                int dx = location.x - other.location.x;
+                int dy = location.y - other.location.y;
+                if (dx * dx + dy * dy < Map.SUB) {
+                    other.stats.setCurrent(MobStats.VITALITY, 0);
+                    ai.alarm(null);
+                    logger.info("Creature " + name + " (" + getKey() + ") killed the intruder at " + other.location);
+                }
+                else {
+                    // go for it
+                    // logger.info("Creature " + name + " (" + getKey() + ") is alarmed and called to " + other.location);
+                    
+                    ai.alarm(other.location);
+                }
+            }
+        }        
+        
         if(path == null && ai != null)
         {
             // Hajo: we need a new path ...
             // ... but only if we are still alive
-            if(stats.getCurrent(MobStats.VITALITY) >= 0)
+            if(stats.getCurrent(MobStats.VITALITY) > 0)
             {
                 ai.think(this);
                 ai.findNewPath(this);
             }
         }
     }
-
+    
     /**
      * Called after all the ordinary stuff (map) has been drawn.
      */
@@ -594,9 +629,8 @@ public class Mob
         gameMap.setMob(location.x, location.y, getKey());
     }
 
-	public boolean isGhost() 
-	{
-		return stats.getMax(MobStats.GHOST_STEPS) > 0;
-	}
-
+    public boolean isGhost() 
+    {
+        return stats.getMax(MobStats.GHOST_STEPS) > 0;
+    }
 }

@@ -100,6 +100,11 @@ public class DungeonProcessingThread extends Thread
                     }
                 }
                 n++;
+                
+                // test crawling intruders
+                if (Math.random() < 0.0001) {
+                    spawnIntruders(map, p);
+                }
             }
         }
         
@@ -212,5 +217,11 @@ public class DungeonProcessingThread extends Thread
                                                     Features.P_SILVER_SPARK_1 + (int)(Math.random()*5),
                                                     0xA0000000 | (Colors.randomColor(200, 55, 55, 55) & 0xFFFFFF));
 
- }
+    }
+
+    private void spawnIntruders(Map map, Point p) {
+        logger.info("Spawning intruder at location " + p);
+
+        game.spawnIntruder(map, p.x + Map.SUB/2, p.y + Map.SUB/2);
+    }
 }

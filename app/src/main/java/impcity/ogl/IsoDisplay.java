@@ -24,6 +24,7 @@ import impcity.game.Clock;
 import impcity.game.Item;
 import impcity.game.Texture;
 import impcity.game.TextureCache;
+import impcity.game.ai.MobStats;
 import impcity.game.map.Map;
 import impcity.game.mobs.Mob;
 import impcity.ui.KeyHandler;
@@ -31,6 +32,7 @@ import impcity.ui.MouseHandler;
 import impcity.ui.MousePointerBitmap;
 import impcity.ui.PixFont;
 import impcity.ui.PostRenderHook;
+import java.util.ArrayList;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
@@ -697,12 +699,27 @@ public class IsoDisplay implements PostRenderHook
 
         synchronized(mobs)
         {
+            ArrayList <Cardinal> killList = new ArrayList<>();
+            
             Set <Cardinal> keys = new HashSet<>(mobs.keySet());
 
             for(Cardinal key : keys)
             {
                 Mob mob = mobs.get(key.intValue());
-                mob.update();
+                mob.update(mobs);
+                
+                // check for dead intruders
+                if(mob.getAi() == null && mob.stats.getCurrent(MobStats.VITALITY) == 0)
+                {
+                    killList.add(key);
+                }
+            }
+            
+            // clean up killed intruders
+            for (Cardinal key : killList)
+            {
+                logger.info("Removing dead intruder #" + key.intValue());
+                mobs.remove(key.intValue());
             }
         }
     }

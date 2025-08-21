@@ -21,6 +21,15 @@ public interface Ai
      */
     public void think(Mob mob);
     
+    
+    /**
+     * This is called if the AI is called to fight
+     * ar the given location.
+     * @param p the location of the alarm
+     */
+    public void alarm(Point p);
+    
+    
     /**
      * This method is called each frame while the 
      * creature has no path (path == null). It is called

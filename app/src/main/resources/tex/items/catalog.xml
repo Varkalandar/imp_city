@@ -22950,8 +22950,8 @@
       <Description>
         <version>4</version>
         <id>995</id>
-        <width>1</width>
-        <height>1</height>
+        <width>20</width>
+        <height>16</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
         <footX>0</footX>
@@ -22959,8 +22959,8 @@
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>bubble_fight</string>
+        <string>rgba</string>
         <string></string>
         <string>null</string>
       </Metadata>

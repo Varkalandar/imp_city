@@ -39,6 +39,7 @@ public class Features
     
     public static final int MINING_MARK = 976;
 
+    public static final int BUBBLE_FIGHT = 995;
     public static final int BUBBLE_FOOD = 996;
     public static final int BUBBLE_WORK = 997;
     public static final int BUBBLE_SLEEPING = 998;

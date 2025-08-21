@@ -24,6 +24,27 @@ public abstract class AiBase implements Ai
     protected final Point home = new Point(-1, -1);
 
     protected int workStep;
+    protected Point alarmLocation = null;
+    
+    /**
+     * This is called if the AI is called to fight
+     * ar the given location.
+     * @param p the location of the alarm
+     */
+    @Override
+    public void alarm(Point p)
+    {
+        // we only take one alarm at a time
+        if (alarmLocation == null) 
+        {
+            alarmLocation = p;
+        }
+        
+        if (p == null)
+        {
+            alarmLocation = null;
+        }
+    }
 
     
     @Override

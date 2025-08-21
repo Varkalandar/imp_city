@@ -1288,11 +1288,31 @@ public class ImpCity implements PostRenderHook, GameInterface
         ImpAi impAi = new ImpAi(this);
         Mob imp = new Mob(x, y, Species.IMPS_BASE, Features.SHADOW_BASE, desc.sleepImage, gameMap, impAi, desc.speed, desc.move);
         imp.stats.setCurrent(MobStats.VITALITY, 1);
-        int impKey = world.mobs.nextFreeKey();
-        world.mobs.put(impKey, imp);
-        imp.setKey(impKey);
-        
         imp.stats.setCurrent(MobStats.GOLD, 0);
+
+        synchronized (world.mobs) {
+            int impKey = world.mobs.nextFreeKey();
+            world.mobs.put(impKey, imp);
+            imp.setKey(impKey);
+        }        
+    }
+    
+
+    public void spawnIntruder(Map gameMap, int x, int y) 
+    {
+        SpeciesDescription desc = Species.speciesTable.get(Species.IMPS_BASE);
+        
+        Mob intruder = new Mob(x, y, Species.IMPS_BASE, Features.SHADOW_BASE, desc.sleepImage, gameMap, null, desc.speed, desc.move);
+        intruder.stats.setCurrent(MobStats.VITALITY, 1);
+        // Till there are real intruder graphics, color intruders dark grey
+        intruder.visuals.color = 0xFF555555;
+        intruder.stats.setCurrent(MobStats.GOLD, 0);
+
+        synchronized (world.mobs) {
+            int impKey = world.mobs.nextFreeKey();
+            world.mobs.put(impKey, intruder);
+            intruder.setKey(impKey);
+        }
     }
     
 
