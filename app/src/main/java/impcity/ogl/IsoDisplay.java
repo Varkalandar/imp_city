@@ -524,6 +524,7 @@ public class IsoDisplay implements PostRenderHook
                     int yoff = (mob.iOff * yd / Map.SUB + mob.jOff * yd / Map.SUB) >> 16;
 
                     mob.visuals.display(this, x + xoff, y + yoff, mob.zOff >> 16);
+                    font.drawStringScaled("#" + mob.getKey(), 0xFFFFFFFF, x + xoff - 10, y + yoff + 30, 0.5);
                 }
                 
                 dl = dl.next;

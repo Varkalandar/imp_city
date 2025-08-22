@@ -138,7 +138,10 @@ public class CreatureAi extends AiBase
             Mob intruder = mobs.get(alarmKey);
 
             // is the intruder still alive?
-            if (intruder != null) 
+            // -> at times the alarmKey has become obsolete and now points to a
+            //    normal creature. Needs extra check if the mob is actually an
+            //    intruder
+            if (intruder != null && intruder.visuals.color == 0xFF555555) 
             {             
                 if (goal != Goal.GO_FIGHT)
                 {
@@ -486,7 +489,7 @@ public class CreatureAi extends AiBase
             if(intruder != null) 
             {
                 Point alarmLocation = intruder.location;
-                logger.info("Creature " + mob.name + " (" + mob.getKey() + ") is alarmed and tries to find a path to intruder #" + alarmKey);
+                logger.info("Creature " + mob.name + " (" + mob.getKey() + ") is alarmed and tries to find a path to intruder #" + alarmKey + " at " + alarmLocation);
                 Path path = new Path();
 
                 path.findPath(new WayPathSource(mob.gameMap, desc.size, false),
@@ -496,6 +499,11 @@ public class CreatureAi extends AiBase
                 mob.setPath(path);
                 // goal = Goal.FIGHT;
                 mob.visuals.setBubble(Features.BUBBLE_FIGHT);
+            }
+            else
+            {
+                // intruder is no longer around
+                alarm(0);
             }
         }
         else
