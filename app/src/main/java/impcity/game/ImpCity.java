@@ -1722,6 +1722,8 @@ public class ImpCity implements PostRenderHook, GameInterface
         world.mobs.put(key, generator);
         map.setMob(x, y, key);
         generators.add(generator);
+    
+        LOG.info("Adding particle generator at " + x + ", " + y + " type=" + type + " with key=" + key);
     }
 
 

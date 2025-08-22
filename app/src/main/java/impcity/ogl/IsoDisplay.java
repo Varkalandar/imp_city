@@ -710,7 +710,9 @@ public class IsoDisplay implements PostRenderHook
                 mob.update(mobs);
                 
                 // check for dead intruders
-                if(mob.getAi() == null && mob.stats.getCurrent(MobStats.VITALITY) == 0)
+                if(mob.getAi() == null && 
+                   mob.visuals.color == 0xFF555555 &&     
+                   mob.stats.getCurrent(MobStats.VITALITY) == 0)
                 {
                     killList.add(key);
                 }
