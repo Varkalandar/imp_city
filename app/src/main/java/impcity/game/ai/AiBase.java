@@ -24,25 +24,31 @@ public abstract class AiBase implements Ai
     protected final Point home = new Point(-1, -1);
 
     protected int workStep;
-    protected Point alarmLocation = null;
+
+    /** 
+     * The registry key of the intruder to hunt 
+     */
+    protected int alarmKey;
+    
     
     /**
      * This is called if the AI is called to fight
-     * ar the given location.
-     * @param p the location of the alarm
+     * the given intruder.
+     * @param mobKey The registry key of the intruder
      */
     @Override
-    public void alarm(Point p)
+    public void alarm(int mobKey)
     {
         // we only take one alarm at a time
-        if (alarmLocation == null) 
+        if (alarmKey == 0) 
         {
-            alarmLocation = p;
+            alarmKey = mobKey;
         }
         
-        if (p == null)
+        if (mobKey == 0)
         {
-            alarmLocation = null;
+            // cancel alarm
+            alarmKey = 0;
         }
     }
 

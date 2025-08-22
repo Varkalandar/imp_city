@@ -24,6 +24,7 @@ import static impcity.game.ai.JobPreference.LABORATORY;
 import impcity.game.mobs.Mob;
 import impcity.game.map.LocationPathDestination;
 import impcity.game.map.Map;
+import rlgamekit.objects.Registry;
 import rlgamekit.pathfinding.Area;
 import rlgamekit.pathfinding.Path;
 
@@ -83,7 +84,7 @@ public class CreatureAi extends AiBase
     
 
     @Override
-    public void think(Mob mob) 
+    public void think(Mob mob, Registry<Mob> mobs) 
     {
         // Overrun? restore
         mob.gameMap.setMob(mob.location.x, mob.location.y, mob.getKey());
@@ -133,35 +134,31 @@ public class CreatureAi extends AiBase
         else
         {
             // once we have a lair, alarms have top priority
-            
-            if (alarmLocation == null && goal == Goal.GO_FIGHT)
-            {
-                // alarm is done, go random
-                goal = Goal.GO_RANDOM;
-                mob.setPath(null);
-                mob.visuals.setBubble(0);                
-            }
-            
-            if (alarmLocation != null && goal != Goal.GO_FIGHT)
-            {
-                // called to fight, find path
-                logger.info("Creature " + mob.name + " (" + mob.getKey() + ") was alarmed goes to fight at " + alarmLocation);
-                goal = Goal.GO_FIGHT;
-                mob.setPath(null);
-                mob.visuals.setBubble(Features.BUBBLE_FIGHT);                
-            }
 
-            if (alarmLocation != null && goal == Goal.GO_FIGHT)
-            {               
-                // we are in fight mode, burt sometimes someone else killed the intruder
-                // before we arrived. We eed to clear the alarm if there is no danger anymore
-                
-                if (mob.location.equals(alarmLocation)) {
-                    logger.info("Creature " + mob.name + " (" + mob.getKey() + ") clears the alarm");
-                    alarm(null);
+            Mob intruder = mobs.get(alarmKey);
+
+            // is the intruder still alive?
+            if (intruder != null) 
+            {             
+                if (goal != Goal.GO_FIGHT)
+                {
+                    // called to fight, find path
+                    logger.info("Creature " + mob.name + " (" + mob.getKey() + ") was alarmed goes to fight intruder #" + alarmKey);
+                    goal = Goal.GO_FIGHT;
+                    mob.setPath(null);
+                    mob.visuals.setBubble(Features.BUBBLE_FIGHT);                
+                }
+            }
+            else
+            {
+                // intruder is no longer around
+                if (goal == Goal.GO_FIGHT)
+                {
+                    // alarm is done, go random
                     goal = Goal.GO_RANDOM;
                     mob.setPath(null);
                     mob.visuals.setBubble(0);
+                    alarm(0);
                 }
             }
         }
@@ -329,7 +326,7 @@ public class CreatureAi extends AiBase
     
 
     @Override
-    public void findNewPath(Mob mob) 
+    public void findNewPath(Mob mob, Registry<Mob> mobs) 
     {
         // Hajo Don't think too heavily
         if(pathTime >= Clock.time())
@@ -483,16 +480,23 @@ public class CreatureAi extends AiBase
             mob.visuals.setBubble(Features.BUBBLE_GO_SLEEPING);
         }
         else if(goal == Goal.GO_FIGHT) {
-            logger.info("Creature " + mob.name + " (" + mob.getKey() + ") is alarmed and tries to find a path to " + alarmLocation);
-            Path path = new Path();
             
-            path.findPath(new WayPathSource(mob.gameMap, desc.size, false),
-                          new LocationPathDestination(alarmLocation.x, alarmLocation.y, 0), 
-                          mob.location.x, mob.location.y);
+            Mob intruder = mobs.get(alarmKey);
             
-            mob.setPath(path);
-            // goal = Goal.FIGHT;
-            mob.visuals.setBubble(Features.BUBBLE_FIGHT);
+            if(intruder != null) 
+            {
+                Point alarmLocation = intruder.location;
+                logger.info("Creature " + mob.name + " (" + mob.getKey() + ") is alarmed and tries to find a path to intruder #" + alarmKey);
+                Path path = new Path();
+
+                path.findPath(new WayPathSource(mob.gameMap, desc.size, false),
+                              new LocationPathDestination(alarmLocation.x, alarmLocation.y, 0), 
+                              mob.location.x, mob.location.y);
+
+                mob.setPath(path);
+                // goal = Goal.FIGHT;
+                mob.visuals.setBubble(Features.BUBBLE_FIGHT);
+            }
         }
         else
         {
@@ -700,9 +704,9 @@ public class CreatureAi extends AiBase
     
     
     @Override
-    public void thinkAfterStep(Mob mob) 
+    public void thinkAfterStep(Mob mob, Registry<Mob> mobs) 
     {
-        think(mob);
+        think(mob, mobs);
     }
     
     
@@ -714,6 +718,7 @@ public class CreatureAi extends AiBase
         writer.write("homeY=" + home.y + "\n");
         writer.write("hungry=" + hungry + "\n");
         writer.write("sleepy=" + sleepy + "\n");
+        writer.write("intruder=" + alarmKey + "\n");
     }
     
     
@@ -731,6 +736,8 @@ public class CreatureAi extends AiBase
         hungry = Integer.parseInt(line.substring(7));
         line = reader.readLine();
         sleepy = Integer.parseInt(line.substring(7));
+        line = reader.readLine();
+        alarmKey = Integer.parseInt(line.substring(9));
         
         this.researchTime = Clock.time();
         this.lastThinkTime = Clock.time();

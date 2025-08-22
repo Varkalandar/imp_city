@@ -156,7 +156,7 @@ public class Mob
         return path;
     }
 
-    public boolean advance(SoundPlayer soundPlayer) 
+    public boolean advance(SoundPlayer soundPlayer, Registry<Mob> mobs) 
     {
         long time = System.currentTimeMillis();
         
@@ -231,7 +231,7 @@ public class Mob
         
         if(ai != null)
         {
-            ai.thinkAfterStep(this);
+            ai.thinkAfterStep(this, mobs);
         }
         
         return lastStep;
@@ -308,14 +308,14 @@ public class Mob
                 int dy = location.y - other.location.y;
                 if (dx * dx + dy * dy < Map.SUB) {
                     other.stats.setCurrent(MobStats.VITALITY, 0);
-                    ai.alarm(null);
+                    ai.alarm(0);
                     logger.info("Creature " + name + " (" + getKey() + ") killed the intruder at " + other.location);
                 }
                 else {
                     // go for it
                     // logger.info("Creature " + name + " (" + getKey() + ") is alarmed and called to " + other.location);
                     
-                    ai.alarm(other.location);
+                    ai.alarm(other.key);
                 }
             }
         }        
@@ -326,8 +326,8 @@ public class Mob
             // ... but only if we are still alive
             if(stats.getCurrent(MobStats.VITALITY) > 0)
             {
-                ai.think(this);
-                ai.findNewPath(this);
+                ai.think(this, mobs);
+                ai.findNewPath(this, mobs);
             }
         }
     }

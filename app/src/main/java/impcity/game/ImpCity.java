@@ -404,7 +404,7 @@ public class ImpCity implements PostRenderHook, GameInterface
 
                 if(mob.getPath() != null)
                 {
-                    mob.advance(soundPlayer);
+                    mob.advance(soundPlayer, world.mobs);
 
                     // Hajo: Testing - clean dust from floor
                     cleanDust(mob.gameMap, mob.location);
