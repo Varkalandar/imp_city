@@ -306,7 +306,9 @@ public class Mob
                 // close enough for kill strike?
                 int dx = location.x - other.location.x;
                 int dy = location.y - other.location.y;
-                if (dx * dx + dy * dy < Map.SUB) {
+                int dist2 = dx * dx + dy * dy;
+                
+                if (dist2 < Map.SUB) {
                     other.stats.setCurrent(MobStats.VITALITY, 0);
                     ai.alarm(0);
                     logger.info("Creature " + name + " (" + getKey() + ") killed the intruder at " + other.location);
@@ -315,7 +317,12 @@ public class Mob
                     // go for it
                     // logger.info("Creature " + name + " (" + getKey() + ") is alarmed and called to " + other.location);
                     
-                    ai.alarm(other.key);
+                    // how far can we sense intruders?
+                    // try 10 squares for the moment
+                    if (dist2 < Map.SUB * Map.SUB * 10) 
+                    {
+                        ai.alarm(other.key);
+                    }
                 }
             }
         }        
