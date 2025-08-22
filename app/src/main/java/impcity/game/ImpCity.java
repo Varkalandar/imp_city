@@ -867,9 +867,12 @@ public class ImpCity implements PostRenderHook, GameInterface
                 line = reader.readLine();
                 if("ai=<null>".equals(line))
                 {
-                    // on expedition
-                    mob.visuals.setBubble(0);
-                    mob.visuals.setDisplayCode(Features.I_EXPEDITION_BANNER);
+                    // on expedition if not an intruder
+                    if(mob.visuals.color != 0xFF555555)
+                    {
+                        mob.visuals.setBubble(0);
+                        mob.visuals.setDisplayCode(Features.I_EXPEDITION_BANNER);
+                    }
                 }
                 else
                 {

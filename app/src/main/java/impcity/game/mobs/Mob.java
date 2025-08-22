@@ -379,6 +379,7 @@ public class Mob
         writer.write("ioff=" + iOff + "\n");
         writer.write("joff=" + jOff + "\n");
         writer.write("sped=" + stepsPerSecond + "\n");
+        writer.write("colr=" + visuals.color + "\n");
         writer.write("Mob data end\n");
 
         writer.write("Path data start\n");
@@ -514,6 +515,8 @@ public class Mob
         jOff = Integer.parseInt(line.substring(5));
         line = reader.readLine();
         stepsPerSecond = Integer.parseInt(line.substring(5));
+        line = reader.readLine();
+        visuals.color = Integer.parseInt(line.substring(5));
 
         line = reader.readLine();
     
