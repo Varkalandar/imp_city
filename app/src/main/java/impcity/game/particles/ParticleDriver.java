@@ -132,7 +132,7 @@ public class ParticleDriver
                                     ypos + (particles[base + YPOS] >> 16),
                                     particles[base + COLOR]);
                 
-                System.err.println("ping! " + (xpos + (particles[base + XPOS] >> 16)) + " " + (base + TEXID));
+                // System.err.println("ping! " + (xpos + (particles[base + XPOS] >> 16)) + " " + (base + TEXID));
             }
         }
     }
