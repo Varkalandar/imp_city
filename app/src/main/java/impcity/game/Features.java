@@ -104,6 +104,8 @@ public class Features
 
     public static final int I_EXPEDITION_BANNER = 141;
     
+    public static final int I_DUNGEON_CORE = 316;
+    
     public static final int MESSAGE_IDEA_BLUE = 953;
     public static final int MESSAGE_IDEA_GREEN = 954;
     public static final int MESSAGE_IDEA_RED = 955;

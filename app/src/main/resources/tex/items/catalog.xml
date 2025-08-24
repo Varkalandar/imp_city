@@ -10049,17 +10049,17 @@
       <Description>
         <version>4</version>
         <id>316</id>
-        <width>60</width>
-        <height>49</height>
+        <width>128</width>
+        <height>92</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>67</footX>
+        <footY>79</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string>violet_rainbow_jewel_inv</string>
-        <string>rgba,inv</string>
+        <string>dungeon_core</string>
+        <string>rgba</string>
         <string></string>
         <string></string>
       </Metadata>
@@ -10068,8 +10068,8 @@
       <Description>
         <version>4</version>
         <id>317</id>
-        <width>13</width>
-        <height>10</height>
+        <width>1</width>
+        <height>1</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
         <footX>6</footX>
@@ -10077,8 +10077,8 @@
       </Description>
       <Metadata>
         <int>0</int>
-        <string>violet_rainbow_jewel_map</string>
-        <string>rgba,map</string>
+        <string></string>
+        <string></string>
         <string></string>
         <string></string>
       </Metadata>
@@ -10087,8 +10087,8 @@
       <Description>
         <version>4</version>
         <id>318</id>
-        <width>60</width>
-        <height>49</height>
+        <width>1</width>
+        <height>1</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
         <footX>0</footX>
@@ -10096,8 +10096,8 @@
       </Description>
       <Metadata>
         <int>0</int>
-        <string>blue_rainbow_jewel_inv</string>
-        <string>rgba,inv</string>
+        <string></string>
+        <string></string>
         <string></string>
         <string></string>
       </Metadata>
@@ -10106,8 +10106,8 @@
       <Description>
         <version>4</version>
         <id>319</id>
-        <width>13</width>
-        <height>11</height>
+        <width>1</width>
+        <height>1</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
         <footX>6</footX>
@@ -10115,8 +10115,8 @@
       </Description>
       <Metadata>
         <int>0</int>
-        <string>blue_rainbow_jewel_map</string>
-        <string>rgba,map</string>
+        <string></string>
+        <string></string>
         <string></string>
         <string></string>
       </Metadata>

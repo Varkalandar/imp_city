@@ -337,12 +337,29 @@ public class ImpCity implements PostRenderHook, GameInterface
         playerKey = world.mobs.nextFreeKey();
         world.mobs.put(playerKey, player);
         player.setKey(playerKey);
-        player.visuals.setDisplayCode(0);
+        player.visuals.setDisplayCode(0); // hide player gfx
+
+        buildDungeonCoreRoom(gameMap);
         
         activateMap(gameMap);
         makeImps(gameMap);
     }
 
+    
+    private void buildDungeonCoreRoom(Map map)
+    {
+        for(int y=336; y<336+Map.SUB * 3; y+=Map.SUB)
+        {
+            for(int x=96; x<96 + Map.SUB * 3; x+=Map.SUB)
+            {
+                map.setItem(x, y, 0);
+                map.setFloor(x, y, Features.GROUND_QUAD_TILES + (int)(Math.random() * 3));
+            }
+        }
+
+        map.setItem(112, 352, Features.I_DUNGEON_CORE);
+    }
+    
     
     public static void main(String[] args)
     {
