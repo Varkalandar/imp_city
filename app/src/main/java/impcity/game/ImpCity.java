@@ -37,6 +37,7 @@ import impcity.ogl.GlTextureCache;
 import impcity.game.mobs.Mob;
 import impcity.game.ai.Ai;
 import impcity.game.ai.AiBase;
+import impcity.game.ai.IntruderAi;
 import impcity.game.map.Map;
 import impcity.game.map.RectArea;
 import impcity.game.mobs.MovementJumping;
@@ -331,7 +332,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             LOG.log(Level.SEVERE, mapName, ex);
         }
 
-        player = new Mob(30, 350, Species.GLOBOS_BASE, 0, 0, gameMap, null, 45, new MovementJumping());
+        player = new Mob(30, 350, Species.GLOBOS_BASE, Mob.KIND_DENIZEN, 0, 0, gameMap, null, 45, new MovementJumping());
         player.stats.setCurrent(MobStats.VITALITY, 1);
         
         playerKey = world.mobs.nextFreeKey();
@@ -850,28 +851,24 @@ public class ImpCity implements PostRenderHook, GameInterface
             int species = Integer.parseInt(line.substring(8));
             SpeciesDescription desc = Species.speciesTable.get(species);
 
-
             if(desc == null)
             {
                 LOG.log(Level.INFO, "loading a generator {0}", line);
 
                 // Hajo: this is no real player, only a generator
                 // -> these are re-installed in activateMap, so
-                // we don't need to do anything here
-
+                // we don't need to do anything here but can skip the data
                 do
                 {
                     line = reader.readLine();
-
                 } while(!"AI data end".equals(line));
-
             }
             else
             {
                 LOG.log(Level.INFO, "loading a {0}", desc.name);
 
                 Mob mob;
-                mob = new Mob(0, 0, species, Features.SHADOW_BASE, desc.sleepImage, map, null, desc.speed, desc.move);
+                mob = new Mob(0, 0, species, Mob.KIND_DENIZEN, Features.SHADOW_BASE, desc.sleepImage, map, null, desc.speed, desc.move);
                 mob.read(reader, null);
 
                 line = reader.readLine();
@@ -885,7 +882,7 @@ public class ImpCity implements PostRenderHook, GameInterface
                 if("ai=<null>".equals(line))
                 {
                     // on expedition if not an intruder
-                    if(mob.visuals.color != 0xFF555555)
+                    if(mob.kind == Mob.KIND_DENIZEN)
                     {
                         mob.visuals.setBubble(0);
                         mob.visuals.setDisplayCode(Features.I_EXPEDITION_BANNER);
@@ -901,6 +898,11 @@ public class ImpCity implements PostRenderHook, GameInterface
                     else if(line.contains("CreatureAi"))
                     {
                         ai = new CreatureAi(this);
+                        ai.read(reader);
+                    }
+                    else if(line.contains("IntruderAi"))
+                    {
+                        ai = new IntruderAi(this);
                         ai.read(reader);
                     }
                     else
@@ -1306,7 +1308,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         SpeciesDescription desc = Species.speciesTable.get(Species.IMPS_BASE);
         
         ImpAi impAi = new ImpAi(this);
-        Mob imp = new Mob(x, y, Species.IMPS_BASE, Features.SHADOW_BASE, desc.sleepImage, gameMap, impAi, desc.speed, desc.move);
+        Mob imp = new Mob(x, y, Species.IMPS_BASE, Mob.KIND_IMP, Features.SHADOW_BASE, desc.sleepImage, gameMap, impAi, desc.speed, desc.move);
         imp.stats.setCurrent(MobStats.VITALITY, 1);
         imp.stats.setCurrent(MobStats.GOLD, 0);
 
@@ -1324,14 +1326,14 @@ public class ImpCity implements PostRenderHook, GameInterface
         
         if (ok)
         {
-            SpeciesDescription desc = Species.speciesTable.get(Species.IMPS_BASE);
+            SpeciesDescription desc = Species.speciesTable.get(Species.IMPS_BASE + 1);
 
-            Mob intruder = new Mob(x, y, Species.IMPS_BASE, Features.SHADOW_BASE, desc.sleepImage, gameMap, null, desc.speed, desc.move);
+            Mob intruder = new Mob(x, y, Species.IMPS_BASE, Mob.KIND_INTRUDER, Features.SHADOW_BASE, desc.sleepImage, gameMap, null, desc.speed, desc.move);
             intruder.stats.setCurrent(MobStats.VITALITY, 1);
             // Till there are real intruder graphics, color intruders dark grey
             intruder.visuals.color = 0xFF555555;
             intruder.stats.setCurrent(MobStats.GOLD, 0);
-
+            intruder.setAi(new IntruderAi(this));
             synchronized (world.mobs) {
                 int impKey = world.mobs.nextFreeKey();
                 world.mobs.put(impKey, intruder);
@@ -1730,7 +1732,7 @@ public class ImpCity implements PostRenderHook, GameInterface
     {
         // Hajo: Hack: Generators must be mobs, due to display
         // restrictions. -> They have species 0 as marker!
-        Mob generator = new Mob(x, y, 0, 0, 0, map, null, 0, new MovementJumping());
+        Mob generator = new Mob(x, y, 0, Mob.KIND_DENIZEN, 0, 0, map, null, 0, new MovementJumping());
         generator.stats.setCurrent(MobStats.GENERATOR, type);
         generator.stats.setCurrent(MobStats.VITALITY, 1);
                 
@@ -2054,7 +2056,7 @@ public class ImpCity implements PostRenderHook, GameInterface
                 {
                     Mob mob = world.mobs.get(key.intValue());
 
-                    if(mob.stats.getCurrent(MobStats.VITALITY) == 0) {
+                    if(mob.kind == Mob.KIND_DENIZEN && mob.stats.getCurrent(MobStats.VITALITY) == 0) {
                         int chances = mob.stats.getCurrent(MobStats.GHOST_STEPS);
                         if(chances > 0)
                         {

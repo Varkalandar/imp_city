@@ -26,6 +26,11 @@ import rlgamekit.stats.Stats;
 public class Mob
 {
     public static final Logger logger = Logger.getLogger(Mob.class.getName());
+
+
+    public static final int KIND_DENIZEN = 0;
+    public static final int KIND_IMP = 1;
+    public static final int KIND_INTRUDER = 2;
     
     public static final int SLOT_HEAD = 0;
     public static final int SLOT_BODY = 1;
@@ -46,6 +51,7 @@ public class Mob
     
     private Ai ai;
     public boolean isDying;
+    public int kind;
 
     public Ai getAi() 
     {
@@ -111,10 +117,11 @@ public class Mob
         this.key = key;
     }
                 
-    public Mob(int playerX, int playerY, int species, int shadow, int sleep, Map gameMap, Ai ai, int speed, MovementPattern pattern)
+    public Mob(int playerX, int playerY, int species, int kind, int shadow, int sleep, Map gameMap, Ai ai, int speed, MovementPattern pattern)
     {
         this.visuals = new MobVisuals(shadow, sleep);
         this.species = species;
+        this.kind = kind;
         this.gameMap = gameMap;
         this.location = new Point(playerX, playerY);
         
@@ -295,10 +302,8 @@ public class Mob
         for(Cardinal key : keys)
         {
             Mob other = mobs.get(key.intValue());
-            // intruders should have a better identification
             // -> Only denizens attack intruders
-            if (ai != null && 
-                visuals.color != 0xFF555555 && other.visuals.color == 0xFF555555 &&
+            if (ai != null && kind == KIND_DENIZEN && other.kind == KIND_INTRUDER &&
                 other.stats.getCurrent(MobStats.VITALITY) > 0) 
             {
                 intruderFound = true;
@@ -312,13 +317,23 @@ public class Mob
                     other.stats.setCurrent(MobStats.VITALITY, 0);
                     ai.alarm(0);
                     logger.info("Creature " + name + " (" + getKey() + ") killed the intruder at " + other.location);
+                    addExperience(20);
                 }
                 else {
                     // go for it
-                    // logger.info("Creature " + name + " (" + getKey() + ") is alarmed and called to " + other.location);
+                    // logger.info("Creature #" + getKey() + "(kind=" + kind + ") is alarmed and called to attack intruder #" + other.key);
                     
                     // how far can we sense intruders?
                     // try 10 squares for the moment
+                    if (dist2 < Map.SUB * Map.SUB * 10) 
+                    {
+                        ai.alarm(other.key);
+                    }
+                    
+                    // if the intruder is near the dungeon core, always alarm
+                    dx = 112 - other.location.x;
+                    dy = 352 - other.location.y;
+                    dist2 = dx * dx + dy * dy;
                     if (dist2 < Map.SUB * Map.SUB * 10) 
                     {
                         ai.alarm(other.key);
@@ -376,6 +391,7 @@ public class Mob
         writer.write("ypos=" + location.y + "\n");
 
         writer.write("spec=" + species + "\n");
+        writer.write("kind=" + kind + "\n");
         writer.write("ioff=" + iOff + "\n");
         writer.write("joff=" + jOff + "\n");
         writer.write("sped=" + stepsPerSecond + "\n");
@@ -509,6 +525,8 @@ public class Mob
 
         line = reader.readLine();
         species = Integer.parseInt(line.substring(5));
+        line = reader.readLine();
+        kind = Integer.parseInt(line.substring(5));
         line = reader.readLine();
         iOff = Integer.parseInt(line.substring(5));
         line = reader.readLine();

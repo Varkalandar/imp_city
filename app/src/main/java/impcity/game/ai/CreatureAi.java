@@ -95,10 +95,10 @@ public class CreatureAi extends AiBase
             work(mob);
         }
         
-        // Hajo Don't think too heavily
+        // Is it time to think yet?
         if(thinkTime >= Clock.time())
         {
-            // cool head, erm CPU
+            // Not yet, keep a cool head, erm CPU
             // System.err.println("Mob=" + mob.getKey() + " AI skips thinking.");
             return;
         }
@@ -141,7 +141,7 @@ public class CreatureAi extends AiBase
             // -> at times the alarmKey has become obsolete and now points to a
             //    normal creature. Needs extra check if the mob is actually an
             //    intruder
-            if (intruder != null && intruder.visuals.color == 0xFF555555) 
+            if (intruder != null && intruder.kind == Mob.KIND_INTRUDER) 
             {             
                 if (goal != Goal.GO_FIGHT)
                 {
@@ -150,6 +150,30 @@ public class CreatureAi extends AiBase
                     goal = Goal.GO_FIGHT;
                     mob.setPath(null);
                     mob.visuals.setBubble(Features.BUBBLE_FIGHT);                
+                }
+                if (goal == Goal.GO_FIGHT)
+                {
+                    // intruders move, we need to update our path now and then
+                    Path currentPath = mob.getPath();
+                    
+                    if(currentPath != null)
+                    {
+                        Path.Node node = currentPath.getStep(currentPath.length() - 1);
+
+                        Mob other = mobs.get(alarmKey);
+
+                        if(other != null && other.stats.getCurrent(MobStats.VITALITY) > 0) {
+                            // our target is still around and alive
+                            int dx = other.location.x - node.x;
+                            int dy = other.location.y - node.y;
+                            int dist2 = dx * dx + dy * dy;
+
+                            if (dist2 > Map.SUB) {
+                                // out of strike range, we need a new path
+                                mob.setPath(null);
+                            }
+                        }
+                    }
                 }
             }
             else

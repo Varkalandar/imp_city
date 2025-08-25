@@ -262,6 +262,32 @@ public class Species
                                        JobPreference.LABORATORY
                 );
 
+        SpeciesDescription evilImps = 
+                new SpeciesDescription("EvilImp", 
+                                       2,
+                                       IMPS_BASE, 
+                                       139,             // sleep image
+                                       397 | Map.F_FLOOR_DECO,               // lair type
+                                       2,                 // lair size
+                                       new MovementJumping(),
+                                       4,                // speed
+                                       -1,               // starting sound
+                                       new RoomRequirements(
+                                            999,   // lairs 
+                                            999,   // farms
+                                            999,   // treasury
+                                            999,   // libraries
+                                            999,   // forges
+                                            0,
+                                            0      // gold or silver coins
+                                        ),
+                                       3,                 // intelligence
+                                       1,                 // combat
+                                       1,                 // stealth
+                                       1,                 // carrying capacity
+                                       JobPreference.LAZY
+                );
+
         speciesTable.put(GLOBOS_BASE, globos);
         speciesTable.put(CONIANS_BASE, conians);
         speciesTable.put(IMPS_BASE, imps);
@@ -271,5 +297,6 @@ public class Species
         speciesTable.put(BOOKWORMS_BASE, bookworms);
         speciesTable.put(MOSQUITOES_BASE, mosquitoes);
         speciesTable.put(HAT_MAGE_BASE, hatMages);
+        speciesTable.put(IMPS_BASE + 1, evilImps);
     }
 }
