@@ -99,6 +99,8 @@ public class ImpCity implements PostRenderHook, GameInterface
     public final RoomList libraryRooms = new RoomList();
     public final RoomList labRooms = new RoomList();
     
+    public final Point coreLocation = new Point(112, 352);
+    
     public final List <Mob> generators = Collections.synchronizedList(new ArrayList<>());
     public final List <Quest> quests = Collections.synchronizedList(new ArrayList<>());
 
@@ -262,6 +264,19 @@ public class ImpCity implements PostRenderHook, GameInterface
         
         DungeonSweepingThread dst = new DungeonSweepingThread(this, gameDisplay, display);
         dst.start();
+        /*
+        GenericMessage message = 
+                new GenericMessage(gameDisplay, 600, 400,
+                       "Go big!", 
+                       "Collect four artifacts to gain power and break the barrier which encloses the dungeon.", 
+                       "[Acknowledged]", null);        
+
+        MessageHook hookedMessage =
+                new MessageHook(Features.MESSAGE_ARTIFACT_QUEST,
+                                message);
+
+        gameDisplay.addHookedMessage(hookedMessage);
+        */
         
         display.run();
     }
@@ -358,7 +373,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             }
         }
 
-        map.setItem(112, 352, Features.I_DUNGEON_CORE);
+        map.setItem(coreLocation.x, coreLocation.y, Features.I_DUNGEON_CORE);
     }
     
     

@@ -395,31 +395,53 @@ public class CreatureAi extends AiBase
         }
         else if(goal == Goal.GO_RANDOM)
         {
-            Area area = new Area();
-            area.findArea(new WayPathSource(mob.gameMap, desc.size, false),
-                          mob.location.x, mob.location.y);
+            // sometimes creatures visit the dungeon heart instead of just
+            // going to a random location
             
-            ArrayList <Point> locations = area.getArea();
-
-            if(locations.isEmpty())
+            if(Math.random() < 0.3)
             {
-                logger.log(Level.WARNING, "Creature #{0} is stuck at {1}, {2} and will be warped home.",
-                        new Object[]{mob.getKey(), mob.location.x, mob.location.y});
-
-                mob.teleportTo(home);
-            }
-            else
-            {
-                Point p = locations.get((int) (Math.random() * locations.size()));
-
+                double angle = Math.random() * Math.PI * 2.0;
+                int x = (int)(Math.cos(angle) * Map.SUB * 0.75);
+                int y = (int)(Math.cos(angle) * Map.SUB * 0.75);
+                
                 Path path = new Path();
 
                 path.findPath(new WayPathSource(mob.gameMap, desc.size, false),
-                        new LocationPathDestination(p.x, p.y, 0),
-                        mob.location.x, mob.location.y);
+                              new LocationPathDestination(x, y, 0),
+                              mob.location.x, mob.location.y);
 
                 mob.setPath(path);
                 goal = Goal.GOING;
+            }
+            else
+            {
+                // go to a random place in reach from current location
+                Area area = new Area();
+                area.findArea(new WayPathSource(mob.gameMap, desc.size, false),
+                              mob.location.x, mob.location.y);
+
+                ArrayList <Point> locations = area.getArea();
+
+                if(locations.isEmpty())
+                {
+                    logger.log(Level.WARNING, "Creature #{0} is stuck at {1}, {2} and will be warped home.",
+                            new Object[]{mob.getKey(), mob.location.x, mob.location.y});
+
+                    mob.teleportTo(home);
+                }
+                else
+                {
+                    Point p = locations.get((int) (Math.random() * locations.size()));
+
+                    Path path = new Path();
+
+                    path.findPath(new WayPathSource(mob.gameMap, desc.size, false),
+                                  new LocationPathDestination(p.x, p.y, 0),
+                                  mob.location.x, mob.location.y);
+
+                    mob.setPath(path);
+                    goal = Goal.GOING;
+                }
             }
         }
         else if(goal == Goal.FIND_FOOD)
