@@ -1630,7 +1630,8 @@ public class ImpCity implements PostRenderHook, GameInterface
         // restrictions. -> They have species 0 as marker!
         Mob generator = new Mob(x, y, 0, 0, 0, map, null, 0, new MovementJumping());
         generator.stats.setCurrent(MobStats.GENERATOR, type);
-                
+        generator.stats.setCurrent(MobStats.VITALITY, 1);
+
         int key = world.mobs.nextFreeKey();
         generator.setKey(key);
         generator.zOff = z << 16;
