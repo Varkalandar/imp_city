@@ -264,7 +264,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         
         DungeonSweepingThread dst = new DungeonSweepingThread(this, gameDisplay, display);
         dst.start();
-        /*
+
         GenericMessage message = 
                 new GenericMessage(gameDisplay, 600, 400,
                        "Go big!", 
@@ -276,7 +276,6 @@ public class ImpCity implements PostRenderHook, GameInterface
                                 message);
 
         gameDisplay.addHookedMessage(hookedMessage);
-        */
         
         display.run();
     }
