@@ -21,7 +21,8 @@ public class KeeperStats
     
     // Stats 3 to 5 are used in Mob update
     // for mana and vitality
-
+    public static final int LIFE = 4;
+    
     // Bitfield, see RESEARCH_XXX values
     public static final int RESEARCH = 6;
     public static final int RESEARCH_QUEST = 7;
@@ -48,6 +49,11 @@ public class KeeperStats
     public static final int MANA = 8;
     
     
+    // Life constants
+    public static final int LIFE_START = 1000;
+    public static final int LIFE_BASE_MAX = 1000;
+    public static final int LIFE_BASE_GROWTH = 1;
+
     // Mana constants
     public static final int MANA_START = 400;
     public static final int MANA_BASE_MAX = 1000;

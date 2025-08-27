@@ -2144,6 +2144,14 @@ public class ImpCity implements PostRenderHook, GameInterface
             {
                 keeper.stats.setCurrent(KeeperStats.MANA, mana);
             }
+            
+            int life = keeper.stats.getCurrent(KeeperStats.LIFE);
+            life += KeeperStats.LIFE_BASE_GROWTH;
+            
+            if(life < keeper.stats.getMax(KeeperStats.LIFE)) 
+            {
+                keeper.stats.setCurrent(KeeperStats.LIFE, life);
+            }
         }
     }
 }

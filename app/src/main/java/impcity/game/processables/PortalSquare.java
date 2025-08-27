@@ -84,7 +84,7 @@ public class PortalSquare implements Processable
             }
 
             // Sometimes we get intruders instead of minions
-            if (time > 80000 && Math.random() < 0.725) {
+            if (time > 80000 && Math.random() < 0.25) {
                 int sx = x + Map.SUB/3;
                 int sy = y + Map.SUB/2 + (int)(Math.random() * 2);
 

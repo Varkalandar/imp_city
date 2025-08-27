@@ -250,14 +250,17 @@ public class GameDisplay
 
         IsoDisplay.fillRect(0, 0, display.displayWidth, 24, 0x77000000);
 
-        drawMenuText("Mana " + keeper.stats.getCurrent(KeeperStats.MANA) + "/" + keeper.stats.getMax(KeeperStats.MANA), 
+        drawMenuText("Life " + keeper.stats.getCurrent(KeeperStats.LIFE) + "/" + keeper.stats.getMax(KeeperStats.LIFE), 
         		     textColor, textLeft, 2, 0.6);
+
+        drawMenuText("Mana " + keeper.stats.getCurrent(KeeperStats.MANA) + "/" + keeper.stats.getMax(KeeperStats.MANA), 
+        		     textColor, textLeft + 170, 2, 0.6);
         
-        drawMenuText(calcReputationDisplay(keeper), textColor, textLeft + 250, 2, 0.6);
+        drawMenuText(calcReputationDisplay(keeper), textColor, textLeft + 340, 2, 0.6);
         drawMenuText("" + keeper.stats.getMax(KeeperStats.COINS) + " Gold, " +
                         keeper.stats.getCurrent(KeeperStats.COINS) + " Silver, " +
                         keeper.stats.getMin(KeeperStats.COINS) + " Copper",
-                        textColor, textLeft + 450, 2, 0.6);
+                        textColor, textLeft + 480, 2, 0.6);
         drawMenuText("" + game.calcCurrentCreatureCount() + "/" + game.calcMaxCreatureCount() + " Creatures",
                         textColor, textLeft + 810, 2, 0.6);
     }

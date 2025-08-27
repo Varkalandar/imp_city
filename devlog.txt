@@ -1,3 +1,7 @@
+Changes since v0.28.3
+
+- Life stat for dungeon core
+
 Changes since v0.28.2
 
 - Ghostyard rooms, where dead creatures can be buried with a chance
@@ -10,7 +14,7 @@ Changes since v0.28.2
 - Evil tin can knights intrude the dungeon randomly. Creatures go to fight
   the tin can knights.
 - Dungeon got a dungeon core
-- Mana and life stats for dungeon core
+- Mana stat for dungeon core
 
 Changes since v0.28.1
 
