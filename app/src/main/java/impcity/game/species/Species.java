@@ -22,6 +22,7 @@ public class Species
     public static final int BOOKWORMS_BASE = 81;
     public static final int MOSQUITOES_BASE = 89;
     public static final int HAT_MAGE_BASE = 129;
+    public static final int TIN_CAN_KNIGHT_BASE = 150;
 
     public static final HashMap<Integer, SpeciesDescription> speciesTable = new HashMap<Integer, SpeciesDescription>();
 
@@ -262,12 +263,12 @@ public class Species
                                        JobPreference.LABORATORY
                 );
 
-        SpeciesDescription evilImps = 
-                new SpeciesDescription("EvilImp", 
+        SpeciesDescription tinCanKnights = 
+                new SpeciesDescription("Tin Can Knight", 
                                        2,
-                                       IMPS_BASE, 
-                                       139,             // sleep image
-                                       397 | Map.F_FLOOR_DECO,               // lair type
+                                       TIN_CAN_KNIGHT_BASE, 
+                                       TIN_CAN_KNIGHT_BASE,             // sleep image
+                                       397 | Map.F_FLOOR_DECO,          // lair type
                                        2,                 // lair size
                                        new MovementJumping(),
                                        4,                // speed
@@ -281,8 +282,8 @@ public class Species
                                             0,
                                             0      // gold or silver coins
                                         ),
-                                       3,                 // intelligence
-                                       1,                 // combat
+                                       2,                 // intelligence
+                                       3,                 // combat
                                        1,                 // stealth
                                        1,                 // carrying capacity
                                        JobPreference.LAZY
@@ -297,6 +298,6 @@ public class Species
         speciesTable.put(BOOKWORMS_BASE, bookworms);
         speciesTable.put(MOSQUITOES_BASE, mosquitoes);
         speciesTable.put(HAT_MAGE_BASE, hatMages);
-        speciesTable.put(IMPS_BASE + 1, evilImps);
+        speciesTable.put(TIN_CAN_KNIGHT_BASE, tinCanKnights);
     }
 }

@@ -1340,12 +1340,11 @@ public class ImpCity implements PostRenderHook, GameInterface
         
         if (ok)
         {
-            SpeciesDescription desc = Species.speciesTable.get(Species.IMPS_BASE + 1);
+            SpeciesDescription desc = Species.speciesTable.get(Species.TIN_CAN_KNIGHT_BASE);
 
-            Mob intruder = new Mob(x, y, Species.IMPS_BASE, Mob.KIND_INTRUDER, Features.SHADOW_BASE, desc.sleepImage, gameMap, null, desc.speed, desc.move);
+            Mob intruder = new Mob(x, y, Species.TIN_CAN_KNIGHT_BASE, Mob.KIND_INTRUDER, Features.SHADOW_BASE, desc.sleepImage, gameMap, null, desc.speed, desc.move);
             intruder.stats.setCurrent(MobStats.VITALITY, 1);
-            // Till there are real intruder graphics, color intruders dark grey
-            intruder.visuals.color = 0xFF555555;
+
             intruder.stats.setCurrent(MobStats.GOLD, 0);
             intruder.setAi(new IntruderAi(this));
             synchronized (world.mobs) {
