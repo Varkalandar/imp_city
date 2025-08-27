@@ -237,8 +237,8 @@ public class IsoDisplay implements PostRenderHook
         newDisplaySize.height = displayHeight = height;
         
         GL11.glMatrixMode(GL11.GL_PROJECTION);
-	    GL11.glLoadIdentity();
-	    GL11.glOrtho(0, displayWidth, 0, displayHeight, 1, -1);
+        GL11.glLoadIdentity();
+        GL11.glOrtho(0, displayWidth, 0, displayHeight, 1, -1);
         GL11.glViewport(0, 0, displayWidth, displayHeight);
         exitOnGLError("glViewport");
     }
@@ -662,13 +662,9 @@ public class IsoDisplay implements PostRenderHook
                     frameCount = 0;
                 }
                 
-                
                 if(newDisplaySize.width != displayWidth || newDisplaySize.height != displayHeight)
                 {
-                    displayWidth = newDisplaySize.width;
-                    displayHeight = newDisplaySize.height;
-
-                    resizeGL(displayWidth, displayHeight);
+                    resizeGL(newDisplaySize.width, newDisplaySize.height);
                 }
                 
                 keyHandler.processKeyboard();
