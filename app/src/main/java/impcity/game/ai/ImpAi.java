@@ -15,7 +15,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -635,7 +634,6 @@ public class ImpAi extends AiBase
             int item = mob.stats.getCurrent(MobStats.CARRY);
 
             mob.visuals.setBubble(0);
-            mob.gameMap.dropItem(mob.location.x, mob.location.y, item, (x, y) -> {});
             mob.stats.setCurrent(MobStats.CARRY, 0);
 
             if(Features.isCoins(item))

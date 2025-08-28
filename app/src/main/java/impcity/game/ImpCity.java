@@ -1796,7 +1796,6 @@ public class ImpCity implements PostRenderHook, GameInterface
 
     public void reactivateReturningCreatures(Quest quest)
     {
-        Mob keeper = world.mobs.get(getPlayerKey());
         int count = 0;
         
         for(int key : quest.party.members)
@@ -1834,8 +1833,8 @@ public class ImpCity implements PostRenderHook, GameInterface
                 // give them some experience
                 mob.addExperience(200);
 
-                // now line them up 
-                Point p = keeper.location;
+                // now line them up near the portal
+                Point p = new Point(19, 354);
 
                 mob.location.x = p.x;
                 mob.location.y = p.y + count * 2 - quest.party.members.size();
@@ -1910,7 +1909,7 @@ public class ImpCity implements PostRenderHook, GameInterface
 
             Mob keeper = world.mobs.get(getPlayerKey());
             Map map = keeper.gameMap;
-            Point location = keeper.location;
+            Point location = new Point(19, 354);
 
             int item;
 

@@ -2,6 +2,8 @@ Changes since v0.28.4
 
 - Mining marks don't cost mana anymore
 - Creatures on expeditions don't create mana anymore
+- Coins and artifacts no longer become duplicated upon being dropped
+  by an imp
 
 Changes since v0.28.3
 
