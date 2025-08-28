@@ -92,6 +92,8 @@ public class Clock
     
     public static void read(BufferedReader reader) throws IOException
     {
+        Clock.init(System.currentTimeMillis());
+
         String line;
         line = reader.readLine();
         elapsedTime = Long.parseLong(line.substring(5));

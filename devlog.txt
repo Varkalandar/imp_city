@@ -1,5 +1,8 @@
 Changes since v0.28.4
 
+- Mining marks don't cost mana anymore
+- Creatures on expeditions don't create mana anymore
+
 Changes since v0.28.3
 
 - Life stat for dungeon core

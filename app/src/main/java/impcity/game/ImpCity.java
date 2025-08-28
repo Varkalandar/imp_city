@@ -348,6 +348,7 @@ public class ImpCity implements PostRenderHook, GameInterface
 
         player = new Mob(coreLocation.x, coreLocation.y, Species.GLOBOS_BASE, Mob.KIND_DENIZEN, 0, 0, gameMap, null, 45, new MovementJumping());
         player.stats.setCurrent(MobStats.VITALITY, 1);
+        player.stats.setCurrent(MobStats.EXPERIENCE, 20);
         
         playerKey = world.mobs.nextFreeKey();
         world.mobs.put(playerKey, player);
@@ -1325,6 +1326,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         Mob imp = new Mob(x, y, Species.IMPS_BASE, Mob.KIND_IMP, Features.SHADOW_BASE, desc.sleepImage, gameMap, impAi, desc.speed, desc.move);
         imp.stats.setCurrent(MobStats.VITALITY, 1);
         imp.stats.setCurrent(MobStats.GOLD, 0);
+        imp.stats.setCurrent(MobStats.EXPERIENCE, 20);
 
         synchronized (world.mobs) {
             int impKey = world.mobs.nextFreeKey();
@@ -1745,7 +1747,7 @@ public class ImpCity implements PostRenderHook, GameInterface
     {
         // Hajo: Hack: Generators must be mobs, due to display
         // restrictions. -> They have species 0 as marker!
-        Mob generator = new Mob(x, y, 0, Mob.KIND_DENIZEN, 0, 0, map, null, 0, new MovementJumping());
+        Mob generator = new Mob(x, y, 0, Mob.KIND_GENERATOR, 0, 0, map, null, 0, new MovementJumping());
         generator.stats.setCurrent(MobStats.GENERATOR, type);
         generator.stats.setCurrent(MobStats.VITALITY, 1);
                 
@@ -2129,12 +2131,19 @@ public class ImpCity implements PostRenderHook, GameInterface
             {
                 Mob mob = world.mobs.get(key.intValue());
                 
-                if(mob.kind == Mob.KIND_DENIZEN && mob.getAi() != null)
+                if(mob.kind == Mob.KIND_DENIZEN || mob.kind == Mob.KIND_IMP)
                 {
-                    mana += KeeperStats.MANA_CREATURE_GROWTH + mob.getLevel();
+                    // LOG.info("mob #" + mob.getKey() + " has level=" + mob.getLevel());
+                    if(mob.getAi() == null) {
+                        // on expedition, creates less mana
+                        mana += 1 + mob.getLevel();
+                    }
+                    else
+                    {
+                        mana += KeeperStats.MANA_CREATURE_GROWTH + mob.getLevel();
+                    }
                 }
             }
-            
             
             // rooms upkeep
                         
@@ -2148,7 +2157,14 @@ public class ImpCity implements PostRenderHook, GameInterface
             mana -= hospitals.size() * KeeperStats.MANA_HOSPITAL_COST;
             mana -= ghostyards.size() * KeeperStats.MANA_GHOSTYARD_COST;
             mana -= claimed.size() * KeeperStats.MANA_CLAIMED_SQUARE_COST;
+         
+            LOG.info("mana=" + mana);
             
+            if(mana < 0) 
+            {
+                mana = 0;  // don't go below 0
+            }
+
             if(mana < keeper.stats.getMax(KeeperStats.MANA)) 
             {
                 keeper.stats.setCurrent(KeeperStats.MANA, mana);

@@ -31,6 +31,7 @@ public class Mob
     public static final int KIND_DENIZEN = 0;
     public static final int KIND_IMP = 1;
     public static final int KIND_INTRUDER = 2;
+    public static final int KIND_GENERATOR = 3;
     
     public static final int SLOT_HEAD = 0;
     public static final int SLOT_BODY = 1;
@@ -611,7 +612,7 @@ public class Mob
         visuals.setDisplayCode(species);
 
         // Hajo: give pre-experience-code saved mobs some basic experience after loading
-        if(stats.getCurrent(MobStats.EXPERIENCE) == 0)
+        if(stats.getCurrent(MobStats.EXPERIENCE) <= 0)
         {
             stats.setCurrent(MobStats.EXPERIENCE, MobStats.BEGINNER_EXPERIENCE);
         }
