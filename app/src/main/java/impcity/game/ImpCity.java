@@ -2123,9 +2123,18 @@ public class ImpCity implements PostRenderHook, GameInterface
             int mana = keeper.stats.getCurrent(KeeperStats.MANA);
             
             mana += KeeperStats.MANA_BASE_GROWTH;
-            mana += calcCurrentCreatureCount() * KeeperStats.MANA_CREATURE_GROWTH;
             
-            // TODO: creatures on expeditions should not grant mana
+            Set<Cardinal> keys = world.mobs.keySet();
+            for(Cardinal key:  keys)
+            {
+                Mob mob = world.mobs.get(key.intValue());
+                
+                if(mob.kind == Mob.KIND_DENIZEN && mob.getAi() != null)
+                {
+                    mana += KeeperStats.MANA_CREATURE_GROWTH + mob.getLevel();
+                }
+            }
+            
             
             // rooms upkeep
                         
