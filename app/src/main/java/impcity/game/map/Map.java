@@ -69,6 +69,15 @@ public class Map implements Serializable
     public int darkness;
 
 
+    public static Point randomCirclePoint(int centerX, int centerY, int radius)
+    {
+        double angle = Math.random() * Math.PI * 2.0;
+        int x = (int)(Math.cos(angle) * radius);
+        int y = (int)(Math.cos(angle) * radius);
+        return new Point(centerX + x, centerY + y);
+    }
+    
+    
     public Map(int width, int height)
     {
         this.lights = new ArrayList <Light> ();

@@ -399,15 +399,13 @@ public class CreatureAi extends AiBase
             // going to a random location
             
             if(Math.random() < 0.3)
-            {
-                double angle = Math.random() * Math.PI * 2.0;
-                int x = (int)(Math.cos(angle) * Map.SUB * 0.75);
-                int y = (int)(Math.cos(angle) * Map.SUB * 0.75);
+            {              
+                Point p = Map.randomCirclePoint(game.coreLocation.x, game.coreLocation.y, Map.SUB * 3 / 4);
                 
                 Path path = new Path();
 
                 path.findPath(new WayPathSource(mob.gameMap, desc.size, false),
-                              new LocationPathDestination(x, y, 0),
+                              new LocationPathDestination(p.x, p.y, 0),
                               mob.location.x, mob.location.y);
 
                 mob.setPath(path);

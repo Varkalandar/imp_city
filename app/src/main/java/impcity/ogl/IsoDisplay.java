@@ -240,9 +240,13 @@ public class IsoDisplay implements PostRenderHook
         int res = java.awt.Toolkit.getDefaultToolkit().getScreenResolution();   
         
         logger.log(Level.INFO, "Adjusting for res {0}", res);
-                
-        int scaledWidth = displayWidth * res / 96;
-        int scaledHeight = displayHeight * res / 96;
+           
+        // Doesn't have the desired effect. Disabled for now
+        // int scaledWidth = displayWidth * res / 96;
+        // int scaledHeight = displayHeight * res / 96;
+
+        int scaledWidth = displayWidth;
+        int scaledHeight = displayHeight;
         
         GL11.glMatrixMode(GL11.GL_PROJECTION);
         GL11.glLoadIdentity();

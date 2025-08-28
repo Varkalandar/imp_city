@@ -346,7 +346,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             LOG.log(Level.SEVERE, mapName, ex);
         }
 
-        player = new Mob(30, 350, Species.GLOBOS_BASE, Mob.KIND_DENIZEN, 0, 0, gameMap, null, 45, new MovementJumping());
+        player = new Mob(coreLocation.x, coreLocation.y, Species.GLOBOS_BASE, Mob.KIND_DENIZEN, 0, 0, gameMap, null, 45, new MovementJumping());
         player.stats.setCurrent(MobStats.VITALITY, 1);
         
         playerKey = world.mobs.nextFreeKey();

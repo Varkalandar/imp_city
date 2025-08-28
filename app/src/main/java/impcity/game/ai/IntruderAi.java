@@ -1,10 +1,11 @@
 package impcity.game.ai;
 
 import impcity.game.Clock;
-import impcity.game.Features;
 import impcity.game.ImpCity;
 import impcity.game.map.Map;
+import impcity.game.map.LocationPathDestination;
 import impcity.game.mobs.Mob;
+import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Writer;
@@ -70,10 +71,12 @@ public class IntruderAi extends AiBase
         {
             Map map = mob.gameMap;
             
+            Point p = Map.randomCirclePoint(game.coreLocation.x, game.coreLocation.y, Map.SUB * 3 / 4);
+            
             Path path = new Path();
             boolean ok = 
                 path.findPath(new WayPathSource(map, 3, false),
-                              new FeaturePathDestination(map, Features.I_DUNGEON_CORE, 0, 0, -1),
+                              new LocationPathDestination(p.x, p.y, 0),
                               mob.location.x, mob.location.y);
             
             if(ok)

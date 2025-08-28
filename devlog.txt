@@ -1,3 +1,5 @@
+Changes since v0.28.4
+
 Changes since v0.28.3
 
 - Life stat for dungeon core
