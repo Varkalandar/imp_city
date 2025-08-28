@@ -231,17 +231,26 @@ public class IsoDisplay implements PostRenderHook
         glDisable(GL_DEPTH_TEST);
     }
 
+    
     public void resizeGL(int width, int height)
     {
         newDisplaySize.width = displayWidth = width;
         newDisplaySize.height = displayHeight = height;
         
+        int res = java.awt.Toolkit.getDefaultToolkit().getScreenResolution();   
+        
+        logger.log(Level.INFO, "Adjusting for res {0}", res);
+                
+        int scaledWidth = displayWidth * res / 96;
+        int scaledHeight = displayHeight * res / 96;
+        
         GL11.glMatrixMode(GL11.GL_PROJECTION);
         GL11.glLoadIdentity();
-        GL11.glOrtho(0, displayWidth, 0, displayHeight, 1, -1);
-        GL11.glViewport(0, 0, displayWidth, displayHeight);
+        GL11.glOrtho(0, scaledWidth, 0, scaledHeight, 1, -1);
+        GL11.glViewport(0, 0, scaledWidth, scaledHeight);
         exitOnGLError("glViewport");
     }
+    
 
     public void render(long currentTime)
     {
