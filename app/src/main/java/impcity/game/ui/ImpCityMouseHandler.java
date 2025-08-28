@@ -155,25 +155,25 @@ public class ImpCityMouseHandler implements MouseHandler
         int ground = map.getFloor(rasterI, rasterJ);
         int block = map.getItem(rasterI + Map.O_BLOCK, rasterJ + Map.O_BLOCK) & Map.F_IDENT_MASK;
 
-        if (game.payMana(KeeperStats.MANA_DIG_BLOCK_COST))
+        if(Features.canBeDug(ground, block))
         {
-            if(Features.canBeDug(ground, block))
+            if (game.payMana(KeeperStats.MANA_DIG_BLOCK_COST))
             {
                 createExcavationJob(map, rasterI, rasterJ);
                 game.payMana(KeeperStats.MANA_DIG_BLOCK_COST);
             }
-            else if(Features.canBeMined(ground, block))
+            else 
             {
-                createMiningJob(map, rasterI, rasterJ);
+                TimedMessage tm = new TimedMessage("Not enough mana!",
+                                       Colors.BRIGHT_GOLD_INK,
+                                       Mouse.getX(), Mouse.getY() + 20,
+                                       Clock.time(), 0.3);
+                gameDisplay.addMessage(tm);
             }
         }
-        else 
+        else if(Features.canBeMined(ground, block))
         {
-            TimedMessage tm = new TimedMessage("Not enough mana!",
-                                   Colors.BRIGHT_GOLD_INK,
-                                   Mouse.getX(), Mouse.getY() + 20,
-                                   Clock.time(), 0.3);
-            gameDisplay.addMessage(tm);
+            createMiningJob(map, rasterI, rasterJ);
         }
     }
 
