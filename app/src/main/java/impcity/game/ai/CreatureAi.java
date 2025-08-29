@@ -5,7 +5,6 @@ import impcity.game.ImpCity;
 import impcity.game.KeeperStats;
 import impcity.game.jobs.JobFetchItem;
 import impcity.game.jobs.JobQueue;
-import impcity.game.room.Room;
 import impcity.game.Sounds;
 import impcity.game.species.Species;
 import impcity.game.species.SpeciesDescription;
@@ -21,9 +20,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import impcity.game.Clock;
 import impcity.game.Direction;
+import static impcity.game.ai.JobPreference.LABORATORY;
 import impcity.game.mobs.Mob;
 import impcity.game.map.LocationPathDestination;
 import impcity.game.map.Map;
+import rlgamekit.objects.Registry;
 import rlgamekit.pathfinding.Area;
 import rlgamekit.pathfinding.Path;
 
@@ -45,6 +46,7 @@ public class CreatureAi extends AiBase
         GO_RANDOM, GOING,
         FIND_FOOD, FEEDING,
         FIND_WORKPLACE, GO_WORK, WORKING,
+        GO_FIGHT, FIGHT,
     }
     
     private Goal goal;
@@ -82,21 +84,21 @@ public class CreatureAi extends AiBase
     
 
     @Override
-    public void think(Mob mob) 
+    public void think(Mob mob, Registry<Mob> mobs) 
     {
         // Overrun? restore
         mob.gameMap.setMob(mob.location.x, mob.location.y, mob.getKey());
-
+      
         // Hajo: animated goals must be processed every step
         if(goal == Goal.WORKING)
         {
             work(mob);
         }
         
-        // Hajo Don't think too heavily
+        // Is it time to think yet?
         if(thinkTime >= Clock.time())
         {
-            // cool head, erm CPU
+            // Not yet, keep a cool head, erm CPU
             // System.err.println("Mob=" + mob.getKey() + " AI skips thinking.");
             return;
         }
@@ -127,6 +129,64 @@ public class CreatureAi extends AiBase
             if(goal != Goal.BUILD_LAIR)
             {
                 goal = Goal.FIND_LAIR;
+            }
+        }
+        else
+        {
+            // once we have a lair, alarms have top priority
+
+            Mob intruder = mobs.get(alarmKey);
+
+            // is the intruder still alive?
+            // -> at times the alarmKey has become obsolete and now points to a
+            //    normal creature. Needs extra check if the mob is actually an
+            //    intruder
+            if (intruder != null && intruder.kind == Mob.KIND_INTRUDER) 
+            {             
+                if (goal != Goal.GO_FIGHT)
+                {
+                    // called to fight, find path
+                    logger.info("Creature " + mob.name + " (" + mob.getKey() + ") was alarmed goes to fight intruder #" + alarmKey);
+                    goal = Goal.GO_FIGHT;
+                    mob.setPath(null);
+                    mob.visuals.setBubble(Features.BUBBLE_FIGHT);                
+                }
+                if (goal == Goal.GO_FIGHT)
+                {
+                    // intruders move, we need to update our path now and then
+                    Path currentPath = mob.getPath();
+                    
+                    if(currentPath != null)
+                    {
+                        Path.Node node = currentPath.getStep(currentPath.length() - 1);
+
+                        Mob other = mobs.get(alarmKey);
+
+                        if(other != null && other.stats.getCurrent(MobStats.VITALITY) > 0) {
+                            // our target is still around and alive
+                            int dx = other.location.x - node.x;
+                            int dy = other.location.y - node.y;
+                            int dist2 = dx * dx + dy * dy;
+
+                            if (dist2 > Map.SUB) {
+                                // out of strike range, we need a new path
+                                mob.setPath(null);
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // intruder is no longer around
+                if (goal == Goal.GO_FIGHT)
+                {
+                    // alarm is done, go random
+                    goal = Goal.GO_RANDOM;
+                    mob.setPath(null);
+                    mob.visuals.setBubble(0);
+                    alarm(0);
+                }
             }
         }
         
@@ -293,7 +353,7 @@ public class CreatureAi extends AiBase
     
 
     @Override
-    public void findNewPath(Mob mob) 
+    public void findNewPath(Mob mob, Registry<Mob> mobs) 
     {
         // Hajo Don't think too heavily
         if(pathTime >= Clock.time())
@@ -335,31 +395,51 @@ public class CreatureAi extends AiBase
         }
         else if(goal == Goal.GO_RANDOM)
         {
-            Area area = new Area();
-            area.findArea(new WayPathSource(mob.gameMap, desc.size, false),
-                          mob.location.x, mob.location.y);
+            // sometimes creatures visit the dungeon heart instead of just
+            // going to a random location
             
-            ArrayList <Point> locations = area.getArea();
-
-            if(locations.isEmpty())
-            {
-                logger.log(Level.WARNING, "Creature #{0} is stuck at {1}, {2} and will be warped home.",
-                        new Object[]{mob.getKey(), mob.location.x, mob.location.y});
-
-                mob.teleportTo(home);
-            }
-            else
-            {
-                Point p = locations.get((int) (Math.random() * locations.size()));
-
+            if(Math.random() < 0.3)
+            {              
+                Point p = Map.randomCirclePoint(game.coreLocation.x, game.coreLocation.y, Map.SUB * 3 / 4);
+                
                 Path path = new Path();
 
                 path.findPath(new WayPathSource(mob.gameMap, desc.size, false),
-                        new LocationPathDestination(p.x, p.y, 0),
-                        mob.location.x, mob.location.y);
+                              new LocationPathDestination(p.x, p.y, 0),
+                              mob.location.x, mob.location.y);
 
                 mob.setPath(path);
                 goal = Goal.GOING;
+            }
+            else
+            {
+                // go to a random place in reach from current location
+                Area area = new Area();
+                area.findArea(new WayPathSource(mob.gameMap, desc.size, false),
+                              mob.location.x, mob.location.y);
+
+                ArrayList <Point> locations = area.getArea();
+
+                if(locations.isEmpty())
+                {
+                    logger.log(Level.WARNING, "Creature #{0} is stuck at {1}, {2} and will be warped home.",
+                            new Object[]{mob.getKey(), mob.location.x, mob.location.y});
+
+                    mob.teleportTo(home);
+                }
+                else
+                {
+                    Point p = locations.get((int) (Math.random() * locations.size()));
+
+                    Path path = new Path();
+
+                    path.findPath(new WayPathSource(mob.gameMap, desc.size, false),
+                                  new LocationPathDestination(p.x, p.y, 0),
+                                  mob.location.x, mob.location.y);
+
+                    mob.setPath(path);
+                    goal = Goal.GOING;
+                }
             }
         }
         else if(goal == Goal.FIND_FOOD)
@@ -446,6 +526,30 @@ public class CreatureAi extends AiBase
             goal = Goal.SLEEP;
             mob.visuals.setBubble(Features.BUBBLE_GO_SLEEPING);
         }
+        else if(goal == Goal.GO_FIGHT) {
+            
+            Mob intruder = mobs.get(alarmKey);
+            
+            if(intruder != null) 
+            {
+                Point alarmLocation = intruder.location;
+                logger.info("Creature " + mob.name + " (" + mob.getKey() + ") is alarmed and tries to find a path to intruder #" + alarmKey + " at " + alarmLocation);
+                Path path = new Path();
+
+                path.findPath(new WayPathSource(mob.gameMap, desc.size, false),
+                              new LocationPathDestination(alarmLocation.x, alarmLocation.y, 0), 
+                              mob.location.x, mob.location.y);
+
+                mob.setPath(path);
+                // goal = Goal.FIGHT;
+                mob.visuals.setBubble(Features.BUBBLE_FIGHT);
+            }
+            else
+            {
+                // intruder is no longer around
+                alarm(0);
+            }
+        }
         else
         {
             // no other goals yet
@@ -481,7 +585,10 @@ public class CreatureAi extends AiBase
         switch(desc.jobPreference)
         {
             case FARM:
-                workplaces = game.getFarmlandLocations();
+                workplaces = game.getInnerFarmlandLocations();
+                if (workplaces.isEmpty()) {
+                    workplaces = game.getFarmlandLocations();
+                }
                 break;
             case LIBRARY:
                 workplaces = game.getLibraries();
@@ -601,6 +708,11 @@ public class CreatureAi extends AiBase
                 }
                 break;
 
+            case FARM:
+                p = new Point();
+                p.x = work.x + (int) (Math.random() * Map.SUB);
+                p.y = work.y + (int) (Math.random() * Map.SUB);
+                break;
             default:
                 p = new Point();
                 // around the middle ...
@@ -644,9 +756,9 @@ public class CreatureAi extends AiBase
     
     
     @Override
-    public void thinkAfterStep(Mob mob) 
+    public void thinkAfterStep(Mob mob, Registry<Mob> mobs) 
     {
-        think(mob);
+        think(mob, mobs);
     }
     
     
@@ -658,6 +770,7 @@ public class CreatureAi extends AiBase
         writer.write("homeY=" + home.y + "\n");
         writer.write("hungry=" + hungry + "\n");
         writer.write("sleepy=" + sleepy + "\n");
+        writer.write("intruder=" + alarmKey + "\n");
     }
     
     
@@ -675,6 +788,8 @@ public class CreatureAi extends AiBase
         hungry = Integer.parseInt(line.substring(7));
         line = reader.readLine();
         sleepy = Integer.parseInt(line.substring(7));
+        line = reader.readLine();
+        alarmKey = Integer.parseInt(line.substring(9));
         
         this.researchTime = Clock.time();
         this.lastThinkTime = Clock.time();
@@ -950,7 +1065,7 @@ public class CreatureAi extends AiBase
     private void spreadSeedlings(Mob mob) 
     {
         Map map = mob.gameMap;
-        int radius = Map.SUB + 8;
+        int radius = Map.SUB + 10;
         int xr = (int)(Math.random() * radius) - radius / 2;
         int yr = (int)(Math.random() * radius) - radius / 2;
 
@@ -958,7 +1073,7 @@ public class CreatureAi extends AiBase
         int dist2 = xr*xr + yr*yr;
 
         // must be inside circle
-        ok &= dist2 < (Map.SUB+1) * (Map.SUB+1) / 4;
+        ok &= dist2 < radius * radius / 4;
                 
         xr += mob.location.x;
         yr += mob.location.y;

@@ -1,9 +1,27 @@
+Changes since v0.28.4
+
+- Mining marks don't cost mana anymore
+- Creatures on expeditions create less mana than dungeon residents
+- Coins and artifacts no longer become duplicated upon being dropped
+  by an imp
+
+Changes since v0.28.3
+
+- Life stat for dungeon core
+
 Changes since v0.28.2
 
 - Ghostyard rooms, where dead creatures can be buried with a chance
   to return as a ghost.
 - Ghosts get +2 stealth, +1 scouting bonus, but have a carry capacity
   of zero.
+- Dungeon keeper gains mana over time, rooms cost upkeep in mana.
+- Spells have a mana cost now.
+- Powersnails try harder to find good locations for planting crops.
+- Evil tin can knights intrude the dungeon randomly. Creatures go to fight
+  the tin can knights.
+- Dungeon got a dungeon core
+- Mana stat for dungeon core
 
 Changes since v0.28.1
 

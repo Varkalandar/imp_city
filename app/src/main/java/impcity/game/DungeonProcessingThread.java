@@ -212,5 +212,5 @@ public class DungeonProcessingThread extends Thread
                                                     Features.P_SILVER_SPARK_1 + (int)(Math.random()*5),
                                                     0xA0000000 | (Colors.randomColor(200, 55, 55, 55) & 0xFFFFFF));
 
- }
+    }
 }

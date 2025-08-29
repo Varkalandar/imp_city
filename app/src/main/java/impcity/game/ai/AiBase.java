@@ -25,6 +25,33 @@ public abstract class AiBase implements Ai
 
     protected int workStep;
 
+    /** 
+     * The registry key of the intruder to hunt 
+     */
+    protected int alarmKey;
+    
+    
+    /**
+     * This is called if the AI is called to fight
+     * the given intruder.
+     * @param mobKey The registry key of the intruder
+     */
+    @Override
+    public void alarm(int mobKey)
+    {
+        // we only take one alarm at a time
+        if (alarmKey == 0) 
+        {
+            alarmKey = mobKey;
+        }
+        
+        if (mobKey == 0)
+        {
+            // cancel alarm
+            alarmKey = 0;
+        }
+    }
+
     
     @Override
     public boolean isLair(Mob mob, int x, int y)

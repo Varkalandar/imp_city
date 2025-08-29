@@ -37,6 +37,7 @@ import impcity.ogl.GlTextureCache;
 import impcity.game.mobs.Mob;
 import impcity.game.ai.Ai;
 import impcity.game.ai.AiBase;
+import impcity.game.ai.IntruderAi;
 import impcity.game.map.Map;
 import impcity.game.map.RectArea;
 import impcity.game.mobs.MovementJumping;
@@ -97,6 +98,8 @@ public class ImpCity implements PostRenderHook, GameInterface
     public final RoomList forgeRooms = new RoomList();
     public final RoomList libraryRooms = new RoomList();
     public final RoomList labRooms = new RoomList();
+    
+    public final Point coreLocation = new Point(112, 352);
     
     public final List <Mob> generators = Collections.synchronizedList(new ArrayList<>());
     public final List <Quest> quests = Collections.synchronizedList(new ArrayList<>());
@@ -261,6 +264,18 @@ public class ImpCity implements PostRenderHook, GameInterface
         
         DungeonSweepingThread dst = new DungeonSweepingThread(this, gameDisplay, display);
         dst.start();
+
+        GenericMessage message = 
+                new GenericMessage(gameDisplay, 600, 400,
+                       "Go big!", 
+                       "Collect four artifacts to gain power and break the barrier which encloses the dungeon.", 
+                       "[Acknowledged]", null);        
+
+        MessageHook hookedMessage =
+                new MessageHook(Features.MESSAGE_ARTIFACT_QUEST,
+                                message);
+
+        gameDisplay.addHookedMessage(hookedMessage);
         
         display.run();
     }
@@ -331,17 +346,36 @@ public class ImpCity implements PostRenderHook, GameInterface
             LOG.log(Level.SEVERE, mapName, ex);
         }
 
-        player = new Mob(30, 350, Species.GLOBOS_BASE, 0, 0, gameMap, null, 45, new MovementJumping());
+        player = new Mob(coreLocation.x, coreLocation.y, Species.GLOBOS_BASE, Mob.KIND_DENIZEN, 0, 0, gameMap, null, 45, new MovementJumping());
         player.stats.setCurrent(MobStats.VITALITY, 1);
+        player.stats.setCurrent(MobStats.EXPERIENCE, 20);
+        
         playerKey = world.mobs.nextFreeKey();
         world.mobs.put(playerKey, player);
         player.setKey(playerKey);
-        player.visuals.setDisplayCode(0);
+        player.visuals.setDisplayCode(0); // hide player gfx
+
+        buildDungeonCoreRoom(gameMap);
         
         activateMap(gameMap);
         makeImps(gameMap);
     }
 
+    
+    private void buildDungeonCoreRoom(Map map)
+    {
+        for(int y=336; y<336+Map.SUB * 3; y+=Map.SUB)
+        {
+            for(int x=96; x<96 + Map.SUB * 3; x+=Map.SUB)
+            {
+                map.setItem(x, y, 0);
+                map.setFloor(x, y, Features.GROUND_QUAD_TILES + (int)(Math.random() * 3));
+            }
+        }
+
+        map.setItem(coreLocation.x, coreLocation.y, Features.I_DUNGEON_CORE);
+    }
+    
     
     public static void main(String[] args)
     {
@@ -403,7 +437,7 @@ public class ImpCity implements PostRenderHook, GameInterface
 
                 if(mob.getPath() != null)
                 {
-                    mob.advance(soundPlayer);
+                    mob.advance(soundPlayer, world.mobs);
 
                     // Hajo: Testing - clean dust from floor
                     cleanDust(mob.gameMap, mob.location);
@@ -832,28 +866,24 @@ public class ImpCity implements PostRenderHook, GameInterface
             int species = Integer.parseInt(line.substring(8));
             SpeciesDescription desc = Species.speciesTable.get(species);
 
-
             if(desc == null)
             {
                 LOG.log(Level.INFO, "loading a generator {0}", line);
 
                 // Hajo: this is no real player, only a generator
                 // -> these are re-installed in activateMap, so
-                // we don't need to do anything here
-
+                // we don't need to do anything here but can skip the data
                 do
                 {
                     line = reader.readLine();
-
                 } while(!"AI data end".equals(line));
-
             }
             else
             {
                 LOG.log(Level.INFO, "loading a {0}", desc.name);
 
                 Mob mob;
-                mob = new Mob(0, 0, species, Features.SHADOW_BASE, desc.sleepImage, map, null, desc.speed, desc.move);
+                mob = new Mob(0, 0, species, Mob.KIND_DENIZEN, Features.SHADOW_BASE, desc.sleepImage, map, null, desc.speed, desc.move);
                 mob.read(reader, null);
 
                 line = reader.readLine();
@@ -866,9 +896,12 @@ public class ImpCity implements PostRenderHook, GameInterface
                 line = reader.readLine();
                 if("ai=<null>".equals(line))
                 {
-                    // on expedition
-                    mob.visuals.setBubble(0);
-                    mob.visuals.setDisplayCode(Features.I_EXPEDITION_BANNER);
+                    // on expedition if not an intruder
+                    if(mob.kind == Mob.KIND_DENIZEN)
+                    {
+                        mob.visuals.setBubble(0);
+                        mob.visuals.setDisplayCode(Features.I_EXPEDITION_BANNER);
+                    }
                 }
                 else
                 {
@@ -880,6 +913,11 @@ public class ImpCity implements PostRenderHook, GameInterface
                     else if(line.contains("CreatureAi"))
                     {
                         ai = new CreatureAi(this);
+                        ai.read(reader);
+                    }
+                    else if(line.contains("IntruderAi"))
+                    {
+                        ai = new IntruderAi(this);
                         ai.read(reader);
                     }
                     else
@@ -1285,13 +1323,40 @@ public class ImpCity implements PostRenderHook, GameInterface
         SpeciesDescription desc = Species.speciesTable.get(Species.IMPS_BASE);
         
         ImpAi impAi = new ImpAi(this);
-        Mob imp = new Mob(x, y, Species.IMPS_BASE, Features.SHADOW_BASE, desc.sleepImage, gameMap, impAi, desc.speed, desc.move);
+        Mob imp = new Mob(x, y, Species.IMPS_BASE, Mob.KIND_IMP, Features.SHADOW_BASE, desc.sleepImage, gameMap, impAi, desc.speed, desc.move);
         imp.stats.setCurrent(MobStats.VITALITY, 1);
-        int impKey = world.mobs.nextFreeKey();
-        world.mobs.put(impKey, imp);
-        imp.setKey(impKey);
-        
         imp.stats.setCurrent(MobStats.GOLD, 0);
+        imp.stats.setCurrent(MobStats.EXPERIENCE, 20);
+
+        synchronized (world.mobs) {
+            int impKey = world.mobs.nextFreeKey();
+            world.mobs.put(impKey, imp);
+            imp.setKey(impKey);
+        }        
+    }
+    
+
+    public boolean spawnIntruder(Map gameMap, int x, int y) 
+    {
+        boolean ok = !gameMap.isMovementBlockedRadius(x, y, 7);
+        
+        if (ok)
+        {
+            SpeciesDescription desc = Species.speciesTable.get(Species.TIN_CAN_KNIGHT_BASE);
+
+            Mob intruder = new Mob(x, y, Species.TIN_CAN_KNIGHT_BASE, Mob.KIND_INTRUDER, Features.SHADOW_BASE, desc.sleepImage, gameMap, null, desc.speed, desc.move);
+            intruder.stats.setCurrent(MobStats.VITALITY, 1);
+
+            intruder.stats.setCurrent(MobStats.GOLD, 0);
+            intruder.setAi(new IntruderAi(this));
+            synchronized (world.mobs) {
+                int impKey = world.mobs.nextFreeKey();
+                world.mobs.put(impKey, intruder);
+                intruder.setKey(impKey);
+            }
+        }
+        
+        return ok;
     }
     
 
@@ -1464,6 +1529,45 @@ public class ImpCity implements PostRenderHook, GameInterface
     }
     
 
+    private boolean checkIsFarmland(List<FarmSquare> locations, int x, int y)
+    {        
+        for(FarmSquare farm : farmland)
+        {
+            if (farm.x == x && farm.y == y)
+            {            
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Farmland locations which are surrounded by farmland.
+     * These are the best locations for farming and first choice in
+     * job location search
+     * @return A list of suitable locations
+     */
+    public List<Point> getInnerFarmlandLocations() 
+    {
+        List<Point> result = new ArrayList<>(32);
+            
+        for(FarmSquare farm : farmland)
+        {
+            if ( checkIsFarmland(farmland, farm.x + Map.SUB, farm.y) &&
+                 checkIsFarmland(farmland, farm.x - Map.SUB, farm.y) &&
+                 checkIsFarmland(farmland, farm.x, farm.y + Map.SUB) &&
+                 checkIsFarmland(farmland, farm.x, farm.y - Map.SUB) )
+            {
+                Point p = new Point(farm.x, farm.y);
+                result.add(p);
+            }
+        }
+        
+        return result;
+    }
+
+
     /**
      * The player starts with a restricted area. This method is used to set these walls
      * and later to remover them again
@@ -1566,6 +1670,21 @@ public class ImpCity implements PostRenderHook, GameInterface
     }
 
 
+    public boolean payMana(int howmuch)
+    {
+            Mob keeper = world.mobs.get(getPlayerKey());
+        int mana = keeper.stats.getCurrent(KeeperStats.MANA);
+
+        if(mana >= howmuch) 
+        {
+            keeper.stats.setCurrent(KeeperStats.MANA, mana - howmuch);
+            return true;
+        }
+        
+        return false;
+    }
+    
+    
     public void makeTreasureQuest()
     {
         // debug quest book, add some extra quests
@@ -1628,16 +1747,18 @@ public class ImpCity implements PostRenderHook, GameInterface
     {
         // Hajo: Hack: Generators must be mobs, due to display
         // restrictions. -> They have species 0 as marker!
-        Mob generator = new Mob(x, y, 0, 0, 0, map, null, 0, new MovementJumping());
+        Mob generator = new Mob(x, y, 0, Mob.KIND_GENERATOR, 0, 0, map, null, 0, new MovementJumping());
         generator.stats.setCurrent(MobStats.GENERATOR, type);
         generator.stats.setCurrent(MobStats.VITALITY, 1);
-
+                
         int key = world.mobs.nextFreeKey();
         generator.setKey(key);
         generator.zOff = z << 16;
         world.mobs.put(key, generator);
         map.setMob(x, y, key);
         generators.add(generator);
+    
+        LOG.info("Adding particle generator at " + x + ", " + y + " type=" + type + " with key=" + key);
     }
 
 
@@ -1675,7 +1796,6 @@ public class ImpCity implements PostRenderHook, GameInterface
 
     public void reactivateReturningCreatures(Quest quest)
     {
-        Mob keeper = world.mobs.get(getPlayerKey());
         int count = 0;
         
         for(int key : quest.party.members)
@@ -1713,8 +1833,8 @@ public class ImpCity implements PostRenderHook, GameInterface
                 // give them some experience
                 mob.addExperience(200);
 
-                // now line them up 
-                Point p = keeper.location;
+                // now line them up near the portal
+                Point p = new Point(19, 354);
 
                 mob.location.x = p.x;
                 mob.location.y = p.y + count * 2 - quest.party.members.size();
@@ -1743,10 +1863,10 @@ public class ImpCity implements PostRenderHook, GameInterface
             LOG.log(Level.INFO, "No grave available for creature #" + mob.getKey());
             removeCreature(mob.getKey());
         }
-	}
+    }
 
 
-	public void removeCreature(int key)
+    public void removeCreature(int key)
     {
         LOG.log(Level.INFO, "Removing creature {0} from the world.", key);
         
@@ -1789,7 +1909,7 @@ public class ImpCity implements PostRenderHook, GameInterface
 
             Mob keeper = world.mobs.get(getPlayerKey());
             Map map = keeper.gameMap;
-            Point location = keeper.location;
+            Point location = new Point(19, 354);
 
             int item;
 
@@ -1927,7 +2047,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         {
             for(int j=-d; j<=d; j++)
             {
-                map.setColor(p.x + i * Map.SUB, p.y + j * Map.SUB, 0xFFA0A0A0);
+                map.setColor(p.x + i * Map.SUB, p.y + j * Map.SUB, 0xFF909090);
             }            
         }
     }
@@ -1939,19 +2059,21 @@ public class ImpCity implements PostRenderHook, GameInterface
         @Override
         public void newDay(int days)
         {
-        	ArrayList <Cardinal> killList = new ArrayList<Cardinal>();
-        	
-        	// each midnight, dead creatures get a chance to return as ghost
-        	
-        	Set <Cardinal>keys = world.mobs.keySet();
-        	for(Cardinal key : keys)
-        	{
-                    Mob mob = world.mobs.get(key.intValue());
-                    if(mob.stats.getCurrent(MobStats.VITALITY) <= 0) {
+            ArrayList <Cardinal> killList = new ArrayList<Cardinal>();
 
-        		int chances = mob.stats.getCurrent(MobStats.GHOST_STEPS);
-        		if(chances > 0)
-        		{
+            // each midnight, dead creatures get a chance to return as ghost
+
+            synchronized(world.mobs) 
+            {
+                Set <Cardinal>keys = world.mobs.keySet();
+                for(Cardinal key : keys)
+                {
+                    Mob mob = world.mobs.get(key.intValue());
+
+                    if(mob.kind == Mob.KIND_DENIZEN && mob.stats.getCurrent(MobStats.VITALITY) == 0) {
+                        int chances = mob.stats.getCurrent(MobStats.GHOST_STEPS);
+                        if(chances > 0)
+                        {
                             if(Math.random() < 0.5)
                             {
                                 turnGraveIntoLair(mob.gameMap, mob);
@@ -1960,9 +2082,9 @@ public class ImpCity implements PostRenderHook, GameInterface
                             {
                                 mob.stats.setCurrent(MobStats.GHOST_STEPS, chances - 1);
                             }
-        		}
-        		else
-        		{
+                        }
+                        else
+                        {
                             // dead for real
                             killList.add(key);
 
@@ -1970,17 +2092,18 @@ public class ImpCity implements PostRenderHook, GameInterface
                             int rasterI = (mob.location.x / Map.SUB) * Map.SUB;
                             int rasterJ = (mob.location.y / Map.SUB) * Map.SUB;
                             Map map = mob.gameMap;
-        			
+
                             resetSquare(map, rasterI, rasterJ);
                             map.setFloor(rasterI, rasterJ, Features.GROUND_GHOSTYARD + (int)(Math.random() * 1));
                         }
                     }
-        	}
-        	
-        	for(Cardinal key : killList)
-        	{
-        		removeCreature(key.intValue());
-        	}
+                }
+
+                for(Cardinal key : killList)
+                {
+                    removeCreature(key.intValue());
+                }
+            }
         }
 
         @Override
@@ -1991,6 +2114,68 @@ public class ImpCity implements PostRenderHook, GameInterface
             
             reputation = reputation - reputation / 16;
             keeper.stats.setCurrent(KeeperStats.REPUTATION, reputation);
+            
+            processManaEconomy();
+        }
+        
+        private void processManaEconomy()
+        {
+            Mob keeper = world.mobs.get(getPlayerKey());
+            int mana = keeper.stats.getCurrent(KeeperStats.MANA);
+            
+            mana += KeeperStats.MANA_BASE_GROWTH;
+            
+            Set<Cardinal> keys = world.mobs.keySet();
+            for(Cardinal key:  keys)
+            {
+                Mob mob = world.mobs.get(key.intValue());
+                
+                if(mob.kind == Mob.KIND_DENIZEN || mob.kind == Mob.KIND_IMP)
+                {
+                    // LOG.info("mob #" + mob.getKey() + " has level=" + mob.getLevel());
+                    if(mob.getAi() == null) {
+                        // on expedition, creates less mana
+                        mana += 1 + mob.getLevel();
+                    }
+                    else
+                    {
+                        mana += KeeperStats.MANA_CREATURE_GROWTH + mob.getLevel();
+                    }
+                }
+            }
+            
+            // rooms upkeep
+                        
+            mana -= farmland.size() * KeeperStats.MANA_FARMLAND_COST;
+            mana -= portals.size() * KeeperStats.MANA_PORTAL_COST;
+            mana -= lairs.size() * KeeperStats.MANA_LAIR_COST;
+            mana -= treasuries.size() * KeeperStats.MANA_TREASURY_COST;
+            mana -= libraries.size() * KeeperStats.MANA_LIBRARY_COST;
+            mana -= forges.size() * KeeperStats.MANA_FORGE_COST;
+            mana -= labs.size() * KeeperStats.MANA_LABORATORY_COST;
+            mana -= hospitals.size() * KeeperStats.MANA_HOSPITAL_COST;
+            mana -= ghostyards.size() * KeeperStats.MANA_GHOSTYARD_COST;
+            mana -= claimed.size() * KeeperStats.MANA_CLAIMED_SQUARE_COST;
+         
+            LOG.info("mana=" + mana);
+            
+            if(mana < 0) 
+            {
+                mana = 0;  // don't go below 0
+            }
+
+            if(mana < keeper.stats.getMax(KeeperStats.MANA)) 
+            {
+                keeper.stats.setCurrent(KeeperStats.MANA, mana);
+            }
+            
+            int life = keeper.stats.getCurrent(KeeperStats.LIFE);
+            life += KeeperStats.LIFE_BASE_GROWTH;
+            
+            if(life < keeper.stats.getMax(KeeperStats.LIFE)) 
+            {
+                keeper.stats.setCurrent(KeeperStats.LIFE, life);
+            }
         }
     }
 }

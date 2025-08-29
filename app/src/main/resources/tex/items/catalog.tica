@@ -9521,16 +9521,16 @@ null
 Tile Description
 v.5
 316
-60 49
+128 92
 0 0
-0 0
+67 79
 End Of Header
 Item
 v.1
 data
 4
-violet_rainbow_jewel_inv
-rgba,inv
+dungeon_core
+rgba
 
 
 1
@@ -9539,7 +9539,7 @@ rgba,inv
 Tile Description
 v.5
 317
-13 10
+1 1
 0 0
 6 9
 End Of Header
@@ -9547,8 +9547,8 @@ Item
 v.1
 data
 4
-violet_rainbow_jewel_map
-rgba,map
+
+
 
 
 1
@@ -9557,7 +9557,7 @@ rgba,map
 Tile Description
 v.5
 318
-60 49
+1 1
 0 0
 0 0
 End Of Header
@@ -9565,8 +9565,8 @@ Item
 v.1
 data
 4
-blue_rainbow_jewel_inv
-rgba,inv
+
+
 
 
 1
@@ -9575,7 +9575,7 @@ rgba,inv
 Tile Description
 v.5
 319
-13 11
+1 1
 0 0
 6 9
 End Of Header
@@ -9583,8 +9583,8 @@ Item
 v.1
 data
 4
-blue_rainbow_jewel_map
-rgba,map
+
+
 
 
 1
@@ -21743,7 +21743,7 @@ null
 Tile Description
 v.5
 995
-1 1
+20 16
 0 0
 0 0
 End Of Header
@@ -21751,8 +21751,8 @@ Item
 v.1
 data
 4
-
-
+bubble_fight
+rgba
 
 null
 1

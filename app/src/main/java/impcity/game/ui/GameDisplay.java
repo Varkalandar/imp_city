@@ -35,6 +35,7 @@ public class GameDisplay
     private final static int defaultButtonColor = 0xFFCCCCCC;
     // private final static int selectedButtonColor = 0xFFFFDD99;
     private final static int selectedButtonColor = 0xFFB0F030;
+    private final static int lackingManaButtonColor = 0xFFF0B030;
     private final static int disabledButtonColor = 0x70CCCCCC;
     private final static int toolTipColor = Colors.BRIGHT_SILVER_INK;
 
@@ -249,14 +250,19 @@ public class GameDisplay
 
         IsoDisplay.fillRect(0, 0, display.displayWidth, 24, 0x77000000);
 
-        drawMenuText("Rookie", textColor, textLeft, 2, 0.6);
-        drawMenuText(calcReputationDisplay(keeper), textColor, textLeft + 200, 2, 0.6);
+        drawMenuText("Life " + keeper.stats.getCurrent(KeeperStats.LIFE) + "/" + keeper.stats.getMax(KeeperStats.LIFE), 
+        		     textColor, textLeft, 2, 0.6);
+
+        drawMenuText("Mana " + keeper.stats.getCurrent(KeeperStats.MANA) + "/" + keeper.stats.getMax(KeeperStats.MANA), 
+        		     textColor, textLeft + 170, 2, 0.6);
+        
+        drawMenuText(calcReputationDisplay(keeper), textColor, textLeft + 340, 2, 0.6);
         drawMenuText("" + keeper.stats.getMax(KeeperStats.COINS) + " Gold, " +
                         keeper.stats.getCurrent(KeeperStats.COINS) + " Silver, " +
                         keeper.stats.getMin(KeeperStats.COINS) + " Copper",
-                        textColor, textLeft + 400, 2, 0.6);
+                        textColor, textLeft + 480, 2, 0.6);
         drawMenuText("" + game.calcCurrentCreatureCount() + "/" + game.calcMaxCreatureCount() + " Creatures",
-                        textColor, textLeft + 760, 2, 0.6);
+                        textColor, textLeft + 810, 2, 0.6);
     }
 
 
@@ -318,6 +324,7 @@ public class GameDisplay
         Mob keeper = game.world.mobs.get(game.getPlayerKey());
         int research = keeper.stats.getCurrent(KeeperStats.RESEARCH);
 
+        boolean costCovered = true;
         boolean enabled = true;
         int color;
 
@@ -332,14 +339,30 @@ public class GameDisplay
             case MAKE_HOSPITAL:
                 enabled = (research & KeeperStats.RESEARCH_HEALING) != 0;
                 break;
+            case MARK_DIG:
+                enabled = true;
+                costCovered = keeper.stats.getCurrent(KeeperStats.MANA) >= KeeperStats.MANA_DIG_BLOCK_COST;
+                break;
+            case SPELL_IMP:
+                enabled = true;
+                int imps = game.countMobs(Species.IMPS_BASE);
+                int cost = Math.max(1, imps - 3) * KeeperStats.MANA_SPAWN_IMP_COST;
+                costCovered = keeper.stats.getCurrent(KeeperStats.MANA) >= cost;
+                break;
         }
 
         if(enabled) {
             if (Tools.selected == tool) {
-                color = selectedButtonColor;
+                if (costCovered) {
+                    color = selectedButtonColor;
+                }
+                else {
+                    color = lackingManaButtonColor;
+                }
             } else {
                 color = defaultButtonColor;
             }
+            
         }
         else
         {
@@ -380,46 +403,53 @@ public class GameDisplay
 
         IsoDisplay.drawTile(buttonDemolish, left + 640, top, 60, 60, calculateButtonColor(Tools.DEMOLISH));
         
-        int tipY = 108;
+        int tipY = 112;
         int n = calculateTabButtonNumber(Mouse.getX(), Mouse.getY());
 
         if(n == 0)
         {
             drawMenuText("Mark a block for digging", toolTipColor, 70, tipY, 0.6);
+            drawMenuText("Cost: " + KeeperStats.MANA_DIG_BLOCK_COST + " mana", toolTipColor, 70, tipY-18, 0.5);
         }
         else if(n == 1)
         {
             drawMenuText("Build lair space for your creatures", toolTipColor, 140, tipY, 0.6);
+            drawMenuText("Upkeep: " + KeeperStats.MANA_LAIR_COST + " mana/hour", toolTipColor, 140, tipY-18, 0.5);
         }
         else if(n == 2)
         {
             drawMenuText("Convert floor to farmland", toolTipColor, 210, tipY, 0.6);
+            drawMenuText("Upkeep: " + KeeperStats.MANA_FARMLAND_COST + " mana/hour", toolTipColor, 210, tipY-18, 0.5);
         }
         else if(n == 3)
         {
             drawMenuText("Set up a library", toolTipColor, 280, tipY, 0.6);
+            drawMenuText("Upkeep: " + KeeperStats.MANA_LIBRARY_COST + " mana/hour", toolTipColor, 280, tipY-18, 0.5);
         }
         else if(n == 4)
         {
             drawMenuText("Make a treasury", toolTipColor, 350, tipY, 0.6);
+            drawMenuText("Upkeep: " + KeeperStats.MANA_TREASURY_COST + " mana/hour", toolTipColor, 350, tipY-18, 0.5);
         }
         else if(n == 5)
         {
             drawMenuText("Build a laboratory", toolTipColor, 440, tipY, 0.6);
-            drawMenuText("Cost: 1 Copper", Colors.BRIGHT_GOLD_INK, 440+30, tipY-18, 0.4);
+            drawMenuText("Cost: 1 Copper Upkeep: " + KeeperStats.MANA_LABORATORY_COST + " mana/hour", toolTipColor, 440, tipY-18, 0.5);
         }
         else if(n == 6)
         {
             drawMenuText("Create a forge", toolTipColor, 490, tipY, 0.6);
+            drawMenuText("Upkeep: " + KeeperStats.MANA_FORGE_COST + " mana/hour", toolTipColor, 490, tipY-18, 0.5);
         }
         else if(n == 7)
         {
             drawMenuText("Place a healing well", toolTipColor, 560, tipY, 0.6);
-            drawMenuText("Cost: 5 Copper", Colors.BRIGHT_GOLD_INK, 560+40, tipY-18, 0.4);
+            drawMenuText("Cost: 5 Copper Upkeep: " + KeeperStats.MANA_LABORATORY_COST + " mana/hour", toolTipColor, 560, tipY-18, 0.5);
         }
         else if(n == 8)
         {
             drawMenuText("Dig a ghostyard", toolTipColor, 640, tipY, 0.6);
+            drawMenuText("Cost: n/a Upkeep: " + KeeperStats.MANA_GHOSTYARD_COST + " mana/hour", toolTipColor, 640, tipY-18, 0.5);
         }
         else if(n == 9)
         {
@@ -440,9 +470,9 @@ public class GameDisplay
         if(n == 0)
         {
             int imps = game.countMobs(Species.IMPS_BASE);
-            int cost = Math.max(1, imps - 3);
+            int cost = Math.max(1, imps - 3) * KeeperStats.MANA_SPAWN_IMP_COST;
             drawMenuText("Spawn a new imp", toolTipColor, 90, tipY, 0.6);
-            drawMenuText("Cost: " + cost + " Copper", Colors.BRIGHT_GOLD_INK, 90+30, tipY-18, 0.4);
+            drawMenuText("Cost: " + cost + " mana", toolTipColor, 90, tipY-18, 0.4);
         }
     }
 

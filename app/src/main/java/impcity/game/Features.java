@@ -39,6 +39,7 @@ public class Features
     
     public static final int MINING_MARK = 976;
 
+    public static final int BUBBLE_FIGHT = 995;
     public static final int BUBBLE_FOOD = 996;
     public static final int BUBBLE_WORK = 997;
     public static final int BUBBLE_SLEEPING = 998;
@@ -102,6 +103,8 @@ public class Features
     public static final int I_FRAME_TOP = 29;
 
     public static final int I_EXPEDITION_BANNER = 141;
+    
+    public static final int I_DUNGEON_CORE = 316;
     
     public static final int MESSAGE_IDEA_BLUE = 953;
     public static final int MESSAGE_IDEA_GREEN = 954;

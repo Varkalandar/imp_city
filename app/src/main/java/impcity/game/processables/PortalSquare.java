@@ -16,6 +16,7 @@ import impcity.game.map.Map;
 import impcity.game.mobs.Mob;
 import rlgamekit.pathfinding.Path;
 
+
 /**
  * Creatures enter the dungeon through portals.
  * 
@@ -82,54 +83,69 @@ public class PortalSquare implements Processable
                 species = Species.HAT_MAGE_BASE;
             }
 
-            // Hajo: got something that matches?
-            if(species > 0 && game.calcCurrentCreatureCount() <= game.calcMaxCreatureCount())
-            {
+            // Sometimes we get intruders instead of minions
+            if (time > 80000 && Math.random() < 0.25) {
                 int sx = x + Map.SUB/3;
                 int sy = y + Map.SUB/2 + (int)(Math.random() * 2);
 
-                SpeciesDescription desc = Species.speciesTable.get(species);
-                CreatureAi monsterAi = new CreatureAi(game);
-                
-                // Hajo: check if there is enough space for a lair
-                Path path = new Path();
-                boolean ok = monsterAi.findLair(map, desc, path, new Point(sx, sy));
-                
-                if(ok)
-                {
-                    game.soundPlayer.playFromPosition(Sounds.CREATURE_ARRIVAL, 0.8f, 1.0f,
-                                                      new Point(16, 355), game.getViewPosition());
-                    
-                    Mob mob = new Mob(sx, sy, species, 
-                            Features.SHADOW_BASE, desc.sleepImage,
-                            map, monsterAi, desc.speed, desc.move);
-                    
-                    synchronized(game.world.mobs)
-                    {
-                        int key = game.world.mobs.nextFreeKey();
-                        game.world.mobs.put(key, mob);
-                        mob.setKey(key);
-                    }
-                    
-                    // Hajo: make creature look south-east
-                    mob.visuals.setDisplayCode(species+3);
-                    
-                    // Hajo: they arrive at full health and with
-                    // basic experience
-                    mob.stats.setCurrent(MobStats.INJURIES, 0);
-                    mob.stats.setCurrent(MobStats.VITALITY, 20);
-                    mob.stats.setCurrent(MobStats.EXPERIENCE, MobStats.BEGINNER_EXPERIENCE);
+                logger.log(Level.INFO, "Spawning intruder at location {0}, {1}", new Object[]{sx, sy});
 
-                    // Hajo: give them slightly random shadaes
-                    mob.visuals.color =
-                            0xFF000000 + 
-                            ((204 + (int)(42 * Math.random())) << 16) +
-                            ((204 + (int)(42 * Math.random())) << 8) +
-                            ((204 + (int)(42 * Math.random())));
-                }
-                else
+                game.soundPlayer.playFromPosition(Sounds.CREATURE_ARRIVAL, 0.8f, 1.0f,
+                                                  new Point(sx, sy), game.getViewPosition());
+                game.spawnIntruder(map, sx, sy);
+            }
+            else
+            {
+                // A regular creature might spawn.
+                // got something that matches?
+                if(species > 0 && game.calcCurrentCreatureCount() <= game.calcMaxCreatureCount())
                 {
-                    logger.log(Level.INFO, "Found no lair space for a {0}", desc.name);
+                    int sx = x + Map.SUB/3;
+                    int sy = y + Map.SUB/2 + (int)(Math.random() * 2);
+
+                    SpeciesDescription desc = Species.speciesTable.get(species);
+                    CreatureAi creatureAi = new CreatureAi(game);
+
+                    // Hajo: check if there is enough space for a lair
+                    Path path = new Path();
+                    boolean ok = creatureAi.findLair(map, desc, path, new Point(sx, sy));
+
+                    if(ok)
+                    {
+                        game.soundPlayer.playFromPosition(Sounds.CREATURE_ARRIVAL, 0.8f, 1.0f,
+                                                          new Point(16, 355), game.getViewPosition());
+
+                        Mob mob = new Mob(sx, sy, species, Mob.KIND_DENIZEN,
+                                          Features.SHADOW_BASE, desc.sleepImage,
+                                          map, creatureAi, desc.speed, desc.move);
+
+                        synchronized(game.world.mobs)
+                        {
+                            int key = game.world.mobs.nextFreeKey();
+                            game.world.mobs.put(key, mob);
+                            mob.setKey(key);
+                        }
+
+                        // Hajo: make creature look south-east
+                        mob.visuals.setDisplayCode(species+3);
+
+                        // Hajo: they arrive at full health and with
+                        // basic experience
+                        mob.stats.setCurrent(MobStats.INJURIES, 0);
+                        mob.stats.setCurrent(MobStats.VITALITY, 20);
+                        mob.stats.setCurrent(MobStats.EXPERIENCE, MobStats.BEGINNER_EXPERIENCE);
+
+                        // Hajo: give them slightly random shadaes
+                        mob.visuals.color =
+                                0xFF000000 + 
+                                ((204 + (int)(42 * Math.random())) << 16) +
+                                ((204 + (int)(42 * Math.random())) << 8) +
+                                ((204 + (int)(42 * Math.random())));
+                    }
+                    else
+                    {
+                        logger.log(Level.INFO, "Found no lair space for a {0}", desc.name);
+                    }
                 }
             }
             

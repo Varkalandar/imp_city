@@ -9,8 +9,12 @@ import impcity.game.ai.Ai;
 import impcity.game.ai.MobStats;
 import impcity.game.map.Map;
 import impcity.oal.SoundPlayer;
+import java.util.HashSet;
+import java.util.Set;
 import rlgamekit.item.ItemCatalog;
 import rlgamekit.map.data.LayeredMap;
+import rlgamekit.objects.Cardinal;
+import rlgamekit.objects.Registry;
 import rlgamekit.pathfinding.Path;
 import rlgamekit.stats.Stats;
 
@@ -22,6 +26,12 @@ import rlgamekit.stats.Stats;
 public class Mob
 {
     public static final Logger logger = Logger.getLogger(Mob.class.getName());
+
+
+    public static final int KIND_DENIZEN = 0;
+    public static final int KIND_IMP = 1;
+    public static final int KIND_INTRUDER = 2;
+    public static final int KIND_GENERATOR = 3;
     
     public static final int SLOT_HEAD = 0;
     public static final int SLOT_BODY = 1;
@@ -42,6 +52,7 @@ public class Mob
     
     private Ai ai;
     public boolean isDying;
+    public int kind;
 
     public Ai getAi() 
     {
@@ -107,10 +118,11 @@ public class Mob
         this.key = key;
     }
                 
-    public Mob(int playerX, int playerY, int species, int shadow, int sleep, Map gameMap, Ai ai, int speed, MovementPattern pattern)
+    public Mob(int playerX, int playerY, int species, int kind, int shadow, int sleep, Map gameMap, Ai ai, int speed, MovementPattern pattern)
     {
         this.visuals = new MobVisuals(shadow, sleep);
         this.species = species;
+        this.kind = kind;
         this.gameMap = gameMap;
         this.location = new Point(playerX, playerY);
         
@@ -152,7 +164,7 @@ public class Mob
         return path;
     }
 
-    public boolean advance(SoundPlayer soundPlayer) 
+    public boolean advance(SoundPlayer soundPlayer, Registry<Mob> mobs) 
     {
         long time = System.currentTimeMillis();
         
@@ -227,7 +239,7 @@ public class Mob
         
         if(ai != null)
         {
-            ai.thinkAfterStep(this);
+            ai.thinkAfterStep(this, mobs);
         }
         
         return lastStep;
@@ -278,25 +290,71 @@ public class Mob
     /**
      * Called every frame in between display
      */
-    public void update()
+    public void update(Registry<Mob> mobs)
     {
         // drive particles in sync with display     
             
         visuals.frontParticles.driveParticles();
         visuals.backParticles.driveParticles();    
               
+        // is there an intruder nearby?
+        Set <Cardinal> keys = new HashSet<>(mobs.keySet());
+        boolean intruderFound = false;
+        for(Cardinal key : keys)
+        {
+            Mob other = mobs.get(key.intValue());
+            // -> Only denizens attack intruders
+            if (ai != null && kind == KIND_DENIZEN && other.kind == KIND_INTRUDER &&
+                other.stats.getCurrent(MobStats.VITALITY) > 0) 
+            {
+                intruderFound = true;
+                
+                // close enough for kill strike?
+                int dx = location.x - other.location.x;
+                int dy = location.y - other.location.y;
+                int dist2 = dx * dx + dy * dy;
+                
+                if (dist2 < Map.SUB) {
+                    other.stats.setCurrent(MobStats.VITALITY, 0);
+                    ai.alarm(0);
+                    logger.info("Creature " + name + " (" + getKey() + ") killed the intruder at " + other.location);
+                    addExperience(20);
+                }
+                else {
+                    // go for it
+                    // logger.info("Creature #" + getKey() + "(kind=" + kind + ") is alarmed and called to attack intruder #" + other.key);
+                    
+                    // how far can we sense intruders?
+                    // try 10 squares for the moment
+                    if (dist2 < Map.SUB * Map.SUB * 10) 
+                    {
+                        ai.alarm(other.key);
+                    }
+                    
+                    // if the intruder is near the dungeon core, always alarm
+                    dx = 112 - other.location.x;
+                    dy = 352 - other.location.y;
+                    dist2 = dx * dx + dy * dy;
+                    if (dist2 < Map.SUB * Map.SUB * 10) 
+                    {
+                        ai.alarm(other.key);
+                    }
+                }
+            }
+        }        
+        
         if(path == null && ai != null)
         {
             // Hajo: we need a new path ...
             // ... but only if we are still alive
-            if(stats.getCurrent(MobStats.VITALITY) >= 0)
+            if(stats.getCurrent(MobStats.VITALITY) > 0)
             {
-                ai.think(this);
-                ai.findNewPath(this);
+                ai.think(this, mobs);
+                ai.findNewPath(this, mobs);
             }
         }
     }
-
+    
     /**
      * Called after all the ordinary stuff (map) has been drawn.
      */
@@ -334,9 +392,11 @@ public class Mob
         writer.write("ypos=" + location.y + "\n");
 
         writer.write("spec=" + species + "\n");
+        writer.write("kind=" + kind + "\n");
         writer.write("ioff=" + iOff + "\n");
         writer.write("joff=" + jOff + "\n");
         writer.write("sped=" + stepsPerSecond + "\n");
+        writer.write("colr=" + visuals.color + "\n");
         writer.write("Mob data end\n");
 
         writer.write("Path data start\n");
@@ -467,11 +527,15 @@ public class Mob
         line = reader.readLine();
         species = Integer.parseInt(line.substring(5));
         line = reader.readLine();
+        kind = Integer.parseInt(line.substring(5));
+        line = reader.readLine();
         iOff = Integer.parseInt(line.substring(5));
         line = reader.readLine();
         jOff = Integer.parseInt(line.substring(5));
         line = reader.readLine();
         stepsPerSecond = Integer.parseInt(line.substring(5));
+        line = reader.readLine();
+        visuals.color = Integer.parseInt(line.substring(5));
 
         line = reader.readLine();
     
@@ -548,7 +612,7 @@ public class Mob
         visuals.setDisplayCode(species);
 
         // Hajo: give pre-experience-code saved mobs some basic experience after loading
-        if(stats.getCurrent(MobStats.EXPERIENCE) == 0)
+        if(stats.getCurrent(MobStats.EXPERIENCE) <= 0)
         {
             stats.setCurrent(MobStats.EXPERIENCE, MobStats.BEGINNER_EXPERIENCE);
         }
@@ -594,9 +658,8 @@ public class Mob
         gameMap.setMob(location.x, location.y, getKey());
     }
 
-	public boolean isGhost() 
-	{
-		return stats.getMax(MobStats.GHOST_STEPS) > 0;
-	}
-
+    public boolean isGhost() 
+    {
+        return stats.getMax(MobStats.GHOST_STEPS) > 0;
+    }
 }

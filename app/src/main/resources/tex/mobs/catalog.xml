@@ -2548,136 +2548,136 @@
       <Description>
         <version>4</version>
         <id>150</id>
-        <width>1</width>
-        <height>1</height>
+        <width>26</width>
+        <height>31</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>12</footX>
+        <footY>28</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>tin_can_knight_1</string>
+        <string>rgba</string>
       </Metadata>
     </Tile>
     <Tile>
       <Description>
         <version>4</version>
         <id>151</id>
-        <width>1</width>
-        <height>1</height>
+        <width>25</width>
+        <height>32</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>12</footX>
+        <footY>26</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>tin_can_knight_2</string>
+        <string>rgba</string>
       </Metadata>
     </Tile>
     <Tile>
       <Description>
         <version>4</version>
         <id>152</id>
-        <width>1</width>
-        <height>1</height>
+        <width>25</width>
+        <height>31</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>11</footX>
+        <footY>26</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>tin_can_knight_3</string>
+        <string>rgba</string>
       </Metadata>
     </Tile>
     <Tile>
       <Description>
         <version>4</version>
         <id>153</id>
-        <width>1</width>
-        <height>1</height>
+        <width>28</width>
+        <height>34</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>14</footX>
+        <footY>29</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>tin_can_knight_4</string>
+        <string>rgba</string>
       </Metadata>
     </Tile>
     <Tile>
       <Description>
         <version>4</version>
         <id>154</id>
-        <width>1</width>
-        <height>1</height>
+        <width>26</width>
+        <height>39</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>12</footX>
+        <footY>35</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>tin_can_knight_5</string>
+        <string>rgba</string>
       </Metadata>
     </Tile>
     <Tile>
       <Description>
         <version>4</version>
         <id>155</id>
-        <width>1</width>
-        <height>1</height>
+        <width>26</width>
+        <height>43</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>11</footX>
+        <footY>36</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>tin_can_knight_6</string>
+        <string>rgba</string>
       </Metadata>
     </Tile>
     <Tile>
       <Description>
         <version>4</version>
         <id>156</id>
-        <width>1</width>
-        <height>1</height>
+        <width>24</width>
+        <height>40</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>13</footX>
+        <footY>35</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>tin_can_knight_7</string>
+        <string>rgba</string>
       </Metadata>
     </Tile>
     <Tile>
       <Description>
         <version>4</version>
         <id>157</id>
-        <width>1</width>
-        <height>1</height>
+        <width>28</width>
+        <height>35</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>13</footX>
+        <footY>28</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>tin_can_knight_8</string>
+        <string>rgba</string>
       </Metadata>
     </Tile>
     <Tile>

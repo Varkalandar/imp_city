@@ -24,6 +24,7 @@ import impcity.game.Clock;
 import impcity.game.Item;
 import impcity.game.Texture;
 import impcity.game.TextureCache;
+import impcity.game.ai.MobStats;
 import impcity.game.map.Map;
 import impcity.game.mobs.Mob;
 import impcity.ui.KeyHandler;
@@ -31,6 +32,7 @@ import impcity.ui.MouseHandler;
 import impcity.ui.MousePointerBitmap;
 import impcity.ui.PixFont;
 import impcity.ui.PostRenderHook;
+import java.util.ArrayList;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
@@ -229,17 +231,30 @@ public class IsoDisplay implements PostRenderHook
         glDisable(GL_DEPTH_TEST);
     }
 
+    
     public void resizeGL(int width, int height)
     {
         newDisplaySize.width = displayWidth = width;
         newDisplaySize.height = displayHeight = height;
         
+        int res = java.awt.Toolkit.getDefaultToolkit().getScreenResolution();   
+        
+        logger.log(Level.INFO, "Adjusting for res {0}", res);
+           
+        // Doesn't have the desired effect. Disabled for now
+        // int scaledWidth = displayWidth * res / 96;
+        // int scaledHeight = displayHeight * res / 96;
+
+        int scaledWidth = displayWidth;
+        int scaledHeight = displayHeight;
+        
         GL11.glMatrixMode(GL11.GL_PROJECTION);
-	    GL11.glLoadIdentity();
-	    GL11.glOrtho(0, displayWidth, 0, displayHeight, 1, -1);
-        GL11.glViewport(0, 0, displayWidth, displayHeight);
+        GL11.glLoadIdentity();
+        GL11.glOrtho(0, scaledWidth, 0, scaledHeight, 1, -1);
+        GL11.glViewport(0, 0, scaledWidth, scaledHeight);
         exitOnGLError("glViewport");
     }
+    
 
     public void render(long currentTime)
     {
@@ -522,6 +537,7 @@ public class IsoDisplay implements PostRenderHook
                     int yoff = (mob.iOff * yd / Map.SUB + mob.jOff * yd / Map.SUB) >> 16;
 
                     mob.visuals.display(this, x + xoff, y + yoff, mob.zOff >> 16);
+                    font.drawStringScaled("#" + mob.getKey(), 0xFFFFFFFF, x + xoff - 10, y + yoff + 30, 0.5);
                 }
                 
                 dl = dl.next;
@@ -659,13 +675,9 @@ public class IsoDisplay implements PostRenderHook
                     frameCount = 0;
                 }
                 
-                
                 if(newDisplaySize.width != displayWidth || newDisplaySize.height != displayHeight)
                 {
-                    displayWidth = newDisplaySize.width;
-                    displayHeight = newDisplaySize.height;
-
-                    resizeGL(displayWidth, displayHeight);
+                    resizeGL(newDisplaySize.width, newDisplaySize.height);
                 }
                 
                 keyHandler.processKeyboard();
@@ -697,12 +709,28 @@ public class IsoDisplay implements PostRenderHook
 
         synchronized(mobs)
         {
+            ArrayList <Cardinal> killList = new ArrayList<>();
+            
             Set <Cardinal> keys = new HashSet<>(mobs.keySet());
 
             for(Cardinal key : keys)
             {
                 Mob mob = mobs.get(key.intValue());
-                mob.update();
+                mob.update(mobs);
+                
+                // check for dead intruders
+                if(mob.kind == Mob.KIND_INTRUDER &&     
+                   mob.stats.getCurrent(MobStats.VITALITY) == 0)
+                {
+                    killList.add(key);
+                }
+            }
+            
+            // clean up killed intruders
+            for (Cardinal key : killList)
+            {
+                logger.info("Removing dead intruder #" + key.intValue());
+                mobs.remove(key.intValue());
             }
         }
     }

@@ -35,12 +35,20 @@ public class Research
         stats.setCurrent(KeeperStats.COINS, 0);
         stats.setMax(KeeperStats.COINS, 0);
 
+        stats.setMin(KeeperStats.MANA, 0);
+        stats.setCurrent(KeeperStats.MANA, KeeperStats.MANA_START);
+        stats.setMax(KeeperStats.MANA, KeeperStats.MANA_BASE_MAX);
+
+        stats.setMin(KeeperStats.LIFE, 0);
+        stats.setCurrent(KeeperStats.LIFE, KeeperStats.LIFE_START);
+        stats.setMax(KeeperStats.LIFE, KeeperStats.LIFE_BASE_MAX);
+
         stats.setMin(KeeperStats.RESEARCH, 0);
         stats.setCurrent(KeeperStats.RESEARCH, 0);
         stats.setMax(KeeperStats.RESEARCH, 10000); // research needed for next discovery
         
-        // stats.setCurrent(KeeperStats.RESEARCH, KeeperStats.RESEARCH_LABS | KeeperStats.RESEARCH_FORGES);
-        stats.setCurrent(KeeperStats.RESEARCH, KeeperStats.RESEARCH_GHOSTYARDS);
+        stats.setCurrent(KeeperStats.RESEARCH, KeeperStats.RESEARCH_LABS | KeeperStats.RESEARCH_FORGES);
+        // stats.setCurrent(KeeperStats.RESEARCH, KeeperStats.RESEARCH_GHOSTYARDS);
 
         stats.setMin(KeeperStats.RESEARCH_QUEST, 0);
         stats.setCurrent(KeeperStats.RESEARCH_QUEST, 0);
