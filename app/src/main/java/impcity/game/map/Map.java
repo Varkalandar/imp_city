@@ -77,6 +77,14 @@ public class Map implements Serializable
         return new Point(centerX + x, centerY + y);
     }
     
+
+    public static int distSqr(Point p1, Point p2)
+    {
+        int dx = p1.x - p2.x;
+        int dy = p1.y - p2.y;
+        return dx * dx + dy * dy;
+    }
+
     
     public Map(int width, int height)
     {

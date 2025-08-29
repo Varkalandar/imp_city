@@ -44,6 +44,16 @@ public class IntruderAi extends AiBase
     }
     
     
+    /**
+     * Delay the next thinking by at least this many milliseconds
+     * @param milliseconds The desired delay
+     */
+    public void delayThinking(int milliseconds)
+    {
+        thinkTime = Clock.time() + milliseconds;        
+    }
+
+
     @Override
     public void think(Mob mob, Registry<Mob> mobs) {
         // Overrun? restore
@@ -59,7 +69,7 @@ public class IntruderAi extends AiBase
         else
         {
             // System.err.println("Mob=" + mob.getKey() + " AI thinks.");
-            thinkTime = Clock.time() + THINK_COOLDOWN;
+            delayThinking(THINK_COOLDOWN);
         }
     }
 

@@ -5,9 +5,11 @@ import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import impcity.game.Direction;
+import impcity.game.Features;
 import impcity.game.ai.Ai;
 import impcity.game.ai.MobStats;
 import impcity.game.map.Map;
+import impcity.game.particles.ParticleDriver;
 import impcity.oal.SoundPlayer;
 import java.util.HashSet;
 import java.util.Set;
@@ -310,15 +312,21 @@ public class Mob
                 intruderFound = true;
                 
                 // close enough for kill strike?
-                int dx = location.x - other.location.x;
-                int dy = location.y - other.location.y;
-                int dist2 = dx * dx + dy * dy;
+                int dist2 = Map.distSqr(location, other.location);
                 
-                if (dist2 < Map.SUB) {
+                // half a square is close enough
+                if (dist2 < Map.SUB * Map.SUB / 2) {
                     other.stats.setCurrent(MobStats.VITALITY, 0);
                     ai.alarm(0);
                     logger.info("Creature " + name + " (" + getKey() + ") killed the intruder at " + other.location);
                     addExperience(20);
+                    
+                    // particle beam
+                    emitParticleBeam(other.location);
+                    ai.delayThinking(1000);
+                    
+                    // stop moving
+                    setPath(null);
                 }
                 else {
                     // go for it
@@ -332,8 +340,8 @@ public class Mob
                     }
                     
                     // if the intruder is near the dungeon core, always alarm
-                    dx = 112 - other.location.x;
-                    dy = 352 - other.location.y;
+                    int dx = 112 - other.location.x;
+                    int dy = 352 - other.location.y;
                     dist2 = dx * dx + dy * dy;
                     if (dist2 < Map.SUB * Map.SUB * 10) 
                     {
@@ -658,8 +666,42 @@ public class Mob
         gameMap.setMob(location.x, location.y, getKey());
     }
 
+    
     public boolean isGhost() 
     {
         return stats.getMax(MobStats.GHOST_STEPS) > 0;
+    }
+
+    
+    private void emitParticleBeam(Point target) 
+    {
+        int di = target.x - location.x;
+        int dj = target.y - location.y;
+        int dx = dj - di;
+        int dy = dj + di / 2;
+        
+        // normalize the vector
+        double l = Math.sqrt(dx * dx + dy * dy);
+        double dxn = ((double)dx) / l; 
+        double dyn = ((double)-dy) / l; 
+                
+        ParticleDriver driver;
+        if (dy < 0) {
+            driver = visuals.backParticles;
+        }
+        else 
+        {
+            driver = visuals.frontParticles;
+        }
+
+        for(int i=0; i<40; i++)
+        {
+            double d = Math.random() * 3.0;
+            double speed = 3.0 + Math.random() * 3.0;
+            int x = (int)(dxn * d + 1.0 - Math.random() * 2.1);
+            int y = 12 + (int)(dyn * d + 1.0 - Math.random() * 2.1);
+            int texId = Features.P_ORANGE_SPARK_1 + (int)(Math.random()*3);
+            driver.addParticle(x, y, dxn * speed, dyn * speed, 20, texId, 0xFFFFFFFF);
+        }
     }
 }

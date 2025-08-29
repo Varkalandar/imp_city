@@ -82,6 +82,16 @@ public class CreatureAi extends AiBase
         goal = Goal.GO_SLEEP;
     }
     
+    
+    /**
+     * Delay the next thinking by at least this many milliseconds
+     * @param milliseconds The desired delay
+     */
+    public void delayThinking(int milliseconds)
+    {
+        thinkTime = Clock.time() + milliseconds;        
+    }
+    
 
     @Override
     public void think(Mob mob, Registry<Mob> mobs) 
@@ -105,7 +115,7 @@ public class CreatureAi extends AiBase
         else
         {
             // System.err.println("Mob=" + mob.getKey() + " AI thinks.");
-            thinkTime = Clock.time() + THINK_COOLDOWN;
+            delayThinking(THINK_COOLDOWN);
         }
 
         // Hajo: Precision? Seems to be good enough ...
@@ -151,6 +161,7 @@ public class CreatureAi extends AiBase
                     mob.setPath(null);
                     mob.visuals.setBubble(Features.BUBBLE_FIGHT);                
                 }
+                
                 if (goal == Goal.GO_FIGHT)
                 {
                     // intruders move, we need to update our path now and then
@@ -1023,9 +1034,7 @@ public class CreatureAi extends AiBase
         {
             if(generator.stats.getCurrent(MobStats.GENERATOR) == MobStats.G_DISTILL)
             {
-                int dx = generator.location.x - mob.location.x;
-                int dy = generator.location.y - mob.location.y;
-                int d = dx * dx + dy * dy;
+                int d = Map.distSqr(generator.location, mob.location);
 
                 if(d < best) 
                 {

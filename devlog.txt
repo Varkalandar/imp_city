@@ -4,6 +4,7 @@ Changes since v0.28.4
 - Creatures on expeditions create less mana than dungeon residents
 - Coins and artifacts no longer become duplicated upon being dropped
   by an imp
+- Creatures attack intruders with a fire stream
 
 Changes since v0.28.3
 

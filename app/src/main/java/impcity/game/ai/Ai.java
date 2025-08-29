@@ -31,6 +31,11 @@ public interface Ai
      */
     public void think(Mob mob, Registry<Mob> mobs);
     
+    /**
+     * Delay the next thinking by at least this many milliseconds
+     * @param milliseconds The desired delay
+     */
+    public void delayThinking(int milliseconds);
     
     /**
      * This method is called each frame while the 
