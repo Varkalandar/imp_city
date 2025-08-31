@@ -7,18 +7,16 @@ import impcity.game.quests.QuestProcessor;
 import impcity.game.species.Species;
 import impcity.game.species.SpeciesDescription;
 import impcity.game.quests.Quest;
+import impcity.game.ui.CreatureBook.Entry;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import impcity.game.mobs.Mob;
 import impcity.ogl.IsoDisplay;
-import java.util.HashSet;
-import rlgamekit.objects.Cardinal;
-import rlgamekit.objects.Registry;
+
 
 
 /**
@@ -68,52 +66,16 @@ public class PartySelector extends UiDialog
         int silver = Colors.BRIGHT_SILVER_INK;
         
         creatureDisplayList.clear();
+
+        maxPages = CreatureBook.displayCreaturePage(x, y, width, height, currentPage, game, gameDisplay, display,
+                                                    (int key) -> {return party.members.contains(key);},
+                                                    creatureDisplayList);
         
-        gameDisplay.drawShadowText("Your Creatures",
-                              gold, x+28, y+height-80, 0.4);
+        // gameDisplay.drawShadowText("Your Creatures",
+        //                       gold, x+28, y+height-80, 0.4);
         
         gameDisplay.drawShadowText("Your Party",
                               gold, x+width/2+28, y+height-80, 0.4);
-        
-        int row = 500;
-        int col = 20;
-        int count = 0;
-
-        // work on copy, the original set might change during the loop
-        Registry <Mob> mobs = game.world.mobs;
-        Set <Cardinal> keys = new HashSet<>(mobs.keySet());
-
-        for(Cardinal key : keys)
-        {
-            Mob mob = mobs.get(key.intValue());
-            Ai ai = mob.getAi();
-
-            if(mob.getKey() != game.getPlayerKey() &&
-               ai != null &&
-               ai.isLair(mob, ai.getHome().x, ai.getHome().y))
-            {
-                int species = mob.getSpecies();
-                if(species > 0 && species != Species.IMPS_BASE)
-                {
-                    if(count >= currentPage * 10 && count < currentPage * 10 + 10)
-                    {
-                        drawCreatureTile(x + col, row, mob, party.members.contains(key.intValue()));
-                        creatureDisplayList.add(new Entry(mob.getKey(), x + col, row));
-
-                        col += 170;
-                        if (col > width / 2 - 169) {
-                            col = 20;
-                            row -= 88;
-                        }
-                    }
-
-                    count ++;
-                }
-            }
-        }
-
-        // We list 10 creatures per page
-        maxPages = (creatureDisplayList.size()  + 9) / 10;
 
         int xoff = width/2 + 28;
         int yoff = 460;
@@ -156,7 +118,7 @@ public class PartySelector extends UiDialog
                     silver, x+xoff, y+yoff, 0.25);
         }
         
-        gameDisplay.drawMenuText("< Page " +  (currentPage + 1) + " of " + (maxPages + 1) + " >", gold, x + 28, y + 22, 0.6);
+        // gameDisplay.drawMenuText("< Page " +  (currentPage + 1) + " of " + (maxPages + 1) + " >", gold, x + 28, y + 22, 0.6);
 
         int color = party.members.isEmpty() ? Colors.DIM_GOLD_INK : gold;
         gameDisplay.drawMenuText("> Start Expedition", color, x + width/2 + 28, y + 22, 0.6);
@@ -312,18 +274,5 @@ public class PartySelector extends UiDialog
         QuestResultMessage qrm = new QuestResultMessage(game, gameDisplay, display, 600, height, result, "[ Ok ]");
         gameDisplay.showDialog(qrm);
         */
-    }
-
-
-    private class Entry
-    {
-        public final int key, x, y;
-        
-        public Entry(int key, int x, int y)
-        {
-            this.key = key;
-            this.x = x;
-            this.y = y;
-        }
     }
 }

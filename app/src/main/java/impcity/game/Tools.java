@@ -19,6 +19,7 @@ public enum Tools
     
     SPELL_IMP,
 
+    BOOK_CREATURES,
     BOOK_QUESTS,
     BOOK_EXPEDITION;
 

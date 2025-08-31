@@ -540,10 +540,15 @@ public class ImpCityMouseHandler implements MouseHandler
 
         if(n == 0)
         {
-            gameDisplay.openQuestBook();
+            gameDisplay.openCreaturesBook();
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
         else if(n == 1)
+        {
+            gameDisplay.openQuestBook();
+            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
+        }
+        else if(n == 2)
         {
             gameDisplay.openExpeditionBook();
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);

@@ -5,6 +5,7 @@ Changes since v0.28.4
 - Coins and artifacts no longer become duplicated upon being dropped
   by an imp
 - Creatures attack intruders with a fire stream
+- Creature book to see creature stats
 
 Changes since v0.28.3
 

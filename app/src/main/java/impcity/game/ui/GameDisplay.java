@@ -39,6 +39,7 @@ public class GameDisplay
     private final static int disabledButtonColor = 0x70CCCCCC;
     private final static int toolTipColor = Colors.BRIGHT_SILVER_INK;
 
+    private final CreatureBook creaturesBook;
     private final QuestBook questBook;
     private final ExpeditionBook expeditionBook;
     
@@ -47,14 +48,16 @@ public class GameDisplay
     private final ImpCity game;
     private final PixFont fontLow; // script font, for in-game text
 
+    private final Texture buttonCreatures;
+    private final Texture buttonMap;
     private final Texture buttonExpedition;
+
     private final Texture buttonDig;
     private final Texture buttonLair;
     private final Texture buttonFood;
     private final Texture buttonBook;
     private final Texture buttonTreasury;
     private final Texture buttonForge;
-    private final Texture buttonMap;
     private final Texture buttonLab;
     private final Texture buttonHeal;
     private final Texture buttonGhost;
@@ -81,6 +84,7 @@ public class GameDisplay
         this.display = display;
         this.fontLow = new PixFont("/font/humanistic_128_2");
         
+        this.creaturesBook = new CreatureBook(game, this, display);
         this.questBook = new QuestBook(display, this, game);
         this.expeditionBook = new ExpeditionBook(display, this, game);
         
@@ -99,6 +103,7 @@ public class GameDisplay
 
         buttonImp = textureCache.loadTexture("/ui/button_imp.png", true);
         
+        buttonCreatures = textureCache.loadTexture("/ui/button_creatures.png", true);
         buttonMap = textureCache.loadTexture("/ui/button_map.png", true);
         buttonExpedition = textureCache.loadTexture("/ui/button_expedition.png", true);
     }
@@ -480,19 +485,24 @@ public class GameDisplay
     {
         IsoDisplay.fillRect(122, 26, 650, 70, 0x77000000);
         
-        IsoDisplay.drawTile(buttonMap, left + 0, top, 60, 60, calculateButtonColor(Tools.BOOK_QUESTS));
-        IsoDisplay.drawTile(buttonExpedition, left + 70, top, 60, 60, calculateButtonColor(Tools.BOOK_EXPEDITION));
+        IsoDisplay.drawTile(buttonCreatures, left + 0, top, 60, 60, calculateButtonColor(Tools.BOOK_CREATURES));
+        IsoDisplay.drawTile(buttonMap, left + 70, top, 60, 60, calculateButtonColor(Tools.BOOK_QUESTS));
+        IsoDisplay.drawTile(buttonExpedition, left + 140, top, 60, 60, calculateButtonColor(Tools.BOOK_EXPEDITION));
 
         int tipY = 108;
         int n = calculateTabButtonNumber(Mouse.getX(), Mouse.getY());
 
         if(n == 0)
         {
-            drawMenuText("Open quest location list", toolTipColor, 70, tipY, 0.6);
+            drawMenuText("Open creature book", toolTipColor, 70, tipY, 0.6);
         }
         else if(n == 1)
         {
-            drawMenuText("Open expeditions book", toolTipColor, 140, tipY, 0.6);
+            drawMenuText("Open quest location list", toolTipColor, 140, tipY, 0.6);
+        }
+        else if(n == 2)
+        {
+            drawMenuText("Open expeditions book", toolTipColor, 210, tipY, 0.6);
         }
     }
 
@@ -604,6 +614,12 @@ public class GameDisplay
             hookedMessageStack.remove(n);
             hookedMessage.activate(this);
         }
+    }
+
+
+    void openCreaturesBook() 
+    {
+        showDialog(creaturesBook);
     }
 
 
