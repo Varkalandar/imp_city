@@ -2,6 +2,7 @@ package impcity.game.ui;
 
 import java.util.List;
 import impcity.game.TextureCache;
+import impcity.ogl.IsoDisplay;
 import java.util.function.IntConsumer;
 import java.util.logging.Logger;
 
@@ -17,6 +18,7 @@ public class ListChoice extends UiDialog
     private final List<String> choices;
     private final IntConsumer callback;
     private int topCached;
+    private int selection = 0;
     
     public ListChoice(TextureCache textureCache, GameDisplay gameDisplay,
                       int width, int height,
@@ -36,17 +38,23 @@ public class ListChoice extends UiDialog
     {
         super.display(x, y);
     
-        int top = y + height - 60;
-        int left = x + 20;
+        int top = y + height - 80;
+        int left = x + 40;
         topCached = top;
         
-        gameDisplay.drawShadowText(title, Colors.BRIGHT_GOLD_INK, left, top, 0.4);
+        gameDisplay.drawShadowText(title, Colors.BRIGHT_GOLD_INK, left + 10, top, 0.4);
         
         top -= 30;
+
+        if (selection >= 0 && selection < choices.size())
+        {
+            IsoDisplay.fillRect(left, top - selection * 35 - 4, width - 80, 35, 0x77000000);
+            IsoDisplay.fillRect(left+1, top - selection * 35 - 3, width - 82, 33, 0x33FFCC99);
+        }
         
         for(String choice : choices)
         {
-            gameDisplay.drawShadowText(choice, Colors.BRIGHT_SILVER_INK, left, top, 0.2);
+            gameDisplay.drawShadowText(choice, Colors.BRIGHT_SILVER_INK, left + 10, top, 0.2);
             top -= 35;
         }
     }
@@ -56,15 +64,14 @@ public class ListChoice extends UiDialog
     public void mouseEvent(int buttonPressed, int buttonReleased, int mouseX, int mouseY) 
     {
         int top = topCached;
-        // top -= 20;
-
         int dy = top - mouseY;
-
         int n = dy / 35;
         
+        selection = n;
+        logger.info("Choice #" + selection + " was hovered");
+
         if(buttonReleased != 0)
         {
-            logger.info("Choice #" + n + " was clicked");
             callback.accept(n);
         }
     }

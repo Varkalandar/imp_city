@@ -147,17 +147,33 @@ public class ImpCityKeyHandler implements KeyHandler
     private void showSaveGameDialog() 
     {
         ArrayList <String> entries = new ArrayList<>(16);
-        entries.add("Game 1");
-        entries.add("Game 2");
-        entries.add("Game 3");
-        entries.add("Game 4");
-        entries.add("Game 5");
-        entries.add("Game 6");
-        entries.add("Game 7");
-        entries.add("Game 8");
+        
+        try
+        {
+            File directory = new File("savegame");
+            File [] files = directory.listFiles((File dir, String name) -> name.startsWith("game_") && name.endsWith(".map"));
+  
+            for (int i=0; i<8; i++) 
+            {
+                String appendix = "(free slot)";
+                
+                if (i < files.length)
+                {
+                    FileTime time = 
+                            Files.getLastModifiedTime(files[i].toPath(), LinkOption.NOFOLLOW_LINKS);
+                    appendix = time.toString();
+                }
+
+                entries.add("Game #" + i + ": " + appendix);
+            }
+        }
+        catch(IOException ioex)
+        {
+            logger.log(Level.SEVERE, "Error while listing saved games", ioex);
+        }
     
         ListChoice choice = new ListChoice(display.textureCache, gameDisplay,
-                                           300, 400, 
+                                           500, 400, 
                                            "Save Game", entries,
                                            (int n) -> {
                                                gameDisplay.showDialog(null);
@@ -183,6 +199,9 @@ public class ImpCityKeyHandler implements KeyHandler
                 
                 entries.add("Game #" + i + ": " + time.toString());
                 i ++;
+                if(i > 8) {
+                    break;
+                }
             }
         }
         catch(IOException ioex)
