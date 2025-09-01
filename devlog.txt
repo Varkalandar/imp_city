@@ -6,6 +6,7 @@ Changes since v0.28.4
   by an imp
 - Creatures attack intruders with a fire stream
 - Creature book to see creature stats
+- Support for up to 8 saved games
 
 Changes since v0.28.3
 

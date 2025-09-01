@@ -4,6 +4,15 @@ import impcity.game.ImpCity;
 import impcity.game.mobs.Mob;
 import impcity.ogl.IsoDisplay;
 import impcity.ui.KeyHandler;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.attribute.FileTime;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.lwjgl.input.Keyboard;
 
 /**
@@ -12,6 +21,8 @@ import org.lwjgl.input.Keyboard;
  */
 public class ImpCityKeyHandler implements KeyHandler
 {
+    private static final Logger logger = Logger.getLogger(ImpCityKeyHandler.class.getName());
+
     private final ImpCity game;
     private final IsoDisplay display;
     private final GameDisplay gameDisplay;
@@ -81,11 +92,13 @@ public class ImpCityKeyHandler implements KeyHandler
                 }
                 else if(Keyboard.getEventKey() == Keyboard.KEY_L && isCtrlDown)
                 {
-                    game.load();
+                    // game.load();
+                    showLoadGameDialog();
                 }
                 else if(Keyboard.getEventKey() == Keyboard.KEY_S && isCtrlDown)
                 {
-                    game.save();
+                    // game.save();
+                    showSaveGameDialog();
                 }
                 else if(Keyboard.getEventKey() == Keyboard.KEY_ESCAPE)
                 {
@@ -128,5 +141,72 @@ public class ImpCityKeyHandler implements KeyHandler
         }
     
         return done;
+    }
+
+    
+    private void showSaveGameDialog() 
+    {
+        ArrayList <String> entries = new ArrayList<>(16);
+        entries.add("Game 1");
+        entries.add("Game 2");
+        entries.add("Game 3");
+        entries.add("Game 4");
+        entries.add("Game 5");
+        entries.add("Game 6");
+        entries.add("Game 7");
+        entries.add("Game 8");
+    
+        ListChoice choice = new ListChoice(display.textureCache, gameDisplay,
+                                           300, 400, 
+                                           "Save Game", entries,
+                                           (int n) -> {
+                                               gameDisplay.showDialog(null);
+                                               game.save(n);
+                                           });
+        gameDisplay.showDialog(choice);
+    }
+
+    
+    private void showLoadGameDialog() 
+    {
+        ArrayList <String> entries = new ArrayList<>(16);
+        try
+        {
+            File directory = new File("savegame");
+            File [] files = directory.listFiles((File dir, String name) -> name.startsWith("game_") && name.endsWith(".map"));
+  
+            int i = 0;
+            for (File file : files) 
+            {
+                FileTime time = 
+                        Files.getLastModifiedTime(file.toPath(), LinkOption.NOFOLLOW_LINKS);
+                
+                entries.add("Game #" + i + ": " + time.toString());
+                i ++;
+            }
+        }
+        catch(IOException ioex)
+        {
+            logger.log(Level.SEVERE, "Error while listing saved games", ioex);
+        }
+
+            /*
+        entries.add("Game 1");
+        entries.add("Game 2");
+        entries.add("Game 3");
+        entries.add("Game 4");
+        entries.add("Game 5");
+        entries.add("Game 6");
+        entries.add("Game 7");
+        entries.add("Game 8");
+*/
+        ListChoice choice = new ListChoice(display.textureCache, gameDisplay,
+                                           500, 400,
+                                           "Load Game", entries,
+                                           (int n) -> {
+                                               gameDisplay.showDialog(null);
+                                               game.load(n);
+                                           });
+        gameDisplay.showDialog(choice);
     }
 }

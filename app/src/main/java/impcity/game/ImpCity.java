@@ -703,7 +703,7 @@ public class ImpCity implements PostRenderHook, GameInterface
     }
 
 
-    public void save() 
+    public void save(int slot) 
     {
         try
         {
@@ -722,10 +722,10 @@ public class ImpCity implements PostRenderHook, GameInterface
             }
             else
             {
-                File file = new File(folderName, "test.map");
+                File file = new File(folderName, "game_" + slot + ".map");
                 player.gameMap.save(file);
 
-                try (FileWriter writer = new FileWriter(folderName + "/test.mob")) 
+                try (FileWriter writer = new FileWriter(folderName + "/game_" + slot + ".mob")) 
                 {
                     Clock.write(writer);
                     
@@ -808,22 +808,22 @@ public class ImpCity implements PostRenderHook, GameInterface
     }
     
 
-    public void load() 
+    public void load(int slot) 
     {
         try
         {
             synchronized(world)
             {
-                LOG.log(Level.INFO, "Loading saved game.");
+                LOG.log(Level.INFO, "Loading saved game #" + slot);
 
                 world.mobs.clear();
                 ImpAi.idleImpLocations.clear();
 
-                File file = new File("./savegame/test.map");
+                File file = new File("./savegame/game_" + slot + ".map");
                 player.gameMap.load(file);
                 Map map = player.gameMap;
 
-                try (BufferedReader reader = new BufferedReader(new FileReader("./savegame/test.mob"))) 
+                try (BufferedReader reader = new BufferedReader(new FileReader("./savegame/game_" + slot + ".mob"))) 
                 {
                     Clock.read(reader);
                     
