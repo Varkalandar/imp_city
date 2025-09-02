@@ -1,3 +1,8 @@
+Changes since v0.28.5
+
+- F1 displays a list of hotkeys
+- TAB now toggles creature names/numbers on/off as well as item names
+
 Changes since v0.28.4
 
 - Mining marks don't cost mana anymore

@@ -5,7 +5,6 @@ import impcity.game.mobs.Mob;
 import impcity.ogl.IsoDisplay;
 import impcity.ui.KeyHandler;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
@@ -27,12 +26,14 @@ public class ImpCityKeyHandler implements KeyHandler
     private final IsoDisplay display;
     private final GameDisplay gameDisplay;
 
+    
     public ImpCityKeyHandler(ImpCity game, IsoDisplay display, GameDisplay gameDisplay)
     {
         this.game = game;
         this.display = display;
         this.gameDisplay = gameDisplay;
     }
+    
     
     @Override
     public void processKeyboard()
@@ -114,6 +115,10 @@ public class ImpCityKeyHandler implements KeyHandler
                     display.setShowItemNames(!display.getShowItemNames());
                 }
                 else if(Keyboard.getEventKey() == Keyboard.KEY_F1)
+                {
+                    showHelpDialog();
+                }
+                else if(Keyboard.getEventKey() == Keyboard.KEY_F8)
                 {
                     GameDisplay.debugShowMapInfo = !GameDisplay.debugShowMapInfo;
                 }
@@ -209,22 +214,34 @@ public class ImpCityKeyHandler implements KeyHandler
             logger.log(Level.SEVERE, "Error while listing saved games", ioex);
         }
 
-            /*
-        entries.add("Game 1");
-        entries.add("Game 2");
-        entries.add("Game 3");
-        entries.add("Game 4");
-        entries.add("Game 5");
-        entries.add("Game 6");
-        entries.add("Game 7");
-        entries.add("Game 8");
-*/
         ListChoice choice = new ListChoice(display.textureCache, gameDisplay,
                                            500, 400,
                                            "Load Game", entries,
                                            (int n) -> {
                                                gameDisplay.showDialog(null);
                                                game.load(n);
+                                           });
+        gameDisplay.showDialog(choice);
+    }
+
+
+    private void showHelpDialog() 
+    {
+        ArrayList <String> entries = new ArrayList<>(16);
+
+        entries.add("F1: Show this help dialog");
+        entries.add("ESC: Close top dialog");
+        entries.add("TAB: Toggle item and creature name display");
+        entries.add("Ctrl-S: Save current game");
+        entries.add("Ctrl-L: Load a saved game");
+        entries.add("E: Open expedition book");
+        entries.add("Q: Open quest book");
+
+        ListChoice choice = new ListChoice(display.textureCache, gameDisplay,
+                                           500, 400,
+                                           "Hotkeys", entries,
+                                           (int n) -> {
+                                               gameDisplay.showDialog(null);
                                            });
         gameDisplay.showDialog(choice);
     }
