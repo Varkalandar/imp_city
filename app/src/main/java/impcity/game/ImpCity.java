@@ -1439,7 +1439,7 @@ public class ImpCity implements PostRenderHook, GameInterface
     }	
     	
     	
-	public void allocateGrave(Map map, int x, int y)
+    public void allocateGrave(Map map, int x, int y)
     {
         int gx = x + Map.SUB/3;
         int gy = y + Map.SUB/2;
