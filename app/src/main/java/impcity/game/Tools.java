@@ -18,6 +18,7 @@ public enum Tools
     DEMOLISH,
     
     SPELL_IMP,
+    SPELL_GRAB,
 
     BOOK_CREATURES,
     BOOK_QUESTS,

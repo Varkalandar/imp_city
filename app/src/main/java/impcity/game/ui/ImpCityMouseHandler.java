@@ -43,6 +43,8 @@ public class ImpCityMouseHandler implements MouseHandler
     private int dragStartMx, dragStartMy;
     private boolean dragging = false;
     
+    private int grabbedItem;
+    
     
     public ImpCityMouseHandler(ImpCity game, 
                                GameDisplay gameDisplay,
@@ -56,6 +58,8 @@ public class ImpCityMouseHandler implements MouseHandler
 
         Tools.selected = Tools.MARK_DIG;
         setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
+        
+        this.grabbedItem = 0;
     }
     
     
@@ -439,6 +443,52 @@ public class ImpCityMouseHandler implements MouseHandler
         }
     }
     
+    
+    private void grabItem(Map map)
+    {
+        if(grabbedItem == 0)
+        {
+            // try exact location first
+            int item = map.getItem(game.mouseI, game.mouseJ);
+            int whereX = game.mouseI;
+            int whereY =  game.mouseJ;
+
+            // if there was nothing, scan nearby places
+            if (item == 0 && !Features.isCoins(item) && !Features.isResource(item))
+            {
+                for(int j=game.mouseJ - 1; j<=game.mouseJ + 1; j++) 
+                {
+                    for(int i=game.mouseI - 1; i<=game.mouseI + 1; i++) 
+                    {
+                        item = map.getItem(i, j);
+
+                        if(item != 0 && (Features.isCoins(item) || Features.isResource(item))) {
+                            whereX = game.mouseI;
+                            whereY =  game.mouseJ;
+                        }
+                    }
+                }
+            }
+
+            // success?
+            if (item != 0 && (Features.isCoins(item) || Features.isResource(item)))
+            {
+                LOG.info("Grabbing item=" + item);
+                map.setItem(whereX, whereY, 0);
+                setMousePointer(display.textureCache.textures[item & 0xFFFF]);
+                grabbedItem = item;
+            }
+        }
+        else
+        {
+            // deposit item
+            map.setItem(game.mouseI, game.mouseJ, grabbedItem);
+            grabbedItem = 0;
+            setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
+        }
+    }
+    
+    
     private void setMousePointer(Texture tex)
     {
         MousePointerBitmap mp = new MousePointerBitmap();
@@ -449,6 +499,7 @@ public class ImpCityMouseHandler implements MouseHandler
         mp.hue = 0xFFFFFFFF;
         display.setMousePointer(mp);
     }
+    
 
     private void handleRoom1Buttons(int mouseX, int mouseY)
     {
@@ -529,6 +580,13 @@ public class ImpCityMouseHandler implements MouseHandler
             Tools.selected = Tools.SPELL_IMP;
             // setMousePointer(TextureCache.species[Species.IMPS_BASE+2]);
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
+            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
+        }
+        else if(n == 1)
+        {
+            Tools.selected = Tools.SPELL_GRAB;
+            // setMousePointer(TextureCache.species[Species.IMPS_BASE+2]);
+            // setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
     }
@@ -755,6 +813,9 @@ public class ImpCityMouseHandler implements MouseHandler
                     break;
                 case SPELL_IMP:
                     spawnImp(map, rasterI, rasterJ);
+                    break;
+                case SPELL_GRAB:
+                    grabItem(map);
                     break;
             }
         }            

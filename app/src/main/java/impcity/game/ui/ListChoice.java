@@ -6,6 +6,7 @@ import impcity.ogl.IsoDisplay;
 import java.util.function.IntConsumer;
 import java.util.logging.Logger;
 
+
 /**
  *
  * @author hjm
@@ -19,6 +20,7 @@ public class ListChoice extends UiDialog
     private final IntConsumer callback;
     private int topCached;
     private int selection = 0;
+
     
     public ListChoice(TextureCache textureCache, GameDisplay gameDisplay,
                       int width, int height,
@@ -72,6 +74,7 @@ public class ListChoice extends UiDialog
 
         if(buttonReleased != 0)
         {
+            playClickSound();
             callback.accept(n);
         }
     }
