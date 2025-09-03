@@ -18,6 +18,9 @@ import impcity.ogl.IsoDisplay;
 import impcity.ui.MouseHandler;
 import impcity.ui.MousePointerBitmap;
 import impcity.ui.TimedMessage;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Writer;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -43,8 +46,11 @@ public class ImpCityMouseHandler implements MouseHandler
     private int dragStartMx, dragStartMy;
     private boolean dragging = false;
     
-    private int grabbedItem;
-    
+    /**
+     * The item currently grabbed by the player (on cursor)
+     */
+    public int grabbedItem;
+
     
     public ImpCityMouseHandler(ImpCity game, 
                                GameDisplay gameDisplay,
@@ -58,8 +64,6 @@ public class ImpCityMouseHandler implements MouseHandler
 
         Tools.selected = Tools.MARK_DIG;
         setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
-        
-        this.grabbedItem = 0;
     }
     
     
@@ -490,6 +494,39 @@ public class ImpCityMouseHandler implements MouseHandler
                 setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             }
         }
+    }
+    
+    
+    @Override
+    public void read(BufferedReader reader) throws IOException
+    {
+        String line = reader.readLine();
+        if(line != null)
+        {
+            grabbedItem = Integer.parseInt(line.substring(5));
+        }
+        else
+        {
+            // older games have no grabbed items
+            grabbedItem = 0;                        
+        }
+
+        if(grabbedItem == 0)
+        {
+            setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
+        }
+        else
+        {
+            setMousePointer(display.textureCache.textures[grabbedItem & 0xFFFF]);
+            Tools.selected = Tools.SPELL_GRAB;            
+        }
+    }
+
+
+    @Override
+    public void write(Writer writer) throws IOException
+    {
+        writer.write("item=" + grabbedItem + "\n");
     }
     
     

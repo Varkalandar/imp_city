@@ -32,6 +32,8 @@ import impcity.ui.MouseHandler;
 import impcity.ui.MousePointerBitmap;
 import impcity.ui.PixFont;
 import impcity.ui.PostRenderHook;
+import java.io.BufferedReader;
+import java.io.Writer;
 import java.util.ArrayList;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
@@ -1126,6 +1128,14 @@ public class IsoDisplay implements PostRenderHook
         @Override
         public void processMouse()
         {
+        }
+
+        @Override
+        public void read(BufferedReader reader) throws IOException {
+        }
+
+        @Override
+        public void write(Writer writer) throws IOException {
         }
     }
 }

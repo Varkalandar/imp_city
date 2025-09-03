@@ -735,6 +735,9 @@ public class ImpCity implements PostRenderHook, GameInterface
                     jobQueue.write(writer);
                     
                     saveQuests(writer);
+                    display.mouseHandler.write(writer);
+                    
+                    writer.write(folderName);
                 }
 
                 gameDisplay.addMessage(new TimedMessage("Game saved!", 0xFFFFFFFF, display.displayWidth/2, 300, Clock.time(), 1.0));
@@ -839,6 +842,8 @@ public class ImpCity implements PostRenderHook, GameInterface
                     jobQueue.read(this, reader);
                     
                     loadQuests(reader);
+
+                    display.mouseHandler.read(reader);
                 }
                 
                 activateMap(map);

@@ -19,6 +19,8 @@ import impcity.ui.KeyHandler;
 import impcity.ui.MouseHandler;
 import impcity.ui.PostRenderHook;
 import impcity.uikit.dialogs.StringInputDialog;
+import java.io.BufferedReader;
+import java.io.Writer;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -680,6 +682,14 @@ public class Editor implements PostRenderHook, TextureCache.LoaderCallback
             }
             
             return 0;
+        }
+
+        @Override
+        public void read(BufferedReader reader) throws IOException {
+        }
+
+        @Override
+        public void write(Writer writer) throws IOException {
         }
     }
 }
