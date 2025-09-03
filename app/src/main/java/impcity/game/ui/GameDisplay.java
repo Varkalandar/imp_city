@@ -63,6 +63,7 @@ public class GameDisplay
     private final Texture buttonGhost;
     private final Texture buttonDemolish;
     private final Texture buttonImp;
+    private final Texture buttonHand;
     
     public static final int TAB_NONE = 0;
     public static final int TAB_ROOMS = 1;
@@ -102,6 +103,7 @@ public class GameDisplay
         buttonDemolish = textureCache.loadTexture("/ui/button_demolish.png", true);
 
         buttonImp = textureCache.loadTexture("/ui/button_imp.png", true);
+        buttonHand = textureCache.loadTexture("/ui/button_hand.png", true);
         
         buttonCreatures = textureCache.loadTexture("/ui/button_creatures.png", true);
         buttonMap = textureCache.loadTexture("/ui/button_map.png", true);
@@ -468,6 +470,7 @@ public class GameDisplay
         IsoDisplay.fillRect(122, 26, 650, 70, 0x77000000);
         
         IsoDisplay.drawTile(buttonImp, left + 0, top, 60, 60, calculateButtonColor(Tools.SPELL_IMP));
+        IsoDisplay.drawTile(buttonHand, left + 70, top, 60, 60, calculateButtonColor(Tools.SPELL_IMP));
 
         int tipY = 108;
         int n = calculateTabButtonNumber(Mouse.getX(), Mouse.getY());
@@ -478,6 +481,11 @@ public class GameDisplay
             int cost = Math.max(1, imps - 3) * KeeperStats.MANA_SPAWN_IMP_COST;
             drawMenuText("Spawn a new imp", toolTipColor, 90, tipY, 0.6);
             drawMenuText("Cost: " + cost + " mana", toolTipColor, 90, tipY-18, 0.4);
+        }
+        else if(n == 1)
+        {
+            drawMenuText("Grab an item", toolTipColor, 90 + 70, tipY, 0.6);
+            drawMenuText("Cost: " + 10 + " mana", toolTipColor, 90 + 70, tipY-18, 0.4);
         }
     }
 

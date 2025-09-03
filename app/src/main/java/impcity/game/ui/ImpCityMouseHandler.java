@@ -452,35 +452,38 @@ public class ImpCityMouseHandler implements MouseHandler
     {
         if(grabbedItem == 0)
         {
-            // try exact location first
-            int item = map.getItem(game.mouseI, game.mouseJ);
-            int whereX = game.mouseI;
-            int whereY =  game.mouseJ;
-
-            // if there was nothing, scan nearby places
-            if (item == 0 && !Features.isCoins(item) && !Features.isResource(item))
+            if(game.payMana(10))
             {
-                for(int j=game.mouseJ - 1; j<=game.mouseJ + 1; j++) 
-                {
-                    for(int i=game.mouseI - 1; i<=game.mouseI + 1; i++) 
-                    {
-                        item = map.getItem(i, j);
+                // try exact location first
+                int item = map.getItem(game.mouseI, game.mouseJ);
+                int whereX = game.mouseI;
+                int whereY =  game.mouseJ;
 
-                        if(item != 0 && (Features.isCoins(item) || Features.isResource(item))) {
-                            whereX = game.mouseI;
-                            whereY =  game.mouseJ;
+                // if there was nothing, scan nearby places
+                if (item == 0 && !Features.isCoins(item) && !Features.isResource(item))
+                {
+                    for(int j=game.mouseJ - 1; j<=game.mouseJ + 1; j++) 
+                    {
+                        for(int i=game.mouseI - 1; i<=game.mouseI + 1; i++) 
+                        {
+                            item = map.getItem(i, j);
+
+                            if(item != 0 && (Features.isCoins(item) || Features.isResource(item))) {
+                                whereX = game.mouseI;
+                                whereY =  game.mouseJ;
+                            }
                         }
                     }
                 }
-            }
 
-            // success?
-            if (item != 0 && (Features.isCoins(item) || Features.isResource(item)))
-            {
-                LOG.info("Grabbing item=" + item);
-                map.setItem(whereX, whereY, 0);
-                setMousePointer(display.textureCache.textures[item & 0xFFFF]);
-                grabbedItem = item;
+                // success?
+                if (item != 0 && (Features.isCoins(item) || Features.isResource(item)))
+                {
+                    LOG.info("Grabbing item=" + item);
+                    map.setItem(whereX, whereY, 0);
+                    setMousePointer(display.textureCache.textures[item & 0xFFFF]);
+                    grabbedItem = item;
+                }
             }
         }
         else
