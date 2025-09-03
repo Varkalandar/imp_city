@@ -482,9 +482,13 @@ public class ImpCityMouseHandler implements MouseHandler
         else
         {
             // deposit item
-            map.setItem(game.mouseI, game.mouseJ, grabbedItem);
-            grabbedItem = 0;
-            setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
+            boolean ok = map.dropItem(game.mouseI, game.mouseJ, grabbedItem, (x, y) -> {});
+            
+            if (ok)
+            {
+                grabbedItem = 0;
+                setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
+            }
         }
     }
     
