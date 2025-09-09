@@ -6,6 +6,7 @@ import impcity.game.ai.WayPathSource;
 import impcity.game.jobs.JobExcavate;
 import impcity.game.jobs.JobMining;
 import impcity.game.jobs.JobQueue;
+import impcity.game.map.LocationCallback;
 import impcity.game.processables.FarmSquare;
 import java.awt.Point;
 import java.util.logging.Level;
@@ -453,33 +454,23 @@ public class ImpCityMouseHandler implements MouseHandler
         {
             if(game.payMana(10))
             {
-                // try exact location first
-                int item = map.getItem(game.mouseI, game.mouseJ);
-                int whereX = game.mouseI;
-                int whereY =  game.mouseJ;
+                Point where = 
+                    map.spirallytraverseArea(game.mouseI, game.mouseJ, 5,
+                        new LocationCallback() {
+                            @Override
+                            public boolean visit(int x, int y) {
+                                int item = map.getItem(x, y);
 
-                // if there was nothing, scan nearby places
-                if (item == 0 && !Features.isCoins(item) && !Features.isResource(item))
-                {
-                    for(int j=game.mouseJ - 1; j<=game.mouseJ + 1; j++) 
-                    {
-                        for(int i=game.mouseI - 1; i<=game.mouseI + 1; i++) 
-                        {
-                            item = map.getItem(i, j);
-
-                            if(item != 0 && (Features.isCoins(item) || Features.isResource(item))) {
-                                whereX = game.mouseI;
-                                whereY =  game.mouseJ;
+                                return item != 0 && (Features.isCoins(item) || Features.isResource(item));
                             }
-                        }
-                    }
-                }
-
+                        });
+                            
                 // success?
-                if (item != 0 && (Features.isCoins(item) || Features.isResource(item)))
+                if(where != null)
                 {
+                    int item = map.getItem(where.x, where.y);
                     LOG.info("Grabbing item=" + item);
-                    map.setItem(whereX, whereY, 0);
+                    map.setItem(where.x, where.y, 0);
                     setMousePointer(display.textureCache.textures[item & 0xFFFF]);
                     grabbedItem = item;
                 }
@@ -488,9 +479,9 @@ public class ImpCityMouseHandler implements MouseHandler
         else
         {
             // deposit item
-            boolean ok = map.dropItem(game.mouseI, game.mouseJ, grabbedItem, (x, y) -> {});
+            Point where = map.dropItem(game.mouseI, game.mouseJ, grabbedItem, (x, y) -> {});
             
-            if (ok)
+            if(where != null)
             {
                 grabbedItem = 0;
                 setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);

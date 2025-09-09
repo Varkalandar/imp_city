@@ -1,5 +1,6 @@
 package impcity.game.map;
 
+import java.awt.Point;
 import java.awt.Rectangle;
 
 /**
@@ -15,7 +16,8 @@ public class RectArea
         area = new Rectangle(x, y, w, h);
     }
 
-    public boolean spirallyTraverse(LocationCallback callback, int maxRadius)
+    
+    public Point spirallyTraverse(LocationCallback callback, int maxRadius)
     {
         int cx = area.x + area.width/2;
         int cy = area.y + area.height/2;
@@ -27,13 +29,16 @@ public class RectArea
                 for(int i=-radius; i<=radius; i++)
                 {
                     boolean ok = callback.visit(cx+i, cy+j);
-                    if(ok) return true;
+                    if(ok) {
+                        return new Point(cx+i, cy+j);
+                    }
                 }
             }
         }
         
-        return false;
+        return null;
     }
+    
 
     public boolean traverseWithoutCorners(LocationCallback callback)
     {

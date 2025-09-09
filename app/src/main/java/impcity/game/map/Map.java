@@ -206,7 +206,7 @@ public class Map implements Serializable
                 }
             };        
                 
-        return area.spirallyTraverse(callback, r);
+        return area.spirallyTraverse(callback, r) != null;
     }
 
 
@@ -264,7 +264,7 @@ public class Map implements Serializable
                 }
             };        
                 
-        return area.spirallyTraverse(callback, r);
+        return area.spirallyTraverse(callback, r) != null;
     }
 
 
@@ -481,7 +481,7 @@ public class Map implements Serializable
     }
 
 
-    public boolean dropItem(int x, int y, final int itemKey, LocationVisitor visitor)
+    public Point dropItem(int x, int y, final int itemKey, LocationVisitor visitor)
     {
         RectArea area = new RectArea(x, y, 0, 0);
         
@@ -551,6 +551,14 @@ public class Map implements Serializable
                 visitor.visit(x + i, y + j);
             }
         }        
+    }
+    
+    
+    public Point spirallytraverseArea(int x, int y, int radius,
+                                     LocationCallback callback)
+    {
+        RectArea area = new RectArea(x, y, 0, 0);
+        return area.spirallyTraverse(callback, radius);
     }
     
     
