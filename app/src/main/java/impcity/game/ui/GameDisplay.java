@@ -485,7 +485,12 @@ public class GameDisplay
         else if(n == 1)
         {
             drawMenuText(Tool.SPELL_GRAB.UI_DESCRIPTION, toolTipColor, 90 + 70, tipY, 0.6);
-            drawMenuText("Cost: " + 10 + " mana", toolTipColor, 90 + 70, tipY-18, 0.4);
+            drawMenuText("Cost: " + Tool.SPELL_GRAB.COST_MANA + " mana", toolTipColor, 90 + 70, tipY-18, 0.4);
+        }
+        else if(n == 2)
+        {
+            drawMenuText(Tool.SPELL_PLACE_DECORATION.UI_DESCRIPTION, toolTipColor, 90 + 140, tipY, 0.6);
+            drawMenuText("Cost: " + Tool.SPELL_PLACE_DECORATION.COST_MANA + " mana", toolTipColor, 90 + 140, tipY-18, 0.4);
         }
     }
 

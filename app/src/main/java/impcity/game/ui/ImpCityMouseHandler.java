@@ -490,6 +490,18 @@ public class ImpCityMouseHandler implements MouseHandler
     }
     
     
+    private void placeDecoration(Map map)
+    {
+        int item = map.getItem(game.mouseI, game.mouseJ);
+        
+        // allowed to place a decoration here?
+        if(item == 0 || Features.DUST_SET.contains(item))
+        {
+            map.setItem(game.mouseI, game.mouseJ, Tool.parameter);
+        }
+    }
+    
+    
     @Override
     public void read(BufferedReader reader) throws IOException
     {
@@ -619,6 +631,14 @@ public class ImpCityMouseHandler implements MouseHandler
         else if(n == 1)
         {
             Tool.selected = Tool.SPELL_GRAB;
+            // setMousePointer(TextureCache.species[Species.IMPS_BASE+2]);
+            // setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
+            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
+        }
+        else if(n == 2)
+        {
+            Tool.selected = Tool.SPELL_PLACE_DECORATION;
+            Tool.parameter = Features.I_TORCH_STAND;
             // setMousePointer(TextureCache.species[Species.IMPS_BASE+2]);
             // setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
@@ -850,6 +870,9 @@ public class ImpCityMouseHandler implements MouseHandler
                     break;
                 case SPELL_GRAB:
                     grabItem(map);
+                    break;
+                case SPELL_PLACE_DECORATION:
+                    placeDecoration(map);
                     break;
             }
         }            
