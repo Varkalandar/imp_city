@@ -62,7 +62,7 @@ public class ImpCityMouseHandler implements MouseHandler
         this.display = display;
         this.soundPlayer = soundPlayer;
 
-        Tools.selected = Tools.MARK_DIG;
+        Tool.selected = Tool.MARK_DIG;
         setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
     }
     
@@ -165,10 +165,9 @@ public class ImpCityMouseHandler implements MouseHandler
 
         if(Features.canBeDug(ground, block))
         {
-            if (game.payMana(KeeperStats.MANA_DIG_BLOCK_COST))
+            if (game.payMana(Tool.MARK_DIG.COST_MANA))
             {
                 createExcavationJob(map, rasterI, rasterJ);
-                game.payMana(KeeperStats.MANA_DIG_BLOCK_COST);
             }
             else 
             {
@@ -426,7 +425,7 @@ public class ImpCityMouseHandler implements MouseHandler
            wps.isMoveAllowed(game.mouseI, game.mouseJ, game.mouseI, game.mouseJ))
         {
             int imps = game.countMobs(Species.IMPS_BASE);
-            int cost = Math.max(1, imps - 3) * KeeperStats.MANA_SPAWN_IMP_COST;
+            int cost = Math.max(1, imps - 3) * Tool.SPELL_IMP.COST_MANA;
 
             boolean ok = game.payMana(cost);
 
@@ -521,7 +520,7 @@ public class ImpCityMouseHandler implements MouseHandler
         else
         {
             setMousePointer(display.textureCache.textures[grabbedItem & 0xFFFF]);
-            Tools.selected = Tools.SPELL_GRAB;            
+            Tool.selected = Tool.SPELL_GRAB;            
         }
     }
 
@@ -554,61 +553,61 @@ public class ImpCityMouseHandler implements MouseHandler
         
         if(n == 0)
         {
-            Tools.selected = Tools.MARK_DIG;
+            Tool.selected = Tool.MARK_DIG;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
         else if(n == 1)
         {
-            Tools.selected = Tools.MAKE_LAIR;
+            Tool.selected = Tool.MAKE_LAIR;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
         else if(n == 2)
         {
-            Tools.selected = Tools.MAKE_FARM;
+            Tool.selected = Tool.MAKE_FARM;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
         else if(n == 3)
         {
-            Tools.selected = Tools.MAKE_LIBRARY;
+            Tool.selected = Tool.MAKE_LIBRARY;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
         else if(n == 4)
         {
-            Tools.selected = Tools.MAKE_TREASURY;
+            Tool.selected = Tool.MAKE_TREASURY;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
         else if(n == 5 && (research & KeeperStats.RESEARCH_LABS) != 0)
         {
-            Tools.selected = Tools.MAKE_LAB;
+            Tool.selected = Tool.MAKE_LAB;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
         else if(n == 6 && (research & KeeperStats.RESEARCH_FORGES) != 0)
         {
-            Tools.selected = Tools.MAKE_FORGE;
+            Tool.selected = Tool.MAKE_FORGE;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
         else if(n == 7 && (research & KeeperStats.RESEARCH_HEALING) != 0)
         {
-            Tools.selected = Tools.MAKE_HOSPITAL;
+            Tool.selected = Tool.MAKE_HOSPITAL;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
         else if(n == 8 && (research & KeeperStats.RESEARCH_GHOSTYARDS) != 0)
         {
-            Tools.selected = Tools.MAKE_GHOSTYARD;
+            Tool.selected = Tool.MAKE_GHOSTYARD;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
         else if(n == 9)
         {
-            Tools.selected = Tools.DEMOLISH;
+            Tool.selected = Tool.DEMOLISH;
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
@@ -621,14 +620,14 @@ public class ImpCityMouseHandler implements MouseHandler
 
         if(n == 0)
         {
-            Tools.selected = Tools.SPELL_IMP;
+            Tool.selected = Tool.SPELL_IMP;
             // setMousePointer(TextureCache.species[Species.IMPS_BASE+2]);
             setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
         }
         else if(n == 1)
         {
-            Tools.selected = Tools.SPELL_GRAB;
+            Tool.selected = Tool.SPELL_GRAB;
             // setMousePointer(TextureCache.species[Species.IMPS_BASE+2]);
             // setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
@@ -823,7 +822,7 @@ public class ImpCityMouseHandler implements MouseHandler
             Mob player = game.world.mobs.get(game.getPlayerKey());
             Map map = player.gameMap;
 
-            switch(Tools.selected)
+            switch(Tool.selected)
             {
                 case MARK_DIG:
                     markForExcavation(map, rasterI, rasterJ);

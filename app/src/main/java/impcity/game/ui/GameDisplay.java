@@ -1,7 +1,7 @@
 package impcity.game.ui;
 
 import impcity.game.ImpCity;
-import impcity.game.Tools;
+import impcity.game.Tool;
 import impcity.game.KeeperStats;
 import impcity.game.Sounds;
 import java.io.IOException;
@@ -326,7 +326,7 @@ public class GameDisplay
      * Calculate of the button is disabled, normal or selected
      * @return
      */
-    private int calculateButtonColor(Tools tool)
+    private int calculateButtonColor(Tool tool)
     {
         Mob keeper = game.world.mobs.get(game.getPlayerKey());
         int research = keeper.stats.getCurrent(KeeperStats.RESEARCH);
@@ -348,18 +348,18 @@ public class GameDisplay
                 break;
             case MARK_DIG:
                 enabled = true;
-                costCovered = keeper.stats.getCurrent(KeeperStats.MANA) >= KeeperStats.MANA_DIG_BLOCK_COST;
+                costCovered = keeper.stats.getCurrent(KeeperStats.MANA) >= Tool.MARK_DIG.COST_MANA;
                 break;
             case SPELL_IMP:
                 enabled = true;
                 int imps = game.countMobs(Species.IMPS_BASE);
-                int cost = Math.max(1, imps - 3) * KeeperStats.MANA_SPAWN_IMP_COST;
+                int cost = Math.max(1, imps - 3) * Tool.SPELL_IMP.COST_MANA;
                 costCovered = keeper.stats.getCurrent(KeeperStats.MANA) >= cost;
                 break;
         }
 
         if(enabled) {
-            if (Tools.selected == tool) {
+            if (Tool.selected == tool) {
                 if (costCovered) {
                     color = selectedButtonColor;
                 }
@@ -398,69 +398,69 @@ public class GameDisplay
     {
         IsoDisplay.fillRect(122, 26, 720, 70, 0x77000000);
         
-        IsoDisplay.drawTile(buttonDig, left + 0, top, 60, 60, calculateButtonColor(Tools.MARK_DIG));
-        IsoDisplay.drawTile(buttonLair, left + 70, top, 60, 60, calculateButtonColor(Tools.MAKE_LAIR));
-        IsoDisplay.drawTile(buttonFood, left + 140, top, 60, 60, calculateButtonColor(Tools.MAKE_FARM));
-        IsoDisplay.drawTile(buttonBook, left + 210, top, 60, 60, calculateButtonColor(Tools.MAKE_LIBRARY));
-        IsoDisplay.drawTile(buttonTreasury, left + 280, top, 60, 60, calculateButtonColor(Tools.MAKE_TREASURY));
-        IsoDisplay.drawTile(buttonLab, left + 350, top, 60, 60, calculateButtonColor(Tools.MAKE_LAB));
-        IsoDisplay.drawTile(buttonForge, left + 420, top, 60, 60, calculateButtonColor(Tools.MAKE_FORGE));
-        IsoDisplay.drawTile(buttonHeal, left + 490, top, 60, 60, calculateButtonColor(Tools.MAKE_HOSPITAL));
-        IsoDisplay.drawTile(buttonGhost, left + 560, top, 60, 60, calculateButtonColor(Tools.MAKE_GHOSTYARD));
+        IsoDisplay.drawTile(buttonDig, left + 0, top, 60, 60, calculateButtonColor(Tool.MARK_DIG));
+        IsoDisplay.drawTile(buttonLair, left + 70, top, 60, 60, calculateButtonColor(Tool.MAKE_LAIR));
+        IsoDisplay.drawTile(buttonFood, left + 140, top, 60, 60, calculateButtonColor(Tool.MAKE_FARM));
+        IsoDisplay.drawTile(buttonBook, left + 210, top, 60, 60, calculateButtonColor(Tool.MAKE_LIBRARY));
+        IsoDisplay.drawTile(buttonTreasury, left + 280, top, 60, 60, calculateButtonColor(Tool.MAKE_TREASURY));
+        IsoDisplay.drawTile(buttonLab, left + 350, top, 60, 60, calculateButtonColor(Tool.MAKE_LAB));
+        IsoDisplay.drawTile(buttonForge, left + 420, top, 60, 60, calculateButtonColor(Tool.MAKE_FORGE));
+        IsoDisplay.drawTile(buttonHeal, left + 490, top, 60, 60, calculateButtonColor(Tool.MAKE_HOSPITAL));
+        IsoDisplay.drawTile(buttonGhost, left + 560, top, 60, 60, calculateButtonColor(Tool.MAKE_GHOSTYARD));
 
-        IsoDisplay.drawTile(buttonDemolish, left + 640, top, 60, 60, calculateButtonColor(Tools.DEMOLISH));
+        IsoDisplay.drawTile(buttonDemolish, left + 640, top, 60, 60, calculateButtonColor(Tool.DEMOLISH));
         
         int tipY = 112;
         int n = calculateTabButtonNumber(Mouse.getX(), Mouse.getY());
 
         if(n == 0)
         {
-            drawMenuText("Mark a block for digging", toolTipColor, 70, tipY, 0.6);
-            drawMenuText("Cost: " + KeeperStats.MANA_DIG_BLOCK_COST + " mana", toolTipColor, 70, tipY-18, 0.5);
+            drawMenuText(Tool.MARK_DIG.UI_DESCRIPTION, toolTipColor, 70, tipY, 0.6);
+            drawMenuText("Cost: " + Tool.MARK_DIG.COST_MANA + " mana", toolTipColor, 70, tipY-18, 0.5);
         }
         else if(n == 1)
         {
-            drawMenuText("Build lair space for your creatures", toolTipColor, 140, tipY, 0.6);
+            drawMenuText(Tool.MAKE_LAIR.UI_DESCRIPTION, toolTipColor, 140, tipY, 0.6);
             drawMenuText("Upkeep: " + KeeperStats.MANA_LAIR_COST + " mana/hour", toolTipColor, 140, tipY-18, 0.5);
         }
         else if(n == 2)
         {
-            drawMenuText("Convert floor to farmland", toolTipColor, 210, tipY, 0.6);
+            drawMenuText(Tool.MAKE_FARM.UI_DESCRIPTION, toolTipColor, 210, tipY, 0.6);
             drawMenuText("Upkeep: " + KeeperStats.MANA_FARMLAND_COST + " mana/hour", toolTipColor, 210, tipY-18, 0.5);
         }
         else if(n == 3)
         {
-            drawMenuText("Set up a library", toolTipColor, 280, tipY, 0.6);
+            drawMenuText(Tool.MAKE_LIBRARY.UI_DESCRIPTION, toolTipColor, 280, tipY, 0.6);
             drawMenuText("Upkeep: " + KeeperStats.MANA_LIBRARY_COST + " mana/hour", toolTipColor, 280, tipY-18, 0.5);
         }
         else if(n == 4)
         {
-            drawMenuText("Make a treasury", toolTipColor, 350, tipY, 0.6);
+            drawMenuText(Tool.MAKE_TREASURY.UI_DESCRIPTION, toolTipColor, 350, tipY, 0.6);
             drawMenuText("Upkeep: " + KeeperStats.MANA_TREASURY_COST + " mana/hour", toolTipColor, 350, tipY-18, 0.5);
         }
         else if(n == 5)
         {
-            drawMenuText("Build a laboratory", toolTipColor, 440, tipY, 0.6);
+            drawMenuText(Tool.MAKE_LAB.UI_DESCRIPTION, toolTipColor, 440, tipY, 0.6);
             drawMenuText("Cost: 1 Copper Upkeep: " + KeeperStats.MANA_LABORATORY_COST + " mana/hour", toolTipColor, 440, tipY-18, 0.5);
         }
         else if(n == 6)
         {
-            drawMenuText("Create a forge", toolTipColor, 490, tipY, 0.6);
+            drawMenuText(Tool.MAKE_FORGE.UI_DESCRIPTION, toolTipColor, 490, tipY, 0.6);
             drawMenuText("Upkeep: " + KeeperStats.MANA_FORGE_COST + " mana/hour", toolTipColor, 490, tipY-18, 0.5);
         }
         else if(n == 7)
         {
-            drawMenuText("Place a healing well", toolTipColor, 560, tipY, 0.6);
+            drawMenuText(Tool.MAKE_HOSPITAL.UI_DESCRIPTION, toolTipColor, 560, tipY, 0.6);
             drawMenuText("Cost: 5 Copper Upkeep: " + KeeperStats.MANA_LABORATORY_COST + " mana/hour", toolTipColor, 560, tipY-18, 0.5);
         }
         else if(n == 8)
         {
-            drawMenuText("Dig a ghostyard", toolTipColor, 640, tipY, 0.6);
+            drawMenuText(Tool.MAKE_GHOSTYARD.UI_DESCRIPTION, toolTipColor, 640, tipY, 0.6);
             drawMenuText("Cost: n/a Upkeep: " + KeeperStats.MANA_GHOSTYARD_COST + " mana/hour", toolTipColor, 640, tipY-18, 0.5);
         }
         else if(n == 9)
         {
-            drawMenuText("Revert a room to empty space", toolTipColor, 720, tipY, 0.6);
+            drawMenuText(Tool.DEMOLISH.UI_DESCRIPTION, toolTipColor, 720, tipY, 0.6);
         }
     }
     
@@ -469,8 +469,8 @@ public class GameDisplay
     {
         IsoDisplay.fillRect(122, 26, 650, 70, 0x77000000);
         
-        IsoDisplay.drawTile(buttonImp, left + 0, top, 60, 60, calculateButtonColor(Tools.SPELL_IMP));
-        IsoDisplay.drawTile(buttonHand, left + 70, top, 60, 60, calculateButtonColor(Tools.SPELL_IMP));
+        IsoDisplay.drawTile(buttonImp, left + 0, top, 60, 60, calculateButtonColor(Tool.SPELL_IMP));
+        IsoDisplay.drawTile(buttonHand, left + 70, top, 60, 60, calculateButtonColor(Tool.SPELL_IMP));
 
         int tipY = 108;
         int n = calculateTabButtonNumber(Mouse.getX(), Mouse.getY());
@@ -478,39 +478,40 @@ public class GameDisplay
         if(n == 0)
         {
             int imps = game.countMobs(Species.IMPS_BASE);
-            int cost = Math.max(1, imps - 3) * KeeperStats.MANA_SPAWN_IMP_COST;
-            drawMenuText("Spawn a new imp", toolTipColor, 90, tipY, 0.6);
+            int cost = Math.max(1, imps - 3) * Tool.SPELL_IMP.COST_MANA;
+            drawMenuText(Tool.SPELL_IMP.UI_DESCRIPTION, toolTipColor, 90, tipY, 0.6);
             drawMenuText("Cost: " + cost + " mana", toolTipColor, 90, tipY-18, 0.4);
         }
         else if(n == 1)
         {
-            drawMenuText("Grab an item", toolTipColor, 90 + 70, tipY, 0.6);
+            drawMenuText(Tool.SPELL_GRAB.UI_DESCRIPTION, toolTipColor, 90 + 70, tipY, 0.6);
             drawMenuText("Cost: " + 10 + " mana", toolTipColor, 90 + 70, tipY-18, 0.4);
         }
     }
 
+    
     private void displayBooksTab(int left, int top)
     {
         IsoDisplay.fillRect(122, 26, 650, 70, 0x77000000);
         
-        IsoDisplay.drawTile(buttonCreatures, left + 0, top, 60, 60, calculateButtonColor(Tools.BOOK_CREATURES));
-        IsoDisplay.drawTile(buttonMap, left + 70, top, 60, 60, calculateButtonColor(Tools.BOOK_QUESTS));
-        IsoDisplay.drawTile(buttonExpedition, left + 140, top, 60, 60, calculateButtonColor(Tools.BOOK_EXPEDITION));
+        IsoDisplay.drawTile(buttonCreatures, left + 0, top, 60, 60, calculateButtonColor(Tool.BOOK_CREATURES));
+        IsoDisplay.drawTile(buttonMap, left + 70, top, 60, 60, calculateButtonColor(Tool.BOOK_QUESTS));
+        IsoDisplay.drawTile(buttonExpedition, left + 140, top, 60, 60, calculateButtonColor(Tool.BOOK_EXPEDITION));
 
         int tipY = 108;
         int n = calculateTabButtonNumber(Mouse.getX(), Mouse.getY());
 
         if(n == 0)
         {
-            drawMenuText("Open creature book", toolTipColor, 70, tipY, 0.6);
+            drawMenuText(Tool.BOOK_CREATURES.UI_DESCRIPTION, toolTipColor, 70, tipY, 0.6);
         }
         else if(n == 1)
         {
-            drawMenuText("Open quest location list", toolTipColor, 140, tipY, 0.6);
+            drawMenuText(Tool.BOOK_QUESTS.UI_DESCRIPTION, toolTipColor, 140, tipY, 0.6);
         }
         else if(n == 2)
         {
-            drawMenuText("Open expeditions book", toolTipColor, 210, tipY, 0.6);
+            drawMenuText(Tool.BOOK_EXPEDITION.UI_DESCRIPTION, toolTipColor, 210, tipY, 0.6);
         }
     }
 
