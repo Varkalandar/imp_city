@@ -637,11 +637,18 @@ public class ImpCityMouseHandler implements MouseHandler
         }
         else if(n == 2)
         {
-            Tool.selected = Tool.SPELL_PLACE_DECORATION;
-            Tool.parameter = Features.I_TORCH_STAND;
-            // setMousePointer(TextureCache.species[Species.IMPS_BASE+2]);
-            // setMousePointer(display.textureCache.textures[Features.CURSOR_HAND]);
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
+            ImageChoice decorationChoice = 
+                    new ImageChoice(display.textureCache, gameDisplay, 800, 600, 
+                            "Chose a decoration to place:", Features.DECORATIONS_SET, 
+                            (texId) -> {
+                                Tool.selected = Tool.SPELL_PLACE_DECORATION;
+                                Tool.parameter = Features.I_TORCH_STAND;
+                                gameDisplay.showDialog(null);
+                                // setMousePointer(display.textureCache.textures[texId]);
+                            });
+        
+            gameDisplay.showDialog(decorationChoice);
         }
     }
 

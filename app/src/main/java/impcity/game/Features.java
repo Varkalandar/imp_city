@@ -163,6 +163,14 @@ public class Features
     public static final HashSet<Integer> DUST_SET;
     
     
+    public static final int [] DECORATIONS = new int [] 
+    {
+        I_TORCH_STAND,
+    };
+    
+    public static final HashSet<Integer> DECORATIONS_SET;
+
+
     /** 
      * This filter keeps coins, resources and artifacts
      */
@@ -177,6 +185,13 @@ public class Features
         for(int dust : DUSTS)
         {
             DUST_SET.add(dust);
+        }
+
+        DECORATIONS_SET = new HashSet<>();
+
+        for(int decoration : DECORATIONS)
+        {
+            DECORATIONS_SET.add(decoration);
         }
     }
     
