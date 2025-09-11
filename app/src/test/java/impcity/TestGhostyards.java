@@ -33,7 +33,7 @@ public class TestGhostyards
 		ok = game.isGrave(map, 0, 0);		
 		assertTrue(ok, "Location 0, 0 must be grave now");
 
-		Mob mob = new Mob(0, 0, 0, 0, 0, map, null, 0, null);
+		Mob mob = new Mob(0, 0, 0, Mob.KIND_DENIZEN, 0, 0, map, null, 0, null);
 		
 		game.populateGrave(map, mob, 0, 0);
 	

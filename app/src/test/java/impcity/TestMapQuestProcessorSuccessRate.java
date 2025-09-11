@@ -111,7 +111,7 @@ public class TestMapQuestProcessorSuccessRate
     private static void addPartyMember(World world, Party party, int species)
     {
         Mob mob;
-        mob = new Mob(0, 0, species, 0, 0, null, null, 0, null);
+        mob = new Mob(0, 0, species, Mob.KIND_DENIZEN, 0, 0, null, null, 0, null);
         int key = world.mobs.nextFreeKey();
         mob.setKey(key);
         world.mobs.put(key, mob);
