@@ -2111,6 +2111,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             }
         }
 
+        
         @Override
         public void newHour(int hours)
         {
@@ -2122,6 +2123,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             
             processManaEconomy();
         }
+        
         
         private void processManaEconomy()
         {
@@ -2162,7 +2164,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             mana -= ghostyards.size() * KeeperStats.MANA_GHOSTYARD_COST;
             mana -= claimed.size() * KeeperStats.MANA_CLAIMED_SQUARE_COST;
          
-            LOG.info("mana=" + mana);
+            // LOG.info("mana=" + mana);
             
             if(mana < 0) 
             {
@@ -2174,6 +2176,22 @@ public class ImpCity implements PostRenderHook, GameInterface
                 keeper.stats.setCurrent(KeeperStats.MANA, mana);
             }
             
+            // max mana
+            int manaMax = KeeperStats.MANA_BASE_MAX;
+            manaMax += farmland.size();
+            manaMax += portals.size();
+            manaMax += lairs.size();
+            manaMax += treasuries.size();
+            manaMax += libraries.size();
+            manaMax += forges.size();
+            manaMax += labs.size();
+            manaMax += hospitals.size();
+            manaMax += ghostyards.size();
+            manaMax += claimed.size();
+            
+            keeper.stats.setMax(KeeperStats.MANA, manaMax);
+            
+            // life            
             int life = keeper.stats.getCurrent(KeeperStats.LIFE);
             life += KeeperStats.LIFE_BASE_GROWTH;
             

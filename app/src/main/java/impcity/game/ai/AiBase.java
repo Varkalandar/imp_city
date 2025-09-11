@@ -111,7 +111,7 @@ public abstract class AiBase implements Ai
     }
 
 
-    public boolean checkLairSpace(Mob mob, int x, int y)
+    public static boolean checkLairSpace(Mob mob, int x, int y)
     {
         SpeciesDescription desc = Species.speciesTable.get(mob.getSpecies());
         boolean ok = true;
@@ -122,8 +122,12 @@ public abstract class AiBase implements Ai
             {                
                 // Hajo: lair anchor points are shifted up to get 
                 // visibility right 
+                
+                // not needed?
+                /*
                 ok &= mob.gameMap.getItem(x + i - desc.lairSize + 1, 
                                           y + j - desc.lairSize + 1) == 0;
+                */
                 
                 ok &= !mob.gameMap.isPlacementBlocked(x + i, y + j);
             }

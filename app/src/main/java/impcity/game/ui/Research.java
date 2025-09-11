@@ -44,57 +44,84 @@ public class Research
         stats.setMax(KeeperStats.LIFE, KeeperStats.LIFE_BASE_MAX);
 
         stats.setMin(KeeperStats.RESEARCH, 0);
-        stats.setCurrent(KeeperStats.RESEARCH, 0);
+        stats.setCurrent(KeeperStats.RESEARCH, KeeperStats.RESEARCH_NONE);
         stats.setMax(KeeperStats.RESEARCH, 10000); // research needed for next discovery
         
-        stats.setCurrent(KeeperStats.RESEARCH, KeeperStats.RESEARCH_LABS | KeeperStats.RESEARCH_FORGES);
+        // stats.setCurrent(KeeperStats.RESEARCH, KeeperStats.RESEARCH_LABS | KeeperStats.RESEARCH_FORGES);
         // stats.setCurrent(KeeperStats.RESEARCH, KeeperStats.RESEARCH_GHOSTYARDS);
 
+        stats.setMin(KeeperStats.METALLURGY, 0);
+        stats.setCurrent(KeeperStats.METALLURGY, KeeperStats.METALLURGY_NONE);
+        stats.setMax(KeeperStats.METALLURGY, 10000); // research needed for next discovery
+        
+        
         stats.setMin(KeeperStats.RESEARCH_QUEST, 0);
         stats.setCurrent(KeeperStats.RESEARCH_QUEST, 0);
         stats.setMax(KeeperStats.RESEARCH_QUEST, 15000); // research needed for next quest
     }
-    
-    
-    public void addRoomResearch(Stats stats, int howmuch)
+
+
+    public void addRoomResearch(Stats stats, int howmuch, int whichStat)
     {
-        int research = stats.getMin(KeeperStats.RESEARCH);
-        int limit = stats.getMax(KeeperStats.RESEARCH); 
+        int research = stats.getMin(whichStat);
+        int limit = stats.getMax(whichStat); 
         int total = research + howmuch;
 
         // logger.log(Level.INFO, "Mob researched " + howmuch + " points, total is now " + total + " limit is " + limit);
         
-        stats.setMin(KeeperStats.RESEARCH, total);
+        stats.setMin(whichStat, total);
 
         if(total > limit)
         {
             // step by step research
 
-            int researchBits = stats.getCurrent(KeeperStats.RESEARCH);
-            if((researchBits & KeeperStats.RESEARCH_FORGES) == 0)
+            int researchBits = stats.getCurrent(whichStat);
+            
+            if(whichStat == KeeperStats.RESEARCH)
             {
-                researchBits |= KeeperStats.RESEARCH_FORGES;
-                announceResearchResult(KeeperStats.RESEARCH_FORGES);
-                stats.setMin(KeeperStats.RESEARCH, 0);
-                stats.setCurrent(KeeperStats.RESEARCH, researchBits);
-                stats.setMax(KeeperStats.RESEARCH, limit * 2);
+                if((researchBits & KeeperStats.RESEARCH_FORGES) == 0)
+                {
+                    researchBits |= KeeperStats.RESEARCH_FORGES;
+                    announceResearchResult(whichStat, KeeperStats.RESEARCH_FORGES);
+                }
+                else if((researchBits & KeeperStats.RESEARCH_LABS) == 0)
+                {
+                    researchBits |= KeeperStats.RESEARCH_LABS;
+                    announceResearchResult(whichStat, KeeperStats.RESEARCH_LABS);
+                }
+                else if((researchBits & KeeperStats.RESEARCH_HEALING) == 0)
+                {
+                    researchBits |= KeeperStats.RESEARCH_HEALING;
+                    announceResearchResult(whichStat, KeeperStats.RESEARCH_HEALING);
+                }
             }
-            else if((researchBits & KeeperStats.RESEARCH_LABS) == 0)
+            else if(whichStat == KeeperStats.METALLURGY)
             {
-                researchBits |= KeeperStats.RESEARCH_LABS;
-                announceResearchResult(KeeperStats.RESEARCH_LABS);
-                stats.setMin(KeeperStats.RESEARCH, 0);
-                stats.setCurrent(KeeperStats.RESEARCH, researchBits);
-                stats.setMax(KeeperStats.RESEARCH, limit * 2);
+                if((researchBits & KeeperStats.METALLURGY_BRONZE) == 0)
+                {
+                    researchBits |= KeeperStats.METALLURGY_BRONZE;
+                    announceResearchResult(whichStat, KeeperStats.METALLURGY_BRONZE);
+                }
+                else if((researchBits & KeeperStats.METALLURGY_IRON) == 0)
+                {
+                    researchBits |= KeeperStats.METALLURGY_IRON;
+                    announceResearchResult(whichStat, KeeperStats.METALLURGY_IRON);
+                }
+                else if((researchBits & KeeperStats.METALLURGY_STEEL) == 0)
+                {
+                    researchBits |= KeeperStats.METALLURGY_STEEL;
+                    announceResearchResult(whichStat, KeeperStats.METALLURGY_STEEL);
+                }
+                else if((researchBits & KeeperStats.METALLURGY_ALLOYS) == 0)
+                {
+                    researchBits |= KeeperStats.METALLURGY_ALLOYS;
+                    announceResearchResult(whichStat, KeeperStats.METALLURGY_ALLOYS);
+                }
             }
-            else if((researchBits & KeeperStats.RESEARCH_HEALING) == 0)
-            {
-                researchBits |= KeeperStats.RESEARCH_HEALING;
-                announceResearchResult(KeeperStats.RESEARCH_HEALING);
-                stats.setMin(KeeperStats.RESEARCH, 0);
-                stats.setCurrent(KeeperStats.RESEARCH, researchBits);
-                stats.setMax(KeeperStats.RESEARCH, limit * 2);
-            }
+            
+            stats.setMin(whichStat, 0);
+            stats.setCurrent(whichStat, researchBits);
+            stats.setMax(whichStat, limit * 2);
         }        
     }
 
@@ -126,20 +153,36 @@ public class Research
     }
 
 
-    public void announceResearchResult(int breakthrough)
+    public void announceResearchResult(int stat, int breakthrough)
     {
         String text = "";
-        if(breakthrough == KeeperStats.RESEARCH_FORGES)
+        if(stat == KeeperStats.RESEARCH && breakthrough == KeeperStats.RESEARCH_FORGES)
         {
             text = "Your researchers found out how to build forges.\nRoom unlocked: Forge";
         }
-        else if(breakthrough == KeeperStats.RESEARCH_LABS)
+        else if(stat == KeeperStats.RESEARCH && breakthrough == KeeperStats.RESEARCH_LABS)
         {
             text = "Your researchers found out how to build laboratories.\nRoom unlocked: Laboratory";
         }
-        else if(breakthrough == KeeperStats.RESEARCH_HEALING)
+        else if(stat == KeeperStats.RESEARCH && breakthrough == KeeperStats.RESEARCH_HEALING)
         {
             text = "Your researchers discovered healing.\nRoom unlocked: Healing Well";
+        }
+        else if(stat == KeeperStats.METALLURGY && breakthrough == KeeperStats.METALLURGY_BRONZE)
+        {
+            text = "Your researchers found out how to melt bronze.\nTechnology unlocked: Bronze weapons and tools";
+        }
+        else if(stat == KeeperStats.METALLURGY && breakthrough == KeeperStats.METALLURGY_IRON)
+        {
+            text = "Your researchers found out how to produce iron.\nTechnology unlocked: Iron weapons and tools";
+        }
+        else if(stat == KeeperStats.METALLURGY && breakthrough == KeeperStats.METALLURGY_STEEL)
+        {
+            text = "Your researchers learned to refine iron into steel.\nTechnology unlocked: Steel weapons and tools";
+        }
+        else if(stat == KeeperStats.METALLURGY && breakthrough == KeeperStats.METALLURGY_ALLOYS)
+        {
+            text = "Your researchers developed advanced metal alloys.\nTechnology unlocked: Weapons and tools made from advanced metal alloys";
         }
 
         GenericMessage message =

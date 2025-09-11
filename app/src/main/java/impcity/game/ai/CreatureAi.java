@@ -1064,6 +1064,7 @@ public class CreatureAi extends AiBase
         }
         else if(ground >= Features.GROUND_LABORATORY && ground <= Features.GROUND_LABORATORY + 3)
         {
+            produceInLaboratory();
         }
 
         // Mobs gain experience while working
@@ -1185,8 +1186,23 @@ public class CreatureAi extends AiBase
         long now = Clock.time();
         int research = (int)((now - researchTime) >> 3);        
 
-        game.research.addRoomResearch(keeper.stats, research);
+        game.research.addRoomResearch(keeper.stats, research, KeeperStats.RESEARCH);
         game.research.addQuestResearch(game, keeper.stats, research);
         researchTime = Clock.time();
     }
+
+    
+    private void produceInLaboratory() 
+    {
+        Mob keeper = game.world.mobs.get(game.getPlayerKey());
+
+        // first, accumulate wisdom
+        long now = Clock.time();
+        int research = (int)((now - researchTime) >> 3);        
+
+        game.research.addRoomResearch(keeper.stats, research, KeeperStats.METALLURGY);
+        game.research.addQuestResearch(game, keeper.stats, research);
+        researchTime = Clock.time();
+    }
+
 }

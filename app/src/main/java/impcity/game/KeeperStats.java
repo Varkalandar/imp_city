@@ -27,6 +27,7 @@ public class KeeperStats
     public static final int RESEARCH = 6;
     public static final int RESEARCH_QUEST = 7;
 
+    public static final int RESEARCH_NONE = 0;
     public static final int RESEARCH_FORGES = 1;
     public static final int RESEARCH_LABS = 2;
     public static final int RESEARCH_HEALING = 4;
@@ -45,6 +46,13 @@ public class KeeperStats
      * 6 = adamantite working (highly magic metal)
      */
     public static final int METALLURGY = 7;
+
+    public static final int METALLURGY_NONE = 0;
+    public static final int METALLURGY_BRONZE = 1;
+    public static final int METALLURGY_IRON = 2;
+    public static final int METALLURGY_STEEL = 3;
+    public static final int METALLURGY_ALLOYS = 4;
+
     
     public static final int MANA = 8;
     
@@ -58,7 +66,7 @@ public class KeeperStats
     public static final int MANA_START = 400;
     public static final int MANA_BASE_MAX = 1000;
     public static final int MANA_BASE_GROWTH = 60;
-    public static final int MANA_CREATURE_GROWTH = 3;
+    public static final int MANA_CREATURE_GROWTH = 4;
     
     // Room upkeept costs
     public static final int MANA_FARMLAND_COST = 1;

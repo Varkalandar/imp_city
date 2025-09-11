@@ -35,15 +35,19 @@ public class LairPathDestination implements PathDestination
 
                 // Hajo: lair anchor points are shifted up to get 
                 // visibility right 
-                int n = map.getItem(xpos - desc.lairSize + 1, ypos - desc.lairSize + 1);
-                ok &= (n == 0) && !map.isPlacementBlocked(xpos, ypos);
+                
+                // doesn't work?
+                // int n = map.getItem(xpos - desc.lairSize + 1, ypos - desc.lairSize + 1);
+                // ok &= (n == 0) && !map.isPlacementBlocked(xpos, ypos);
 
+                ok &= !map.isPlacementBlocked(xpos, ypos);
+                
                 if(ok)
                 {
                     int rasterI = xpos/Map.SUB*Map.SUB;
                     int rasterJ = ypos/Map.SUB*Map.SUB;
-                    n = map.getFloor(rasterI, rasterJ);
-                    ok &= (n >= ground) && (n < ground + 3);
+                    int floor = map.getFloor(rasterI, rasterJ);
+                    ok &= (floor >= ground) && (floor < ground + 3);
                 }
             }
         }
