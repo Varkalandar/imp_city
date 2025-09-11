@@ -156,20 +156,20 @@ public class ImpCityKeyHandler implements KeyHandler
         try
         {
             File directory = new File("savegame");
-            File [] files = directory.listFiles((File dir, String name) -> name.startsWith("game_") && name.endsWith(".map"));
   
             for (int i=0; i<8; i++) 
             {
+                File file = new File(directory, "game_" + i + ".map");
                 String appendix = "(free slot)";
                 
-                if (i < files.length)
+                if(file.exists())
                 {
                     FileTime time = 
-                            Files.getLastModifiedTime(files[i].toPath(), LinkOption.NOFOLLOW_LINKS);
+                            Files.getLastModifiedTime(file.toPath(), LinkOption.NOFOLLOW_LINKS);
                     appendix = time.toString();
                 }
 
-                entries.add("Game #" + i + ": " + appendix);
+                entries.add("Game #" + (i + 1) + ": " + appendix);
             }
         }
         catch(IOException ioex)
@@ -194,18 +194,16 @@ public class ImpCityKeyHandler implements KeyHandler
         try
         {
             File directory = new File("savegame");
-            File [] files = directory.listFiles((File dir, String name) -> name.startsWith("game_") && name.endsWith(".map"));
-  
-            int i = 0;
-            for (File file : files) 
+            for (int i=0; i<8; i++) 
             {
-                FileTime time = 
-                        Files.getLastModifiedTime(file.toPath(), LinkOption.NOFOLLOW_LINKS);
+                File file = new File(directory, "game_" + i + ".map");
                 
-                entries.add("Game #" + i + ": " + time.toString());
-                i ++;
-                if(i > 8) {
-                    break;
+                if(file.exists())
+                {
+                    FileTime time = 
+                            Files.getLastModifiedTime(file.toPath(), LinkOption.NOFOLLOW_LINKS);
+
+                    entries.add("Game #" + (i + 1) + ": " + time.toString());
                 }
             }
         }

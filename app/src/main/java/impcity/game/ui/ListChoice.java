@@ -70,7 +70,7 @@ public class ListChoice extends UiDialog
         int n = dy / 35;
         
         selection = n;
-        logger.info("Choice #" + selection + " was hovered");
+        // logger.info("Choice #" + selection + " was hovered");
 
         if(buttonReleased != 0)
         {
