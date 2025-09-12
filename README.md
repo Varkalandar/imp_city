@@ -6,6 +6,8 @@ at hand, you can send expedictions to the upper world to find treasures and valu
 artifacts. The upper world is dangerous though, so make sure your expedition teams are
 well equipped and trained.
 
+<img width="1204" height="806" alt="image" src="https://github.com/user-attachments/assets/fd11480a-2d66-4f80-b697-8c58a1979dbb" />
+
 ## Manual
 
 Once I started a manual over there. Outdated, but better than nothing, I guess:
