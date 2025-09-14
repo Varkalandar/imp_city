@@ -22,6 +22,7 @@ import impcity.ogl.Light;
 import impcity.ui.Colors;
 import rlgamekit.map.data.LayeredMap;
 
+
 /**
  * Ground layer data usage:
  * 
@@ -66,7 +67,6 @@ public class Map implements Serializable
 
     public final ArrayList <Light> lights;
     private final SparseMapLayer<Drawable> effects;
-    public int darkness;
 
 
     public static Point randomCirclePoint(int centerX, int centerY, int radius)
@@ -86,10 +86,19 @@ public class Map implements Serializable
     }
 
     
+    public static int distSqr(int i1, int j1, int i2, int j2)
+    {
+        int xd = i1 - i2;
+        int yd = j1 - j2;
+        
+        return xd * xd + yd * yd;
+    }
+
+
     public Map(int width, int height)
     {
-        this.lights = new ArrayList <Light> ();
-        this.effects = new SparseMapLayer<Drawable>(width*SUB, height*SUB);
+        this.lights = new ArrayList <> ();
+        this.effects = new SparseMapLayer<>(width*SUB, height*SUB);
         newMap(width, height);
     }
 
@@ -192,21 +201,14 @@ public class Map implements Serializable
     }
 
 
-    public boolean isMovementBlockedRadius(int x, int y, int r)
+    public boolean isMovementBlockedRadius(int x, int y, int radius)
     {
         RectArea area = new RectArea(x, y, 0, 0);
         
         LocationCallback callback = 
-            new LocationCallback() 
-            {
-                @Override
-                public boolean visit(int x, int y) 
-                {
-                    return isMovementBlocked(x, y);
-                }
-            };        
+            (int x1, int y1) -> isMovementBlocked(x1, y1);        
                 
-        return area.spirallyTraverse(callback, r) != null;
+        return area.spirallyTraverse(callback, radius) != null;
     }
 
 
@@ -230,15 +232,10 @@ public class Map implements Serializable
         RectArea area = new RectArea(x, y, 0, 0);
         
         LocationCallback callback = 
-            new LocationCallback() 
-            {
-                @Override
-                public boolean visit(int x, int y) 
-                {
-                    setMovementBlocked(x, y, yesno);
-                    return false; // continue iterating
-                }
-            };        
+            (int x1, int y1) -> {
+                setMovementBlocked(x1, y1, yesno);
+                return false; // continue iterating
+        };        
                 
         area.spirallyTraverse(callback, r);
     }
@@ -255,14 +252,7 @@ public class Map implements Serializable
         RectArea area = new RectArea(x, y, 0, 0);
         
         LocationCallback callback = 
-            new LocationCallback() 
-            {
-                @Override
-                public boolean visit(int x, int y) 
-                {
-                    return isPlacementBlocked(x, y);
-                }
-            };        
+            (int x1, int y1) -> isPlacementBlocked(x1, y1);        
                 
         return area.spirallyTraverse(callback, r) != null;
     }
@@ -288,15 +278,10 @@ public class Map implements Serializable
         RectArea area = new RectArea(x, y, 0, 0);
         
         LocationCallback callback = 
-            new LocationCallback() 
-            {
-                @Override
-                public boolean visit(int x, int y) 
-                {
-                    setPlacementBlocked(x, y, yesno);
-                    return false; // continue iterating
-                }
-            };        
+            (int x1, int y1) -> {
+                setPlacementBlocked(x1, y1, yesno);
+                return false; // continue iterating
+        };        
                 
         area.spirallyTraverse(callback, r);
     }
@@ -408,7 +393,6 @@ public class Map implements Serializable
         reader.close();
         
         map = newMap;
-        darkness = 0;
         lights.clear();
         effects.resize(map.getWidth(), map.getHeight());
     }
@@ -466,7 +450,6 @@ public class Map implements Serializable
     public final void newMap(int w, int h) 
     {
         map = new LayeredMap(3, w, h);
-        darkness = 0;
         
         int brightness = 128;
         
@@ -486,25 +469,19 @@ public class Map implements Serializable
         RectArea area = new RectArea(x, y, 0, 0);
         
         LocationCallback callback = 
-            new LocationCallback() 
-            {
-                @Override
-                public boolean visit(int x, int y) 
+            (int x1, int y1) -> {
+                int rasterI = x1 - x1 % Map.SUB;
+                int rasterJ = y1 - y1 % Map.SUB;
+                if(getItem(x1, y1) == 0 && 
+                   !isPlacementBlocked(x1, y1) && 
+                   !isMovementBlockedRadius(x1, y1, 2) && // Imps must be able to reach it  
+                   !Features.isImpassable(getFloor(rasterI, rasterJ))) 
                 {
-                    int rasterI = x - x % Map.SUB;
-                    int rasterJ = y - y % Map.SUB;
-                    
-                    if(getItem(x, y) == 0 && 
-                            !isPlacementBlocked(x, y) &&
-                            !isMovementBlockedRadius(x, y, 2) && // Imps must be able to reach it  
-                            !Features.isImpassable(getFloor(rasterI, rasterJ)))
-                    {
-                        setItem(x, y, itemKey);
-                        visitor.visit(x, y);
-                        return true;
-                    }
-                    return false;
+                    setItem(x1, y1, itemKey);
+                    visitor.visit(x1, y1);
+                    return true;
                 }
+                return false;
             };        
                 
         return area.spirallyTraverse(callback, Map.SUB/2);
@@ -525,16 +502,16 @@ public class Map implements Serializable
         i = (mouseI / Map.SUB) * Map.SUB;
         j = (mouseJ / Map.SUB) * Map.SUB;
 
-        d = Math.sqrt(distance2(i, j, mouseI, mouseJ));
+        d = Math.sqrt(distSqr(i, j, mouseI, mouseJ));
         setColor(i, j, Colors.mix(0x909090, temp, (int)(d*10))); 
         
-        d = Math.sqrt(distance2(i+SUB, j, mouseI, mouseJ));
+        d = Math.sqrt(distSqr(i+SUB, j, mouseI, mouseJ));
         setColor(i+SUB, j, Colors.mix(0x909090, temp, (int)(d*10))); 
         
-        d = Math.sqrt(distance2(i, j+SUB, mouseI, mouseJ));
+        d = Math.sqrt(distSqr(i, j+SUB, mouseI, mouseJ));
         setColor(i, j+SUB, Colors.mix(0x909090, temp, (int)(d*10))); 
         
-        d = Math.sqrt(distance2(i+SUB, j+SUB, mouseI, mouseJ));
+        d = Math.sqrt(distSqr(i+SUB, j+SUB, mouseI, mouseJ));
         setColor(i+SUB, j+SUB, Colors.mix(0x909090, temp, (int)(d*10))); 
     
         map.set(LAYER_GROUNDS, i+3, j+0, temp);
@@ -573,15 +550,6 @@ public class Map implements Serializable
         map.insert(other.map, 0, 0, width, height, 0, 0);
         lights.clear();
         lights.addAll(other.lights);
-    }
-
-
-    public static int distance2(int i1, int j1, int i2, int j2)
-    {
-        int xd = i1 - i2;
-        int yd = j1 - j2;
-        
-        return xd * xd + yd * yd;
     }
 
 

@@ -74,6 +74,7 @@ public class ImpAi extends AiBase
      * Delay the next thinking by at least this many milliseconds
      * @param milliseconds The desired delay
      */
+    @Override
     public void delayThinking(int milliseconds)
     {
         thinkTime = Clock.time() + milliseconds;        
@@ -598,7 +599,7 @@ public class ImpAi extends AiBase
             {
                 Mob worker = idleImpLocations.get(imp);
                 Point jobLocation = next.getLocation();
-                int d2 = Map.distance2(worker.location.x, worker.location.y, jobLocation.x, jobLocation.y);
+                int d2 = Map.distSqr(worker.location, jobLocation);
                 if(d2 < best)
                 {
                     bestImp = imp;
