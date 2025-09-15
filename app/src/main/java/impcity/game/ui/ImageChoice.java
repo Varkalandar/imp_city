@@ -20,6 +20,9 @@ public class ImageChoice extends UiDialog
     private final String title;
     private final HashSet<Integer> choices;
     private final IntConsumer callback;
+    private final int topOffset;
+    private final int leftOffset;
+    private final int cellXSpacing;
     private int topCached;
     private int selection = 0;
 
@@ -27,6 +30,7 @@ public class ImageChoice extends UiDialog
     public ImageChoice(TextureCache textureCache, GameDisplay gameDisplay,
                       int width, int height,
                       String title, HashSet<Integer> choices,
+                      int topOffset, int leftOffset, int cellCSpacing,
                       IntConsumer callback)
     {
         super(textureCache, width, height);
@@ -35,6 +39,9 @@ public class ImageChoice extends UiDialog
         this.title = title;
         this.choices = choices;
         this.callback = callback;
+        this.topOffset = topOffset;
+        this.leftOffset = leftOffset;
+        this.cellXSpacing = cellCSpacing;
     }
     
 
@@ -49,7 +56,7 @@ public class ImageChoice extends UiDialog
         
         gameDisplay.drawShadowText(title, Colors.BRIGHT_GOLD_INK, left, top, 0.4);
         
-        top -= 100;
+        top -= topOffset;
 /*
         if (selection >= 0 && selection < choices.size())
         {
@@ -57,7 +64,7 @@ public class ImageChoice extends UiDialog
             IsoDisplay.fillRect(left+1, top - selection * 35 - 3, width - 82, 33, 0x33FFCC99);
         }
 */        
-        int col = left + 20;
+        int col = left + leftOffset;
         int row = top;
         for(Integer choice : choices)
         {
@@ -67,10 +74,10 @@ public class ImageChoice extends UiDialog
             */
             
             IsoDisplay.drawTileStanding(textureCache.textures[choice], col, row);
-            col += 64;
+            col += cellXSpacing;
             
             if(col > width) {
-                col = left + 20;
+                col = left + leftOffset;
                 row -= 64;
             }
         }

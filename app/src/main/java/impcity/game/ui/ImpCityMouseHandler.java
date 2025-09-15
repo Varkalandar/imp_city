@@ -6,7 +6,6 @@ import impcity.game.ai.WayPathSource;
 import impcity.game.jobs.JobExcavate;
 import impcity.game.jobs.JobMining;
 import impcity.game.jobs.JobQueue;
-import impcity.game.map.LocationCallback;
 import impcity.game.processables.FarmSquare;
 import java.awt.Point;
 import java.util.logging.Level;
@@ -32,7 +31,7 @@ import org.lwjgl.input.Mouse;
  */
 public class ImpCityMouseHandler implements MouseHandler
 {
-    public static final Logger LOG = Logger.getLogger(ImpCityMouseHandler.class.getName());
+    private static final Logger LOG = Logger.getLogger(ImpCityMouseHandler.class.getName());
     
     private boolean lastButtonState = false;
     private final ImpCity game;
@@ -456,14 +455,10 @@ public class ImpCityMouseHandler implements MouseHandler
             {
                 Point where = 
                     map.spirallytraverseArea(game.mouseI, game.mouseJ, 5,
-                        new LocationCallback() {
-                            @Override
-                            public boolean visit(int x, int y) {
-                                int item = map.getItem(x, y);
-
-                                return item != 0 && (Features.isCoins(item) || Features.isResource(item));
-                            }
-                        });
+                        (int x, int y) -> {
+                            int item = map.getItem(x, y);
+                            return item != 0 && (Features.isCoins(item) || Features.isResource(item));
+                    });
                             
                 // success?
                 if(where != null)
@@ -490,6 +485,26 @@ public class ImpCityMouseHandler implements MouseHandler
     }
     
     
+    private void placeResourceNode(Map map, int rasterI, int rasterJ)
+    {
+        int blockI = rasterI + Map.SUB/2-1;
+        int blockJ = rasterJ + Map.SUB/2-1;
+        
+        LOG.info("Attempting to place resource node: " + Tool.parameter);
+        
+        int item = map.getItem(blockI, blockJ);
+
+        LOG.info("Found item: " + item);
+        
+        // allowed to place a resouce node here?
+        if(item >= Features.I_STEEP_EARTH_BLOCK && item < Features.I_STEEP_EARTH_BLOCK + 3 &&
+           game.payMana(Tool.SPELL_PLACE_RESOURCE.COST_MANA))
+        {
+            map.setItem(blockI, blockJ, Tool.parameter);
+        }
+    }
+    
+    
     private void placeDecoration(Map map)
     {
         int item = map.getItem(game.mouseI, game.mouseJ);
@@ -497,7 +512,10 @@ public class ImpCityMouseHandler implements MouseHandler
         // allowed to place a decoration here?
         if(item == 0 || Features.DUST_SET.contains(item))
         {
-            map.setItem(game.mouseI, game.mouseJ, Tool.parameter);
+            if(game.payMana(Tool.SPELL_PLACE_DECORATION.COST_MANA))
+            {
+                map.setItem(game.mouseI, game.mouseJ, Tool.parameter);
+            }
         }
     }
     
@@ -638,9 +656,27 @@ public class ImpCityMouseHandler implements MouseHandler
         else if(n == 2)
         {
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
+            ImageChoice resourceChoice = 
+                    new ImageChoice(display.textureCache, gameDisplay, 800, 600, 
+                            "Chose a resource to place:", Features.RESOURCES_SET,
+                            200, 100, 240,
+                            (texId) -> {
+                                Tool.selected = Tool.SPELL_PLACE_RESOURCE;
+                                Tool.parameter = texId;
+                                gameDisplay.showDialog(null);
+                                // setMousePointer(display.textureCache.textures[texId]);
+                                LOG.info("Selected resource: " + texId);
+                            });
+        
+            gameDisplay.showDialog(resourceChoice);
+        }
+        else if(n == 3)
+        {
+            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
             ImageChoice decorationChoice = 
                     new ImageChoice(display.textureCache, gameDisplay, 800, 600, 
-                            "Chose a decoration to place:", Features.DECORATIONS_SET, 
+                            "Chose a decoration to place:", Features.DECORATIONS_SET,
+                            100, 20, 64,
                             (texId) -> {
                                 Tool.selected = Tool.SPELL_PLACE_DECORATION;
                                 Tool.parameter = Features.I_TORCH_STAND;
@@ -877,6 +913,9 @@ public class ImpCityMouseHandler implements MouseHandler
                     break;
                 case SPELL_GRAB:
                     grabItem(map);
+                    break;
+                case SPELL_PLACE_RESOURCE:
+                    placeResourceNode(map, rasterI, rasterJ);
                     break;
                 case SPELL_PLACE_DECORATION:
                     placeDecoration(map);

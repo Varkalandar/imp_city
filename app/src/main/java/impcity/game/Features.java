@@ -171,6 +171,14 @@ public class Features
     public static final HashSet<Integer> DECORATIONS_SET;
 
 
+    public static final int [] RESOURCES = new int [] 
+    {
+        I_COPPER_ORE_MOUND,
+    };
+    
+    public static final HashSet<Integer> RESOURCES_SET;
+
+
     /** 
      * This filter keeps coins, resources and artifacts
      */
@@ -192,6 +200,13 @@ public class Features
         for(int decoration : DECORATIONS)
         {
             DECORATIONS_SET.add(decoration);
+        }
+
+        RESOURCES_SET = new HashSet<>();
+
+        for(int resource : RESOURCES)
+        {
+            RESOURCES_SET.add(resource);
         }
     }
     

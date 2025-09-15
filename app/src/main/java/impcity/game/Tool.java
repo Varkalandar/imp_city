@@ -19,6 +19,7 @@ public enum Tool
     
     SPELL_IMP("Spawn a new imp", 0, 50),
     SPELL_GRAB("Grab an item", 0, 10),
+    SPELL_PLACE_RESOURCE("Place a resource node", 0, 100),
     SPELL_PLACE_DECORATION("Place a decoration item", 0, 10),
     BOOK_CREATURES("Open creature book", 0, 0),
     BOOK_QUESTS("Open quest location list", 0, 0),
