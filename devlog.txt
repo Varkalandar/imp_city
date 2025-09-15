@@ -1,3 +1,7 @@
+Changes since v0.28.7
+
+- Intruders attack the core with particle beams now
+
 Changes since v0.28.6
 
 - Rooms expand the max mana limit

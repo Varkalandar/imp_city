@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import impcity.game.Direction;
 import impcity.game.Features;
+import impcity.game.ImpCity;
 import impcity.game.ai.Ai;
 import impcity.game.ai.MobStats;
 import impcity.game.map.Map;
@@ -285,7 +286,7 @@ public class Mob
     /**
      * Called every frame in between display
      */
-    public void update(Registry<Mob> mobs)
+    public void update(ImpCity game, Registry<Mob> mobs)
     {
         // drive particles in sync with display     
             
@@ -330,10 +331,7 @@ public class Mob
                     }
                     
                     // if the intruder is near the dungeon core, always alarm
-                    
-                    int dx = 112 - other.location.x;
-                    int dy = 352 - other.location.y;
-                    dist2 = dx * dx + dy * dy;
+                    dist2 = Map.distSqr(game.coreLocation, other.location);
                     if (dist2 < Map.SUB * Map.SUB * 10) 
                     {
                         ai.alarm(other.key);
@@ -664,7 +662,7 @@ public class Mob
     }
 
     
-    private void emitParticleBeam(Point target) 
+    public void emitParticleBeam(Point target) 
     {
         int di = target.x - location.x;
         int dj = target.y - location.y;

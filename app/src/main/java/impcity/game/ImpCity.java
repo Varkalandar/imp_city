@@ -277,7 +277,7 @@ public class ImpCity implements PostRenderHook, GameInterface
 
         gameDisplay.addHookedMessage(hookedMessage);
         
-        display.run();
+        display.run(this);
     }
     
     
@@ -374,6 +374,9 @@ public class ImpCity implements PostRenderHook, GameInterface
         }
 
         map.setItem(coreLocation.x, coreLocation.y, Features.I_DUNGEON_CORE);
+        map.setAreaMovementBlocked(coreLocation.x, coreLocation.y, 
+                                   new Rectangle(-2, -2, 5, 5),
+                                   true);
     }
     
     
@@ -1775,7 +1778,7 @@ public class ImpCity implements PostRenderHook, GameInterface
         // display.font.drawStringScaled(msg, 0xDDDDDD, 220, 400, 0.8);
         gameDisplay.getFontLow().drawStringScaled(NAME_VERSION, 0xFFFFDDAA, 210, 445, 0.5);
         gameDisplay.getFontLow().drawStringScaled(msg, 0xFFDDDDDD, 210, 396, 0.3);
-        display.update();
+        display.update(this);
     }
 
 

@@ -1,5 +1,6 @@
 package impcity.editor;
 
+import impcity.game.ImpCity;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -113,6 +114,7 @@ public class Editor implements PostRenderHook, TextureCache.LoaderCallback
 
         display.map = makeMap(20, 20, 19);
     }
+
     
     private void run()
     {
@@ -123,8 +125,9 @@ public class Editor implements PostRenderHook, TextureCache.LoaderCallback
         display.keyHandler = new MyKeyHandler();
         display.centerY += 100;
 
-        display.run();
+        display.run(null);
     }
+
     
     @Override
     public void displayMore() 

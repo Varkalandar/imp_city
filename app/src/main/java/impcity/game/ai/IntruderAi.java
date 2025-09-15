@@ -9,6 +9,7 @@ import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import rlgamekit.objects.Registry;
 import rlgamekit.pathfinding.Path;
@@ -48,6 +49,7 @@ public class IntruderAi extends AiBase
      * Delay the next thinking by at least this many milliseconds
      * @param milliseconds The desired delay
      */
+    @Override
     public void delayThinking(int milliseconds)
     {
         thinkTime = Clock.time() + milliseconds;        
@@ -64,10 +66,15 @@ public class IntruderAi extends AiBase
         {
             // Not yet, keep a cool head, erm CPU
             // System.err.println("Mob=" + mob.getKey() + " AI skips thinking.");
-            return;
         }
         else
         {
+            if(goal == Goal.FIGHT)
+            {
+                // -> attack the core
+                mob.emitParticleBeam(game.coreLocation);
+            }
+
             // System.err.println("Mob=" + mob.getKey() + " AI thinks.");
             delayThinking(THINK_COOLDOWN);
         }
@@ -96,8 +103,13 @@ public class IntruderAi extends AiBase
             }
             else
             {
-                LOG.info("Intruder #" + mob.getKey() + " cannot find a path to the dungeon core");
+                LOG.log(Level.INFO, "Intruder #{0} cannot find a path to the dungeon core", mob.getKey());
             }
+        }
+        else if(goal == Goal.GO_CORE)
+        {
+            // being at the end of path means near the core
+            goal = Goal.FIGHT;
         }
     }
 

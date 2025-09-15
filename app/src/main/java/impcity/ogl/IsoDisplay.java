@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import impcity.game.Clock;
+import impcity.game.ImpCity;
 import impcity.game.Item;
 import impcity.game.Texture;
 import impcity.game.TextureCache;
@@ -660,7 +661,7 @@ public class IsoDisplay implements PostRenderHook
         }
     }
 
-    public void run()
+    public void run(ImpCity game)
     {
         long lastTime = 0;
         int frameCount = 0;
@@ -702,14 +703,14 @@ public class IsoDisplay implements PostRenderHook
                 safeSleep(100);
             }
             
-            update();
+            update(game);
             
             Display.sync(60);
         }
     }
 
     
-    public void update()
+    public void update(ImpCity game)
     {
         Display.update();
 
@@ -722,7 +723,7 @@ public class IsoDisplay implements PostRenderHook
             for(Cardinal key : keys)
             {
                 Mob mob = mobs.get(key.intValue());
-                mob.update(mobs);
+                mob.update(game, mobs);
                 
                 // check for dead intruders
                 if(mob.kind == Mob.KIND_INTRUDER &&     
