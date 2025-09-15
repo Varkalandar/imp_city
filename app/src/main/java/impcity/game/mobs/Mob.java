@@ -71,13 +71,6 @@ public class Mob
      */
     public final Point location;
 
-    /**
-     * The map data that is shown to the player (will not show
-     * hidden features or changes to "remembered" areas).
-     */
-    public LayeredMap displayMap;
-
-
     private long lastActionTime;
     
     private int stepsPerSecond;
@@ -301,7 +294,6 @@ public class Mob
               
         // is there an intruder nearby?
         Set <Cardinal> keys = new HashSet<>(mobs.keySet());
-        boolean intruderFound = false;
         for(Cardinal key : keys)
         {
             Mob other = mobs.get(key.intValue());
@@ -309,8 +301,6 @@ public class Mob
             if (ai != null && kind == KIND_DENIZEN && other.kind == KIND_INTRUDER &&
                 other.stats.getCurrent(MobStats.VITALITY) > 0) 
             {
-                intruderFound = true;
-                
                 // close enough for kill strike?
                 int dist2 = Map.distSqr(location, other.location);
                 
@@ -340,6 +330,7 @@ public class Mob
                     }
                     
                     // if the intruder is near the dungeon core, always alarm
+                    
                     int dx = 112 - other.location.x;
                     int dy = 352 - other.location.y;
                     dist2 = dx * dx + dy * dy;
