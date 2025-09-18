@@ -94,6 +94,7 @@ public class ImpCity implements PostRenderHook, GameInterface
     private final List <Point> hospitals = Collections.synchronizedList(new ArrayList<>());
     private final List <Point> ghostyards = Collections.synchronizedList(new ArrayList<>());
     private final List <Point> claimed = Collections.synchronizedList(new ArrayList<>());
+    public final List <ResourceNode> resourceNodes = new ArrayList<>(64);
     
     public final RoomList forgeRooms = new RoomList();
     public final RoomList libraryRooms = new RoomList();
@@ -485,6 +486,9 @@ public class ImpCity implements PostRenderHook, GameInterface
                 int ground = map.getFloor(x, y);
                 if(ground >= Features.GROUND_IMPASSABLE && ground < Features.GROUND_IMPASSABLE+3)
                 {
+                    // Random nodes are disabled for the time being.
+                    // Only player placed nodes
+                    /*
                     double select = Math.random();
 
                     if(select > 0.98)
@@ -511,6 +515,9 @@ public class ImpCity implements PostRenderHook, GameInterface
                     {
                         map.setItem(x, y, Features.I_STEEP_EARTH_BLOCK + (int)(Math.random() * 3));
                     }
+                    */
+                            
+                    map.setItem(x, y, Features.I_STEEP_EARTH_BLOCK + (int)(Math.random() * 3));
                 }
                 if(y==0 || x==0 || x>=w-Map.SUB || y>=h-Map.SUB)
                 {
@@ -623,6 +630,16 @@ public class ImpCity implements PostRenderHook, GameInterface
                     LOG.log(Level.SEVERE, "Unknown ground type {0} at {1}, {2}", new Object[]{ground, x, y});
                 }
 
+                int blockI = x + Map.SUB/2-1;
+                int blockJ = y + Map.SUB/2-1;
+                int block = map.getItem(blockI, blockJ);
+                if(block == Features.I_COPPER_ORE_MOUND)
+                {
+                    ResourceNode node = new ResourceNode(ResourceNode.Type.COPPER_ORE, new Point(blockI, blockJ));
+                    resourceNodes.add(node);
+                    LOG.info("Found copper ore resource node at " + node.location);
+                }
+                
                 for(int j=0; j<Map.SUB; j++)
                 {
                     for(int i=0; i<Map.SUB; i++)
@@ -2167,6 +2184,15 @@ public class ImpCity implements PostRenderHook, GameInterface
             mana -= ghostyards.size() * KeeperStats.MANA_GHOSTYARD_COST;
             mana -= claimed.size() * KeeperStats.MANA_CLAIMED_SQUARE_COST;
          
+            LOG.info("Paying mana upkeep for " + resourceNodes.size() + " resource nodes.");
+            for(ResourceNode node : resourceNodes)
+            {
+                if(node.type == ResourceNode.Type.COPPER_ORE)
+                {
+                    mana -= KeeperStats.MANA_COPPER_NODE_COST;
+                }
+            }
+            
             // LOG.info("mana=" + mana);
             
             if(mana < 0) 

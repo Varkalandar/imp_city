@@ -1,6 +1,10 @@
 Changes since v0.28.7
 
 - Intruders attack the core with particle beams now
+- Resource nodes cost upkeep now. The game starts without resource nodes
+  on the map. While it is possible to load old games with random resource
+  nodes like copper ore, the upkeep cost is likely so high that they can't
+  be continued with this version.
 
 Changes since v0.28.6
 

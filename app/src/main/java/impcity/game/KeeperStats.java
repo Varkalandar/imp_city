@@ -79,4 +79,7 @@ public class KeeperStats
     public static final int MANA_HOSPITAL_COST = 5;
     public static final int MANA_GHOSTYARD_COST = 6;
     public static final int MANA_CLAIMED_SQUARE_COST = 1;
+
+    public static final int MANA_COPPER_NODE_COST = 10;
+
 }

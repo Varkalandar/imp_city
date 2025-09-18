@@ -501,6 +501,8 @@ public class ImpCityMouseHandler implements MouseHandler
            game.payMana(Tool.SPELL_PLACE_RESOURCE.COST_MANA))
         {
             map.setItem(blockI, blockJ, Tool.parameter);
+            ResourceNode node = new ResourceNode(ResourceNode.Type.COPPER_ORE, new Point(blockI, blockJ));
+            game.resourceNodes.add(node);
         }
     }
     
