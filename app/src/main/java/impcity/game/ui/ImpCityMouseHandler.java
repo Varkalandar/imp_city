@@ -263,6 +263,27 @@ public class ImpCityMouseHandler implements MouseHandler
         int n = map.getFloor(rasterI, rasterJ);
         if(n >= Features.GROUND_POLY_TILES && n < Features.GROUND_POLY_TILES + 3)
         {
+            // notify the player about resource nodes when they build their
+            // first forge room.
+            if(game.getForges().isEmpty() && game.resourceNodes.isEmpty())
+            {
+                GenericMessage message =
+                        new GenericMessage(
+                                gameDisplay,
+                                600, 400,
+                                "Resource nodes needed:",
+                                "To produce copper coins in the forge, you need to place" +
+                                " a copper ore mound and order your imps to mine it. Conians " +
+                                " will use the mined ore when they work in the forge.",
+                                "[ Acknowledged ]", null);
+
+                MessageHook hookedMessage =
+                        new MessageHook(Features.MESSAGE_IDEA_GREEN,
+                                message);
+
+                gameDisplay.addHookedMessage(hookedMessage);
+            }
+            
             game.addForgeSquare(map, rasterI, rasterJ);
             game.soundPlayer.play(Sounds.MAKE_FORGE, 0.2f, 1.0f);
         }
@@ -660,7 +681,9 @@ public class ImpCityMouseHandler implements MouseHandler
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
             ImageChoice resourceChoice = 
                     new ImageChoice(display.textureCache, gameDisplay, 800, 600, 
-                            "Chose a resource to place:", Features.RESOURCES_SET,
+                            "Chose a resource to place:", 
+                            Features.RESOURCES,
+                            new String [] {"Copper Ore"},
                             200, 100, 240,
                             (texId) -> {
                                 Tool.selected = Tool.SPELL_PLACE_RESOURCE;
@@ -677,7 +700,9 @@ public class ImpCityMouseHandler implements MouseHandler
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
             ImageChoice decorationChoice = 
                     new ImageChoice(display.textureCache, gameDisplay, 800, 600, 
-                            "Chose a decoration to place:", Features.DECORATIONS_SET,
+                            "Chose a decoration to place:", 
+                            Features.DECORATIONS,
+                            new String [] {"Torch"},
                             100, 20, 64,
                             (texId) -> {
                                 Tool.selected = Tool.SPELL_PLACE_DECORATION;

@@ -282,21 +282,24 @@ public class GameDisplay
     }
     
     
-    public void drawShadowText(String text, int color, int x, int y, double f)
+    public int drawShadowText(String text, int color, int x, int y, double f)
     {
         int shadow = 0x33000000;
         PixFont font = fontLow;
-        // PixFont font = display.font; f *= 3.0;
         
-        font.drawStringScaled(text, shadow, x+1, y, f);
-        font.drawStringScaled(text, shadow, x, y+1, f);
-        font.drawStringScaled(text, shadow, x-1, y, f);
-        font.drawStringScaled(text, shadow, x, y-1, f);
-
-        font.drawStringScaled(text, color, x, y, f);
-
+        // no shadow for invisible text
+        if(color != 0) 
+        {
+            font.drawStringScaled(text, shadow, x+1, y, f);
+            font.drawStringScaled(text, shadow, x, y+1, f);
+            font.drawStringScaled(text, shadow, x-1, y, f);
+            font.drawStringScaled(text, shadow, x, y-1, f);
+        }
+        
+        return font.drawStringScaled(text, color, x, y, f);
     }
 
+    
     public int drawBoxedShadowText(String text,
                                     int color, int left, int top, int width,
                                     int linespace, double factor)

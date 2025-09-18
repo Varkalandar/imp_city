@@ -1,5 +1,6 @@
 package impcity.game.ui;
 
+import impcity.game.Texture;
 import java.util.List;
 import impcity.game.TextureCache;
 import impcity.ogl.IsoDisplay;
@@ -18,7 +19,8 @@ public class ImageChoice extends UiDialog
     private final GameDisplay gameDisplay;
     private final TextureCache textureCache;
     private final String title;
-    private final HashSet<Integer> choices;
+    private final int [] choices;
+    private final String [] labels;
     private final IntConsumer callback;
     private final int topOffset;
     private final int leftOffset;
@@ -29,7 +31,8 @@ public class ImageChoice extends UiDialog
     
     public ImageChoice(TextureCache textureCache, GameDisplay gameDisplay,
                       int width, int height,
-                      String title, HashSet<Integer> choices,
+                      String title, 
+                      int [] choices, String [] labels,
                       int topOffset, int leftOffset, int cellCSpacing,
                       IntConsumer callback)
     {
@@ -38,6 +41,7 @@ public class ImageChoice extends UiDialog
         this.textureCache = textureCache;
         this.title = title;
         this.choices = choices;
+        this.labels = labels;
         this.callback = callback;
         this.topOffset = topOffset;
         this.leftOffset = leftOffset;
@@ -66,14 +70,16 @@ public class ImageChoice extends UiDialog
 */        
         int col = left + leftOffset;
         int row = top;
-        for(Integer choice : choices)
+        for(int i = 0; i < choices.length; i++)
         {
-            /*
-            gameDisplay.drawShadowText(choice, Colors.BRIGHT_SILVER_INK, left + 10, top, 0.2);
-            top -= 35;
-            */
+            int choice = choices[i];
+            String label = labels[i];
+            Texture tex = textureCache.textures[choice];
             
-            IsoDisplay.drawTileStanding(textureCache.textures[choice], col, row);
+            IsoDisplay.drawTileStanding(tex, col, row);
+            int tw = gameDisplay.drawShadowText(label, 0x00000000, col, row - 20 , 0.2);
+            gameDisplay.drawShadowText(label, Colors.BRIGHT_SILVER_INK, col - tw/2, row - 24 , 0.2);
+            
             col += cellXSpacing;
             
             if(col > width) {
@@ -97,7 +103,7 @@ public class ImageChoice extends UiDialog
         if(buttonReleased != 0)
         {
             playClickSound();
-            callback.accept((Integer)choices.toArray()[0]);
+            callback.accept((Integer)choices[0]);
         }
     }
 }

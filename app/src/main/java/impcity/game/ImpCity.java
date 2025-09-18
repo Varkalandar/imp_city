@@ -1998,7 +1998,6 @@ public class ImpCity implements PostRenderHook, GameInterface
                             message);
 
             gameDisplay.addHookedMessage(hookedMessage);
-
         }
     }
 
