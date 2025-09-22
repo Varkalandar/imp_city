@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  */
 public class ImageChoice extends UiDialog
 {
-    private static final Logger logger = Logger.getLogger(ImageChoice.class.getName());
+    private static final Logger LOG = Logger.getLogger(ImageChoice.class.getName());
     private final GameDisplay gameDisplay;
     private final TextureCache textureCache;
     private final String title;
@@ -25,7 +25,7 @@ public class ImageChoice extends UiDialog
     private final int topOffset;
     private final int leftOffset;
     private final int cellXSpacing;
-    private int topCached;
+    private int leftCached;
     private int selection = 0;
 
     
@@ -56,7 +56,7 @@ public class ImageChoice extends UiDialog
     
         int top = y + height - 80;
         int left = x + 50;
-        topCached = top;
+        leftCached = left;
         
         gameDisplay.drawShadowText(title, Colors.BRIGHT_GOLD_INK, left, top, 0.4);
         
@@ -93,17 +93,17 @@ public class ImageChoice extends UiDialog
     @Override
     public void mouseEvent(int buttonPressed, int buttonReleased, int mouseX, int mouseY) 
     {
-        int top = topCached;
-        int dy = top - mouseY;
-        int n = dy / 35;
+        // int top = topCached;
+        // int dy = top - mouseY;
+        int n = (mouseX - leftCached) / cellXSpacing;
         
         selection = n;
-        // logger.info("Choice #" + selection + " was hovered");
+        // LOG.info("Choice #" + selection + " was hovered");
 
         if(buttonReleased != 0)
         {
             playClickSound();
-            callback.accept((Integer)choices[0]);
+            callback.accept((Integer)choices[n]);
         }
     }
 }

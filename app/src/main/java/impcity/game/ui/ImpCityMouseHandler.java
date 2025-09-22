@@ -522,7 +522,11 @@ public class ImpCityMouseHandler implements MouseHandler
            game.payMana(Tool.SPELL_PLACE_RESOURCE.COST_MANA))
         {
             map.setItem(blockI, blockJ, Tool.parameter);
-            ResourceNode node = new ResourceNode(ResourceNode.Type.COPPER_ORE, new Point(blockI, blockJ));
+            ResourceNode.Type type = 
+                    Tool.parameter == Features.I_COPPER_ORE_MOUND ?
+                        ResourceNode.Type.COPPER_ORE : ResourceNode.Type.TIN_ORE;
+            
+            ResourceNode node = new ResourceNode(type, new Point(blockI, blockJ));
             game.resourceNodes.add(node);
         }
     }
@@ -683,7 +687,7 @@ public class ImpCityMouseHandler implements MouseHandler
                     new ImageChoice(display.textureCache, gameDisplay, 800, 600, 
                             "Chose a resource to place:", 
                             Features.RESOURCES,
-                            new String [] {"Copper Ore"},
+                            new String [] {"Copper Ore", "Tin Ore"},
                             200, 100, 240,
                             (texId) -> {
                                 Tool.selected = Tool.SPELL_PLACE_RESOURCE;

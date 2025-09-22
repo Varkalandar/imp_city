@@ -11,6 +11,7 @@ public class ResourceNode
     public static enum Type
     {
         COPPER_ORE,
+        TIN_ORE,
     };
     
     public final Type type;

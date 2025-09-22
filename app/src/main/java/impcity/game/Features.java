@@ -174,7 +174,7 @@ public class Features
 
     public static final int [] RESOURCES = new int [] 
     {
-        I_COPPER_ORE_MOUND,
+        I_COPPER_ORE_MOUND, I_TIN_ORE_MOUND,
     };
     
     public static final HashSet<Integer> RESOURCES_SET;
