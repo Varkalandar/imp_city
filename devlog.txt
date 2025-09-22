@@ -5,6 +5,7 @@ Changes since v0.28.7
   on the map. While it is possible to load old games with random resource
   nodes like copper ore, the upkeep cost is likely so high that they can't
   be continued with this version.
+- Granite blocks act as obstacles in tunnel construction now.
 
 Changes since v0.28.6
 

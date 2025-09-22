@@ -32849,17 +32849,17 @@
       <Description>
         <version>4</version>
         <id>1516</id>
-        <width>1</width>
-        <height>1</height>
+        <width>216</width>
+        <height>150</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>107</footX>
+        <footY>91</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>granite_mound_1</string>
+        <string>rgba</string>
         <string></string>
         <string></string>
       </Metadata>
@@ -32868,17 +32868,17 @@
       <Description>
         <version>4</version>
         <id>1517</id>
-        <width>1</width>
-        <height>1</height>
+        <width>216</width>
+        <height>150</height>
         <offsetX>0</offsetX>
         <offsetY>0</offsetY>
-        <footX>0</footX>
-        <footY>0</footY>
+        <footX>107</footX>
+        <footY>91</footY>
       </Description>
       <Metadata>
         <int>0</int>
-        <string></string>
-        <string></string>
+        <string>granite_mound_2</string>
+        <string>rgba</string>
         <string></string>
         <string></string>
       </Metadata>

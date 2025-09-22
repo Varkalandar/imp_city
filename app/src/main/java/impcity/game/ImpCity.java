@@ -227,6 +227,8 @@ public class ImpCity implements PostRenderHook, GameInterface
         display.setDecoDisplayName(Features.I_MINERAL_BLOCK, "Raw Cobaltite Deposit");
         display.setDecoDisplayName(Features.I_TIN_ORE_MOUND, "Tin Ore");
         display.setDecoDisplayName(Features.I_COPPER_ORE_MOUND, "Copper Ore");
+        display.setDecoDisplayName(Features.I_GRANITE_BLOCK, "Solid Granite");
+        display.setDecoDisplayName(Features.I_GRANITE_BLOCK + 1, "Solid Granite");
         
         // gameDisplay.showDialog(new CreatureOverview(this, gameDisplay, display));
     
@@ -486,38 +488,16 @@ public class ImpCity implements PostRenderHook, GameInterface
                 int ground = map.getFloor(x, y);
                 if(ground >= Features.GROUND_IMPASSABLE && ground < Features.GROUND_IMPASSABLE+3)
                 {
-                    // Random nodes are disabled for the time being.
-                    // Only player placed nodes
-                    /*
                     double select = Math.random();
 
-                    if(select > 0.98)
+                    if(select > 0.94)
                     {
-                        map.setItem(x, y, Features.I_COPPER_ORE_MOUND);
-                    }
-                    else if(select > 0.97)
-                    {
-                        map.setItem(x, y, Features.I_TIN_ORE_MOUND);
-                    }
-                    else if(select > 0.96)
-                    {
-                        map.setItem(x, y, Features.I_MINERAL_BLOCK);
-                    }
-                    else if(select > 0.95)
-                    {
-                        map.setItem(x, y, Features.I_GRAPHITE_BLOCK);
-                    }
-                    else if(select > 0.94)
-                    {
-                        map.setItem(x, y, Features.I_IRON_ORE_BLOCK);
+                        map.setItem(x, y, Features.I_GRANITE_BLOCK + (int)(Math.random() * 2));
                     }
                     else
                     {
                         map.setItem(x, y, Features.I_STEEP_EARTH_BLOCK + (int)(Math.random() * 3));
                     }
-                    */
-                            
-                    map.setItem(x, y, Features.I_STEEP_EARTH_BLOCK + (int)(Math.random() * 3));
                 }
                 if(y==0 || x==0 || x>=w-Map.SUB || y>=h-Map.SUB)
                 {

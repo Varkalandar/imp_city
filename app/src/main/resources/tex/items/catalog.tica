@@ -31121,16 +31121,16 @@ data
 Tile Description
 v.5
 1516
-1 1
+216 150
 0 0
-0 0
+107 91
 End Of Header
 Item
 v.1
 data
 4
-
-
+granite_mound_1
+rgba
 
 
 1
@@ -31139,16 +31139,16 @@ data
 Tile Description
 v.5
 1517
-1 1
+216 150
 0 0
-0 0
+107 91
 End Of Header
 Item
 v.1
 data
 4
-
-
+granite_mound_2
+rgba
 
 
 1
