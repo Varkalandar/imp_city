@@ -1,6 +1,14 @@
 package impcity.game.ui;
 
-import impcity.game.*;
+import impcity.game.Clock;
+import impcity.game.DebugCentral;
+import impcity.game.Features;
+import impcity.game.ImpCity;
+import impcity.game.KeeperStats;
+import impcity.game.ResourceNode;
+import impcity.game.Sounds;
+import impcity.game.Texture;
+import impcity.game.Tool;
 import impcity.game.species.Species;
 import impcity.game.ai.WayPathSource;
 import impcity.game.jobs.JobExcavate;
@@ -13,14 +21,19 @@ import java.util.logging.Logger;
 
 import impcity.game.map.Map;
 import impcity.game.mobs.Mob;
+import impcity.game.room.Product;
+import impcity.game.room.Room;
 import impcity.oal.SoundPlayer;
 import impcity.ogl.IsoDisplay;
 import impcity.ui.MouseHandler;
 import impcity.ui.MousePointerBitmap;
 import impcity.ui.TimedMessage;
+import impcity.utils.Pair;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -163,8 +176,14 @@ public class ImpCityMouseHandler implements MouseHandler
         int ground = map.getFloor(rasterI, rasterJ);
         int block = map.getItem(rasterI + Map.O_BLOCK, rasterJ + Map.O_BLOCK) & Map.F_IDENT_MASK;
 
-        if(Features.canBeDug(ground, block))
+        if(!Features.canBeDug(ground, block))
         {
+            if(Features.canBeMined(ground, block))
+            {
+                createMiningJob(map, rasterI, rasterJ);
+            }
+        }
+        else {
             if (game.payMana(Tool.MARK_DIG.COST_MANA))
             {
                 createExcavationJob(map, rasterI, rasterJ);
@@ -172,15 +191,11 @@ public class ImpCityMouseHandler implements MouseHandler
             else 
             {
                 TimedMessage tm = new TimedMessage("Not enough mana!",
-                                       Colors.BRIGHT_GOLD_INK,
-                                       Mouse.getX(), Mouse.getY() + 20,
-                                       Clock.time(), 0.3);
+                        Colors.BRIGHT_GOLD_INK,
+                        Mouse.getX(), Mouse.getY() + 20,
+                        Clock.time(), 0.3);
                 gameDisplay.addMessage(tm);
             }
-        }
-        else if(Features.canBeMined(ground, block))
-        {
-            createMiningJob(map, rasterI, rasterJ);
         }
     }
 
@@ -348,16 +363,16 @@ public class ImpCityMouseHandler implements MouseHandler
         }
         else if(n >= Features.GROUND_GHOSTYARD && n < Features.GROUND_GHOSTYARD + 3)
         {
-        	if(game.isGrave(map, rasterI, rasterJ))
-        	{
+            if(game.isGrave(map, rasterI, rasterJ))
+            {
                 int gx = rasterI + Map.SUB/3;
                 int gy = rasterJ + Map.SUB/2;
 
                 int key = map.getMob(gx+1, gy);        		
                 game.turnGraveIntoLair(map, game.world.mobs.get(key));
-        	}
-        	else
-        	{
+            }
+            else
+            {
                 game.allocateGrave(map, rasterI, rasterJ);
 
                 // kill one mob for testing the grave
@@ -365,7 +380,7 @@ public class ImpCityMouseHandler implements MouseHandler
         		mob.setPath(null);
         		mob.setAi(null);
                 game.populateGrave(map, mob, rasterI, rasterJ);
-        	}
+            }
         }        
         else
         {
@@ -531,6 +546,32 @@ public class ImpCityMouseHandler implements MouseHandler
         }
     }
     
+    
+    private void selectProductionForRoom(Map map, int rasterI, int rasterJ)
+    {
+        Point location = new Point(rasterI, rasterJ);
+        Pair<Room, Integer> pair = game.forgeRooms.findClosestRoom(location);
+    
+        
+        
+        if(pair.v1.squares.contains(location)) 
+        {
+            List<String> choices = new ArrayList();
+            choices.add("Copper Coins");
+            
+            ListChoice production = 
+                    new ListChoice(display.textureCache, gameDisplay, 
+                                   600, 400, 
+                                   "Select Production", 
+                                   choices, 
+                                   (x) -> {
+                                       pair.v1.product = Product.COPPER_COINS;
+                                       gameDisplay.showDialog(null);
+                                   });
+            gameDisplay.showDialog(production);
+        }
+    }
+
     
     private void placeDecoration(Map map)
     {
@@ -700,6 +741,11 @@ public class ImpCityMouseHandler implements MouseHandler
             gameDisplay.showDialog(resourceChoice);
         }
         else if(n == 3)
+        {
+            soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
+            Tool.selected = Tool.SPELL_SELECT_PRODUCTION;
+        }
+        else if(n == 4)
         {
             soundPlayer.play(Sounds.UI_BUTTON_CLICK, 1.0f, 1.0f);
             ImageChoice decorationChoice = 
@@ -947,6 +993,9 @@ public class ImpCityMouseHandler implements MouseHandler
                     break;
                 case SPELL_PLACE_RESOURCE:
                     placeResourceNode(map, rasterI, rasterJ);
+                    break;
+                case SPELL_SELECT_PRODUCTION:
+                    selectProductionForRoom(map, rasterI, rasterJ);
                     break;
                 case SPELL_PLACE_DECORATION:
                     placeDecoration(map);

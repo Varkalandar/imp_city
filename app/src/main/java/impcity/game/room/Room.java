@@ -23,12 +23,14 @@ public class Room
 
     public final Set <Point> squares;
     public final HashMap <Point, Integer> distances;
+    public Product product;
     
     
     public Room()
     {
         squares = new HashSet<>();
         distances = new HashMap<>();
+        product = Product.COPPER_COINS;
     }
 
     

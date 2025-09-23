@@ -477,6 +477,7 @@ public class GameDisplay
         IsoDisplay.drawTile(buttonImp, left + 0, top, 60, 60, calculateButtonColor(Tool.SPELL_IMP));
         IsoDisplay.drawTile(buttonHand, left + 70, top, 60, 60, calculateButtonColor(Tool.SPELL_IMP));
         IsoDisplay.drawTile(buttonOreNode, left + 140, top, 60, 60, calculateButtonColor(Tool.SPELL_PLACE_RESOURCE));
+        IsoDisplay.drawTile(buttonOreNode, left + 210, top, 60, 60, calculateButtonColor(Tool.SPELL_SELECT_PRODUCTION));
 
         int tipY = 108;
         int n = calculateTabButtonNumber(Mouse.getX(), Mouse.getY());
@@ -502,8 +503,14 @@ public class GameDisplay
         }
         else if(n == 3)
         {
-            drawMenuText(Tool.SPELL_PLACE_DECORATION.UI_DESCRIPTION, toolTipColor, 90 + 140, tipY, 0.6);
-            drawMenuText("Cost: " + Tool.SPELL_PLACE_DECORATION.COST_MANA + " mana", toolTipColor, 90 + 140, tipY-18, 0.4);
+            drawMenuText(Tool.SPELL_SELECT_PRODUCTION.UI_DESCRIPTION, toolTipColor, 90 + 140, tipY, 0.6);
+            drawMenuText("Cost: " + Tool.SPELL_SELECT_PRODUCTION.COST_MANA + " mana", 
+                         toolTipColor, 90 + 210, tipY-18, 0.4);
+        }
+        else if(n == 4)
+        {
+            drawMenuText(Tool.SPELL_PLACE_DECORATION.UI_DESCRIPTION, toolTipColor, 90 + 280, tipY, 0.6);
+            drawMenuText("Cost: " + Tool.SPELL_PLACE_DECORATION.COST_MANA + " mana", toolTipColor, 90 + 280, tipY-18, 0.4);
         }
     }
 
