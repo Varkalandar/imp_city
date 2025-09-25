@@ -65,6 +65,7 @@ public class GameDisplay
     private final Texture buttonImp;
     private final Texture buttonHand;
     private final Texture buttonOreNode;
+    private final Texture buttonGears;
     
     public static final int TAB_NONE = 0;
     public static final int TAB_ROOMS = 1;
@@ -106,6 +107,7 @@ public class GameDisplay
         buttonImp = textureCache.loadTexture("/ui/button_imp.png", true);
         buttonHand = textureCache.loadTexture("/ui/button_hand.png", true);
         buttonOreNode = textureCache.loadTexture("/ui/button_ore_node.png", true);
+        buttonGears = textureCache.loadTexture("/ui/button_gears.png", true);
         
         buttonCreatures = textureCache.loadTexture("/ui/button_creatures.png", true);
         buttonMap = textureCache.loadTexture("/ui/button_map.png", true);
@@ -477,7 +479,7 @@ public class GameDisplay
         IsoDisplay.drawTile(buttonImp, left + 0, top, 60, 60, calculateButtonColor(Tool.SPELL_IMP));
         IsoDisplay.drawTile(buttonHand, left + 70, top, 60, 60, calculateButtonColor(Tool.SPELL_IMP));
         IsoDisplay.drawTile(buttonOreNode, left + 140, top, 60, 60, calculateButtonColor(Tool.SPELL_PLACE_RESOURCE));
-        IsoDisplay.drawTile(buttonOreNode, left + 210, top, 60, 60, calculateButtonColor(Tool.SPELL_SELECT_PRODUCTION));
+        IsoDisplay.drawTile(buttonGears, left + 210, top, 60, 60, calculateButtonColor(Tool.SPELL_SELECT_PRODUCTION));
 
         int tipY = 108;
         int n = calculateTabButtonNumber(Mouse.getX(), Mouse.getY());
