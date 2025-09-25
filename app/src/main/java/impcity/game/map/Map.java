@@ -32,8 +32,8 @@ import rlgamekit.map.data.LayeredMap;
  * (1,1) - Main feature
  * (0,2) - Left wall deco
  * (2,0) - Right wall deco
- * (2,2) - Way overlay
- * (1,2) - Way-like item
+ * (2,2) - unused
+ * (1,2) - unused
  * (2,1) - unused
  * (3,0) - temperature
  * (3,3) - brightness/color
@@ -115,30 +115,6 @@ public class Map implements Serializable
     }
 
 
-    public int getWay(int w, int h)
-    {
-        return map.get(LAYER_GROUNDS, w+2, h+2);
-    }
-
-
-    public void setWay(int w, int h, int floor)
-    {
-        map.set(LAYER_GROUNDS, w+2, h+2, floor);
-    }
-
-
-    public int getWayLikeItem(int w, int h)
-    {
-        return map.get(LAYER_GROUNDS, w+1, h+2);
-    }
-
-
-    public void setWayLikeItem(int w, int h, int floor)
-    {
-        map.set(LAYER_GROUNDS, w+1, h+2, floor);
-    }
-
-
     public int getLeftWall(int w, int h)
     {
         return map.get(LAYER_GROUNDS, w, h+1);
@@ -172,6 +148,53 @@ public class Map implements Serializable
     public void setColor(int w, int h, int argb)
     {
         map.set(LAYER_GROUNDS, w+3, h+3, argb);
+    }
+
+
+    public int getCount(int w, int h)
+    {
+        int h_base = (h / SUB) * SUB;
+        int h_offset = (h - h_base) >> 2;
+        int h_byte = (h - h_base) & 3;
+        
+        int four_bytes = map.get(LAYER_GROUNDS, w, h_base + SUB/2 + h_offset);
+        
+        /*
+        System.out.println("Reading w=" + w + 
+                           " h_base=" + h_base + 
+                           " h_offset=" + h_offset + 
+                           " h_byte=" + h_byte + 
+                           " bytes=" + four_bytes);
+        */
+        
+        return (four_bytes >> (h_byte << 3)) & 0xFF;
+    }
+
+
+    public void setCount(int w, int h, int v)
+    {
+        int h_base = (h / SUB) * SUB;
+        int h_offset = (h - h_base) >> 2;
+        int h_byte = (h - h_base) & 3;
+        
+        int four_bytes = map.get(LAYER_GROUNDS, w, h_base + SUB/2 + h_offset);
+
+        int mask = 0xFF << (h_byte << 3);
+        int bytes = four_bytes & ~mask;
+        bytes = bytes | (v << (h_byte << 3));
+        
+        /*
+        System.out.println("Storing w=" + w + 
+                           " h_base=" + h_base + 
+                           " h_offset=" + h_offset + 
+                           " h_byte=" + h_byte + 
+                           " bytes=" + bytes);
+        */
+        
+        map.set(LAYER_GROUNDS, w, h_base + SUB/2 + h_offset, bytes);
+
+        // int r = map.get(LAYER_GROUNDS, w, h_base + SUB/2 + h_offset);        
+        // System.out.println("bytes=" + bytes + " r=" + r);
     }
 
 

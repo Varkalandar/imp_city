@@ -1237,11 +1237,10 @@ public class ImpCity implements PostRenderHook, GameInterface
             
             hospitals.add(p);
             
-            // map.setWayLikeItem(p.x, p.y, Features.I_HEALING_WELL_2 + (int)(Math.random()*2));
-            map.setWayLikeItem(p.x, p.y, Features.I_HEALING_WELL_2);
-            
             int volx = p.x + Map.SUB/2;
             int voly = p.y + Map.SUB/2;
+
+            map.setItem(volx, voly, Features.I_HEALING_WELL_2);
 
             addParticleGenerator(map, volx, voly, 2, MobStats.G_HEALING_WELL);
             map.setAreaPlacementBlocked(new Rectangle(p.x, p.y, Map.SUB, Map.SUB), true);
@@ -1382,7 +1381,6 @@ public class ImpCity implements PostRenderHook, GameInterface
     
     public void resetSquare(Map map, int rasterI, int rasterJ) 
     {
-        map.setWayLikeItem(rasterI, rasterJ, 0);
         clearItems(map, rasterI, rasterJ, Map.SUB, Features.keepTreasureFilter);
         
         int n = map.getFloor(rasterI, rasterJ);

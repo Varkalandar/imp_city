@@ -620,9 +620,6 @@ public class Editor implements PostRenderHook, TextureCache.LoaderCallback
                 case 3:
                     map.setRightWall(rasterI, rasterJ, texturesInUiOrder[selection].cacheIndex);
                     break;
-                case 4:
-                    map.setWay(rasterI, rasterJ, texturesInUiOrder[selection].cacheIndex);
-                    break;
                 default:
                     if(selection == 0)
                     {

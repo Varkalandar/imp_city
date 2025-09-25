@@ -632,35 +632,10 @@ public class IsoDisplay implements PostRenderHook
                     logger.log(Level.SEVERE, "No floor texture loaded for id={0}", n);
                 }
             }
-
-            n = map.getWay(mapI, mapJ);
-            if(n > 0 && c1 != 0)
-            {
-                Texture tex = textureCache.grounds[n];
-
-                if(tex != null)
-                {
-                    int c2 = map.getColor(mapI+Map.SUB, mapJ);
-                    int c3 = map.getColor(mapI+Map.SUB, mapJ+Map.SUB);
-                    int c4 = map.getColor(mapI, mapJ+Map.SUB);
-
-                    drawGround(tex, x0, y0, c1, c2, c3, c4);
-                }
-            }
-
-            n = map.getWayLikeItem(mapI, mapJ);
-            if(n > 0 && c1 != 0)
-            {
-                Texture tex = textureCache.textures[n];
-
-                if(tex != null)
-                {
-                    drawTile(tex, x0 - xd - tex.footX, y0 - xd - tex.image.getHeight() + tex.footY);
-                }
-            }
         }
     }
 
+    
     public void run(ImpCity game)
     {
         long lastTime = 0;
