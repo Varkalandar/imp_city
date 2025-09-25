@@ -42,7 +42,7 @@ public class JobFetchItem extends AbstractJob
         if(worker.gameMap.getItem(location.x, location.y) == item)
         {
             worker.stats.setCurrent(MobStats.CARRY, item);
-            worker.gameMap.setItem(location.x, location.y, 0);
+            worker.gameMap.takeItem(location.x, location.y);
 
             // if this was a real item, the bubble must be set to the item
             // texture instead of the key

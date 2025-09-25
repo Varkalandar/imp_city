@@ -495,12 +495,18 @@ public class Map implements Serializable
             (int x1, int y1) -> {
                 int rasterI = x1 - x1 % Map.SUB;
                 int rasterJ = y1 - y1 % Map.SUB;
-                if(getItem(x1, y1) == 0 && 
+                
+                int item = getItem(x1, y1);
+                boolean stackable = (item == itemKey) && Features.isStackable(itemKey);
+                
+                if((item == 0 || stackable) && 
                    !isPlacementBlocked(x1, y1) && 
                    !isMovementBlockedRadius(x1, y1, 2) && // Imps must be able to reach it  
                    !Features.isImpassable(getFloor(rasterI, rasterJ))) 
                 {
                     setItem(x1, y1, itemKey);
+                    setCount(x1, y1, getCount(x1, y1) + 1);
+                    
                     visitor.visit(x1, y1);
                     return true;
                 }
@@ -511,6 +517,26 @@ public class Map implements Serializable
     }
 
 
+    public int takeItem(int x, int y)
+    {
+        int item = getItem(x, y);
+        int count = getCount(x, y) - 1;
+        
+        // took the last item from a stack?
+        if(count <= 0) 
+        {
+            setCount(x, y, 0);
+            setItem(x, y, 0);
+        }
+        else
+        {
+            setCount(x, y, count);
+        }
+        
+        return item;
+    }
+    
+    
     public int getTemperature(int i, int j)
     {
         return map.get(LAYER_GROUNDS, i+3, j+0);

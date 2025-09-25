@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 
 import impcity.game.mobs.Mob;
 import impcity.game.map.LocationPathDestination;
+import java.util.HashSet;
 import rlgamekit.objects.Registry;
 import rlgamekit.pathfinding.Path;
 
@@ -50,7 +51,7 @@ public class ImpAi extends AiBase
         FIND_LAIR, BUILD_LAIR,
         FIND_JOB, FIND_PATH_TO_JOB, GO_TO_JOB, WORKING,
         GO_TO_SLEEP, SLEEP, 
-        GOLD_TO_TREASURY,
+        CARRY_TO_TREASURY,
         ITEM_TO_FORGE, ITEM_TO_LAB, DROP_ITEM
     }
     
@@ -303,15 +304,15 @@ public class ImpAi extends AiBase
             case GO_TO_SLEEP:
                 findPathToLair(mob, desc);
                 break;
-            case GOLD_TO_TREASURY:
-                findPathToRoom(mob, desc, Features.GROUND_TREASURY);
+            case CARRY_TO_TREASURY:
+                findPathToRoom(mob, desc, Features.GROUND_TREASURY, Features.I_COPPER_COINS);
                 currentJob = null;
                 break;
             case ITEM_TO_FORGE:
-                findPathToRoom(mob, desc, Features.GROUND_FORGE);
+                findPathToRoom(mob, desc, Features.GROUND_FORGE, 0);
                 break;
             case ITEM_TO_LAB:
-                findPathToRoom(mob, desc, Features.GROUND_LABORATORY);
+                findPathToRoom(mob, desc, Features.GROUND_LABORATORY, 0);
                 break;
             default:
                 break;
@@ -450,13 +451,16 @@ public class ImpAi extends AiBase
     }
 
     
-    private void findPathToRoom(Mob mob, SpeciesDescription desc, int requiredGround)
+    private void findPathToRoom(Mob mob, SpeciesDescription desc, int requiredGround, int allowedItem)
     {
         Path path = new Path();
-
+        HashSet<Integer> set = new HashSet<>();
+        set.add(allowedItem); // stackable items .. better check?
+        set.add(0); // places without items are ok
+        
         boolean ok =
                 path.findPath(new ImpPathSource(mob, desc.size),
-                        new FeaturePathDestination(mob.gameMap, 0, 0, requiredGround, 3),
+                        new FeaturePathDestination(mob.gameMap, set, 0, requiredGround, 3),
                         mob.location.x, mob.location.y);
         if(ok)
         {
@@ -747,7 +751,7 @@ public class ImpAi extends AiBase
             }
             else if(Features.isCoins(cargo) || game.world.isArtifact(cargo))
             {
-                newGoal = Goal.GOLD_TO_TREASURY;
+                newGoal = Goal.CARRY_TO_TREASURY;
             }
             else
             {

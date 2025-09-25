@@ -230,6 +230,12 @@ public class Features
     }
 
     
+    public static boolean isStackable(int item)
+    {
+        return isCoins(item);
+    }
+    
+    
     public static boolean isImpassable(int ground) 
     {
         return ground >= GROUND_IMPASSABLE && ground < GROUND_IMPASSABLE + 3;

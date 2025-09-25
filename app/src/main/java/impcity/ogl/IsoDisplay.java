@@ -422,9 +422,10 @@ public class IsoDisplay implements PostRenderHook
                         int y = y0 - xd + ii * yd / Map.SUB + jj * yd / Map.SUB;
 
                         n = map.getItem(mapI + ii, mapJ + jj);
+                        int c = map.getCount(mapI + ii, mapJ + jj);
                         // map.setItem(mapI + ii, mapJ + jj, 1004);
 
-                        drawItem(xd, yd, mapI + ii, mapJ + jj, n, x, y);
+                        drawItem(xd, yd, mapI + ii, mapJ + jj, n, c, x, y);
 
                         ii --;
                         jj ++;
@@ -444,9 +445,10 @@ public class IsoDisplay implements PostRenderHook
                         int y = y0 - xd + ii* yd / Map.SUB + jj* yd / Map.SUB;
 
                         n = map.getItem(mapI + ii, mapJ + jj);
+                        int c = map.getCount(mapI + ii, mapJ + jj);
                         // map.setItem(mapI + ii, mapJ + jj, 1028);
 
-                        drawItem(xd, yd, mapI + ii, mapJ + jj, n, x, y);
+                        drawItem(xd, yd, mapI + ii, mapJ + jj, n, c, x, y);
 
                         ii --;
                         jj ++;
@@ -456,7 +458,7 @@ public class IsoDisplay implements PostRenderHook
         }
     }
 
-    private void drawItem(int xd, int yd, int mi, int mj, int n, int x, int y) 
+    private void drawItem(int xd, int yd, int mi, int mj, int n, int c, int x, int y) 
     {
         if(n > 0)
         {
@@ -478,6 +480,11 @@ public class IsoDisplay implements PostRenderHook
                         if(name != null)
                         {
                             showName(name, mi, mj, x, y);
+                        }
+                        // showName("" + c, mi, mj, x, y);
+                        if(c != 0)
+                        {
+                            font.drawStringScaled("" + c, 0xFFFFFFFF, x - 10, y + 30, 0.5);
                         }
                     }
                 }
