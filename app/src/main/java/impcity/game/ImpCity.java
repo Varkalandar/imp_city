@@ -683,13 +683,19 @@ public class ImpCity implements PostRenderHook, GameInterface
                     {
                         // an item that is not registered might actually be a coin.
                         if(item == Features.I_GOLD_COINS)
-                            gold ++;
+                        {
+                            gold += map.getCount(x, y);
+                        }
 
                         if(item == Features.I_SILVER_COINS)
-                            silver ++;
+                        {
+                            silver += map.getCount(x, y);
+                        }
 
                         if(item == Features.I_COPPER_COINS)
-                            copper ++;
+                        {
+                            copper += map.getCount(x, y);
+                        }
                     }
                 }
             }
@@ -1642,7 +1648,8 @@ public class ImpCity implements PostRenderHook, GameInterface
     {
         Point [] where = new Point[count];
         boolean success = true;
-
+        int total = 0;
+        
         for(int i=0; i<count; i++)
         {
             Point p = locateCoin(map, type);
@@ -1652,19 +1659,38 @@ public class ImpCity implements PostRenderHook, GameInterface
             }
             else
             {
+                int how_many = map.getCount(p.x, p.y);
+                total += how_many;
                 where[i] = p;
-                map.setItem(p.x, p.y, 0);
+                
+                if(total >= count)
+                {
+                    // map.setItem(p.x, p.y, 0);
+                    break;
+                }
             }
         }
-
-        if(success == false)
+    
+        if(success)
         {
-            // not enough coins. restore the ones we took
+            total = 0;
             for(int i=0; i<count; i++)
             {
                 if(where[i] != null)
                 {
-                    map.setItem(where[i].x, where[i].y, type);
+                    int how_many = map.getCount(where[i].x, where[i].y);
+                    total += how_many;
+                    int remainder = total - count; 
+                    
+                    if(remainder <= 0)
+                    {
+                        map.setItem(where[i].x, where[i].y, 0);
+                        map.setCount(where[i].x, where[i].y, 0);
+                    }
+                    else
+                    {
+                        map.setCount(where[i].x, where[i].y, remainder);
+                    }
                 }
             }
         }

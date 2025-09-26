@@ -180,7 +180,7 @@ public class Features
     
     public static final HashSet<Integer> RESOURCES_SET;
 
-    public static final HashMap<Integer> MAX_STACK_SIZES;
+    public static final HashMap<Integer, Integer> MAX_STACK_SIZES;
 
     /** 
      * This filter keeps coins, resources and artifacts
@@ -213,9 +213,9 @@ public class Features
         }
         
         MAX_STACK_SIZES = new HashMap<>();
-        MAX_STACK_SIZES.add(I_COPPER_COINS, 9);
-        MAX_STACK_SIZES.add(I_SILVER_COINS, 9);
-        MAX_STACK_SIZES.add(I_GOLD_COINS, 9);
+        MAX_STACK_SIZES.put(I_COPPER_COINS, 9);
+        MAX_STACK_SIZES.put(I_SILVER_COINS, 9);
+        MAX_STACK_SIZES.put(I_GOLD_COINS, 9);
     }
     
     
