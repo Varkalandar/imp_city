@@ -1,6 +1,7 @@
 package impcity.game;
 
 import impcity.game.map.Map;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.function.IntUnaryOperator;
 
@@ -179,6 +180,7 @@ public class Features
     
     public static final HashSet<Integer> RESOURCES_SET;
 
+    public static final HashMap<Integer> MAX_STACK_SIZES;
 
     /** 
      * This filter keeps coins, resources and artifacts
@@ -209,6 +211,11 @@ public class Features
         {
             RESOURCES_SET.add(resource);
         }
+        
+        MAX_STACK_SIZES = new HashMap<>();
+        MAX_STACK_SIZES.add(I_COPPER_COINS, 9);
+        MAX_STACK_SIZES.add(I_SILVER_COINS, 9);
+        MAX_STACK_SIZES.add(I_GOLD_COINS, 9);
     }
     
     
@@ -232,7 +239,7 @@ public class Features
     
     public static boolean isStackable(int item)
     {
-        return isCoins(item);
+        return MAX_STACK_SIZES.get(item) > 0;
     }
     
     
