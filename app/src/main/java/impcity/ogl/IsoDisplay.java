@@ -57,31 +57,35 @@ import rlgamekit.objects.Registry;
  */
 public class IsoDisplay implements PostRenderHook
 {
-    public static final Logger logger = Logger.getLogger(IsoDisplay.class.getName());
+    public static final Logger LOG = Logger.getLogger(IsoDisplay.class.getName());
+    public static final String [] NUMBER_STRINGS;
+    
+    static
+    {
+        NUMBER_STRINGS = new String [256];
+        for(int i=0; i<NUMBER_STRINGS.length; i++)
+        {
+            NUMBER_STRINGS[i] = "" + i;
+        }
+    }
 
     private String title = "Initializing ... please wait.";
-
-    public int displayHeight = 768;
-    public int displayWidth = 1200;
 
     private final Dimension newDisplaySize = new Dimension();
 
     private int viewDist = 8;
+    private final Registry<Mob> mobs;
+    private final Registry<Item> items;
+    private final DrawableVerticalList vList = new DrawableVerticalList();
+    private final Texture [] lightTextures = new Texture[32];
     
+    public int displayHeight = 768;
+    public int displayWidth = 1200;
     public PixFont font;
     public final HotspotMap hotspotMap;
     
     public Map map;
-    private final Registry<Mob> mobs;
-    private final Registry<Item> items;
-
-    private final DrawableVerticalList vList = new DrawableVerticalList();
-    
-    
     public final TextureCache textureCache;
-    private final Texture [] lightTextures = new Texture[32];
-    
-    
     public int centerX, centerY;
     public int cursorI, cursorJ, cursorN;
     
@@ -97,6 +101,7 @@ public class IsoDisplay implements PostRenderHook
     public File loadMapRequested;
     private boolean showItemNames;
     private final String[] decoDisplayNames;
+    
     
     public IsoDisplay(Registry<Mob> mobs, Registry<Item> items, TextureCache textureCache)
     {
@@ -118,6 +123,7 @@ public class IsoDisplay implements PostRenderHook
         hotspotMap.setFactor(0.5);
     }
 
+    
     public void create() throws LWJGLException, IOException
     {
         boolean useFrame = true;
@@ -149,7 +155,7 @@ public class IsoDisplay implements PostRenderHook
             }
             catch(IOException ex)
             {
-                logger.log(Level.SEVERE, ex.getMessage(), ex);
+                LOG.log(Level.SEVERE, ex.getMessage(), ex);
             }
             Display.setParent(canvas);
         }        
@@ -202,10 +208,12 @@ public class IsoDisplay implements PostRenderHook
         }
     }
 
+    
     public void quit()
     {
         quitRequested = true;
     }
+    
     
     public void destroy()
     {
@@ -221,6 +229,7 @@ public class IsoDisplay implements PostRenderHook
         }
     }
 
+    
     public void initGL()
     {
         // 2D Initialization
@@ -242,7 +251,7 @@ public class IsoDisplay implements PostRenderHook
         
         int res = java.awt.Toolkit.getDefaultToolkit().getScreenResolution();   
         
-        logger.log(Level.INFO, "Adjusting for res {0}", res);
+        LOG.log(Level.INFO, "Adjusting for res {0}", res);
            
         // Doesn't have the desired effect. Disabled for now
         // int scaledWidth = displayWidth * res / 96;
@@ -270,7 +279,7 @@ public class IsoDisplay implements PostRenderHook
             } 
             catch(IOException ex)
             {
-                logger.log(Level.SEVERE, ex.getMessage(), ex);
+                LOG.log(Level.SEVERE, ex.getMessage(), ex);
             }
         }
         else
@@ -293,15 +302,18 @@ public class IsoDisplay implements PostRenderHook
         }
     }
     
+    
     public void setDecoDisplayName(int deco, String name)
     {
         decoDisplayNames[deco & Map.F_IDENT_MASK] = name;
     }
     
+    
     public void setViewDist(int dist)
     {
         viewDist = dist;
     }
+    
     
     private void displayMap()
     {
@@ -334,7 +346,7 @@ public class IsoDisplay implements PostRenderHook
                 int x0 = centerX + i*xd - j*xd;
                 int y0 = centerY + i*yd + j*yd;
 
-                drawFloor(xd, i, j, x0, y0);
+                drawFloor(i, j, x0, y0);
             }
         }
         
@@ -470,7 +482,7 @@ public class IsoDisplay implements PostRenderHook
                     Texture tex = textureCache.textures[n];
                     if(tex == null)
                     {
-                        logger.log(Level.SEVERE, "No item texture loaded for id={0}", n);
+                        LOG.log(Level.SEVERE, "No item texture loaded for id={0}", n);
                     }
                     else
                     {
@@ -484,7 +496,7 @@ public class IsoDisplay implements PostRenderHook
                         // showName("" + c, mi, mj, x, y);
                         if(c != 0)
                         {
-                            font.drawStringScaled("" + c, 0xFFFFFFFF, x - 10, y + 30, 0.5);
+                            font.drawStringScaled(NUMBER_STRINGS[c], 0xFFFFFFFF, x - 5, y + 20, 0.5);
                         }
                     }
                 }
@@ -497,7 +509,7 @@ public class IsoDisplay implements PostRenderHook
 
                     if(tex == null)
                     {
-                        logger.log(Level.SEVERE, "No deco texture loaded for id={0}", item.texId);
+                        LOG.log(Level.SEVERE, "No deco texture loaded for id={0}", item.texId);
                     }
                     else
                     {
@@ -613,7 +625,8 @@ public class IsoDisplay implements PostRenderHook
         }
     }
 
-    private void drawFloor(int xd, int i, int j, int x0, int y0)
+    
+    private void drawFloor(int i, int j, int x0, int y0)
     {
         if(y0 < displayHeight && y0 > -216 && x0 > -216 && x0 < displayWidth)
         {
@@ -636,7 +649,7 @@ public class IsoDisplay implements PostRenderHook
                 }
                 else
                 {
-                    logger.log(Level.SEVERE, "No floor texture loaded for id={0}", n);
+                    LOG.log(Level.SEVERE, "No floor texture loaded for id={0}", n);
                 }
             }
         }
@@ -718,7 +731,7 @@ public class IsoDisplay implements PostRenderHook
             // clean up killed intruders
             for (Cardinal key : killList)
             {
-                logger.info("Removing dead intruder #" + key.intValue());
+                LOG.log(Level.INFO, "Removing dead intruder #{0}", key.intValue());
                 mobs.remove(key.intValue());
             }
         }
@@ -1038,7 +1051,7 @@ public class IsoDisplay implements PostRenderHook
         }
         catch(Exception ex)
         {
-            logger.log(Level.INFO, ex.getMessage(), ex);
+            LOG.log(Level.INFO, ex.getMessage(), ex);
         }
     }
     

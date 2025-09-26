@@ -64,7 +64,7 @@ public class Map implements Serializable
     public static final int F_ITEM = 0x10000;
     public static final int F_FLOOR_DECO = 0x20000;
     public static final int F_IDENT_MASK = 0xFFFF;
-
+   
     public final ArrayList <Light> lights;
     private final SparseMapLayer<Drawable> effects;
 
