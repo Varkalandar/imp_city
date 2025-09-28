@@ -7,8 +7,8 @@ import impcity.game.map.RectArea;
 import impcity.game.mobs.Mob;
 
 import java.awt.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
+
 
 /**
  *
@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  */
 public abstract class AiBase implements Ai
 {
-    private static final Logger logger = Logger.getLogger(AiBase.class.getName());
+    private static final Logger LOG = Logger.getLogger(AiBase.class.getName());
 
     /**
      * The creatures home location. Homeless creatures have (-1, -1)
@@ -73,6 +73,9 @@ public abstract class AiBase implements Ai
     	}
     
         int n = mob.gameMap.getItem(x, y);
+        
+        // LOG.info("Lair check: required=" + lair + " found=" + n);
+        
         return n == lair;
     }
     

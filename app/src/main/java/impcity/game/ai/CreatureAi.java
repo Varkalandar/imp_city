@@ -1166,7 +1166,7 @@ public class CreatureAi extends AiBase
         }
         else
         {
-            map.setItem(p.x, p.y, 0);
+            map.takeItem(p.x, p.y);
             map.dropItem(mob.location.x,
                          mob.location.y,
                          Features.I_COPPER_COINS,

@@ -372,6 +372,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             for(int x=96; x<96 + Map.SUB * 3; x+=Map.SUB)
             {
                 map.setItem(x, y, 0);
+                map.setItem(x + Map.O_BLOCK, y + Map.O_BLOCK, 0);
                 map.setFloor(x, y, Features.GROUND_QUAD_TILES + (int)(Math.random() * 3));
             }
         }
@@ -474,7 +475,7 @@ public class ImpCity implements PostRenderHook, GameInterface
     }
     
 
-    private void convertMap(Map map)
+    public static void convertMap(Map map)
     {
         LOG.log(Level.INFO, "Converting map.");
         
@@ -492,27 +493,31 @@ public class ImpCity implements PostRenderHook, GameInterface
 
                     if(select > 0.94)
                     {
-                        map.setItem(x, y, Features.I_GRANITE_BLOCK + (int)(Math.random() * 2));
+                        map.setItem(x + Map.O_BLOCK, y + Map.O_BLOCK, Features.I_GRANITE_BLOCK + (int)(Math.random() * 2));
+                        map.setCount(x + Map.O_BLOCK, y + Map.O_BLOCK, 200 + (int)(Math.random() * 50));
                     }
                     else
                     {
-                        map.setItem(x, y, Features.I_STEEP_EARTH_BLOCK + (int)(Math.random() * 3));
+                        map.setItem(x + Map.O_BLOCK, y + Map.O_BLOCK, Features.I_STEEP_EARTH_BLOCK + (int)(Math.random() * 3));
                     }
                 }
+                
+                // add outer border
                 if(y==0 || x==0 || x>=w-Map.SUB || y>=h-Map.SUB)
                 {
-                    map.setItem(x, y, Features.I_PERM_ROCK + (int)(Math.random() * 3));
+                    map.setItem(x, y, 0);
+                    map.setItem(x + Map.O_BLOCK, y + Map.O_BLOCK, Features.I_PERM_ROCK + (int)(Math.random() * 3));
                 }
-
-                // old maps had deco flags that now mess with the item flags
-                for(int yy = 0; yy<Map.SUB; yy++)
-                {
-                    for(int xx= 0; xx<Map.SUB; xx++)
-                    {
-                        int n = map.getItem(x+xx, y+yy) & 0xFF00FFFF;
-                        map.setItem(x+xx, y+yy, n);
-                    }
-                }
+            }
+        }
+        
+        // old maps had deco flags that now mess with the item flags
+        for(int y = 0; y < map.getHeight(); y++)
+        {
+            for(int x = 0; x < map.getWidth(); x++)
+            {
+                int n = map.getItem(x, y) & 0xFF00FFFF;
+                map.setItem(x, y, n);
             }
         }
     }
@@ -617,7 +622,7 @@ public class ImpCity implements PostRenderHook, GameInterface
                 {
                     ResourceNode node = new ResourceNode(ResourceNode.Type.COPPER_ORE, new Point(blockI, blockJ));
                     resourceNodes.add(node);
-                    LOG.info("Found copper ore resource node at " + node.location);
+                    LOG.log(Level.INFO, "Found copper ore resource node at {0}", node.location);
                 }
                 
                 for(int j=0; j<Map.SUB; j++)
@@ -641,26 +646,10 @@ public class ImpCity implements PostRenderHook, GameInterface
                 }
             }
         }
-
-        // old maps hat wall blocks at sub (0, 0) which have to be moved to
-        // (Map.SUB/2-1, Map.SUB/2-1) to avoid clipping errors in the display
-        for(int y = h; y >= 0; y -= Map.SUB)
-        {
-            for (int x = w; x >= 0; x -= Map.SUB)
-            {
-                int block = map.getItem(x, y) & Map.F_IDENT_MASK;
-                if (block >= Features.I_PERM_ROCK && block <= Features.I_STEEP_EARTH_BLOCK + 20)
-                {
-                    map.setItem(x, y, 0);
-                    map.setItem(x + Map.O_BLOCK, y + Map.O_BLOCK, block);
-                }
-            }
-        }
-
-        placeEnclosure(map, 12, Features.GROUND_IMPASSABLE, Features.I_PERM_ROCK);
+        
+        // placeEnclosure(map, 12, Features.GROUND_IMPASSABLE, Features.I_PERM_ROCK);
 
         countCoinsInTreasury(map);
-
     }
 
     private void countCoinsInTreasury(Map map)

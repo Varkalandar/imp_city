@@ -497,7 +497,9 @@ public class Map implements Serializable
                 int rasterJ = y1 - y1 % Map.SUB;
                 
                 int item = getItem(x1, y1);
-                boolean stackable = (item == itemKey) && Features.isStackable(itemKey);
+                int count = getCount(x1, y1);
+                
+                boolean stackable = (item == itemKey) && (count < 255) && Features.isStackable(itemKey);
                 
                 if((item == 0 || stackable) && 
                    !isPlacementBlocked(x1, y1) && 
@@ -505,7 +507,7 @@ public class Map implements Serializable
                    !Features.isImpassable(getFloor(rasterI, rasterJ))) 
                 {
                     setItem(x1, y1, itemKey);
-                    setCount(x1, y1, getCount(x1, y1) + 1);
+                    setCount(x1, y1, count + 1);
                     
                     visitor.visit(x1, y1);
                     return true;
