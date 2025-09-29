@@ -260,6 +260,7 @@ public class Features
         return ((block >=  Features.I_GOLD_MOUND && block < Features.I_GOLD_MOUND + 3) ||
                 (block ==  Features.I_MINERAL_BLOCK) ||
                 (block >=  Features.I_COPPER_ORE_MOUND && block < Features.I_COPPER_ORE_MOUND + 3) ||
+                (block >=  Features.I_GRANITE_BLOCK && block < Features.I_GRANITE_BLOCK + 3) ||
                 (block >=  Features.I_TIN_ORE_MOUND && block < Features.I_TIN_ORE_MOUND + 3))
                 &&
                ((ground >= Features.GROUND_LIGHT_SOIL && ground <= Features.GROUND_LIGHT_SOIL+3) ||

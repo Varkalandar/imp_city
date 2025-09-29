@@ -2176,7 +2176,7 @@ public class ImpCity implements PostRenderHook, GameInterface
             mana -= ghostyards.size() * KeeperStats.MANA_GHOSTYARD_COST;
             mana -= claimed.size() * KeeperStats.MANA_CLAIMED_SQUARE_COST;
          
-            LOG.info("Paying mana upkeep for " + resourceNodes.size() + " resource nodes.");
+            // LOG.log(Level.INFO, "Paying mana upkeep for {0} resource nodes.", resourceNodes.size());
             for(ResourceNode node : resourceNodes)
             {
                 if(node.type == ResourceNode.Type.COPPER_ORE)

@@ -16,11 +16,20 @@ public class JobExcavate extends AbstractJob
 {
     private final ImpCity game;
     
+    
     public JobExcavate(ImpCity game, int x, int y)
     {
         super(new Point(x, y));
         this.game = game;
     }
+
+
+    public JobExcavate(ImpCity game, Point location)
+    {
+        super(location);
+        this.game = game;
+    }
+
 
     @Override
     public boolean isValid(Mob worker)
@@ -33,6 +42,7 @@ public class JobExcavate extends AbstractJob
         
         return mark == Features.MINING_MARK;
     }
+    
     
     @Override
     public void execute(Mob worker)
@@ -53,9 +63,9 @@ public class JobExcavate extends AbstractJob
             
             game.soundPlayer.play(Sounds.DIG_SQUARE, 0.6f, 1.0f);
         }        
-
     }
 
+    
     @Override
     public String toString()
     {

@@ -6,6 +6,8 @@ import impcity.game.ai.MobStats;
 import java.awt.Point;
 import impcity.game.mobs.Mob;
 import impcity.game.map.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Dig gold from a tile.
@@ -14,7 +16,9 @@ import impcity.game.map.Map;
  */
 public class JobMining extends AbstractJob
 {
+    private static final Logger LOG = Logger.getLogger(JobMining.class.getName());
     private final ImpCity game;
+    
     
     public JobMining(ImpCity game, int x, int y)
     {
@@ -22,6 +26,7 @@ public class JobMining extends AbstractJob
         this.game = game;
     }
 
+    
     @Override
     public boolean isValid(Mob worker)
     {
@@ -34,6 +39,7 @@ public class JobMining extends AbstractJob
         
         return Features.canBeMined(ground, block);
     }
+    
     
     @Override
     public void execute(Mob worker)
@@ -62,6 +68,30 @@ public class JobMining extends AbstractJob
             else if(block >= Features.I_TIN_ORE_MOUND && block <  + Features.I_TIN_ORE_MOUND + 3)
             {
                 worker.stats.setCurrent(MobStats.CARRY, Features.I_TIN_ORE); 
+            }
+            else if(block >= Features.I_GRANITE_BLOCK && block <  + Features.I_GRANITE_BLOCK + 3)
+            {
+                int count = map.getCount(rasterI + Map.O_BLOCK, rasterJ + Map.O_BLOCK);
+                
+                if(count > 0) 
+                {
+                    map.setCount(rasterI + Map.O_BLOCK, rasterJ + Map.O_BLOCK, count -1);
+                }
+                else
+                {
+                    // remove granite block, reset counter
+                    map.setItem(rasterI + Map.O_BLOCK, rasterJ + Map.O_BLOCK, 0);
+                    map.setCount(rasterI + Map.O_BLOCK, rasterJ + Map.O_BLOCK, count -1);
+                    
+                    // needed by excavation job
+                    map.setItem(rasterI+Map.SUB/2, rasterJ+Map.SUB/2, Features.MINING_MARK);
+                    
+                    JobExcavate excavate = new JobExcavate(game, location);
+                    
+                    LOG.log(Level.INFO, "Excavation job valid={0}", excavate.isValid(worker));
+                    
+                    game.jobQueue.add(excavate, JobQueue.PRI_HIGH);
+                }
             }
             else if(block == Features.I_MINERAL_BLOCK)
             {

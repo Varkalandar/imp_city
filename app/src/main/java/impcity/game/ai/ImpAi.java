@@ -98,6 +98,7 @@ public class ImpAi extends AiBase
         else
         {
             // System.err.println("Mob=" + mob.getKey() + " AI thinks.");
+            
             delayThinking(THINK_COOLDOWN);
         }
         
@@ -227,11 +228,12 @@ public class ImpAi extends AiBase
                     {
                         // Hajo: wait a while extra
                         pathTime = Clock.time() + 10 * THINK_COOLDOWN;                        
+
+                        LOG.log(Level.INFO, "Imp #{0} completes " + currentJob, mob.getKey());
                         
                         currentJob = null;
                         goal = Goal.FIND_JOB;
                         mob.setPath(null);
-                        LOG.log(Level.INFO, "Imp #{0} completes current job.", mob.getKey());
                     }
                 }
             }
@@ -726,13 +728,25 @@ public class ImpAi extends AiBase
         }    
         else
         {
-            LOG.log(Level.INFO, "Imp #{0} completes mining job.", mob.getKey());
+            LOG.log(Level.INFO, "Imp #{0} completes mining job, goal=" + goal, mob.getKey());
             
             goal = calculateGoalForCargo(mob);
-            mob.setPath(null);
-
-            // Hajo: wait a while extra
-            pathTime = Clock.time() + 5 * THINK_COOLDOWN;
+            
+            if(goal == Goal.WORKING)
+            {
+                workStep = 0;
+                
+                if(!currentJob.isValid(mob))
+                {
+                    findJob(mob);
+                }
+            }
+            else
+            {
+                mob.setPath(null);
+                // Hajo: wait a while extra
+                pathTime = Clock.time() + 5 * THINK_COOLDOWN;
+            }
         }
     }
     
@@ -758,6 +772,13 @@ public class ImpAi extends AiBase
                 newGoal = Goal.ITEM_TO_FORGE;
             }
         }
+        else
+        {
+            // no cargo -> keep mining
+            newGoal = goal;
+        }
+
+        // LOG.info("Imp #{0} has cargo=" + cargo + " newGoal=" + newGoal);
 
         return newGoal;
     }
